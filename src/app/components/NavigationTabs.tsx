@@ -1,4 +1,4 @@
-import { BookOpen, Lightbulb, Share2, FlaskConical, Brain, Boxes } from 'lucide-react';
+import { BookOpen, Lightbulb, Share2, FlaskConical, Brain, Boxes, Newspaper } from 'lucide-react';
 
 interface NavigationTabsProps {
   activeTab: string;
@@ -24,6 +24,8 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
         return 'text-pink-400 border-pink-400';
       case 'builder':
         return 'text-cyan-400 border-cyan-400';
+      case 'news':
+        return 'text-emerald-400 border-emerald-400';
       default:
         return 'text-blue-400 border-blue-400';
     }
@@ -35,6 +37,7 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
     { id: 'graph', label: 'Pattern Network', icon: Share2 },
     { id: 'mindmap', label: 'Mind Map', icon: Brain },
     { id: 'builder', label: 'System Builder', icon: Boxes },
+    { id: 'news', label: 'News Hub', icon: Newspaper },
     { id: 'evaluate', label: 'Evaluate & Compare', icon: FlaskConical },
   ];
 

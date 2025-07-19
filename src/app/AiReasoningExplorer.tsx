@@ -10,6 +10,7 @@ import { TechniquesList } from './components/TechniquesList';
 import { TechniqueDetails } from './components/TechniqueDetails';
 import { RecommendationTab } from './components/RecommendationTab';
 import { SystemBuilder } from './components/SystemBuilder';
+import { NewsTab } from './components/NewsTab';
 import { techniques } from './techniques';
 import { useCases } from './use-cases';
 import { categories } from './categories';
@@ -186,7 +187,7 @@ export const AIReasoningExplorer = () => {
           </div>
         ) : activeTab === 'mindmap' ? (
           /* Mind Map Tab */
-          <div className="h-[calc(100vh-16rem)]">
+          <div className="h-[calc(100vh-12rem)] min-h-[600px]">
             <MindMap 
               techniques={techniques} 
               categories={categories} 
@@ -203,6 +204,11 @@ export const AIReasoningExplorer = () => {
               categories={categories} 
               useCases={useCases}
             />
+          </div>
+        ) : activeTab === 'news' ? (
+          /* News Tab */
+          <div className="h-[calc(100vh-16rem)] overflow-auto">
+            <NewsTab />
           </div>
         ) : (
           /* Evaluation Tab */
