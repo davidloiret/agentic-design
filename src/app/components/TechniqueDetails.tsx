@@ -1,6 +1,8 @@
-import { BookOpen, Code, Check, Brain } from 'lucide-react';
+import { BookOpen, Code, Check, Brain, GitBranch } from 'lucide-react';
 import CodeSandbox from '../../components/CodeSandbox';
+import { MermaidDiagram } from '../../components/MermaidDiagram';
 import { patternExamples, type PatternId, type LanguageType } from '../pattern-examples';
+import { patternDiagrams } from '../pattern-diagrams';
 
 interface TechniqueDetailsProps {
   selectedTechnique: any;
@@ -138,6 +140,30 @@ export const TechniqueDetails = ({
                     </div>
                   </div>
                 </div>
+              </section>
+
+              {/* Visual Flow Diagram */}
+              <section>
+                <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                  <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                  How it Works
+                </h2>
+                {patternDiagrams[selectedTechnique.id as keyof typeof patternDiagrams] ? (
+                  <div className="bg-gray-900 rounded-xl border border-gray-700 overflow-hidden">
+                    <div className="bg-gray-800 px-4 py-2 border-b border-gray-700">
+                      <span className="text-xs font-medium text-gray-400">Process Flow Diagram</span>
+                    </div>
+                    <MermaidDiagram 
+                      chart={patternDiagrams[selectedTechnique.id as keyof typeof patternDiagrams]}
+                      id={`diagram-${selectedTechnique.id}`}
+                    />
+                  </div>
+                ) : (
+                  <div className="bg-gray-800 rounded-lg p-8 border border-gray-700 text-center">
+                    <GitBranch className="w-12 h-12 mx-auto text-gray-500 mb-4" />
+                    <p className="text-gray-400">Diagram coming soon for this pattern</p>
+                  </div>
+                )}
               </section>
 
               {/* Key Features */}
