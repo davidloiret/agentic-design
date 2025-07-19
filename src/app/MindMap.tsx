@@ -592,8 +592,9 @@ export const MindMap = ({
             <li>• Green lines show strong technique relationships</li>
             <li>• Gray dashed lines show weak relationships</li>
             <li>• Purple lines connect related categories</li>
-            <li>• Use mouse wheel to zoom</li>
-            <li>• Drag to pan around</li>
+            <li>• Use mouse wheel to zoom (0.05x - 5.0x)</li>
+            <li>• Drag to pan around the entire map</li>
+            <li>• Use controls (bottom-right) for fit view</li>
           </ul>
         </div>
 
@@ -662,7 +663,7 @@ export const MindMap = ({
           nodeTypes={nodeTypes}
           connectionMode={ConnectionMode.Loose}
           fitView
-          fitViewOptions={{ padding: 0.4, minZoom: 0.2, maxZoom: 1.0 }}
+          fitViewOptions={{ padding: 0.2, minZoom: 0.05, maxZoom: 5.0 }}
           defaultEdgeOptions={{
             style: { strokeWidth: 2, stroke: '#6B7280' },
             type: 'straight',
