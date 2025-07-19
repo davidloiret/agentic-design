@@ -12,6 +12,7 @@ import {
   MiniMap,
   Position,
   ConnectionMode,
+  Handle,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 
@@ -41,31 +42,54 @@ interface UseCase {
 
 // Custom Node Components
 const HubNode = ({ data }: { data: { label: string } }) => (
-  <div className="px-6 py-4 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 border-4 border-blue-300 shadow-lg">
-    <div className="text-white font-bold text-center text-sm whitespace-nowrap">
-      {data.label}
+  <>
+    <Handle type="source" position={Position.Top} style={{ background: '#3B82F6' }} />
+    <Handle type="source" position={Position.Right} style={{ background: '#3B82F6' }} />
+    <Handle type="source" position={Position.Bottom} style={{ background: '#3B82F6' }} />
+    <Handle type="source" position={Position.Left} style={{ background: '#3B82F6' }} />
+    <div className="px-6 py-4 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 border-4 border-blue-300 shadow-lg">
+      <div className="text-white font-bold text-center text-sm whitespace-nowrap">
+        {data.label}
+      </div>
     </div>
-  </div>
+  </>
 );
 
-const CategoryNode = ({ data }: { data: { label: string; icon: string; expanded: boolean; onClick: () => void } }) => (
-  <div 
-    className={`px-4 py-3 rounded-lg border-2 cursor-pointer transition-all shadow-md ${
-      data.expanded 
-        ? 'bg-green-600 border-green-400 text-white' 
-        : 'bg-gray-700 border-gray-500 text-gray-200 hover:border-gray-400'
-    }`}
-    onClick={data.onClick}
-  >
-    <div className="flex items-center gap-2">
-      <span className="text-lg">{data.icon}</span>
-      <span className="font-medium text-sm">{data.label}</span>
-      <span className="text-xs ml-2">{data.expanded ? '−' : '+'}</span>
-    </div>
-  </div>
-);
+const CategoryNode = ({ data }: { data: { label: string; icon: string; expanded: boolean; onClick: () => void; side?: number } }) => {
+  // Determine source handle position based on side
+  const getSourcePosition = () => {
+    switch (data.side) {
+      case 0: return Position.Right;  // Right side - source on right
+      case 1: return Position.Bottom; // Bottom side - source on bottom
+      case 2: return Position.Left;   // Left side - source on left
+      case 3: return Position.Top;    // Top side - source on top
+      default: return Position.Right;
+    }
+  };
 
-const TechniqueNode = ({ data }: { data: { label: string; icon: string; complexity: string; onClick: () => void } }) => {
+  return (
+    <>
+      <Handle type="target" position={Position.Left} style={{ background: '#6B7280' }} />
+      <Handle type="source" position={getSourcePosition()} style={{ background: '#6B7280' }} />
+      <div 
+        className={`px-4 py-3 rounded-lg border-2 cursor-pointer transition-all shadow-md ${
+          data.expanded 
+            ? 'bg-green-600 border-green-400 text-white' 
+            : 'bg-gray-700 border-gray-500 text-gray-200 hover:border-gray-400'
+        }`}
+        onClick={data.onClick}
+      >
+        <div className="flex items-center gap-2">
+          <span className="text-lg">{data.icon}</span>
+          <span className="font-medium text-sm">{data.label}</span>
+          <span className="text-xs ml-2">{data.expanded ? '−' : '+'}</span>
+        </div>
+      </div>
+    </>
+  );
+};
+
+const TechniqueNode = ({ data }: { data: { label: string; icon: string; complexity: string; onClick: () => void; side?: number } }) => {
   const complexityColors = {
     'low': 'bg-green-500 border-green-400',
     'medium': 'bg-yellow-500 border-yellow-400', 
@@ -73,25 +97,45 @@ const TechniqueNode = ({ data }: { data: { label: string; icon: string; complexi
     'very-high': 'bg-purple-500 border-purple-400'
   };
 
+  // Determine target handle position based on side
+  const getTargetPosition = () => {
+    switch (data.side) {
+      case 0: return Position.Left;   // Right side - target on left
+      case 1: return Position.Top;    // Bottom side - target on top
+      case 2: return Position.Right;  // Left side - target on right
+      case 3: return Position.Bottom; // Top side - target on bottom
+      default: return Position.Left;
+    }
+  };
+
   return (
-    <div 
-      className={`px-3 py-2 rounded-full border-2 cursor-pointer transition-all shadow-sm ${
-        complexityColors[data.complexity as keyof typeof complexityColors] || 'bg-gray-500 border-gray-400'
-      } text-white hover:scale-105`}
-      onClick={data.onClick}
-    >
-      <div className="flex items-center gap-1">
-        <span className="text-sm">{data.icon}</span>
-        <span className="font-medium text-xs">{data.label}</span>
+    <>
+      <Handle type="target" position={getTargetPosition()} style={{ background: '#9CA3AF' }} />
+      <div 
+        className={`px-3 py-2 rounded-full border-2 cursor-pointer transition-all shadow-sm ${
+          complexityColors[data.complexity as keyof typeof complexityColors] || 'bg-gray-500 border-gray-400'
+        } text-white hover:scale-105`}
+        onClick={data.onClick}
+      >
+        <div className="flex items-center gap-1">
+          <span className="text-sm">{data.icon}</span>
+          <span className="font-medium text-xs">{data.label}</span>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
 const UseCaseNode = ({ data }: { data: { label: string } }) => (
-  <div className="px-2 py-1 rounded-md bg-pink-600 border border-pink-400 text-white shadow-sm">
-    <div className="text-xs font-medium text-center">{data.label}</div>
-  </div>
+  <>
+    <Handle type="target" position={Position.Left} style={{ background: '#BE185D' }} />
+    <Handle type="target" position={Position.Right} style={{ background: '#BE185D' }} />
+    <Handle type="target" position={Position.Top} style={{ background: '#BE185D' }} />
+    <Handle type="target" position={Position.Bottom} style={{ background: '#BE185D' }} />
+    <div className="px-2 py-1 rounded-md bg-pink-600 border border-pink-400 text-white shadow-sm">
+      <div className="text-xs font-medium text-center">{data.label}</div>
+    </div>
+  </>
 );
 
 const nodeTypes = {
@@ -131,107 +175,281 @@ export const MindMap = ({
     const nodeList: Node[] = [];
     const edgeList: Edge[] = [];
 
+    // Collision detection utilities for XMind layout
+    const getNodeDimensions = (type: string) => {
+      const dimensions = {
+        hub: { width: 220, height: 80 },
+        category: { width: 200, height: 60 },
+        technique: { width: 140, height: 50 },
+        usecase: { width: 120, height: 40 }
+      };
+      return dimensions[type as keyof typeof dimensions] || { width: 140, height: 50 };
+    };
+
+    const getNodeBounds = (x: number, y: number, type: string) => {
+      const { width, height } = getNodeDimensions(type);
+      return {
+        left: x - width / 2 - 20, // Add 20px margin
+        right: x + width / 2 + 20,
+        top: y - height / 2 - 20,
+        bottom: y + height / 2 + 20,
+        width: width + 40,
+        height: height + 40
+      };
+    };
+
+    const checkCollision = (bounds1: any, bounds2: any) => {
+      return !(bounds1.right < bounds2.left || 
+               bounds1.left > bounds2.right || 
+               bounds1.bottom < bounds2.top || 
+               bounds1.top > bounds2.bottom);
+    };
+
+    const findNonCollidingPosition = (idealX: number, idealY: number, type: string, placedNodes: any[], side: number, categoryId?: string) => {
+      let bestX = idealX;
+      let bestY = idealY;
+      let attempt = 0;
+      const maxAttempts = 15;
+
+      // Define stricter group boundaries to prevent cross-contamination
+      const groupBoundaries = {
+        0: { minX: hubX + 300, maxX: hubX + 1400, minY: hubY - 600, maxY: hubY + 600 }, // Right side - more restricted
+        1: { minX: hubX - 600, maxX: hubX + 600, minY: hubY + 300, maxY: hubY + 1200 }, // Bottom side  
+        2: { minX: hubX - 1400, maxX: hubX - 300, minY: hubY - 600, maxY: hubY + 600 }, // Left side - more restricted
+        3: { minX: hubX - 600, maxX: hubX + 600, minY: hubY - 1200, maxY: hubY - 300 }  // Top side
+      };
+
+      while (attempt < maxAttempts) {
+        const bounds = getNodeBounds(bestX, bestY, type);
+        let hasCollision = false;
+
+        // Check for collisions with all nodes to prevent overlaps
+        for (const node of placedNodes) {
+          const existingBounds = getNodeBounds(node.x, node.y, node.type);
+          
+          // For techniques from different categories, add extra spacing
+          if (type === 'technique' && node.type === 'technique' && 
+              node.categoryId !== categoryId && categoryId) {
+            // Expand bounds for cross-category collision detection
+            existingBounds.left -= 40;
+            existingBounds.right += 40;
+            existingBounds.top -= 40;
+            existingBounds.bottom += 40;
+          }
+          
+          if (checkCollision(bounds, existingBounds)) {
+            hasCollision = true;
+            break;
+          }
+        }
+
+        // Check if position is within group boundaries
+        const boundary = groupBoundaries[side as keyof typeof groupBoundaries];
+        const withinBounds = bestX >= boundary.minX && bestX <= boundary.maxX && 
+                           bestY >= boundary.minY && bestY <= boundary.maxY;
+
+        if (!hasCollision && withinBounds) {
+          return { x: bestX, y: bestY };
+        }
+
+        // Adjust position within group boundaries with strict separation
+        attempt++;
+        const offset = attempt * 40; // Larger increments to avoid cross-contamination
+        
+        switch (side) {
+          case 0: // Right side - stay strictly within right zone
+            if (attempt % 2 === 0) {
+              bestX = Math.min(idealX + offset, boundary.maxX - 100);
+              bestX = Math.max(bestX, boundary.minX + 50); // Ensure minimum distance from center
+            } else {
+              bestY = idealY + (attempt % 4 < 2 ? offset : -offset);
+            }
+            break;
+          case 1: // Bottom side - stay strictly within bottom zone
+            if (attempt % 2 === 0) {
+              bestY = Math.min(idealY + offset, boundary.maxY - 100);
+              bestY = Math.max(bestY, boundary.minY + 50);
+            } else {
+              bestX = idealX + (attempt % 4 < 2 ? offset : -offset);
+            }
+            break;
+          case 2: // Left side - stay strictly within left zone
+            if (attempt % 2 === 0) {
+              bestX = Math.max(idealX - offset, boundary.minX + 100);
+              bestX = Math.min(bestX, boundary.maxX - 50); // Ensure maximum distance from center
+            } else {
+              bestY = idealY + (attempt % 4 < 2 ? offset : -offset);
+            }
+            break;
+          case 3: // Top side - stay strictly within top zone
+            if (attempt % 2 === 0) {
+              bestY = Math.max(idealY - offset, boundary.minY + 100);
+              bestY = Math.min(bestY, boundary.maxY - 50);
+            } else {
+              bestX = idealX + (attempt % 4 < 2 ? offset : -offset);
+            }
+            break;
+        }
+
+        // Ensure we stay within boundaries
+        bestX = Math.max(boundary.minX + 50, Math.min(bestX, boundary.maxX - 50));
+        bestY = Math.max(boundary.minY + 50, Math.min(bestY, boundary.maxY - 50));
+      }
+
+      return { x: bestX, y: bestY };
+    };
+
+    // Track placed nodes for collision detection
+    const placedNodes: Array<{x: number, y: number, type: string, categoryId?: string}> = [];
+
     // Central hub
+    const hubX = 600;
+    const hubY = 400;
+    placedNodes.push({ x: hubX, y: hubY, type: 'hub' });
+    
     nodeList.push({
       id: 'hub',
       type: 'hub',
-      position: { x: 400, y: 300 },
+      position: { x: hubX, y: hubY },
       data: { label: 'AI Reasoning Patterns' },
-      sourcePosition: Position.Right,
-      targetPosition: Position.Left,
     });
 
-    // Add a test edge to ensure edges work
-    nodeList.push({
-      id: 'test-node',
-      type: 'category',
-      position: { x: 600, y: 300 },
-      data: { label: 'Test', icon: '🔧', expanded: false, onClick: () => {} },
-      sourcePosition: Position.Right,
-      targetPosition: Position.Left,
-    });
-
-    edgeList.push({
-      id: 'test-edge',
-      source: 'hub',
-      target: 'test-node',
-      type: 'smoothstep',
-      style: { stroke: '#FF0000', strokeWidth: 5, opacity: 1 },
-      animated: false,
-    });
-
-    // Categories positioned in a circle around the hub
-    const categoryAngleStep = (2 * Math.PI) / (categories.length - 1);
-    const categoryRadius = 200;
-
-    categories.slice(1).forEach((category, index) => {
-      const angle = index * categoryAngleStep;
-      const x = 400 + categoryRadius * Math.cos(angle);
-      const y = 300 + categoryRadius * Math.sin(angle);
+    // Perfect XMind cardinal layout with even distribution
+    const availableCategories = categories.slice(1);
+    const branchCount = availableCategories.length;
+    
+    // Ultra-generous XMind spacing to prevent all overlaps
+    const branchDistance = 550; // Distance from hub to categories (was 450)
+    const categorySpacing = 300; // Spacing between categories on same side (was 200)
+    
+    // Calculate even distribution across 4 sides
+    const categoriesPerSide = Math.ceil(branchCount / 4);
+    
+    availableCategories.forEach((category, index) => {
       const isExpanded = expandedCategories.has(category.id);
+      
+      // Determine which side this category belongs to
+      const side = Math.floor(index / categoriesPerSide);
+      const positionOnSide = index % categoriesPerSide;
+      
+      // Calculate offset from center for categories on the same side
+      const offset = (positionOnSide - (categoriesPerSide - 1) / 2) * categorySpacing;
+      
+      let categoryX, categoryY;
+      
+      switch (side) {
+        case 0: // Right side - all categories at same X, varying Y
+          categoryX = hubX + branchDistance;
+          categoryY = hubY + offset;
+          break;
+        case 1: // Bottom side - all categories at same Y, varying X  
+          categoryX = hubX + offset;
+          categoryY = hubY + branchDistance;
+          break;
+        case 2: // Left side - all categories at same X, varying Y
+          categoryX = hubX - branchDistance;
+          categoryY = hubY + offset;
+          break;
+        case 3: // Top side - all categories at same Y, varying X
+        default:
+          categoryX = hubX + offset;
+          categoryY = hubY - branchDistance;
+          break;
+      }
+
+      // Use collision detection for category placement
+      const categoryPosition = findNonCollidingPosition(categoryX, categoryY, 'category', placedNodes, side, category.id);
+      placedNodes.push({ x: categoryPosition.x, y: categoryPosition.y, type: 'category', categoryId: category.id });
 
       nodeList.push({
         id: `category-${category.id}`,
         type: 'category',
-        position: { x, y },
+        position: { x: categoryPosition.x, y: categoryPosition.y },
         data: { 
           label: category.name,
           icon: category.icon,
           expanded: isExpanded,
-          onClick: () => toggleCategoryExpansion(category.id)
+          onClick: () => toggleCategoryExpansion(category.id),
+          side: side // Pass side info for handle positioning
         },
-        sourcePosition: Position.Right,
-        targetPosition: Position.Left,
       });
 
-      // Connect to hub
+      // Connect to hub with clean straight lines
       edgeList.push({
         id: `hub-${category.id}`,
         source: 'hub',
         target: `category-${category.id}`,
-        type: 'smoothstep',
+        type: 'straight', // Clean straight lines for XMind appearance
         style: { 
-          stroke: '#3B82F6', 
-          strokeWidth: 4,
+          stroke: '#4A90E2', 
+          strokeWidth: 3,
           opacity: 1
         },
         animated: false,
       });
 
-      // Add techniques if category is expanded
+      // Add techniques as clean rectangular sub-groups if category is expanded
       if (isExpanded) {
         const categoryTechniques = techniques.filter(t => t.category === category.id);
-        const techniqueAngleStep = Math.PI / Math.max(categoryTechniques.length + 1, 2);
-        const techniqueRadius = 120;
-
+        
+        // Ultra-generous XMind sub-branch spacing to eliminate overlaps
+        const subBranchDistance = 450; // Distance from category to techniques (was 350)
+        const techniqueSpacing = 150; // Spacing between techniques (was 100)
+        
         categoryTechniques.forEach((technique, techIndex) => {
-          const techAngle = angle + (techIndex - categoryTechniques.length / 2) * techniqueAngleStep * 0.5;
-          const techX = x + techniqueRadius * Math.cos(techAngle);
-          const techY = y + techniqueRadius * Math.sin(techAngle);
+          const techniqueCount = categoryTechniques.length;
+          let techniqueX, techniqueY;
+          
+          // Use side-based logic for XMind-style alignment
+          switch (side) {
+            case 0: // Right side - align left edge, techniques extend right
+              techniqueX = categoryPosition.x + subBranchDistance;
+              techniqueY = categoryPosition.y + (techIndex - (techniqueCount - 1) / 2) * techniqueSpacing;
+              break;
+              
+            case 1: // Bottom side - align top edge, techniques extend down
+              techniqueX = categoryPosition.x + (techIndex - (techniqueCount - 1) / 2) * techniqueSpacing;
+              techniqueY = categoryPosition.y + subBranchDistance;
+              break;
+              
+            case 2: // Left side - align right edge, techniques extend left
+              techniqueX = categoryPosition.x - subBranchDistance;
+              techniqueY = categoryPosition.y + (techIndex - (techniqueCount - 1) / 2) * techniqueSpacing;
+              break;
+              
+            case 3: // Top side - align bottom edge, techniques extend up
+            default:
+              techniqueX = categoryPosition.x + (techIndex - (techniqueCount - 1) / 2) * techniqueSpacing;
+              techniqueY = categoryPosition.y - subBranchDistance;
+              break;
+          }
+
+          // Use collision detection for technique placement
+          const techniquePosition = findNonCollidingPosition(techniqueX, techniqueY, 'technique', placedNodes, side, category.id);
+          placedNodes.push({ x: techniquePosition.x, y: techniquePosition.y, type: 'technique', categoryId: category.id });
 
           nodeList.push({
             id: `technique-${technique.id}`,
             type: 'technique',
-            position: { x: techX, y: techY },
+            position: { x: techniquePosition.x, y: techniquePosition.y },
             data: { 
-              label: technique.abbr || technique.name.split(' ')[0],
+              label: technique.abbr || technique.name.split(' ').slice(0, 2).join(' '),
               icon: technique.icon,
               complexity: technique.complexity,
-              onClick: () => onTechniqueSelect(technique)
+              onClick: () => onTechniqueSelect(technique),
+              side: side // Pass side info for handle positioning
             },
-            sourcePosition: Position.Right,
-            targetPosition: Position.Left,
           });
 
-          // Connect to category
+          // Connect to category with clean straight lines
           edgeList.push({
             id: `category-${category.id}-technique-${technique.id}`,
             source: `category-${category.id}`,
             target: `technique-${technique.id}`,
-            type: 'smoothstep',
+            type: 'straight', // Clean straight lines for sub-branches
             style: { 
-              stroke: '#6B7280', 
-              strokeWidth: 3,
+              stroke: '#7B8794', 
+              strokeWidth: 2,
               opacity: 0.8
             },
             animated: false,
@@ -240,122 +458,8 @@ export const MindMap = ({
       }
     });
 
-    // Add technique-to-technique connections based on shared use cases
-    const visibleTechniques = techniques.filter(t => expandedCategories.has(t.category));
-    
-    if (showRelationships) {
-      // Create technique-to-technique relationships
-      visibleTechniques.forEach(technique1 => {
-        visibleTechniques.forEach(technique2 => {
-          if (technique1.id !== technique2.id && technique1.id < technique2.id) { // Avoid duplicates
-            const sharedUseCases = technique1.useCases.filter(uc => technique2.useCases.includes(uc));
-            
-            if (sharedUseCases.length >= 2) { // Strong relationship
-              edgeList.push({
-                id: `technique-relation-${technique1.id}-${technique2.id}`,
-                source: `technique-${technique1.id}`,
-                target: `technique-${technique2.id}`,
-                type: 'smoothstep',
-                style: { 
-                  stroke: '#10B981', 
-                  strokeWidth: 3,
-                  opacity: 0.8
-                },
-                animated: false,
-                label: `${sharedUseCases.length} shared`,
-              });
-            } else if (sharedUseCases.length === 1) { // Weak relationship
-              edgeList.push({
-                id: `technique-weak-${technique1.id}-${technique2.id}`,
-                source: `technique-${technique1.id}`,
-                target: `technique-${technique2.id}`,
-                type: 'straight',
-                style: { 
-                  stroke: '#9CA3AF', 
-                  strokeWidth: 2,
-                  strokeDasharray: '5,5',
-                  opacity: 0.6
-                },
-                animated: false,
-              });
-            }
-          }
-        });
-      });
-    }
-
-    // Add use case connections for visible techniques
-    const commonUseCases = useCases.slice(0, 6); // Show more use cases
-
-    commonUseCases.forEach((useCase, index) => {
-      const relatedTechniques = visibleTechniques.filter(t => t.useCases.includes(useCase.id));
-      
-      if (relatedTechniques.length >= 2) {
-        // Position use case nodes around the outer edge
-        const useCaseAngle = (index / commonUseCases.length) * 2 * Math.PI;
-        const useCaseRadius = 380;
-        const useCaseX = 400 + useCaseRadius * Math.cos(useCaseAngle);
-        const useCaseY = 300 + useCaseRadius * Math.sin(useCaseAngle);
-
-        nodeList.push({
-          id: `usecase-${useCase.id}`,
-          type: 'usecase',
-          position: { x: useCaseX, y: useCaseY },
-          data: { label: useCase.name.split(' ').slice(0, 2).join(' ') }, // Show more text
-          sourcePosition: Position.Right,
-          targetPosition: Position.Left,
-        });
-
-        // Connect techniques to use case with curved edges
-        relatedTechniques.forEach(technique => {
-          edgeList.push({
-            id: `technique-${technique.id}-usecase-${useCase.id}`,
-            source: `technique-${technique.id}`,
-            target: `usecase-${useCase.id}`,
-            type: 'smoothstep',
-            style: { 
-              stroke: '#BE185D', 
-              strokeWidth: 2, 
-              strokeDasharray: '5,5',
-              opacity: 0.7 
-            },
-            animated: false,
-          });
-        });
-      }
-    });
-
-    // Add category relationships based on technique overlap
-    const expandedCats = categories.slice(1).filter(cat => expandedCategories.has(cat.id));
-    expandedCats.forEach(cat1 => {
-      expandedCats.forEach(cat2 => {
-        if (cat1.id !== cat2.id && cat1.id < cat2.id) {
-          const cat1Techniques = techniques.filter(t => t.category === cat1.id);
-          const cat2Techniques = techniques.filter(t => t.category === cat2.id);
-          
-          // Check for shared use cases between categories
-          const cat1UseCases = new Set(cat1Techniques.flatMap(t => t.useCases));
-          const cat2UseCases = new Set(cat2Techniques.flatMap(t => t.useCases));
-          const sharedUseCases = [...cat1UseCases].filter(uc => cat2UseCases.has(uc));
-          
-          if (sharedUseCases.length >= 2) {
-            edgeList.push({
-              id: `category-relation-${cat1.id}-${cat2.id}`,
-              source: `category-${cat1.id}`,
-              target: `category-${cat2.id}`,
-              type: 'smoothstep',
-              style: { 
-                stroke: '#8B5CF6', 
-                strokeWidth: 3,
-                opacity: 0.6,
-                strokeDasharray: '8,4'
-              },
-              animated: false,
-            });
-          }
-        }
-      });
-    });
+    // Disable relationship connections to keep clean XMind appearance
+    // (Can be re-enabled by setting showRelationships, but disabled by default for cleaner layout)
 
     console.log('Mind Map Data:', { nodeCount: nodeList.length, edgeCount: edgeList.length, edges: edgeList });
     return { nodes: nodeList, edges: edgeList };
@@ -534,11 +638,15 @@ export const MindMap = ({
           nodeTypes={nodeTypes}
           connectionMode={ConnectionMode.Loose}
           fitView
-          fitViewOptions={{ padding: 0.1 }}
+          fitViewOptions={{ padding: 0.4, minZoom: 0.2, maxZoom: 1.0 }}
           defaultEdgeOptions={{
-            style: { strokeWidth: 2, stroke: '#ffffff' },
-            type: 'smoothstep',
+            style: { strokeWidth: 2, stroke: '#6B7280' },
+            type: 'straight',
           }}
+          nodesDraggable={true}
+          nodesConnectable={false}
+          elementsSelectable={true}
+          selectNodesOnDrag={false}
           proOptions={{ hideAttribution: true }}
         >
           <Background color="#374151" />

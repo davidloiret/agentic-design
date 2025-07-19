@@ -56,3 +56,7 @@ I need reference, I need schema for each
 -----
 
 Chat with knowledge
+
+see galileo eval
+
+without any framework and with framework
