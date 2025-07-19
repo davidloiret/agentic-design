@@ -101,10 +101,49 @@ export const TechniqueDetails = ({
         <div className="p-6">
           {detailsTab === 'overview' ? (
             <div className="space-y-8">
-              {/* Key Features */}
+              {/* What is this pattern? */}
               <section>
                 <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
                   <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                  What is {selectedTechnique.name}?
+                </h2>
+                <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
+                  <p className="text-gray-200 text-base leading-relaxed mb-4">
+                    {selectedTechnique.description}
+                  </p>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                    <div className="text-center p-3 bg-white/5 rounded-lg">
+                      <div className="text-2xl mb-2">{selectedTechnique.icon}</div>
+                      <div className="text-sm text-gray-400">Pattern Type</div>
+                      <div className="text-sm font-medium text-white">
+                        {categories.find(c => c.id === selectedTechnique.category)?.name || 'Design Pattern'}
+                      </div>
+                    </div>
+                    <div className="text-center p-3 bg-white/5 rounded-lg">
+                      <div className="text-2xl mb-2">
+                        {selectedTechnique.complexity === 'low' ? '🟢' : 
+                         selectedTechnique.complexity === 'medium' ? '🟡' : '🔴'}
+                      </div>
+                      <div className="text-sm text-gray-400">Complexity</div>
+                      <div className="text-sm font-medium text-white capitalize">
+                        {selectedTechnique.complexity}
+                      </div>
+                    </div>
+                    <div className="text-center p-3 bg-white/5 rounded-lg">
+                      <div className="text-2xl mb-2">🎯</div>
+                      <div className="text-sm text-gray-400">Use Cases</div>
+                      <div className="text-sm font-medium text-white">
+                        {selectedTechnique.useCases.length} scenarios
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              {/* Key Features */}
+              <section>
+                <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                  <div className="w-1 h-6 bg-green-500 rounded-full"></div>
                   Key Features
                 </h2>
                 <div className="grid gap-3">
@@ -142,7 +181,7 @@ export const TechniqueDetails = ({
               {/* Example */}
               <section>
                 <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                  <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                  <div className="w-1 h-6 bg-yellow-500 rounded-full"></div>
                   Example
                 </h2>
                 <div className="bg-gray-900 rounded-lg border border-gray-700 overflow-hidden">

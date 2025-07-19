@@ -51,52 +51,47 @@ export const TechniquesList = ({
     });
   };
 
-  const renderTechnique = (technique: any, isNested = false) => {
+  const renderTechnique = (technique: any) => {
+    const isSelected = selectedTechnique?.id === technique.id;
+    
     return (
       <button
         key={technique.id}
         onClick={() => setSelectedTechnique(technique)}
-        className={`w-full text-left p-3 rounded-lg border transition-all group ${isNested ? 'ml-6' : ''} ${
-          selectedTechnique?.id === technique.id
-            ? 'bg-gradient-to-r ' + technique.color + ' border-transparent shadow-lg'
-            : 'bg-gray-800/50 border-gray-700 hover:border-gray-600 hover:bg-gray-800'
+        className={`w-full text-left p-3 rounded-xl transition-all duration-200 group ml-8 ${
+          isSelected
+            ? 'bg-gradient-to-r ' + technique.color + ' shadow-lg scale-[0.98]'
+            : 'bg-gray-800/30 hover:bg-gray-800/50 hover:scale-[0.99]'
         }`}
       >
-        <div className="flex items-start gap-3">
-          <div className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-sm ${
-            selectedTechnique?.id === technique.id 
-              ? 'bg-white/20' 
-              : 'bg-gray-700 group-hover:bg-gray-600'
+        <div className="flex items-center gap-3">
+          <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm transition-colors ${
+            isSelected ? 'bg-white/20 text-white' : 'bg-gray-700/50 text-gray-300 group-hover:bg-gray-600'
           }`}>
             {technique.icon}
           </div>
           <div className="flex-1 min-w-0">
-            <div className="flex items-center justify-between mb-1">
-              <h3 className={`font-semibold text-sm truncate ${
-                selectedTechnique?.id === technique.id ? 'text-white' : 'text-gray-200'
+            <div className="flex items-center justify-between">
+              <h4 className={`font-medium text-sm truncate ${
+                isSelected ? 'text-white' : 'text-gray-200 group-hover:text-white'
               }`}>
                 {technique.name}
                 {technique.abbr && (
-                  <span className="text-xs ml-1 opacity-75">({technique.abbr})</span>
+                  <span className={`text-xs ml-1 ${isSelected ? 'text-white/70' : 'text-gray-400'}`}>
+                    ({technique.abbr})
+                  </span>
                 )}
-              </h3>
-              <ChevronRight className={`w-4 h-4 flex-shrink-0 ml-2 ${
-                selectedTechnique?.id === technique.id ? 'text-white/70' : 'text-gray-500'
-              }`} />
-            </div>
-            <p className={`text-xs leading-relaxed line-clamp-2 ${
-              selectedTechnique?.id === technique.id ? 'text-white/80' : 'text-gray-400'
-            }`}>
-              {technique.description}
-            </p>
-            <div className="mt-2">
-              <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${
-                selectedTechnique?.id === technique.id 
-                  ? 'bg-white/20 text-white/90' 
-                  : 'bg-gray-700 text-gray-300'
-              }`}>
-                Complexity: {technique.complexity}
-              </span>
+              </h4>
+              <div className={`flex items-center gap-2 ${isSelected ? 'text-white/70' : 'text-gray-500'}`}>
+                <span className={`text-xs px-2 py-0.5 rounded-full ${
+                  technique.complexity === 'low' ? 'bg-green-500/20 text-green-400' :
+                  technique.complexity === 'medium' ? 'bg-yellow-500/20 text-yellow-400' :
+                  'bg-red-500/20 text-red-400'
+                }`}>
+                  {technique.complexity}
+                </span>
+                <ChevronRight className="w-3 h-3" />
+              </div>
             </div>
           </div>
         </div>
@@ -104,7 +99,7 @@ export const TechniquesList = ({
     );
   };
 
-  const renderCategory = (category: Category, isChild = false) => {
+  const renderCategory = (category: Category, level = 0) => {
     const hasChildren = category.children && category.children.length > 0;
     const isExpanded = expandedCategories.has(category.id);
     const isSelected = selectedCategory === category.id;
@@ -115,57 +110,72 @@ export const TechniquesList = ({
       return null;
     }
 
+    const isParent = level === 0;
+    const isSubcategory = level === 1;
+
     return (
-      <div key={category.id} className={isChild ? 'ml-4' : ''}>
+      <div key={category.id} className="space-y-1">
         <button
           onClick={() => {
             setSelectedCategory(category.id);
-            if (hasChildren || categoryTechniques.length > 0) {
-              toggleCategory(category.id);
-            }
+            toggleCategory(category.id);
           }}
-          className={`w-full p-3 rounded-lg border transition-all text-left ${
-            isSelected
-              ? 'bg-blue-500 border-blue-400 text-white'
-              : 'bg-gray-800 border-gray-700 hover:border-gray-600 text-gray-300'
+          className={`w-full rounded-xl transition-all duration-200 text-left group ${
+            isParent 
+              ? `p-4 ${isSelected ? 'bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg' : 'bg-gray-800/60 hover:bg-gray-800/80'}`
+              : `p-3 ml-4 ${isSelected ? 'bg-blue-500/20 border border-blue-500/30' : 'bg-gray-800/30 hover:bg-gray-800/50'}`
           }`}
         >
-          <div className="flex items-center gap-2">
-            {(hasChildren || categoryTechniques.length > 0) && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  toggleCategory(category.id);
-                }}
-                className="p-0.5 hover:bg-white/10 rounded flex-shrink-0"
-              >
-                {isExpanded ? (
-                  <ChevronDown className="w-3 h-3" />
-                ) : (
-                  <ChevronRight className="w-3 h-3" />
-                )}
-              </button>
-            )}
-            <span className="text-lg">{category.icon}</span>
-            <div className="flex-1">
-              <div className="font-medium text-sm">{category.name}</div>
-              <div className="text-xs opacity-75">{category.description}</div>
+          <div className="flex items-center gap-3">
+            <div className={`transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`}>
+              <ChevronRight className={`${isParent ? 'w-4 h-4' : 'w-3 h-3'} ${
+                isSelected ? 'text-white' : 'text-gray-400 group-hover:text-gray-300'
+              }`} />
             </div>
-            {(hasChildren || categoryTechniques.length > 0) && (
-              <span className="text-xs text-gray-400 bg-gray-700 px-2 py-0.5 rounded">
+            
+            <div className={`${isParent ? 'w-10 h-10' : 'w-8 h-8'} rounded-xl flex items-center justify-center ${
+              isSelected 
+                ? 'bg-white/20' 
+                : isParent 
+                  ? 'bg-gray-700/50 group-hover:bg-gray-600/50' 
+                  : 'bg-gray-700/30 group-hover:bg-gray-600/30'
+            }`}>
+              <span className={`${isParent ? 'text-lg' : 'text-base'}`}>
+                {category.icon}
+              </span>
+            </div>
+            
+            <div className="flex-1 min-w-0">
+              <h3 className={`font-semibold ${isParent ? 'text-base' : 'text-sm'} truncate ${
+                isSelected ? 'text-white' : 'text-gray-200 group-hover:text-white'
+              }`}>
+                {category.name}
+              </h3>
+              {isParent && (
+                <p className={`text-xs mt-0.5 ${
+                  isSelected ? 'text-white/70' : 'text-gray-400'
+                }`}>
+                  {category.description}
+                </p>
+              )}
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${
+                isSelected 
+                  ? 'bg-white/20 text-white' 
+                  : 'bg-gray-700/50 text-gray-400 group-hover:bg-gray-600/50'
+              }`}>
                 {hasChildren ? getChildCategories(category.id).length : categoryTechniques.length}
               </span>
-            )}
+            </div>
           </div>
         </button>
         
         {isExpanded && (
-          <div className="mt-2 space-y-1">
-            {/* Render child categories first */}
-            {hasChildren && getChildCategories(category.id).map(child => renderCategory(child, true))}
-            
-            {/* Render techniques for this category if it's a leaf category or no children match */}
-            {!hasChildren && categoryTechniques.map(technique => renderTechnique(technique, true))}
+          <div className={`space-y-1 ${isParent ? 'ml-0' : 'ml-4'}`}>
+            {hasChildren && getChildCategories(category.id).map(child => renderCategory(child, level + 1))}
+            {!hasChildren && categoryTechniques.map(technique => renderTechnique(technique))}
           </div>
         )}
       </div>
@@ -173,24 +183,30 @@ export const TechniquesList = ({
   };
 
   return (
-    <div className="lg:col-span-1">
-      <div className="mb-6">
-        <div className="relative mb-4">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-          <input
-            type="text"
-            placeholder="Search patterns..."
-            className="w-full pl-10 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500 transition-colors"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
+    <div className="lg:col-span-1 space-y-6">
+      {/* Search */}
+      <div className="relative">
+        <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+        <input
+          type="text"
+          placeholder="Search patterns..."
+          className="w-full pl-12 pr-4 py-4 bg-gray-800/50 border border-gray-700/50 rounded-2xl focus:outline-none focus:border-blue-500/50 focus:bg-gray-800/70 transition-all duration-200 text-gray-200 placeholder-gray-400"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </div>
+      
+      {/* Categories Tree */}
+      <div className="space-y-3">
+        <div className="flex items-center gap-2 px-1">
+          <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">
+            Design Patterns
+          </h2>
+          <div className="flex-1 h-px bg-gradient-to-r from-gray-600 to-transparent"></div>
         </div>
         
         <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-300">Categories</label>
-          <div className="space-y-2">
-            {parentCategories.map(category => renderCategory(category))}
-          </div>
+          {parentCategories.map(category => renderCategory(category, 0))}
         </div>
       </div>
     </div>
