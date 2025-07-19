@@ -98,7 +98,23 @@ export const AIReasoningExplorer = () => {
   const filteredTechniques = techniques.filter(technique => {
     const matchesSearch = technique.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       technique.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || technique.category === selectedCategory;
+    
+    let matchesCategory = false;
+    if (selectedCategory === 'all') {
+      matchesCategory = true;
+    } else {
+      // Direct category match
+      if (technique.category === selectedCategory) {
+        matchesCategory = true;
+      } else {
+        // Check if selected category is a parent of the technique's category
+        const selectedCat = categories.find(cat => cat.id === selectedCategory);
+        if (selectedCat?.children?.includes(technique.category)) {
+          matchesCategory = true;
+        }
+      }
+    }
+    
     return matchesSearch && matchesCategory;
   });
 

@@ -6,7 +6,7 @@ export const techniques = [
       abbr: 'CoT',
       icon: '🔗',
       color: 'from-blue-500 to-blue-600',
-      category: 'reasoning',
+      category: 'basic-reasoning',
       description: 'Breaks down complex problems into step-by-step intermediate reasoning steps',
       features: [
         'Decomposes complex problems into manageable sub-problems',
@@ -24,7 +24,7 @@ export const techniques = [
       abbr: 'ToT',
       icon: '🌳',
       color: 'from-green-500 to-green-600',
-      category: 'reasoning',
+      category: 'advanced-reasoning',
       description: 'Explores multiple reasoning paths through branching and backtracking',
       features: [
         'Tree structure for exploring alternatives',
@@ -42,7 +42,7 @@ export const techniques = [
       abbr: '',
       icon: '🔄',
       color: 'from-purple-500 to-purple-600',
-      category: 'reasoning',
+      category: 'basic-reasoning',
       description: 'Iteratively evaluates and refines generated content',
       features: [
         'Built-in quality control',
@@ -78,7 +78,7 @@ export const techniques = [
       abbr: '',
       icon: '🎯',
       color: 'from-red-500 to-red-600',
-      category: 'reasoning',
+      category: 'advanced-reasoning',
       description: 'Combines reasoning with acting through external tool use',
       features: [
         'Thought → Action → Observation loop',
@@ -152,7 +152,7 @@ export const techniques = [
       abbr: 'CAI',
       icon: '⚖️',
       color: 'from-red-500 to-orange-500',
-      category: 'safety',
+      category: 'output-filtering',
       description: 'Uses constitutional principles to guide AI behavior and prevent harmful outputs',
       features: [
         'Built-in ethical constraints and principles',
@@ -188,7 +188,7 @@ export const techniques = [
       abbr: '',
       icon: '🧹',
       color: 'from-yellow-500 to-orange-500',
-      category: 'safety',
+      category: 'input-validation',
       description: 'Cleanses and validates user inputs before processing',
       features: [
         'Prompt injection detection',
@@ -226,7 +226,7 @@ export const techniques = [
       abbr: '',
       icon: '🔗',
       color: 'from-blue-400 to-indigo-500',
-      category: 'chaining',
+      category: 'sequential',
       description: 'Links prompts in linear sequence where each output feeds the next input',
       features: [
         'Linear workflow execution',
@@ -244,7 +244,7 @@ export const techniques = [
       abbr: '',
       icon: '⚡',
       color: 'from-indigo-500 to-purple-500',
-      category: 'chaining',
+      category: 'parallel',
       description: 'Executes multiple prompts simultaneously and combines results',
       features: [
         'Concurrent prompt execution',
@@ -262,7 +262,7 @@ export const techniques = [
       abbr: '',
       icon: '🔀',
       color: 'from-purple-500 to-pink-500',
-      category: 'chaining',
+      category: 'conditional',
       description: 'Routes execution through different prompt paths based on conditions',
       features: [
         'Dynamic path selection',
