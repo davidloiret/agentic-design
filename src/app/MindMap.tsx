@@ -41,12 +41,13 @@ interface UseCase {
 }
 
 // Custom Node Components
-const HubNode = ({ data }: { data: { label: string } }) => (
+const HubNode = ({ data }: { data: { label: string; categorySides?: number[] } }) => (
   <>
-    <Handle type="source" position={Position.Top} style={{ background: '#3B82F6' }} />
-    <Handle type="source" position={Position.Right} style={{ background: '#3B82F6' }} />
-    <Handle type="source" position={Position.Bottom} style={{ background: '#3B82F6' }} />
-    <Handle type="source" position={Position.Left} style={{ background: '#3B82F6' }} />
+    {/* Dynamic handles with explicit IDs based on which sides have categories */}
+    {data.categorySides?.includes(0) && <Handle id="right" type="source" position={Position.Right} style={{ background: '#3B82F6' }} />}
+    {data.categorySides?.includes(1) && <Handle id="bottom" type="source" position={Position.Bottom} style={{ background: '#3B82F6' }} />}
+    {data.categorySides?.includes(2) && <Handle id="left" type="source" position={Position.Left} style={{ background: '#3B82F6' }} />}
+    {data.categorySides?.includes(3) && <Handle id="top" type="source" position={Position.Top} style={{ background: '#3B82F6' }} />}
     <div className="px-6 py-4 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 border-4 border-blue-300 shadow-lg">
       <div className="text-white font-bold text-center text-sm whitespace-nowrap">
         {data.label}
@@ -56,7 +57,18 @@ const HubNode = ({ data }: { data: { label: string } }) => (
 );
 
 const CategoryNode = ({ data }: { data: { label: string; icon: string; expanded: boolean; onClick: () => void; side?: number } }) => {
-  // Determine source handle position based on side
+  // Determine target handle position based on side (where hub connects from)
+  const getTargetPosition = () => {
+    switch (data.side) {
+      case 0: return Position.Left;   // Right side - target on left (hub is to the left)
+      case 1: return Position.Top;    // Bottom side - target on top (hub is above)
+      case 2: return Position.Right;  // Left side - target on right (hub is to the right)
+      case 3: return Position.Bottom; // Top side - target on bottom (hub is below)
+      default: return Position.Left;
+    }
+  };
+
+  // Determine source handle position based on side (where techniques connect to)
   const getSourcePosition = () => {
     switch (data.side) {
       case 0: return Position.Right;  // Right side - source on right
@@ -69,7 +81,7 @@ const CategoryNode = ({ data }: { data: { label: string; icon: string; expanded:
 
   return (
     <>
-      <Handle type="target" position={Position.Left} style={{ background: '#6B7280' }} />
+      <Handle type="target" position={getTargetPosition()} style={{ background: '#6B7280' }} />
       <Handle type="source" position={getSourcePosition()} style={{ background: '#6B7280' }} />
       <div 
         className={`px-4 py-3 rounded-lg border-2 cursor-pointer transition-all shadow-md ${
@@ -307,23 +319,32 @@ export const MindMap = ({
     const hubY = 400;
     placedNodes.push({ x: hubX, y: hubY, type: 'hub' });
     
+    // Calculate which sides have categories for dynamic hub handles
+    const availableCategories = categories.slice(1);
+    const branchCount = availableCategories.length;
+    const categoriesPerSide = Math.ceil(branchCount / 4);
+    const usedSides = new Set<number>();
+    
+    availableCategories.forEach((_, index) => {
+      const side = Math.floor(index / categoriesPerSide);
+      usedSides.add(side);
+    });
+    
     nodeList.push({
       id: 'hub',
       type: 'hub',
       position: { x: hubX, y: hubY },
-      data: { label: 'AI Reasoning Patterns' },
+      data: { 
+        label: 'AI Reasoning Patterns',
+        categorySides: Array.from(usedSides)
+      },
     });
 
     // Perfect XMind cardinal layout with even distribution
-    const availableCategories = categories.slice(1);
-    const branchCount = availableCategories.length;
     
     // Ultra-generous XMind spacing to prevent all overlaps
     const branchDistance = 550; // Distance from hub to categories (was 450)
     const categorySpacing = 300; // Spacing between categories on same side (was 200)
-    
-    // Calculate even distribution across 4 sides
-    const categoriesPerSide = Math.ceil(branchCount / 4);
     
     availableCategories.forEach((category, index) => {
       const isExpanded = expandedCategories.has(category.id);
@@ -374,10 +395,13 @@ export const MindMap = ({
         },
       });
 
-      // Connect to hub with clean straight lines
+      // Connect to hub with clean straight lines using correct source handles
+      const sourceHandleId = side === 0 ? 'right' : side === 1 ? 'bottom' : side === 2 ? 'left' : 'top';
+      
       edgeList.push({
         id: `hub-${category.id}`,
         source: 'hub',
+        sourceHandle: sourceHandleId,
         target: `category-${category.id}`,
         type: 'straight', // Clean straight lines for XMind appearance
         style: { 
