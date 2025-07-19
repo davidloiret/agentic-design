@@ -34,3 +34,22 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+
+Evaluate your knowledge => leetcode style / no framework
+
+For each I should add sources etc
+
+
+I want real world example in Typescript / Python / Rust 
+sans Framework 
+juste avec BAML
+
+
+
+For each pattern I want an example that I can run and modify each time in Typescript / Python / Rust
+with and without framework example code
+
+I need reference, I need schema for each
+
+

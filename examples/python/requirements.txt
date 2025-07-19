@@ -1,0 +1,13 @@
+# Python dependencies for agentic design patterns
+# No external dependencies required - uses only Python standard library
+
+# Optional: For enhanced functionality
+# asyncio  # Built into Python 3.7+
+# dataclasses  # Built into Python 3.7+
+# typing  # Built into Python 3.5+
+# enum  # Built into Python 3.4+
+
+# Development dependencies (optional)
+# pytest>=7.0.0
+# black>=22.0.0
+# mypy>=0.900

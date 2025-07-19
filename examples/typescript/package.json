@@ -1,0 +1,25 @@
+{
+  "name": "agentic-design-patterns-typescript",
+  "version": "1.0.0",
+  "description": "TypeScript examples for agentic design patterns",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "tsx",
+    "cot": "tsx chain-of-thought.ts",
+    "tot": "tsx tree-of-thought.ts",
+    "react": "tsx react-pattern.ts",
+    "constitutional": "tsx constitutional-ai.ts",
+    "sequential": "tsx sequential-chaining.ts"
+  },
+  "dependencies": {
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

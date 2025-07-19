@@ -1,7 +1,15 @@
 "use client"
 
-import React, { useState, useEffect } from 'react';
-import { Search, Filter, ChevronRight, Brain, Target, Code, MessageSquare, TreePine, RefreshCw, Network, Zap, X, Check, ArrowRight, Lightbulb, BookOpen, Sparkles } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Search, Filter, ChevronRight, Brain, Target, Code, MessageSquare, TreePine, RefreshCw, Network, Zap, X, Check, ArrowRight, Lightbulb, BookOpen, Sparkles, Share2, FlaskConical, Play, BarChart3, TestTube } from 'lucide-react';
+import { NetworkGraph } from './NetworkGraph';
+import { EvaluationInterface } from './EvaluationInterface';
+import CodeSandbox from '../components/CodeSandbox';
+import { techniques } from './techniques';
+import { useCases } from './use-cases';
+import { categories } from './categories';
+import { constraints } from './constraints';
+import { patternExamples, getPatternExample, type PatternId, type LanguageType } from './pattern-examples';
 
 export const AIReasoningExplorer = () => {
   const [selectedTechnique, setSelectedTechnique] = useState(null);
@@ -11,176 +19,20 @@ export const AIReasoningExplorer = () => {
   const [activeTab, setActiveTab] = useState('explore');
   const [userComplexity, setUserComplexity] = useState('');
   const [userConstraints, setUserConstraints] = useState([]);
-
-  const techniques = [
-    {
-      id: 'cot',
-      name: 'Chain-of-Thought',
-      abbr: 'CoT',
-      icon: '🔗',
-      color: 'from-blue-500 to-blue-600',
-      description: 'Breaks down complex problems into step-by-step intermediate reasoning steps',
-      features: [
-        'Decomposes complex problems into manageable sub-problems',
-        'Provides transparent reasoning process',
-        'Uses "think step by step" approach',
-        'Foundation for advanced agent actions'
-      ],
-      useCases: ['complex-qa', 'math', 'planning', 'analysis'],
-      complexity: 'low',
-      example: 'Problem: "If a train travels 120 miles in 2 hours, and then 180 miles in 3 hours, what is its average speed?"\n\nCoT Response:\n1. First segment: 120 miles in 2 hours\n2. Second segment: 180 miles in 3 hours\n3. Total distance: 120 + 180 = 300 miles\n4. Total time: 2 + 3 = 5 hours\n5. Average speed: 300 ÷ 5 = 60 mph'
-    },
-    {
-      id: 'tot',
-      name: 'Tree-of-Thought',
-      abbr: 'ToT',
-      icon: '🌳',
-      color: 'from-green-500 to-green-600',
-      description: 'Explores multiple reasoning paths through branching and backtracking',
-      features: [
-        'Tree structure for exploring alternatives',
-        'Supports backtracking and revision',
-        'Evaluates multiple solution paths',
-        'Ideal for strategic planning and complex decisions'
-      ],
-      useCases: ['planning', 'complex-qa', 'creative', 'optimization'],
-      complexity: 'high',
-      example: 'Problem: "Plan a 3-day trip to Paris with a $1000 budget"\n\nToT Branches:\n├─ Budget-focused path\n│  ├─ Hostels + street food\n│  └─ Airbnb + cooking\n├─ Experience-focused path\n│  ├─ Mid-range hotel + restaurants\n│  └─ Budget hotel + select dining\n└─ Balanced path (selected)\n   ├─ Budget hotel\n   ├─ Mix of dining options\n   └─ Free/low-cost attractions'
-    },
-    {
-      id: 'self-correction',
-      name: 'Self-Correction',
-      abbr: '',
-      icon: '🔄',
-      color: 'from-purple-500 to-purple-600',
-      description: 'Iteratively evaluates and refines generated content',
-      features: [
-        'Built-in quality control',
-        'Identifies ambiguities and errors',
-        'Iterative refinement process',
-        'Enhances reliability and accuracy'
-      ],
-      useCases: ['content', 'code', 'analysis', 'creative'],
-      complexity: 'medium',
-      example: 'Initial Draft: "AI is good for business"\n\nSelf-Correction Process:\n1. Review: Too vague, lacks specifics\n2. Identify gaps: No examples, no metrics\n3. Revise: "AI enhances business operations through:\n   • 40% reduction in data processing time\n   • Automated customer service (24/7)\n   • Predictive analytics for inventory\n   • Personalized marketing campaigns"'
-    },
-    {
-      id: 'palm',
-      name: 'Program-Aided LMs',
-      abbr: 'PALMs',
-      icon: '💻',
-      color: 'from-indigo-500 to-indigo-600',
-      description: 'Integrates code generation and execution for precise calculations',
-      features: [
-        'Generates executable code',
-        'Deterministic computation',
-        'Handles complex calculations',
-        'Combines language and programming'
-      ],
-      useCases: ['math', 'data-analysis', 'scientific', 'financial'],
-      complexity: 'medium',
-      example: 'Question: "Calculate compound interest for $10,000 at 5% annually for 10 years"\n\nPALM generates:\n```python\nprincipal = 10000\nrate = 0.05\ntime = 10\namount = principal * (1 + rate) ** time\ninterest = amount - principal\nprint(f"Final amount: ${amount:.2f}")\nprint(f"Interest earned: ${interest:.2f}")\n```\nOutput: Final amount: $16,288.95\n        Interest earned: $6,288.95'
-    },
-    {
-      id: 'react',
-      name: 'ReAct',
-      abbr: '',
-      icon: '🎯',
-      color: 'from-red-500 to-red-600',
-      description: 'Combines reasoning with acting through external tool use',
-      features: [
-        'Thought → Action → Observation loop',
-        'Integrates external tools',
-        'Dynamic strategy adaptation',
-        'Real-time environmental feedback'
-      ],
-      useCases: ['research', 'complex-qa', 'automation', 'investigation'],
-      complexity: 'high',
-      example: 'Task: "Find the current CEO of OpenAI"\n\nReAct Process:\nThought: Need to search for current OpenAI leadership\nAction: search("OpenAI CEO 2024")\nObservation: Results show Sam Altman returned as CEO\nThought: Should verify with official source\nAction: fetch("openai.com/about")\nObservation: Confirmed Sam Altman as CEO\nThought: Have reliable answer\nAction: finish("Sam Altman is the current CEO of OpenAI")'
-    },
-    {
-      id: 'cod',
-      name: 'Chain of Debates',
-      abbr: 'CoD',
-      icon: '💬',
-      color: 'from-yellow-500 to-yellow-600',
-      description: 'Multiple AI models collaborate and debate to reach conclusions',
-      features: [
-        'Multi-model collaboration',
-        'Peer review mechanism',
-        'Reduces individual bias',
-        'Leverages collective intelligence'
-      ],
-      useCases: ['analysis', 'decision-making', 'review', 'validation'],
-      complexity: 'high',
-      example: 'Question: "Should a startup use microservices architecture?"\n\nModel A: "Yes, microservices provide scalability and independence"\nModel B: "No, too complex for startups with limited resources"\nModel C: "Depends on team size and growth projections"\n\nDebate Resolution:\n• For startups <10 developers: Monolithic recommended\n• For rapid scaling needs: Microservices beneficial\n• Hybrid approach: Start monolithic, plan for migration'
-    },
-    {
-      id: 'god',
-      name: 'Graph of Debates',
-      abbr: 'GoD',
-      icon: '🕸️',
-      color: 'from-pink-500 to-pink-600',
-      description: 'Non-linear network of arguments with dynamic branching',
-      features: [
-        'Network structure of arguments',
-        'Dynamic idea branching',
-        'Relationship mapping',
-        'Consensus through clustering'
-      ],
-      useCases: ['complex-analysis', 'research', 'policy', 'innovation'],
-      complexity: 'very-high',
-      example: 'Topic: "AI Regulation Strategy"\n\nGraph Structure:\n[Innovation] ←conflicts→ [Safety]\n     ↓ supports           ↑ supports\n[Economic Growth]    [Public Trust]\n     ↓ requires           ↑ requires\n[Investment] ←→ [Transparency]\n\nConsensus Cluster: Adaptive regulation framework'
-    },
-    {
-      id: 'rlvr',
-      name: 'RLVR',
-      abbr: '',
-      icon: '🧬',
-      color: 'from-teal-500 to-teal-600',
-      description: 'Reinforcement Learning with Verifiable Rewards for extended reasoning',
-      features: [
-        'Variable thinking time allocation',
-        'Extended reasoning chains',
-        'Self-correction capabilities',
-        'Trial-and-error learning'
-      ],
-      useCases: ['math', 'complex-qa', 'optimization', 'scientific'],
-      complexity: 'very-high',
-      example: 'Problem: "Find the 47th Fibonacci number"\n\nRLVR Process:\n• Allocates extended thinking time\n• Generates multiple solution attempts\n• Verifies against known Fibonacci properties\n• Self-corrects calculation errors\n• Optimizes approach through iterations\n• Final answer: 2,971,215,073'
-    }
-  ];
-
-  const useCases = [
-    { id: 'complex-qa', name: 'Complex Question Answering', icon: '❓', description: 'Multi-hop queries requiring information synthesis' },
-    { id: 'math', name: 'Mathematical Problem Solving', icon: '🔢', description: 'Calculations and mathematical reasoning' },
-    { id: 'code', name: 'Code Generation & Debugging', icon: '🐛', description: 'Writing and fixing code' },
-    { id: 'planning', name: 'Strategic Planning', icon: '📋', description: 'Developing comprehensive plans and strategies' },
-    { id: 'analysis', name: 'Analysis & Evaluation', icon: '📊', description: 'Deep analysis of data or situations' },
-    { id: 'content', name: 'Content Creation', icon: '✍️', description: 'Writing and creative content generation' },
-    { id: 'research', name: 'Research & Investigation', icon: '🔬', description: 'In-depth research on topics' },
-    { id: 'creative', name: 'Creative Problem Solving', icon: '🎨', description: 'Innovative and creative solutions' },
-    { id: 'data-analysis', name: 'Data Analysis', icon: '📈', description: 'Processing and analyzing data' },
-    { id: 'scientific', name: 'Scientific Computing', icon: '🧪', description: 'Scientific calculations and modeling' },
-    { id: 'financial', name: 'Financial Analysis', icon: '💰', description: 'Financial calculations and planning' },
-    { id: 'decision-making', name: 'Decision Making', icon: '🤔', description: 'Complex decision analysis' },
-    { id: 'automation', name: 'Task Automation', icon: '🤖', description: 'Automating complex workflows' },
-    { id: 'optimization', name: 'Optimization Problems', icon: '⚡', description: 'Finding optimal solutions' },
-    { id: 'validation', name: 'Validation & Review', icon: '✅', description: 'Checking and validating work' },
-    { id: 'policy', name: 'Policy Analysis', icon: '📜', description: 'Analyzing policies and regulations' },
-    { id: 'innovation', name: 'Innovation Strategy', icon: '💡', description: 'Developing innovative approaches' },
-    { id: 'investigation', name: 'Investigation', icon: '🔍', description: 'Investigating complex topics' },
-    { id: 'review', name: 'Peer Review', icon: '👥', description: 'Reviewing and improving work' },
-    { id: 'complex-analysis', name: 'Complex Systems Analysis', icon: '🌐', description: 'Analyzing complex interconnected systems' }
-  ];
-
-  const constraints = [
-    { id: 'speed', name: 'Need fast responses', icon: '⚡' },
-    { id: 'accuracy', name: 'Require high accuracy', icon: '🎯' },
-    { id: 'transparency', name: 'Need explainable results', icon: '🔍' },
-    { id: 'resources', name: 'Limited computational resources', icon: '💻' },
-    { id: 'scale', name: 'Need to handle scale', icon: '📈' }
-  ];
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  
+  // Code sandbox state
+  const [selectedLanguage, setSelectedLanguage] = useState<LanguageType>('typescript');
+  const [detailsTab, setDetailsTab] = useState<'overview' | 'code'>('overview');
+  
+  // Evaluation state
+  const [selectedPatterns, setSelectedPatterns] = useState([]);
+  const [evaluationCriteria, setEvaluationCriteria] = useState([]);
+  const [testScenario, setTestScenario] = useState('');
+  const [selectedModels, setSelectedModels] = useState([]);
+  const [evaluationResults, setEvaluationResults] = useState(null);
+  const [apiTokens, setApiTokens] = useState({});
+  const [showTokenModal, setShowTokenModal] = useState(false);
 
   const getRecommendations = () => {
     if (!selectedUseCase && !userComplexity) return [];
@@ -240,10 +92,12 @@ export const AIReasoningExplorer = () => {
       .slice(0, 5);
   };
 
-  const filteredTechniques = techniques.filter(technique =>
-    technique.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    technique.description.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredTechniques = techniques.filter(technique => {
+    const matchesSearch = technique.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      technique.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = selectedCategory === 'all' || technique.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
 
   const toggleConstraint = (constraintId) => {
     setUserConstraints(prev =>
@@ -261,9 +115,9 @@ export const AIReasoningExplorer = () => {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent">
-                AI Reasoning Techniques Explorer
+                Agentic Design Patterns
               </h1>
-              <p className="text-gray-400 mt-1">Discover the right reasoning technique for your use case</p>
+              <p className="text-gray-400 mt-1">Comprehensive cheatsheet for building agentic systems</p>
             </div>
             <div className="flex items-center gap-2">
               <Sparkles className="w-8 h-8 text-purple-500" />
@@ -278,6 +132,7 @@ export const AIReasoningExplorer = () => {
           <div className="flex gap-6">
             <button
               onClick={() => setActiveTab('explore')}
+              data-tab="explore"
               className={`py-4 px-6 font-medium transition-all border-b-2 ${
                 activeTab === 'explore'
                   ? 'text-blue-400 border-blue-400'
@@ -285,7 +140,7 @@ export const AIReasoningExplorer = () => {
               }`}
             >
               <BookOpen className="w-4 h-4 inline mr-2" />
-              Explore Techniques
+              Explore Patterns
             </button>
             <button
               onClick={() => setActiveTab('recommend')}
@@ -298,6 +153,28 @@ export const AIReasoningExplorer = () => {
               <Lightbulb className="w-4 h-4 inline mr-2" />
               Get Recommendations
             </button>
+            <button
+              onClick={() => setActiveTab('graph')}
+              className={`py-4 px-6 font-medium transition-all border-b-2 ${
+                activeTab === 'graph'
+                  ? 'text-green-400 border-green-400'
+                  : 'text-gray-400 border-transparent hover:text-gray-200'
+              }`}
+            >
+              <Share2 className="w-4 h-4 inline mr-2" />
+              Pattern Network
+            </button>
+            <button
+              onClick={() => setActiveTab('evaluate')}
+              className={`py-4 px-6 font-medium transition-all border-b-2 ${
+                activeTab === 'evaluate'
+                  ? 'text-orange-400 border-orange-400'
+                  : 'text-gray-400 border-transparent hover:text-gray-200'
+              }`}
+            >
+              <FlaskConical className="w-4 h-4 inline mr-2" />
+              Evaluate & Compare
+            </button>
           </div>
         </div>
       </div>
@@ -308,47 +185,92 @@ export const AIReasoningExplorer = () => {
             {/* Techniques List */}
             <div className="lg:col-span-1">
               <div className="mb-6">
-                <div className="relative">
+                <div className="relative mb-4">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                   <input
                     type="text"
-                    placeholder="Search techniques..."
+                    placeholder="Search patterns..."
                     className="w-full pl-10 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500 transition-colors"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
                 </div>
+                
+                {/* Category Filter */}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-300">Categories</label>
+                  <div className="grid grid-cols-1 gap-2">
+                    {categories.map(category => (
+                      <button
+                        key={category.id}
+                        onClick={() => setSelectedCategory(category.id)}
+                        className={`p-3 rounded-lg border transition-all text-left ${
+                          selectedCategory === category.id
+                            ? 'bg-blue-500 border-blue-400 text-white'
+                            : 'bg-gray-800 border-gray-700 hover:border-gray-600 text-gray-300'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="text-lg">{category.icon}</span>
+                          <div>
+                            <div className="font-medium text-sm">{category.name}</div>
+                            <div className="text-xs opacity-75">{category.description}</div>
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {filteredTechniques.map((technique) => (
                   <button
                     key={technique.id}
                     onClick={() => setSelectedTechnique(technique)}
-                    className={`w-full text-left p-4 rounded-lg border transition-all ${
+                    className={`w-full text-left p-4 rounded-lg border transition-all group ${
                       selectedTechnique?.id === technique.id
-                        ? 'bg-gradient-to-r ' + technique.color + ' border-transparent'
-                        : 'bg-gray-800 border-gray-700 hover:border-gray-600'
+                        ? 'bg-gradient-to-r ' + technique.color + ' border-transparent shadow-lg'
+                        : 'bg-gray-800/50 border-gray-700 hover:border-gray-600 hover:bg-gray-800'
                     }`}
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <span className="text-2xl">{technique.icon}</span>
-                        <div>
-                          <h3 className="font-semibold">
+                    <div className="flex items-start gap-3">
+                      <div className={`flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center text-lg ${
+                        selectedTechnique?.id === technique.id 
+                          ? 'bg-white/20' 
+                          : 'bg-gray-700 group-hover:bg-gray-600'
+                      }`}>
+                        {technique.icon}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between mb-1">
+                          <h3 className={`font-semibold text-sm truncate ${
+                            selectedTechnique?.id === technique.id ? 'text-white' : 'text-gray-200'
+                          }`}>
                             {technique.name}
                             {technique.abbr && (
-                              <span className="text-sm ml-2 opacity-75">({technique.abbr})</span>
+                              <span className="text-xs ml-1 opacity-75">({technique.abbr})</span>
                             )}
                           </h3>
-                          <p className={`text-sm mt-1 line-clamp-1 ${
-                            selectedTechnique?.id === technique.id ? 'text-white/80' : 'text-gray-400'
+                          <ChevronRight className={`w-4 h-4 flex-shrink-0 ml-2 ${
+                            selectedTechnique?.id === technique.id ? 'text-white/70' : 'text-gray-500'
+                          }`} />
+                        </div>
+                        <p className={`text-xs leading-relaxed line-clamp-2 ${
+                          selectedTechnique?.id === technique.id ? 'text-white/80' : 'text-gray-400'
+                        }`}>
+                          {technique.description}
+                        </p>
+                        <div className="mt-2">
+                          <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${
+                            selectedTechnique?.id === technique.id 
+                              ? 'bg-white/20 text-white/90' 
+                              : 'bg-gray-700 text-gray-300'
                           }`}>
-                            {technique.description}
-                          </p>
+                            {categories.find(c => c.id === technique.category)?.name}
+                          </span>
                         </div>
                       </div>
-                      <ChevronRight className="w-5 h-5 opacity-50" />
                     </div>
                   </button>
                 ))}
@@ -358,59 +280,169 @@ export const AIReasoningExplorer = () => {
             {/* Technique Details */}
             <div className="lg:col-span-2">
               {selectedTechnique ? (
-                <div className="bg-gray-800 rounded-xl p-8 border border-gray-700">
-                  <div className="mb-6">
-                    <div className="flex items-center gap-4 mb-4">
-                      <span className="text-4xl">{selectedTechnique.icon}</span>
-                      <div>
-                        <h2 className="text-3xl font-bold">
-                          {selectedTechnique.name}
-                          {selectedTechnique.abbr && (
-                            <span className="text-xl ml-2 text-gray-400">({selectedTechnique.abbr})</span>
-                          )}
-                        </h2>
-                        <span className={`inline-block px-3 py-1 rounded-full text-sm mt-2 bg-gradient-to-r ${selectedTechnique.color}`}>
-                          Complexity: {selectedTechnique.complexity}
-                        </span>
+                <div className="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden">
+                  {/* Header Section */}
+                  <div className="bg-gradient-to-r from-gray-800 to-gray-700 p-6 border-b border-gray-600">
+                    <div className="flex items-start gap-4">
+                      <div className="flex-shrink-0">
+                        <div className="w-16 h-16 bg-gray-700 rounded-xl flex items-center justify-center text-2xl">
+                          {selectedTechnique.icon}
+                        </div>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <h1 className="text-2xl font-bold text-white mb-1">
+                              {selectedTechnique.name}
+                              {selectedTechnique.abbr && (
+                                <span className="text-lg ml-2 text-gray-400 font-normal">({selectedTechnique.abbr})</span>
+                              )}
+                            </h1>
+                            <p className="text-gray-300 text-base leading-relaxed mb-3">{selectedTechnique.description}</p>
+                            <div className="flex flex-wrap gap-2">
+                              <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r ${selectedTechnique.color} text-white`}>
+                                Complexity: {selectedTechnique.complexity}
+                              </span>
+                              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-600 text-gray-200">
+                                {categories.find(c => c.id === selectedTechnique.category)?.name || 'Pattern'}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                    <p className="text-lg text-gray-300">{selectedTechnique.description}</p>
                   </div>
 
-                  <div className="mb-8">
-                    <h3 className="text-xl font-semibold mb-4">Key Features</h3>
-                    <ul className="space-y-3">
-                      {selectedTechnique.features.map((feature, idx) => (
-                        <li key={idx} className="flex items-start gap-3">
-                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
-                          <span className="text-gray-300">{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div className="mb-8">
-                    <h3 className="text-xl font-semibold mb-4">Best Use Cases</h3>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedTechnique.useCases.map(useCaseId => {
-                        const useCase = useCases.find(uc => uc.id === useCaseId);
-                        return (
-                          <span
-                            key={useCaseId}
-                            className="px-3 py-1 bg-gray-700 rounded-full text-sm"
-                          >
-                            {useCase?.icon} {useCase?.name}
-                          </span>
-                        );
-                      })}
+                  {/* Details Tabs */}
+                  <div className="border-b border-gray-600">
+                    <div className="flex gap-6 px-6">
+                      <button
+                        onClick={() => setDetailsTab('overview')}
+                        className={`py-4 px-2 font-medium transition-all border-b-2 ${
+                          detailsTab === 'overview'
+                            ? 'text-blue-400 border-blue-400'
+                            : 'text-gray-400 border-transparent hover:text-gray-200'
+                        }`}
+                      >
+                        <BookOpen className="w-4 h-4 inline mr-2" />
+                        Overview
+                      </button>
+                      <button
+                        onClick={() => setDetailsTab('code')}
+                        className={`py-4 px-2 font-medium transition-all border-b-2 ${
+                          detailsTab === 'code'
+                            ? 'text-green-400 border-green-400'
+                            : 'text-gray-400 border-transparent hover:text-gray-200'
+                        }`}
+                      >
+                        <Code className="w-4 h-4 inline mr-2" />
+                        Interactive Code
+                      </button>
                     </div>
                   </div>
 
-                  <div>
-                    <h3 className="text-xl font-semibold mb-4">Example</h3>
-                    <div className="bg-gray-900 rounded-lg p-6 font-mono text-sm">
-                      <pre className="whitespace-pre-wrap text-gray-300">{selectedTechnique.example}</pre>
-                    </div>
+                  {/* Content Sections */}
+                  <div className="p-6">
+                    {detailsTab === 'overview' ? (
+                      <div className="space-y-8">
+                        {/* Key Features */}
+                        <section>
+                          <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                            <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                            Key Features
+                          </h2>
+                          <div className="grid gap-3">
+                            {selectedTechnique.features.map((feature, idx) => (
+                              <div key={idx} className="flex items-start gap-3 p-3 bg-gray-700/30 rounded-lg">
+                                <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                                <span className="text-gray-300 text-sm leading-relaxed">{feature}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </section>
+
+                        {/* Best Use Cases */}
+                        <section>
+                          <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                            <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                            Best Use Cases
+                          </h2>
+                          <div className="grid grid-cols-2 gap-2">
+                            {selectedTechnique.useCases.map(useCaseId => {
+                              const useCase = useCases.find(uc => uc.id === useCaseId);
+                              return (
+                                <div
+                                  key={useCaseId}
+                                  className="flex items-center gap-2 px-3 py-2 bg-gray-700/50 rounded-lg text-sm"
+                                >
+                                  <span className="text-base">{useCase?.icon}</span>
+                                  <span className="text-gray-300 font-medium">{useCase?.name}</span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </section>
+
+                        {/* Example */}
+                        <section>
+                          <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                            <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                            Example
+                          </h2>
+                          <div className="bg-gray-900 rounded-lg border border-gray-700 overflow-hidden">
+                            <div className="bg-gray-800 px-4 py-2 border-b border-gray-700">
+                              <span className="text-xs font-medium text-gray-400">Implementation Example</span>
+                            </div>
+                            <div className="p-4">
+                              <pre className="whitespace-pre-wrap text-sm text-gray-300 leading-relaxed font-mono">{selectedTechnique.example}</pre>
+                            </div>
+                          </div>
+                        </section>
+                      </div>
+                    ) : (
+                      <div className="space-y-6">
+                        {/* Language Selection */}
+                        <div className="flex items-center justify-between">
+                          <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                            <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                            Interactive Code Examples
+                          </h2>
+                          <div className="flex gap-2">
+                            {(['typescript', 'python', 'rust'] as LanguageType[]).map(lang => (
+                              <button
+                                key={lang}
+                                onClick={() => setSelectedLanguage(lang)}
+                                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                                  selectedLanguage === lang
+                                    ? 'bg-blue-600 text-white'
+                                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                                }`}
+                              >
+                                {lang.charAt(0).toUpperCase() + lang.slice(1)}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                        
+                        {/* Code Sandbox */}
+                        {patternExamples[selectedTechnique.id as PatternId] ? (
+                          <CodeSandbox
+                            patternId={selectedTechnique.id}
+                            initialCode={patternExamples[selectedTechnique.id as PatternId][selectedLanguage]}
+                            language={selectedLanguage}
+                            onCodeChange={(code) => {
+                              // Optional: Handle code changes if needed
+                              console.log('Code changed:', code);
+                            }}
+                          />
+                        ) : (
+                          <div className="bg-gray-800 rounded-lg p-8 border border-gray-700 text-center">
+                            <Code className="w-12 h-12 mx-auto text-gray-500 mb-4" />
+                            <p className="text-gray-400">Code examples coming soon for this pattern</p>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
               ) : (
@@ -423,11 +455,11 @@ export const AIReasoningExplorer = () => {
               )}
             </div>
           </div>
-        ) : (
+        ) : activeTab === 'recommend' ? (
           /* Recommendation Tab */
           <div className="max-w-4xl mx-auto">
             <div className="bg-gray-800 rounded-xl p-8 border border-gray-700 mb-8">
-              <h2 className="text-2xl font-bold mb-6">Find Your Perfect Reasoning Technique</h2>
+              <h2 className="text-2xl font-bold mb-6">Find Your Perfect Agentic Pattern</h2>
               
               {/* Use Case Selection */}
               <div className="mb-8">
@@ -509,7 +541,7 @@ export const AIReasoningExplorer = () => {
             {/* Recommendations */}
             {showRecommendations && (
               <div className="space-y-4">
-                <h3 className="text-2xl font-bold mb-4">Recommended Techniques</h3>
+                <h3 className="text-2xl font-bold mb-4">Recommended Patterns</h3>
                 {getRecommendations().map((technique, idx) => (
                   <div
                     key={technique.id}
@@ -559,6 +591,38 @@ export const AIReasoningExplorer = () => {
               </div>
             )}
           </div>
+        ) : activeTab === 'graph' ? (
+          /* Graph Tab */
+          <div className="h-[calc(100vh-16rem)]">
+            <NetworkGraph 
+              techniques={techniques} 
+              categories={categories} 
+              useCases={useCases}
+              onTechniqueSelect={setSelectedTechnique}
+              selectedTechnique={selectedTechnique}
+            />
+          </div>
+        ) : (
+          /* Evaluation Tab */
+          <EvaluationInterface 
+            techniques={techniques}
+            categories={categories}
+            useCases={useCases}
+            selectedPatterns={selectedPatterns}
+            setSelectedPatterns={setSelectedPatterns}
+            evaluationCriteria={evaluationCriteria}
+            setEvaluationCriteria={setEvaluationCriteria}
+            testScenario={testScenario}
+            setTestScenario={setTestScenario}
+            selectedModels={selectedModels}
+            setSelectedModels={setSelectedModels}
+            evaluationResults={evaluationResults}
+            setEvaluationResults={setEvaluationResults}
+            apiTokens={apiTokens}
+            setApiTokens={setApiTokens}
+            showTokenModal={showTokenModal}
+            setShowTokenModal={setShowTokenModal}
+          />
         )}
       </div>
     </div>
