@@ -55,4 +55,5 @@ if (require.main === module) {
   main();
 }
 
-export { ChainOfThoughtSolver, Thought };
+export { ChainOfThoughtSolver };
+export type { Thought };

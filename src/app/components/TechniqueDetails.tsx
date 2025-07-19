@@ -25,7 +25,7 @@ export const TechniqueDetails = ({
 }: TechniqueDetailsProps) => {
   if (!selectedTechnique) {
     return (
-      <div className="lg:col-span-2">
+      <div className="lg:col-span-3">
         <div className="bg-gray-800 rounded-xl p-8 border border-gray-700 flex items-center justify-center h-96">
           <div className="text-center">
             <Brain className="w-16 h-16 mx-auto text-gray-600 mb-4" />
@@ -37,7 +37,7 @@ export const TechniqueDetails = ({
   }
 
   return (
-    <div className="lg:col-span-2">
+    <div className="lg:col-span-3">
       <div className="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden">
         {/* Header Section */}
         <div className="bg-gradient-to-r from-gray-800 to-gray-700 p-6 border-b border-gray-600">
@@ -113,7 +113,7 @@ export const TechniqueDetails = ({
                   <p className="text-gray-200 text-base leading-relaxed mb-4">
                     {selectedTechnique.description}
                   </p>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4 mt-4">
                     <div className="text-center p-3 bg-white/5 rounded-lg">
                       <div className="text-2xl mb-2">{selectedTechnique.icon}</div>
                       <div className="text-sm text-gray-400">Pattern Type</div>
@@ -136,6 +136,13 @@ export const TechniqueDetails = ({
                       <div className="text-sm text-gray-400">Use Cases</div>
                       <div className="text-sm font-medium text-white">
                         {selectedTechnique.useCases.length} scenarios
+                      </div>
+                    </div>
+                    <div className="text-center p-3 bg-white/5 rounded-lg">
+                      <div className="text-2xl mb-2">⚡</div>
+                      <div className="text-sm text-gray-400">Features</div>
+                      <div className="text-sm font-medium text-white">
+                        {selectedTechnique.features?.length || 0} features
                       </div>
                     </div>
                   </div>
@@ -188,7 +195,7 @@ export const TechniqueDetails = ({
                   <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
                   Best Use Cases
                 </h2>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
                   {selectedTechnique.useCases.map((useCaseId: string) => {
                     const useCase = useCases.find(uc => uc.id === useCaseId);
                     return (

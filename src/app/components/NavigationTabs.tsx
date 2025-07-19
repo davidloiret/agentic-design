@@ -1,4 +1,4 @@
-import { BookOpen, Lightbulb, Share2, FlaskConical } from 'lucide-react';
+import { BookOpen, Lightbulb, Share2, FlaskConical, Brain, Boxes } from 'lucide-react';
 
 interface NavigationTabsProps {
   activeTab: string;
@@ -20,6 +20,10 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
         return 'text-green-400 border-green-400';
       case 'evaluate':
         return 'text-orange-400 border-orange-400';
+      case 'mindmap':
+        return 'text-pink-400 border-pink-400';
+      case 'builder':
+        return 'text-cyan-400 border-cyan-400';
       default:
         return 'text-blue-400 border-blue-400';
     }
@@ -29,12 +33,14 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
     { id: 'explore', label: 'Explore Patterns', icon: BookOpen },
     { id: 'recommend', label: 'Get Recommendations', icon: Lightbulb },
     { id: 'graph', label: 'Pattern Network', icon: Share2 },
+    { id: 'mindmap', label: 'Mind Map', icon: Brain },
+    { id: 'builder', label: 'System Builder', icon: Boxes },
     { id: 'evaluate', label: 'Evaluate & Compare', icon: FlaskConical },
   ];
 
   return (
     <div className="bg-gray-900 border-b border-gray-700">
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="mx-auto px-6">
         <div className="flex gap-6">
           {tabs.map((tab) => {
             const Icon = tab.icon;

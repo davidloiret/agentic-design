@@ -3,7 +3,7 @@ import { Sparkles } from 'lucide-react';
 export const Header = () => {
   return (
     <div className="bg-gradient-to-r from-gray-900 to-gray-800 border-b border-gray-700">
-      <div className="max-w-7xl mx-auto px-4 py-6">
+      <div className="mx-auto px-6 py-6">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent">

@@ -32,15 +32,15 @@ export const RecommendationTab = ({
   constraints,
 }: RecommendationTabProps) => {
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="mx-auto">
       <div className="bg-gray-800 rounded-xl p-8 border border-gray-700 mb-8">
         <h2 className="text-2xl font-bold mb-6">Find Your Perfect Agentic Pattern</h2>
         
         {/* Use Case Selection */}
         <div className="mb-8">
           <label className="block text-lg font-medium mb-4">What's your primary use case?</label>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            {useCases.slice(0, 12).map(useCase => (
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+            {useCases.map(useCase => (
               <button
                 key={useCase.id}
                 onClick={() => setSelectedUseCase(useCase.id)}

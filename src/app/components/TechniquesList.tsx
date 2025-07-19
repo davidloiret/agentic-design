@@ -190,7 +190,7 @@ export const TechniquesList = ({
         <input
           type="text"
           placeholder="Search patterns..."
-          className="w-full pl-12 pr-4 py-4 bg-gray-800/50 border border-gray-700/50 rounded-2xl focus:outline-none focus:border-blue-500/50 focus:bg-gray-800/70 transition-all duration-200 text-gray-200 placeholder-gray-400"
+          className="w-full pl-12 pr-4 py-3 bg-gray-800/50 border border-gray-700/50 rounded-xl focus:outline-none focus:border-blue-500/50 focus:bg-gray-800/70 transition-all duration-200 text-gray-200 placeholder-gray-400"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />

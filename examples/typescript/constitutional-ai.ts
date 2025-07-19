@@ -194,4 +194,5 @@ if (require.main === module) {
   main();
 }
 
-export { ConstitutionalAI, ConstitutionalPrinciple, SafetyCheck };
+export { ConstitutionalAI };
+export type { ConstitutionalPrinciple, SafetyCheck };

@@ -2,12 +2,14 @@
 
 import React, { useState } from 'react';
 import { NetworkGraph } from './NetworkGraph';
+import { MindMap } from './MindMap';
 import { EvaluationInterface } from './EvaluationInterface';
 import { Header } from './components/Header';
 import { NavigationTabs } from './components/NavigationTabs';
 import { TechniquesList } from './components/TechniquesList';
 import { TechniqueDetails } from './components/TechniqueDetails';
 import { RecommendationTab } from './components/RecommendationTab';
+import { SystemBuilder } from './components/SystemBuilder';
 import { techniques } from './techniques';
 import { useCases } from './use-cases';
 import { categories } from './categories';
@@ -131,9 +133,9 @@ export const AIReasoningExplorer = () => {
       <Header />
       <NavigationTabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="mx-auto px-6 py-8">
         {activeTab === 'explore' ? (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             <TechniquesList
               techniques={techniques}
               categories={categories}
@@ -180,6 +182,26 @@ export const AIReasoningExplorer = () => {
               useCases={useCases}
               onTechniqueSelect={setSelectedTechnique}
               selectedTechnique={selectedTechnique}
+            />
+          </div>
+        ) : activeTab === 'mindmap' ? (
+          /* Mind Map Tab */
+          <div className="h-[calc(100vh-16rem)]">
+            <MindMap 
+              techniques={techniques} 
+              categories={categories} 
+              useCases={useCases}
+              onTechniqueSelect={setSelectedTechnique}
+              selectedTechnique={selectedTechnique}
+            />
+          </div>
+        ) : activeTab === 'builder' ? (
+          /* System Builder Tab */
+          <div className="h-[calc(100vh-16rem)]">
+            <SystemBuilder 
+              techniques={techniques} 
+              categories={categories} 
+              useCases={useCases}
             />
           </div>
         ) : (

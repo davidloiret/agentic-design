@@ -53,3 +53,6 @@ with and without framework example code
 I need reference, I need schema for each
 
 
+-----
+
+Chat with knowledge
