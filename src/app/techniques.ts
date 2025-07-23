@@ -6,7 +6,7 @@ export const techniques = [
       abbr: 'CoT',
       icon: '🔗',
       color: 'from-blue-500 to-blue-600',
-      category: 'basic-reasoning',
+      category: 'reasoning',
       description: 'Breaks down complex problems into step-by-step intermediate reasoning steps',
       features: [
         'Decomposes complex problems into manageable sub-problems',
@@ -24,7 +24,7 @@ export const techniques = [
       abbr: 'ToT',
       icon: '🌳',
       color: 'from-green-500 to-green-600',
-      category: 'advanced-reasoning',
+      category: 'reasoning',
       description: 'Explores multiple reasoning paths through branching and backtracking',
       features: [
         'Tree structure for exploring alternatives',
@@ -42,7 +42,7 @@ export const techniques = [
       abbr: '',
       icon: '🔄',
       color: 'from-purple-500 to-purple-600',
-      category: 'basic-reasoning',
+      category: 'reasoning',
       description: 'Iteratively evaluates and refines generated content',
       features: [
         'Built-in quality control',
@@ -78,7 +78,7 @@ export const techniques = [
       abbr: '',
       icon: '🎯',
       color: 'from-red-500 to-red-600',
-      category: 'advanced-reasoning',
+      category: 'reasoning',
       description: 'Combines reasoning with acting through external tool use',
       features: [
         'Thought → Action → Observation loop',
@@ -280,7 +280,7 @@ export const techniques = [
       abbr: '',
       icon: '🔄',
       color: 'from-pink-500 to-rose-500',
-      category: 'chaining',
+      category: 'sequential',
       description: 'Creates loops where outputs are fed back as inputs for refinement',
       features: [
         'Iterative improvement cycles',
@@ -298,7 +298,7 @@ export const techniques = [
       abbr: '',
       icon: '🏗️',
       color: 'from-rose-500 to-red-500',
-      category: 'chaining',
+      category: 'parallel',
       description: 'Organizes prompts in hierarchical structure with parent-child relationships',
       features: [
         'Multi-level task decomposition',
@@ -309,5 +309,59 @@ export const techniques = [
       useCases: ['project-planning', 'complex-analysis', 'research-synthesis', 'system-design'],
       complexity: 'high',
       example: 'Business Plan Generation:\n\nLevel 1: Executive Summary\n├─ Level 2: Market Analysis\n│  ├─ Level 3: Competitor Analysis\n│  └─ Level 3: Customer Segments\n├─ Level 2: Financial Projections\n│  ├─ Level 3: Revenue Forecast\n│  └─ Level 3: Cost Analysis\n└─ Level 2: Marketing Strategy\n   ├─ Level 3: Channel Strategy\n   └─ Level 3: Pricing Strategy'
+    },
+    {
+      id: 'iterative-refinement',
+      name: 'Iterative Refinement',
+      abbr: '',
+      icon: '🔄',
+      color: 'from-cyan-500 to-blue-500',
+      category: 'sequential',
+      description: 'Continuously improves outputs through multiple refinement cycles',
+      features: [
+        'Multi-cycle improvement process',
+        'Quality assessment between iterations',
+        'Incremental enhancement tracking',
+        'Convergence criteria evaluation'
+      ],
+      useCases: ['content-polish', 'code-optimization', 'design-iteration', 'research-refinement'],
+      complexity: 'medium',
+      example: 'Essay Improvement Process:\n\nCycle 1: Initial draft\nCritique: Weak arguments, unclear structure\nRefinement: Strengthen arguments, improve flow\n\nCycle 2: Revised draft\nCritique: Better structure, needs examples\nRefinement: Add supporting evidence\n\nCycle 3: Enhanced draft\nCritique: Good content, minor style issues\nRefinement: Polish language, final edit\n\nResult: High-quality, well-structured essay'
+    },
+    {
+      id: 'dynamic-routing',
+      name: 'Dynamic Routing',
+      abbr: '',
+      icon: '🎛️',
+      color: 'from-emerald-500 to-cyan-500',
+      category: 'conditional',
+      description: 'Routes prompts based on real-time analysis and context evaluation',
+      features: [
+        'Context-aware decision making',
+        'Real-time path adaptation',
+        'Multi-criteria routing logic',
+        'Dynamic priority adjustment'
+      ],
+      useCases: ['intelligent-workflows', 'adaptive-systems', 'personalization', 'resource-optimization'],
+      complexity: 'high',
+      example: 'Content Generation Router:\n\nInput: "Create marketing content"\n↓\nContext Analysis:\n• Audience: Technical professionals\n• Channel: LinkedIn\n• Goal: Lead generation\n• Brand voice: Professional\n↓\nRoute Decision: Technical Content Chain\n↓\nSelected Path: Technical whitepaper template\nwith LinkedIn optimization\nand lead capture elements'
+    },
+    {
+      id: 'parallel-synthesis',
+      name: 'Parallel Synthesis',
+      abbr: '',
+      icon: '🧩',
+      color: 'from-violet-500 to-purple-500',
+      category: 'parallel',
+      description: 'Combines multiple parallel processing streams into unified outputs',
+      features: [
+        'Multi-stream processing',
+        'Intelligent result merging',
+        'Conflict resolution strategies',
+        'Quality-weighted aggregation'
+      ],
+      useCases: ['research-synthesis', 'multi-perspective-analysis', 'consensus-building', 'comprehensive-reports'],
+      complexity: 'high',
+      example: 'Market Research Synthesis:\n\nParallel Streams:\n• Stream A: Survey data analysis\n• Stream B: Competitor intelligence\n• Stream C: Industry trend analysis\n• Stream D: Customer interview insights\n\nSynthesis Process:\n1. Weight each stream by reliability\n2. Identify common themes\n3. Resolve contradictions\n4. Generate unified insights\n\nOutput: Comprehensive market intelligence report'
     }
   ];

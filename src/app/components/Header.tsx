@@ -9,7 +9,7 @@ export const Header = () => {
             <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent">
               Agentic Design Patterns
             </h1>
-            <p className="text-gray-400 mt-1">Comprehensive cheatsheet for building agentic systems</p>
+            <p className="text-gray-400 mt-1">Learn how to craft reliable agentic systems</p>
           </div>
           <div className="flex items-center gap-2">
             <Sparkles className="w-8 h-8 text-purple-500" />

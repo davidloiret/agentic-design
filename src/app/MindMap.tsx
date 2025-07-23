@@ -515,7 +515,7 @@ export const MindMap = ({
   return (
     <div className="flex h-full">
       {/* Controls Panel */}
-      <div className="w-80 bg-gray-800 border-r border-gray-700 p-6 overflow-y-auto">
+      <div className="w-80 border bg-gray-800 border-r border-gray-700 p-6 overflow-y-auto">
         <h3 className="text-xl font-bold text-white mb-6">Mind Map Controls</h3>
         
         {/* Expansion Controls */}

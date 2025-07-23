@@ -22,19 +22,30 @@ export const MermaidDiagram = ({ chart, id = 'mermaid-diagram' }: MermaidDiagram
         flowchart: {
           useMaxWidth: false,
           htmlLabels: true,
-          curve: 'basis'
+          curve: 'basis',
+          padding: 20,
+          nodeSpacing: 50,
+          rankSpacing: 80
         },
         themeVariables: {
-          primaryColor: '#3b82f6',
+          primaryColor: '#1e40af',
           primaryTextColor: '#ffffff',
-          primaryBorderColor: '#1e40af',
-          lineColor: '#6b7280',
-          secondaryColor: '#1f2937',
-          tertiaryColor: '#374151',
-          background: '#111827',
-          mainBkg: '#1f2937',
-          secondBkg: '#374151',
-          tertiaryBkg: '#4b5563'
+          primaryBorderColor: '#3b82f6',
+          lineColor: '#94a3b8',
+          secondaryColor: '#0f172a',
+          tertiaryColor: '#1e293b',
+          background: '#0f172a',
+          mainBkg: '#1e293b',
+          secondBkg: '#334155',
+          tertiaryBkg: '#475569',
+          darkMode: true,
+          fontFamily: 'Inter, system-ui, sans-serif',
+          fontSize: '14px',
+          nodeBorder: '#64748b',
+          clusterBkg: '#1e293b',
+          clusterBorder: '#475569',
+          edgeLabelBackground: '#1e293b',
+          nodeTextColor: '#ffffff'
         }
       });
       
@@ -44,11 +55,34 @@ export const MermaidDiagram = ({ chart, id = 'mermaid-diagram' }: MermaidDiagram
       mermaid.run({
         querySelector: `#${uniqueId}`
       }).then(() => {
-        // After rendering, let SVG maintain its natural size
+        // After rendering, optimize SVG display and text rendering
         const svgElement = mermaidRef.current?.querySelector('svg');
         if (svgElement) {
           svgElement.style.maxWidth = 'none';
           svgElement.style.height = 'auto';
+          svgElement.style.fontFamily = 'Inter, system-ui, sans-serif';
+          
+          // Fix text rendering and ensure proper sizing
+          const textElements = svgElement.querySelectorAll('text');
+          textElements.forEach((text: Element) => {
+            (text as SVGTextElement).style.fill = '#ffffff';
+            (text as SVGTextElement).style.fontSize = '14px';
+            (text as SVGTextElement).style.fontWeight = '500';
+          });
+          
+          // Improve node styling
+          const rectElements = svgElement.querySelectorAll('rect');
+          rectElements.forEach((rect: Element) => {
+            (rect as SVGRectElement).style.stroke = '#64748b';
+            (rect as SVGRectElement).style.strokeWidth = '2';
+          });
+          
+          // Improve path styling
+          const pathElements = svgElement.querySelectorAll('path');
+          pathElements.forEach((path: Element) => {
+            (path as SVGPathElement).style.stroke = '#94a3b8';
+            (path as SVGPathElement).style.strokeWidth = '2';
+          });
         }
       }).catch(console.error);
     }
@@ -117,7 +151,7 @@ export const MermaidDiagram = ({ chart, id = 'mermaid-diagram' }: MermaidDiagram
             >
               <div 
                 ref={mermaidRef} 
-                className="mermaid-container p-4 select-none"
+                className="mermaid-container p-6 select-none"
               />
             </TransformComponent>
           </>
@@ -143,7 +177,7 @@ export const MermaidDiagram = ({ chart, id = 'mermaid-diagram' }: MermaidDiagram
   }
 
   return (
-    <div className="mermaid-wrapper bg-gray-900 rounded-lg border border-gray-700 overflow-hidden w-full" style={{ height: '500px' }}>
+    <div className="mermaid-wrapper bg-slate-900 rounded-xl border border-slate-600 overflow-hidden w-full shadow-2xl" style={{ height: '500px' }}>
       {diagramContent}
     </div>
   );

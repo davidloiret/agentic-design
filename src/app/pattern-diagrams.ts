@@ -6,9 +6,12 @@ export const patternDiagrams = {
     D --> E[Step 3: Synthesize Solution]
     E --> F[Final Answer]
     
-    style A fill:#e1f5fe
-    style F fill:#e8f5e8
-    style B fill:#fff3e0`,
+    style A fill:#1e40af,stroke:#3b82f6,stroke-width:3px,color:#ffffff
+    style F fill:#059669,stroke:#10b981,stroke-width:3px,color:#ffffff
+    style B fill:#ea580c,stroke:#f97316,stroke-width:3px,color:#ffffff
+    style C fill:#7c3aed,stroke:#8b5cf6,stroke-width:3px,color:#ffffff
+    style D fill:#7c3aed,stroke:#8b5cf6,stroke-width:3px,color:#ffffff
+    style E fill:#7c3aed,stroke:#8b5cf6,stroke-width:3px,color:#ffffff`,
 
   'tot': `graph TD
     A[Problem] --> B[Generate Multiple Approaches]
@@ -29,9 +32,18 @@ export const patternDiagrams = {
     K --> B
     J --> L[Final Solution]
     
-    style A fill:#e1f5fe
-    style L fill:#e8f5e8
-    style I fill:#fff3e0`,
+    style A fill:#1e40af,stroke:#3b82f6,stroke-width:3px,color:#ffffff
+    style L fill:#059669,stroke:#10b981,stroke-width:3px,color:#ffffff
+    style I fill:#ea580c,stroke:#f97316,stroke-width:3px,color:#ffffff
+    style B fill:#7c3aed,stroke:#8b5cf6,stroke-width:3px,color:#ffffff
+    style C fill:#0891b2,stroke:#06b6d4,stroke-width:3px,color:#ffffff
+    style D fill:#0891b2,stroke:#06b6d4,stroke-width:3px,color:#ffffff
+    style E fill:#0891b2,stroke:#06b6d4,stroke-width:3px,color:#ffffff
+    style F fill:#be123c,stroke:#e11d48,stroke-width:3px,color:#ffffff
+    style G fill:#be123c,stroke:#e11d48,stroke-width:3px,color:#ffffff
+    style H fill:#be123c,stroke:#e11d48,stroke-width:3px,color:#ffffff
+    style J fill:#059669,stroke:#10b981,stroke-width:3px,color:#ffffff
+    style K fill:#dc2626,stroke:#ef4444,stroke-width:3px,color:#ffffff`,
 
   'self-correction': `graph LR
     A[Initial Response] --> B[Self-Review]
@@ -43,9 +55,14 @@ export const patternDiagrams = {
     F --> G[Revised Response]
     G --> B
     
-    style A fill:#e1f5fe
-    style H fill:#e8f5e8
-    style C fill:#fff3e0`,
+    style A fill:#1e40af,stroke:#3b82f6,stroke-width:3px,color:#ffffff
+    style H fill:#059669,stroke:#10b981,stroke-width:3px,color:#ffffff
+    style C fill:#ea580c,stroke:#f97316,stroke-width:3px,color:#ffffff
+    style B fill:#7c3aed,stroke:#8b5cf6,stroke-width:3px,color:#ffffff
+    style D fill:#be123c,stroke:#e11d48,stroke-width:3px,color:#ffffff
+    style E fill:#0891b2,stroke:#06b6d4,stroke-width:3px,color:#ffffff
+    style F fill:#0891b2,stroke:#06b6d4,stroke-width:3px,color:#ffffff
+    style G fill:#059669,stroke:#10b981,stroke-width:3px,color:#ffffff`,
 
   'palm': `graph TD
     A[Problem Statement] --> B[Analyze Requirements]
@@ -59,9 +76,16 @@ export const patternDiagrams = {
     E --> I
     I --> J[Final Answer]
     
-    style A fill:#e1f5fe
-    style J fill:#e8f5e8
-    style D fill:#fff3e0`,
+    style A fill:#1e40af,stroke:#3b82f6,stroke-width:3px,color:#ffffff
+    style J fill:#059669,stroke:#10b981,stroke-width:3px,color:#ffffff
+    style D fill:#ea580c,stroke:#f97316,stroke-width:3px,color:#ffffff
+    style B fill:#7c3aed,stroke:#8b5cf6,stroke-width:3px,color:#ffffff
+    style C fill:#0891b2,stroke:#06b6d4,stroke-width:3px,color:#ffffff
+    style E fill:#be123c,stroke:#e11d48,stroke-width:3px,color:#ffffff
+    style F fill:#be123c,stroke:#e11d48,stroke-width:3px,color:#ffffff
+    style G fill:#be123c,stroke:#e11d48,stroke-width:3px,color:#ffffff
+    style H fill:#059669,stroke:#10b981,stroke-width:3px,color:#ffffff
+    style I fill:#ea580c,stroke:#f97316,stroke-width:3px,color:#ffffff`,
 
   'react': `graph TD
     A[Task] --> B[Thought: Plan Action]
@@ -74,10 +98,10 @@ export const patternDiagrams = {
     H --> I[Observation: New Result]
     I --> E
     
-    style A fill:#e1f5fe
-    style G fill:#e8f5e8
-    style B fill:#fff3e0
-    style F fill:#fff3e0`,
+    style A fill:#1e40af,stroke:#3b82f6,stroke-width:3px,color:#ffffff
+    style G fill:#059669,stroke:#10b981,stroke-width:3px,color:#ffffff
+    style B fill:#ea580c,stroke:#f97316,stroke-width:3px,color:#ffffff
+    style F fill:#ea580c,stroke:#f97316,stroke-width:3px,color:#ffffff`,
 
   'cod': `graph TD
     A[Question] --> B[Model 1 Response]
@@ -96,9 +120,9 @@ export const patternDiagrams = {
     G --> I
     H --> I
     
-    style A fill:#e1f5fe
-    style I fill:#e8f5e8
-    style E fill:#fff3e0`,
+    style A fill:#1e40af,stroke:#3b82f6,stroke-width:3px,color:#ffffff
+    style I fill:#059669,stroke:#10b981,stroke-width:3px,color:#ffffff
+    style E fill:#ea580c,stroke:#f97316,stroke-width:3px,color:#ffffff`,
 
   'god': `graph TD
     A[Central Topic] --> B[Argument 1]
@@ -119,9 +143,9 @@ export const patternDiagrams = {
     H --> I
     I --> J[Final Decision]
     
-    style A fill:#e1f5fe
-    style J fill:#e8f5e8
-    style I fill:#fff3e0`,
+    style A fill:#1e40af,stroke:#3b82f6,stroke-width:3px,color:#ffffff
+    style J fill:#059669,stroke:#10b981,stroke-width:3px,color:#ffffff
+    style I fill:#ea580c,stroke:#f97316,stroke-width:3px,color:#ffffff`,
 
   'rlvr': `graph TD
     A[Problem] --> B[Allocate Thinking Time]
@@ -134,9 +158,9 @@ export const patternDiagrams = {
     H --> I[Generate Attempt 2]
     I --> D
     
-    style A fill:#e1f5fe
-    style G fill:#e8f5e8
-    style F fill:#fff3e0`,
+    style A fill:#1e40af,stroke:#3b82f6,stroke-width:3px,color:#ffffff
+    style G fill:#059669,stroke:#10b981,stroke-width:3px,color:#ffffff
+    style F fill:#ea580c,stroke:#f97316,stroke-width:3px,color:#ffffff`,
 
   'constitutional-ai': `graph TD
     A[User Input] --> B[Check Against Constitution]
@@ -149,8 +173,8 @@ export const patternDiagrams = {
     G --> I[Final Output]
     H --> I
     
-    style A fill:#e1f5fe
-    style I fill:#e8f5e8
+    style A fill:#1e40af,stroke:#3b82f6,stroke-width:3px,color:#ffffff
+    style I fill:#059669,stroke:#10b981,stroke-width:3px,color:#ffffff
     style B fill:#ffebee
     style D fill:#ffebee`,
 
@@ -164,8 +188,8 @@ export const patternDiagrams = {
     G --> H[Safe Output]
     F --> H
     
-    style A fill:#e1f5fe
-    style H fill:#e8f5e8
+    style A fill:#1e40af,stroke:#3b82f6,stroke-width:3px,color:#ffffff
+    style H fill:#059669,stroke:#10b981,stroke-width:3px,color:#ffffff
     style E fill:#ffebee`,
 
   'input-sanitization': `graph LR
@@ -176,8 +200,8 @@ export const patternDiagrams = {
     E --> F[Clean Input]
     F --> G[Process Safely]
     
-    style A fill:#e1f5fe
-    style G fill:#e8f5e8
+    style A fill:#1e40af,stroke:#3b82f6,stroke-width:3px,color:#ffffff
+    style G fill:#059669,stroke:#10b981,stroke-width:3px,color:#ffffff
     style B fill:#ffebee
     style C fill:#ffebee`,
 
@@ -191,9 +215,9 @@ export const patternDiagrams = {
     E --> H[Final Output]
     G --> H
     
-    style A fill:#e1f5fe
-    style H fill:#e8f5e8
-    style C fill:#fff3e0`,
+    style A fill:#1e40af,stroke:#3b82f6,stroke-width:3px,color:#ffffff
+    style H fill:#059669,stroke:#10b981,stroke-width:3px,color:#ffffff
+    style C fill:#ea580c,stroke:#f97316,stroke-width:3px,color:#ffffff`,
 
   'sequential-chaining': `graph LR
     A[Input] --> B[Prompt 1]
@@ -203,8 +227,8 @@ export const patternDiagrams = {
     E --> F[Prompt 3]
     F --> G[Final Output]
     
-    style A fill:#e1f5fe
-    style G fill:#e8f5e8
+    style A fill:#1e40af,stroke:#3b82f6,stroke-width:3px,color:#ffffff
+    style G fill:#059669,stroke:#10b981,stroke-width:3px,color:#ffffff
     style B fill:#e3f2fd
     style D fill:#e3f2fd
     style F fill:#e3f2fd`,
@@ -223,9 +247,9 @@ export const patternDiagrams = {
     G --> H
     H --> I[Combined Result]
     
-    style A fill:#e1f5fe
-    style I fill:#e8f5e8
-    style H fill:#fff3e0`,
+    style A fill:#1e40af,stroke:#3b82f6,stroke-width:3px,color:#ffffff
+    style I fill:#059669,stroke:#10b981,stroke-width:3px,color:#ffffff
+    style H fill:#ea580c,stroke:#f97316,stroke-width:3px,color:#ffffff`,
 
   'conditional-chaining': `graph TD
     A[Input] --> B[Classifier]
@@ -242,9 +266,9 @@ export const patternDiagrams = {
     H --> J
     I --> J
     
-    style A fill:#e1f5fe
-    style J fill:#e8f5e8
-    style B fill:#fff3e0`,
+    style A fill:#1e40af,stroke:#3b82f6,stroke-width:3px,color:#ffffff
+    style J fill:#059669,stroke:#10b981,stroke-width:3px,color:#ffffff
+    style B fill:#ea580c,stroke:#f97316,stroke-width:3px,color:#ffffff`,
 
   'feedback-chaining': `graph TD
     A[Initial Input] --> B[Generate Version 1]
@@ -256,9 +280,9 @@ export const patternDiagrams = {
     G --> H[Generate Version 2]
     H --> C
     
-    style A fill:#e1f5fe
-    style F fill:#e8f5e8
-    style E fill:#fff3e0`,
+    style A fill:#1e40af,stroke:#3b82f6,stroke-width:3px,color:#ffffff
+    style F fill:#059669,stroke:#10b981,stroke-width:3px,color:#ffffff
+    style E fill:#ea580c,stroke:#f97316,stroke-width:3px,color:#ffffff`,
 
   'hierarchical-chaining': `graph TD
     A[Main Task] --> B[Subtask 1]
@@ -282,8 +306,8 @@ export const patternDiagrams = {
     M --> N
     K --> N
     
-    style A fill:#e1f5fe
-    style N fill:#e8f5e8
-    style L fill:#fff3e0
-    style M fill:#fff3e0`
+    style A fill:#1e40af,stroke:#3b82f6,stroke-width:3px,color:#ffffff
+    style N fill:#059669,stroke:#10b981,stroke-width:3px,color:#ffffff
+    style L fill:#ea580c,stroke:#f97316,stroke-width:3px,color:#ffffff
+    style M fill:#ea580c,stroke:#f97316,stroke-width:3px,color:#ffffff`
 };

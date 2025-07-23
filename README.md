@@ -60,3 +60,60 @@ Chat with knowledge
 see galileo eval
 
 without any framework and with framework
+
+
+Add news tab, idea is to get update on different time, user can get email or see a summary of articles, person of interest etc in the area of agentic design (AI, agents etc)
+
+High level system specification.
+Generate systems from schema => feed schema to LLM => LLM build for us.
+Maybe use lib => example de pattern.
+
+Faire comme excalidraw comme pour les mecs de BAML qui design d'abord dessus
+- pouvoir avoir ecrire du code / inline
+
+Instead of a modal I should have a drawer at the left, don't hesitate to take a library to create the drawer if needed
+
+I also want the ability to create directly content inline, like code, much like excalidraw but better with code highliting
+
+Make tradeoff => designing system is about making tradeoff
+
+
+=> techno agnostic to techno selection, for example graph DAtabase => neo4j or kuzudb (suggestions => open source etc)
+
+Vector database
+
+Building block Hub => vector database => comparaison etc
+different de project Hub ? => agentic full project
+
+
+Generate code from spec directly
+
+## Interactive Pattern Demonstrations
+
+✅ **NEW FEATURE:** Interactive graph demonstrations with React Flow that play scenarios to explain each pattern interactively with step-by-step execution, input/output examples, and visual learning aids.
+
+### Access the Interactive Demo
+- Visit `/interactive-demo` to experience the new interactive pattern demonstrations
+- Available patterns: Chain of Thought (CoT), Tree of Thoughts (ToT), ReAct Pattern
+- Features:
+  - Step-by-step visual progression
+  - Real-time input/output examples
+  - Auto-play and manual controls
+  - Zoom and pan functionality
+  - Educational explanations for each step
+
+### Usage
+1. Select a pattern (CoT, ToT, or ReAct)
+2. Use play button for automatic progression or step controls for manual navigation
+3. View detailed input/output in the side panel
+4. Reset to restart the demonstration
+
+
+user can add lib etc and say where this is used
+
+Add reference
+
+Person / par domaine fin => AI red teaming etc
+
+
+Add a listen on each page => so instead of reading we can listen.

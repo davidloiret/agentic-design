@@ -563,8 +563,8 @@ export const EvaluationInterface = ({
       
     <div className="h-full flex flex-col">
       {/* Progress Steps */}
-      <div className="bg-gray-800 border-b border-gray-700 p-4">
-        <div className="max-w-6xl mx-auto">
+      <div className="bg-gray-800 border-b border-gray-700 p-4 border">
+        <div className="max-w-10xl mx-auto">
           <div className="flex items-center justify-between">
             {[
               { step: 1, title: 'Select Patterns', icon: Target },
@@ -599,7 +599,7 @@ export const EvaluationInterface = ({
 
       {/* Content Area */}
       <div className="flex-1 overflow-y-auto">
-        <div className="max-w-6xl mx-auto p-6">
+        <div className="max-w-10xl mx-auto p-6">
           {activeStep === 1 && (
             /* Step 1: Pattern Selection */
             <div>

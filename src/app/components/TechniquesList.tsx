@@ -105,72 +105,82 @@ export const TechniquesList = ({
     const isSelected = selectedCategory === category.id;
     const categoryTechniques = getTechniquesForCategory(category.id);
     const hasMatchingTechniques = categoryTechniques.length > 0;
+    const isParent = level === 0;
 
-    if (!hasMatchingTechniques && !hasChildren) {
+    // Always show parent categories, only filter child categories
+    if (!isParent && !hasMatchingTechniques && !hasChildren) {
       return null;
     }
 
-    const isParent = level === 0;
     const isSubcategory = level === 1;
 
     return (
       <div key={category.id} className="space-y-1">
-        <button
-          onClick={() => {
-            setSelectedCategory(category.id);
-            toggleCategory(category.id);
-          }}
-          className={`w-full rounded-xl transition-all duration-200 text-left group ${
+        <div className={`w-full rounded-xl transition-all duration-200 text-left group ${
             isParent 
               ? `p-4 ${isSelected ? 'bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg' : 'bg-gray-800/60 hover:bg-gray-800/80'}`
               : `p-3 ml-4 ${isSelected ? 'bg-blue-500/20 border border-blue-500/30' : 'bg-gray-800/30 hover:bg-gray-800/50'}`
-          }`}
-        >
+          }`}>
           <div className="flex items-center gap-3">
-            <div className={`transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`}>
-              <ChevronRight className={`${isParent ? 'w-4 h-4' : 'w-3 h-3'} ${
-                isSelected ? 'text-white' : 'text-gray-400 group-hover:text-gray-300'
-              }`} />
-            </div>
+            {(hasChildren || categoryTechniques.length > 0) && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleCategory(category.id);
+                }}
+                className="p-1 rounded hover:bg-white/10 transition-colors duration-200 cursor-pointer"
+              >
+                <div className={`transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`}>
+                  <ChevronRight className={`${isParent ? 'w-4 h-4' : 'w-3 h-3'} ${
+                    isSelected ? 'text-white' : 'text-gray-400 group-hover:text-gray-300'
+                  }`} />
+                </div>
+              </button>
+            )}
             
-            <div className={`${isParent ? 'w-10 h-10' : 'w-8 h-8'} rounded-xl flex items-center justify-center ${
-              isSelected 
-                ? 'bg-white/20' 
-                : isParent 
-                  ? 'bg-gray-700/50 group-hover:bg-gray-600/50' 
-                  : 'bg-gray-700/30 group-hover:bg-gray-600/30'
-            }`}>
-              <span className={`${isParent ? 'text-lg' : 'text-base'}`}>
-                {category.icon}
-              </span>
-            </div>
-            
-            <div className="flex-1 min-w-0">
-              <h3 className={`font-semibold ${isParent ? 'text-base' : 'text-sm'} truncate ${
-                isSelected ? 'text-white' : 'text-gray-200 group-hover:text-white'
-              }`}>
-                {category.name}
-              </h3>
-              {isParent && (
-                <p className={`text-xs mt-0.5 ${
-                  isSelected ? 'text-white/70' : 'text-gray-400'
-                }`}>
-                  {category.description}
-                </p>
-              )}
-            </div>
-            
-            <div className="flex items-center gap-2">
-              <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${
+            <button 
+              onClick={() => setSelectedCategory(category.id)}
+              className="flex-1 flex items-center gap-3 cursor-pointer hover:scale-[0.99] transition-transform"
+            >
+              <div className={`${isParent ? 'w-10 h-10' : 'w-8 h-8'} rounded-xl flex items-center justify-center ${
                 isSelected 
-                  ? 'bg-white/20 text-white' 
-                  : 'bg-gray-700/50 text-gray-400 group-hover:bg-gray-600/50'
+                  ? 'bg-white/20' 
+                  : isParent 
+                    ? 'bg-gray-700/50 group-hover:bg-gray-600/50' 
+                    : 'bg-gray-700/30 group-hover:bg-gray-600/30'
               }`}>
-                {hasChildren ? getChildCategories(category.id).length : categoryTechniques.length}
-              </span>
-            </div>
+                <span className={`${isParent ? 'text-lg' : 'text-base'}`}>
+                  {category.icon}
+                </span>
+              </div>
+              
+              <div className="flex-1 min-w-0">
+                <h3 className={`font-semibold ${isParent ? 'text-base' : 'text-sm'} truncate ${
+                  isSelected ? 'text-white' : 'text-gray-200 group-hover:text-white'
+                }`}>
+                  {category.name}
+                </h3>
+                {isParent && (
+                  <p className={`text-xs mt-0.5 ${
+                    isSelected ? 'text-white/70' : 'text-gray-400'
+                  }`}>
+                    {category.description}
+                  </p>
+                )}
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${
+                  isSelected 
+                    ? 'bg-white/20 text-white' 
+                    : 'bg-gray-700/50 text-gray-400 group-hover:bg-gray-600/50'
+                }`}>
+                  {hasChildren ? getChildCategories(category.id).length : categoryTechniques.length}
+                </span>
+              </div>
+            </button>
           </div>
-        </button>
+        </div>
         
         {isExpanded && (
           <div className={`space-y-1 ${isParent ? 'ml-0' : 'ml-4'}`}>
@@ -183,9 +193,9 @@ export const TechniquesList = ({
   };
 
   return (
-    <div className="lg:col-span-1 space-y-6">
+    <div className="lg:col-span-1 h-full flex flex-col">
       {/* Search */}
-      <div className="relative">
+      <div className="relative flex-shrink-0 mb-4">
         <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
         <input
           type="text"
@@ -197,15 +207,15 @@ export const TechniquesList = ({
       </div>
       
       {/* Categories Tree */}
-      <div className="space-y-3">
-        <div className="flex items-center gap-2 px-1">
+      <div className="flex-1 overflow-y-auto space-y-3 pr-8">
+        <div className="flex items-center gap-2 px-1 pb-2">
           <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">
             Design Patterns
           </h2>
           <div className="flex-1 h-px bg-gradient-to-r from-gray-600 to-transparent"></div>
         </div>
         
-        <div className="space-y-2">
+        <div className="space-y-2 pb-6">
           {parentCategories.map(category => renderCategory(category, 0))}
         </div>
       </div>

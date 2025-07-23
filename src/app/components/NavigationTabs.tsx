@@ -1,4 +1,4 @@
-import { BookOpen, Lightbulb, Share2, FlaskConical, Brain, Boxes, Newspaper } from 'lucide-react';
+import { BookOpen, Lightbulb, Share2, FlaskConical, Brain, Boxes, Newspaper, FolderOpen } from 'lucide-react';
 
 interface NavigationTabsProps {
   activeTab: string;
@@ -26,6 +26,8 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
         return 'text-cyan-400 border-cyan-400';
       case 'news':
         return 'text-emerald-400 border-emerald-400';
+      case 'projects':
+        return 'text-yellow-400 border-yellow-400';
       default:
         return 'text-blue-400 border-blue-400';
     }
@@ -33,10 +35,11 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
 
   const tabs = [
     { id: 'explore', label: 'Explore Patterns', icon: BookOpen },
-    { id: 'recommend', label: 'Get Recommendations', icon: Lightbulb },
-    { id: 'graph', label: 'Pattern Network', icon: Share2 },
+    // { id: 'recommend', label: 'Get Recommendations', icon: Lightbulb },
+    // { id: 'graph', label: 'Pattern Network', icon: Share2 },
     { id: 'mindmap', label: 'Mind Map', icon: Brain },
     { id: 'builder', label: 'System Builder', icon: Boxes },
+    { id: 'projects', label: 'Project Hub', icon: FolderOpen },
     { id: 'news', label: 'News Hub', icon: Newspaper },
     { id: 'evaluate', label: 'Evaluate & Compare', icon: FlaskConical },
   ];
@@ -44,7 +47,7 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
   return (
     <div className="bg-gray-900 border-b border-gray-700">
       <div className="mx-auto px-6">
-        <div className="flex gap-6">
+        <div className="flex flex-wrap gap-3 lg:gap-6">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             return (
@@ -52,10 +55,11 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 data-tab={tab.id}
-                className={`py-4 px-6 font-medium transition-all border-b-2 ${getTabClasses(tab.id, activeTab === tab.id)}`}
+                className={`py-4 px-3 lg:px-6 font-medium transition-all border-b-2 text-sm lg:text-base whitespace-nowrap ${getTabClasses(tab.id, activeTab === tab.id)}`}
               >
                 <Icon className="w-4 h-4 inline mr-2" />
-                {tab.label}
+                <span className="hidden sm:inline">{tab.label}</span>
+                <span className="sm:hidden">{tab.label.split(' ')[0]}</span>
               </button>
             );
           })}

@@ -1,15 +1,15 @@
-import { BookOpen, Code, Check, Brain, GitBranch } from 'lucide-react';
+import { BookOpen, Code, Check, Brain, GitBranch, Play } from 'lucide-react';
 import CodeSandbox from '../../components/CodeSandbox';
-import { MermaidDiagram } from '../../components/MermaidDiagram';
+import { InteractivePatternFlow } from '../../components/InteractivePatternFlow';
 import { patternExamples, type PatternId, type LanguageType } from '../pattern-examples';
-import { patternDiagrams } from '../pattern-diagrams';
+import { patternScenarios } from '../../data/pattern-scenarios';
 
 interface TechniqueDetailsProps {
   selectedTechnique: any;
   categories: any[];
   useCases: any[];
-  detailsTab: 'overview' | 'code';
-  setDetailsTab: (tab: 'overview' | 'code') => void;
+  detailsTab: 'overview' | 'code' | 'interactive';
+  setDetailsTab: (tab: 'overview' | 'code' | 'interactive') => void;
   selectedLanguage: LanguageType;
   setSelectedLanguage: (lang: LanguageType) => void;
 }
@@ -26,7 +26,7 @@ export const TechniqueDetails = ({
   if (!selectedTechnique) {
     return (
       <div className="lg:col-span-3">
-        <div className="bg-gray-800 rounded-xl p-8 border border-gray-700 flex items-center justify-center h-96">
+        <div className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700/30 shadow-2xl flex items-center justify-center h-96">
           <div className="text-center">
             <Brain className="w-16 h-16 mx-auto text-gray-600 mb-4" />
             <p className="text-gray-400 text-lg">Select a technique to view details</p>
@@ -38,12 +38,12 @@ export const TechniqueDetails = ({
 
   return (
     <div className="lg:col-span-3">
-      <div className="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden">
+      <div className="bg-gray-900/50 backdrop-blur-sm rounded-2xl border border-gray-700/30 shadow-2xl">
         {/* Header Section */}
-        <div className="bg-gradient-to-r from-gray-800 to-gray-700 p-6 border-b border-gray-600">
+        <div className="bg-gradient-to-r from-gray-900/80 to-gray-800/80 p-6 border-b border-gray-700/30">
           <div className="flex items-start gap-4">
             <div className="flex-shrink-0">
-              <div className="w-16 h-16 bg-gray-700 rounded-xl flex items-center justify-center text-2xl">
+              <div className="w-16 h-16 bg-gray-800/60 rounded-2xl flex items-center justify-center text-2xl">
                 {selectedTechnique.icon}
               </div>
             </div>
@@ -61,7 +61,7 @@ export const TechniqueDetails = ({
                     <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r ${selectedTechnique.color} text-white`}>
                       Complexity: {selectedTechnique.complexity}
                     </span>
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-600 text-gray-200">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-800/60 text-gray-200">
                       {categories.find(c => c.id === selectedTechnique.category)?.name || 'Pattern'}
                     </span>
                   </div>
@@ -72,7 +72,7 @@ export const TechniqueDetails = ({
         </div>
 
         {/* Details Tabs */}
-        <div className="border-b border-gray-600">
+        <div className="border-b border-gray-700/30">
           <div className="flex gap-6 px-6">
             <button
               onClick={() => setDetailsTab('overview')}
@@ -84,6 +84,17 @@ export const TechniqueDetails = ({
             >
               <BookOpen className="w-4 h-4 inline mr-2" />
               Overview
+            </button>
+            <button
+              onClick={() => setDetailsTab('interactive')}
+              className={`py-4 px-2 font-medium transition-all border-b-2 ${
+                detailsTab === 'interactive'
+                  ? 'text-purple-400 border-purple-400'
+                  : 'text-gray-400 border-transparent hover:text-gray-200'
+              }`}
+            >
+              <Play className="w-4 h-4 inline mr-2" />
+              Interactive Demo
             </button>
             <button
               onClick={() => setDetailsTab('code')}
@@ -114,14 +125,14 @@ export const TechniqueDetails = ({
                     {selectedTechnique.description}
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4 mt-4">
-                    <div className="text-center p-3 bg-white/5 rounded-lg">
+                    <div className="text-center p-3 bg-gray-800/30 rounded-lg">
                       <div className="text-2xl mb-2">{selectedTechnique.icon}</div>
                       <div className="text-sm text-gray-400">Pattern Type</div>
                       <div className="text-sm font-medium text-white">
                         {categories.find(c => c.id === selectedTechnique.category)?.name || 'Design Pattern'}
                       </div>
                     </div>
-                    <div className="text-center p-3 bg-white/5 rounded-lg">
+                    <div className="text-center p-3 bg-gray-800/30 rounded-lg">
                       <div className="text-2xl mb-2">
                         {selectedTechnique.complexity === 'low' ? '🟢' : 
                          selectedTechnique.complexity === 'medium' ? '🟡' : '🔴'}
@@ -131,14 +142,14 @@ export const TechniqueDetails = ({
                         {selectedTechnique.complexity}
                       </div>
                     </div>
-                    <div className="text-center p-3 bg-white/5 rounded-lg">
+                    <div className="text-center p-3 bg-gray-800/30 rounded-lg">
                       <div className="text-2xl mb-2">🎯</div>
                       <div className="text-sm text-gray-400">Use Cases</div>
                       <div className="text-sm font-medium text-white">
                         {selectedTechnique.useCases.length} scenarios
                       </div>
                     </div>
-                    <div className="text-center p-3 bg-white/5 rounded-lg">
+                    <div className="text-center p-3 bg-gray-800/30 rounded-lg">
                       <div className="text-2xl mb-2">⚡</div>
                       <div className="text-sm text-gray-400">Features</div>
                       <div className="text-sm font-medium text-white">
@@ -149,28 +160,51 @@ export const TechniqueDetails = ({
                 </div>
               </section>
 
-              {/* Visual Flow Diagram */}
+              {/* How it Works */}
               <section>
                 <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
                   <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
                   How it Works
                 </h2>
-                {patternDiagrams[selectedTechnique.id as keyof typeof patternDiagrams] ? (
-                  <div className="bg-gray-900 rounded-xl border border-gray-700 overflow-hidden">
-                    <div className="bg-gray-800 px-4 py-2 border-b border-gray-700">
-                      <span className="text-xs font-medium text-gray-400">Process Flow Diagram</span>
+                <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                  <p className="text-gray-200 text-base leading-relaxed mb-6">
+                    {selectedTechnique.name} works by following a structured approach that enhances reasoning and problem-solving capabilities. 
+                    This pattern is essential because it provides a systematic way to handle complex tasks that require multiple steps, 
+                    validation, or different approaches to achieve optimal results.
+                  </p>
+                  
+                  {/* Pattern Benefits */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                    <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                      <div className="text-2xl mb-2">🧠</div>
+                      <h4 className="font-semibold text-white mb-2">Enhanced Reasoning</h4>
+                      <p className="text-sm text-gray-300">Breaks down complex problems into manageable steps</p>
                     </div>
-                    <MermaidDiagram 
-                      chart={patternDiagrams[selectedTechnique.id as keyof typeof patternDiagrams]}
-                      id={`diagram-${selectedTechnique.id}`}
-                    />
+                    <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                      <div className="text-2xl mb-2">🔍</div>
+                      <h4 className="font-semibold text-white mb-2">Better Accuracy</h4>
+                      <p className="text-sm text-gray-300">Reduces errors through systematic validation</p>
+                    </div>
+                    <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                      <div className="text-2xl mb-2">📊</div>
+                      <h4 className="font-semibold text-white mb-2">Transparency</h4>
+                      <p className="text-sm text-gray-300">Makes the reasoning process visible and understandable</p>
+                    </div>
                   </div>
-                ) : (
-                  <div className="bg-gray-800 rounded-lg p-8 border border-gray-700 text-center">
-                    <GitBranch className="w-12 h-12 mx-auto text-gray-500 mb-4" />
-                    <p className="text-gray-400">Diagram coming soon for this pattern</p>
+
+                  {/* Why We Need This Pattern */}
+                  <div className="bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 rounded-lg p-4">
+                    <h4 className="font-semibold text-white mb-2 flex items-center gap-2">
+                      <span className="text-amber-400">💡</span>
+                      Why This Pattern Matters
+                    </h4>
+                    <p className="text-sm text-gray-200 leading-relaxed">
+                      Traditional approaches often jump directly to conclusions, missing important intermediate steps. 
+                      This pattern ensures thorough analysis, reduces hallucinations, and provides confidence in the results 
+                      by making each step of the reasoning process explicit and verifiable.
+                    </p>
                   </div>
-                )}
+                </div>
               </section>
 
               {/* Key Features */}
@@ -181,7 +215,7 @@ export const TechniqueDetails = ({
                 </h2>
                 <div className="grid gap-3">
                   {selectedTechnique.features.map((feature: string, idx: number) => (
-                    <div key={idx} className="flex items-start gap-3 p-3 bg-gray-700/30 rounded-lg">
+                    <div key={idx} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
                       <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
                       <span className="text-gray-300 text-sm leading-relaxed">{feature}</span>
                     </div>
@@ -201,7 +235,7 @@ export const TechniqueDetails = ({
                     return (
                       <div
                         key={useCaseId}
-                        className="flex items-center gap-2 px-3 py-2 bg-gray-700/50 rounded-lg text-sm"
+                        className="flex items-center gap-2 px-3 py-2 bg-gray-800/50 rounded-lg text-sm"
                       >
                         <span className="text-base">{useCase?.icon}</span>
                         <span className="text-gray-300 font-medium">{useCase?.name}</span>
@@ -211,21 +245,148 @@ export const TechniqueDetails = ({
                 </div>
               </section>
 
-              {/* Example */}
+              {/* References & Further Reading */}
               <section>
                 <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                  <div className="w-1 h-6 bg-yellow-500 rounded-full"></div>
-                  Example
+                  <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                  References & Further Reading
                 </h2>
-                <div className="bg-gray-900 rounded-lg border border-gray-700 overflow-hidden">
-                  <div className="bg-gray-800 px-4 py-2 border-b border-gray-700">
-                    <span className="text-xs font-medium text-gray-400">Implementation Example</span>
+                <div className="bg-gradient-to-br from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-xl p-6">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    {/* Academic Papers */}
+                    <div className="bg-white/5 rounded-lg p-4">
+                      <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
+                        <span className="text-orange-400">📚</span>
+                        Academic Papers
+                      </h4>
+                      <div className="space-y-2 text-sm">
+                        <a href="#" className="block text-blue-400 hover:text-blue-300 transition-colors">
+                          • Chain-of-Thought Prompting Elicits Reasoning in Large Language Models
+                        </a>
+                        <a href="#" className="block text-blue-400 hover:text-blue-300 transition-colors">
+                          • Self-Consistency Improves Chain of Thought Reasoning
+                        </a>
+                        <a href="#" className="block text-blue-400 hover:text-blue-300 transition-colors">
+                          • Tree of Thoughts: Deliberate Problem Solving with Large Language Models
+                        </a>
+                      </div>
+                    </div>
+
+                    {/* Implementation Guides */}
+                    <div className="bg-white/5 rounded-lg p-4">
+                      <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
+                        <span className="text-green-400">🛠️</span>
+                        Implementation Guides
+                      </h4>
+                      <div className="space-y-2 text-sm">
+                        <a href="#" className="block text-blue-400 hover:text-blue-300 transition-colors">
+                          • OpenAI Cookbook - Techniques for improving reliability
+                        </a>
+                        <a href="#" className="block text-blue-400 hover:text-blue-300 transition-colors">
+                          • Anthropic Constitutional AI Research
+                        </a>
+                        <a href="#" className="block text-blue-400 hover:text-blue-300 transition-colors">
+                          • Best Practices for Prompt Engineering
+                        </a>
+                      </div>
+                    </div>
+
+                    {/* Tools & Libraries */}
+                    <div className="bg-white/5 rounded-lg p-4">
+                      <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
+                        <span className="text-purple-400">⚙️</span>
+                        Tools & Libraries
+                      </h4>
+                      <div className="space-y-2 text-sm">
+                        <a href="#" className="block text-blue-400 hover:text-blue-300 transition-colors">
+                          • LangChain - Framework for developing applications
+                        </a>
+                        <a href="#" className="block text-blue-400 hover:text-blue-300 transition-colors">
+                          • Guidance - Language model programming framework
+                        </a>
+                        <a href="#" className="block text-blue-400 hover:text-blue-300 transition-colors">
+                          • DSPy - Programming framework for LMs
+                        </a>
+                      </div>
+                    </div>
+
+                    {/* Community Resources */}
+                    <div className="bg-white/5 rounded-lg p-4">
+                      <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
+                        <span className="text-cyan-400">👥</span>
+                        Community & Discussions
+                      </h4>
+                      <div className="space-y-2 text-sm">
+                        <a href="#" className="block text-blue-400 hover:text-blue-300 transition-colors">
+                          • r/MachineLearning - Pattern discussions
+                        </a>
+                        <a href="#" className="block text-blue-400 hover:text-blue-300 transition-colors">
+                          • AI Safety Forum - Reasoning techniques
+                        </a>
+                        <a href="#" className="block text-blue-400 hover:text-blue-300 transition-colors">
+                          • GitHub - Awesome Prompt Engineering
+                        </a>
+                      </div>
+                    </div>
                   </div>
-                  <div className="p-4">
-                    <pre className="whitespace-pre-wrap text-sm text-gray-300 leading-relaxed font-mono">{selectedTechnique.example}</pre>
+
+                  <div className="mt-6 p-4 bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-lg">
+                    <p className="text-sm text-gray-200 leading-relaxed">
+                      <strong className="text-white">Note:</strong> These references provide foundational knowledge and advanced techniques related to {selectedTechnique.name}. 
+                      Start with the implementation guides for practical application, then explore academic papers for deeper theoretical understanding.
+                    </p>
                   </div>
                 </div>
               </section>
+
+            </div>
+          ) : detailsTab === 'interactive' ? (
+            <div className="space-y-6">
+              {/* Interactive Pattern Flow */}
+              <div>
+                <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                  <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                  Interactive Pattern Demonstration
+                </h2>
+                <div className="bg-gray-900/60 rounded-xl border border-gray-700/30">
+                  <div className="bg-gray-900/60 px-4 py-3 border-b border-gray-700/30">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-gray-300">
+                        Step-by-step visualization of {selectedTechnique.name}
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        {patternScenarios[selectedTechnique.id] ? 'Interactive scenario available' : 'Scenario coming soon'}
+                      </span>
+                    </div>
+                  </div>
+                  {patternScenarios[selectedTechnique.id] ? (
+                    <InteractivePatternFlow 
+                      scenario={patternScenarios[selectedTechnique.id]}
+                      height={500}
+                    />
+                  ) : (
+                    <div className="p-8 text-center">
+                      <Play className="w-12 h-12 mx-auto text-gray-500 mb-4" />
+                      <h3 className="text-lg font-medium text-gray-300 mb-2">Interactive Demo Coming Soon</h3>
+                      <p className="text-gray-400 text-sm max-w-md mx-auto">
+                        We're working on an interactive step-by-step demonstration for this pattern. 
+                        Check back soon or explore other patterns with available demos.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              {/* Pattern Information */}
+              <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
+                <h4 className="text-lg font-medium text-white mb-3">About Interactive Demos</h4>
+                <div className="text-slate-300 space-y-2 text-sm">
+                  <p>• <strong>Step-by-step:</strong> Watch how the pattern processes information through each stage</p>
+                  <p>• <strong>Real examples:</strong> See actual inputs and outputs at every step</p>
+                  <p>• <strong>Interactive controls:</strong> Play, pause, step forward/backward, or reset</p>
+                  <p>• <strong>Educational:</strong> Learn by seeing the pattern in action with detailed explanations</p>
+                </div>
+              </div>
             </div>
           ) : (
             <div className="space-y-6">
@@ -263,7 +424,7 @@ export const TechniqueDetails = ({
                   }}
                 />
               ) : (
-                <div className="bg-gray-800 rounded-lg p-8 border border-gray-700 text-center">
+                <div className="bg-gray-900/50 rounded-lg p-8 border border-gray-700/30 text-center">
                   <Code className="w-12 h-12 mx-auto text-gray-500 mb-4" />
                   <p className="text-gray-400">Code examples coming soon for this pattern</p>
                 </div>

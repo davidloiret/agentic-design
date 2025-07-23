@@ -172,7 +172,7 @@ export default function CodeSandbox({ patternId, initialCode, language, onCodeCh
   };
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+    <div className="bg-white rounded-lg border border-gray-200">
       {/* Header */}
       <div className="flex items-center justify-between p-4 bg-gray-50 border-b border-gray-200">
         <div className="flex items-center gap-2">

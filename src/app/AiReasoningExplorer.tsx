@@ -8,9 +8,12 @@ import { Header } from './components/Header';
 import { NavigationTabs } from './components/NavigationTabs';
 import { TechniquesList } from './components/TechniquesList';
 import { TechniqueDetails } from './components/TechniqueDetails';
+import { CategoryDetails } from './components/CategoryDetails';
 import { RecommendationTab } from './components/RecommendationTab';
 import { SystemBuilder } from './components/SystemBuilder';
 import { NewsTab } from './components/NewsTab';
+import { ProjectHub } from './components/ProjectHub';
+import { ChatBot } from './components/ChatBot';
 import { techniques } from './techniques';
 import { useCases } from './use-cases';
 import { categories } from './categories';
@@ -25,11 +28,20 @@ export const AIReasoningExplorer = () => {
   const [activeTab, setActiveTab] = useState('explore');
   const [userComplexity, setUserComplexity] = useState('');
   const [userConstraints, setUserConstraints] = useState<string[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedCategoryState, setSelectedCategoryState] = useState('all');
+  
+  // Updated to allow parent category selection for details view
+  const setSelectedCategory = (categoryId: string) => {
+    setSelectedCategoryState(categoryId);
+    // Clear selected technique when switching categories
+    setSelectedTechnique(null);
+  };
+  
+  const selectedCategory = selectedCategoryState;
   
   // Code sandbox state
   const [selectedLanguage, setSelectedLanguage] = useState<LanguageType>('typescript');
-  const [detailsTab, setDetailsTab] = useState<'overview' | 'code'>('overview');
+  const [detailsTab, setDetailsTab] = useState<'overview' | 'code' | 'interactive'>('overview');
   
   // Evaluation state
   const [selectedPatterns, setSelectedPatterns] = useState<any[]>([]);
@@ -134,9 +146,9 @@ export const AIReasoningExplorer = () => {
       <Header />
       <NavigationTabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      <div className="mx-auto px-6 py-8">
+      <div className="mx-auto px-6 py-8 h-[calc(100vh-8rem)]">
         {activeTab === 'explore' ? (
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-full">
             <TechniquesList
               techniques={techniques}
               categories={categories}
@@ -148,15 +160,50 @@ export const AIReasoningExplorer = () => {
               setSelectedCategory={setSelectedCategory}
               filteredTechniques={filteredTechniques}
             />
-            <TechniqueDetails
-              selectedTechnique={selectedTechnique}
-              categories={categories}
-              useCases={useCases}
-              detailsTab={detailsTab}
-              setDetailsTab={setDetailsTab}
-              selectedLanguage={selectedLanguage}
-              setSelectedLanguage={setSelectedLanguage}
-            />
+            {(() => {
+              const selectedCategoryData = categories.find(cat => cat.id === selectedCategory);
+              
+              // Prioritize showing technique details if a technique is selected
+              if (selectedTechnique) {
+                return (
+                  <TechniqueDetails
+                    selectedTechnique={selectedTechnique}
+                    categories={categories}
+                    useCases={useCases}
+                    detailsTab={detailsTab}
+                    setDetailsTab={setDetailsTab}
+                    selectedLanguage={selectedLanguage}
+                    setSelectedLanguage={setSelectedLanguage}
+                  />
+                );
+              }
+              
+              // Show CategoryDetails if the category has detailed description and no technique is selected
+              if (selectedCategoryData?.detailedDescription) {
+                return (
+                  <div className="lg:col-span-3">
+                    <CategoryDetails
+                      category={selectedCategoryData}
+                      onBack={() => setSelectedCategory('all')}
+                      techniques={techniques}
+                      onTechniqueSelect={setSelectedTechnique}
+                    />
+                  </div>
+                );
+              }
+              
+              return (
+                <TechniqueDetails
+                  selectedTechnique={selectedTechnique}
+                  categories={categories}
+                  useCases={useCases}
+                  detailsTab={detailsTab}
+                  setDetailsTab={setDetailsTab}
+                  selectedLanguage={selectedLanguage}
+                  setSelectedLanguage={setSelectedLanguage}
+                />
+              );
+            })()}
           </div>
         ) : activeTab === 'recommend' ? (
           <RecommendationTab
@@ -205,9 +252,14 @@ export const AIReasoningExplorer = () => {
               useCases={useCases}
             />
           </div>
+        ) : activeTab === 'projects' ? (
+          /* Project Hub Tab */
+          <div className="h-[calc(100vh-16rem)]">
+            <ProjectHub />
+          </div>
         ) : activeTab === 'news' ? (
           /* News Tab */
-          <div className="h-[calc(100vh-16rem)] overflow-auto">
+          <div className="h-[calc(100vh-16rem)]">
             <NewsTab />
           </div>
         ) : (
@@ -233,6 +285,17 @@ export const AIReasoningExplorer = () => {
           />
         )}
       </div>
+      
+      <ChatBot 
+        onRecommendationSelect={(useCase, complexity) => {
+          setSelectedUseCase(useCase);
+          setUserComplexity(complexity);
+          setShowRecommendations(true);
+          setActiveTab('recommend');
+        }}
+        getRecommendations={getRecommendations}
+        techniques={techniques}
+      />
     </div>
   );
 };

@@ -9,6 +9,8 @@ interface NewsArticle {
   publishedAt: string;
   category: 'ai' | 'agents' | 'research' | 'industry' | 'tools';
   relevanceScore: number;
+  company?: string;
+  institution?: string;
 }
 
 interface Person {
@@ -31,7 +33,7 @@ interface EmailSettings {
 }
 
 export const NewsTab: React.FC = () => {
-  const [activeSection, setActiveSection] = useState<'articles' | 'people' | 'settings'>('articles');
+  const [activeSection, setActiveSection] = useState<'articles' | 'people' | 'companies' | 'settings'>('articles');
   const [articles, setArticles] = useState<NewsArticle[]>([]);
   const [people, setPeople] = useState<Person[]>([]);
   const [emailSettings, setEmailSettings] = useState<EmailSettings>({
@@ -55,7 +57,9 @@ export const NewsTab: React.FC = () => {
         url: 'https://example.com/article1',
         publishedAt: '2025-01-18T10:00:00Z',
         category: 'research',
-        relevanceScore: 9.2
+        relevanceScore: 9.2,
+        institution: 'MIT Computer Science',
+        company: 'OpenAI'
       },
       {
         id: '2',
@@ -65,7 +69,8 @@ export const NewsTab: React.FC = () => {
         url: 'https://example.com/article2',
         publishedAt: '2025-01-18T08:30:00Z',
         category: 'industry',
-        relevanceScore: 8.7
+        relevanceScore: 8.7,
+        company: 'OpenAI'
       },
       {
         id: '3',
@@ -75,7 +80,8 @@ export const NewsTab: React.FC = () => {
         url: 'https://example.com/article3',
         publishedAt: '2025-01-17T15:20:00Z',
         category: 'research',
-        relevanceScore: 9.5
+        relevanceScore: 9.5,
+        institution: 'Stanford University'
       }
     ];
 
@@ -149,30 +155,31 @@ export const NewsTab: React.FC = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-6 bg-gray-900 text-white min-h-screen">
+    <div className="max-w-10xl mx-auto px-6 py-4">
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Agentic Design News Hub</h1>
         <p className="text-gray-400">Stay updated with the latest in AI agents, reasoning patterns, and industry developments</p>
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex space-x-1 mb-6 bg-gray-800 p-1 rounded-lg">
+      <div className="flex flex-wrap gap-1 mb-6 bg-gray-800 p-1 rounded-lg">
         {[
           { id: 'articles', label: 'Articles', icon: '📰' },
           { id: 'people', label: 'People', icon: '👥' },
+          { id: 'companies', label: 'Companies', icon: '🏢' },
           { id: 'settings', label: 'Settings', icon: '⚙️' }
         ].map(tab => (
           <button
             key={tab.id}
             onClick={() => setActiveSection(tab.id as any)}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-md transition-all ${
+            className={`flex items-center space-x-1 px-2 py-2 rounded-md transition-all text-xs sm:text-sm sm:px-3 sm:space-x-2 min-w-0 ${
               activeSection === tab.id 
                 ? 'bg-blue-600 text-white' 
                 : 'text-gray-400 hover:text-white hover:bg-gray-700'
             }`}
           >
-            <span>{tab.icon}</span>
-            <span>{tab.label}</span>
+            <span className="text-xs sm:text-sm flex-shrink-0">{tab.icon}</span>
+            <span className="truncate">{tab.label}</span>
           </button>
         ))}
       </div>
@@ -230,16 +237,26 @@ export const NewsTab: React.FC = () => {
           </div>
 
           {/* Articles List */}
-          <div className="space-y-4">
+          <div className="space-y-6">
             {filteredArticles.map(article => (
               <div key={article.id} className="bg-gray-800 p-6 rounded-lg hover:bg-gray-750 transition-all">
                 <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center space-x-3">
+                  <div className="flex items-center space-x-3 flex-wrap">
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${getCategoryColor(article.category)}`}>
                       {article.category.toUpperCase()}
                     </span>
                     <span className="text-gray-400 text-sm">{article.source}</span>
                     <span className="text-gray-500 text-sm">{formatDate(article.publishedAt)}</span>
+                    {article.company && (
+                      <span className="px-2 py-1 bg-indigo-100 text-indigo-800 rounded-full text-xs font-medium">
+                        🏢 {article.company}
+                      </span>
+                    )}
+                    {article.institution && (
+                      <span className="px-2 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-medium">
+                        🎓 {article.institution}
+                      </span>
+                    )}
                   </div>
                   <div className="flex items-center space-x-2">
                     <span className="text-xs text-gray-400">Relevance:</span>
@@ -336,6 +353,204 @@ export const NewsTab: React.FC = () => {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* Companies Section */}
+      {activeSection === 'companies' && (
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-xl font-semibold mb-2">Companies & Institutions</h2>
+            <p className="text-gray-400">Track organizations leading in agentic design and AI research</p>
+          </div>
+
+          {/* Company/Institution Grid */}
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {/* Companies */}
+            <div className="bg-gray-800 p-6 rounded-lg">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center space-x-3">
+                  <span className="text-2xl">🏢</span>
+                  <div>
+                    <h3 className="font-semibold text-lg text-white">OpenAI</h3>
+                    <p className="text-gray-400 text-sm">AI Research Company</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-xs text-gray-400">Activity Score</div>
+                  <div className="text-sm font-medium text-blue-400">9.2/10</div>
+                </div>
+              </div>
+              
+              <div className="mb-4">
+                <div className="text-xs text-gray-400 mb-2">Recent Articles: 2</div>
+                <div className="space-y-1">
+                  <div className="text-sm text-gray-300">• New Agent Framework for Enterprise</div>
+                  <div className="text-sm text-gray-300">• GPT-4 Planning Capabilities Study</div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
+                  AI Research
+                </span>
+                <button className="text-blue-400 hover:text-blue-300 text-sm">
+                  View All →
+                </button>
+              </div>
+            </div>
+
+            <div className="bg-gray-800 p-6 rounded-lg">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center space-x-3">
+                  <span className="text-2xl">🎓</span>
+                  <div>
+                    <h3 className="font-semibold text-lg text-white">Stanford University</h3>
+                    <p className="text-gray-400 text-sm">Research Institution</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-xs text-gray-400">Activity Score</div>
+                  <div className="text-sm font-medium text-purple-400">8.9/10</div>
+                </div>
+              </div>
+              
+              <div className="mb-4">
+                <div className="text-xs text-gray-400 mb-2">Recent Articles: 1</div>
+                <div className="space-y-1">
+                  <div className="text-sm text-gray-300">• Chain-of-Thought Reasoning Breakthrough</div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-medium">
+                  Research
+                </span>
+                <button className="text-blue-400 hover:text-blue-300 text-sm">
+                  View All →
+                </button>
+              </div>
+            </div>
+
+            <div className="bg-gray-800 p-6 rounded-lg">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center space-x-3">
+                  <span className="text-2xl">🎓</span>
+                  <div>
+                    <h3 className="font-semibold text-lg text-white">MIT Computer Science</h3>
+                    <p className="text-gray-400 text-sm">Research Institution</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-xs text-gray-400">Activity Score</div>
+                  <div className="text-sm font-medium text-emerald-400">8.7/10</div>
+                </div>
+              </div>
+              
+              <div className="mb-4">
+                <div className="text-xs text-gray-400 mb-2">Recent Articles: 1</div>
+                <div className="space-y-1">
+                  <div className="text-sm text-gray-300">• GPT-4 Agents Planning Research</div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <span className="px-2 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-medium">
+                  Research
+                </span>
+                <button className="text-blue-400 hover:text-blue-300 text-sm">
+                  View All →
+                </button>
+              </div>
+            </div>
+
+            <div className="bg-gray-800 p-6 rounded-lg">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center space-x-3">
+                  <span className="text-2xl">🏢</span>
+                  <div>
+                    <h3 className="font-semibold text-lg text-white">Meta</h3>
+                    <p className="text-gray-400 text-sm">Technology Company</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-xs text-gray-400">Activity Score</div>
+                  <div className="text-sm font-medium text-orange-400">7.8/10</div>
+                </div>
+              </div>
+              
+              <div className="mb-4">
+                <div className="text-xs text-gray-400 mb-2">Recent Articles: 0</div>
+                <div className="text-sm text-gray-500">No recent articles</div>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <span className="px-2 py-1 bg-orange-100 text-orange-800 rounded-full text-xs font-medium">
+                  AI Research
+                </span>
+                <button className="text-blue-400 hover:text-blue-300 text-sm">
+                  View All →
+                </button>
+              </div>
+            </div>
+
+            <div className="bg-gray-800 p-6 rounded-lg">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center space-x-3">
+                  <span className="text-2xl">🏢</span>
+                  <div>
+                    <h3 className="font-semibold text-lg text-white">Tesla</h3>
+                    <p className="text-gray-400 text-sm">Automotive/AI Company</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-xs text-gray-400">Activity Score</div>
+                  <div className="text-sm font-medium text-gray-400">6.5/10</div>
+                </div>
+              </div>
+              
+              <div className="mb-4">
+                <div className="text-xs text-gray-400 mb-2">Recent Articles: 0</div>
+                <div className="text-sm text-gray-500">No recent articles</div>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <span className="px-2 py-1 bg-gray-100 text-gray-800 rounded-full text-xs font-medium">
+                  Autonomous Systems
+                </span>
+                <button className="text-blue-400 hover:text-blue-300 text-sm">
+                  View All →
+                </button>
+              </div>
+            </div>
+
+            <div className="bg-gray-800 p-6 rounded-lg border-2 border-dashed border-gray-600 flex items-center justify-center">
+              <div className="text-center">
+                <span className="text-3xl text-gray-500 block mb-2">+</span>
+                <div className="text-gray-400 text-sm">Track More</div>
+                <div className="text-gray-400 text-sm">Organizations</div>
+                <button className="mt-2 px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-xs text-gray-300">
+                  Add Company
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Stats */}
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-gray-800 p-4 rounded-lg text-center">
+              <div className="text-2xl font-bold text-blue-400">12</div>
+              <div className="text-gray-400 text-sm">Companies Tracked</div>
+            </div>
+            <div className="bg-gray-800 p-4 rounded-lg text-center">
+              <div className="text-2xl font-bold text-purple-400">8</div>
+              <div className="text-gray-400 text-sm">Institutions Tracked</div>
+            </div>
+            <div className="bg-gray-800 p-4 rounded-lg text-center">
+              <div className="text-2xl font-bold text-emerald-400">47</div>
+              <div className="text-gray-400 text-sm">Articles This Month</div>
+            </div>
           </div>
         </div>
       )}
