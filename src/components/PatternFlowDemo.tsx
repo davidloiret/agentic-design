@@ -10,7 +10,9 @@ const PatternFlowDemo: React.FC = () => {
   const availablePatterns = [
     { id: 'cot', name: 'Chain of Thought' },
     { id: 'tot', name: 'Tree of Thoughts' },
-    { id: 'react', name: 'ReAct Pattern' }
+    { id: 'react', name: 'ReAct Pattern' },
+    { id: 'sequential-chaining', name: 'Sequential Chaining' },
+    { id: 'parallel-chaining', name: 'Parallel Chaining' }
   ];
 
   const currentScenario = patternScenarios[selectedPattern];
@@ -77,6 +79,20 @@ const PatternFlowDemo: React.FC = () => {
               <p><strong>ReAct (Reasoning + Acting)</strong> combines thinking with action-taking, iterating until the goal is achieved.</p>
               <p><strong>Key Benefits:</strong> Handles dynamic environments, uses external tools, adapts to new information.</p>
               <p><strong>Best For:</strong> Information gathering, API interactions, tasks requiring external data.</p>
+            </div>
+          )}
+          {selectedPattern === 'sequential-chaining' && (
+            <div>
+              <p><strong>Sequential Chaining</strong> links prompts in linear sequence where each output feeds the next input for complex workflows.</p>
+              <p><strong>Key Benefits:</strong> Context preservation, error handling, modular design, step-by-step processing.</p>
+              <p><strong>Best For:</strong> Content creation, data processing, multi-step analysis, workflow automation.</p>
+            </div>
+          )}
+          {selectedPattern === 'parallel-chaining' && (
+            <div>
+              <p><strong>Parallel Chaining</strong> executes multiple prompts simultaneously and combines results for comprehensive analysis.</p>
+              <p><strong>Key Benefits:</strong> Faster processing, diverse perspectives, load balancing, conflict resolution.</p>
+              <p><strong>Best For:</strong> Research synthesis, data analysis, consensus building, rapid ideation.</p>
             </div>
           )}
         </div>

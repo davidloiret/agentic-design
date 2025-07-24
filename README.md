@@ -117,3 +117,43 @@ Person / par domaine fin => AI red teaming etc
 
 
 Add a listen on each page => so instead of reading we can listen.
+
+
+on confond techniques et patterns ou c bien de faire ca ?
+
+chain of thought c'est un pattern et pas une technique ?
+
+Patterns => Techniques
+
+ou renommer en catégorie un peu comme mitra attack
+
+ou alors on parle de patterns et catégorie de pattern
+
+
+--------------
+
+
+
+  Techniques/Methods (like Chain-of-Thought):
+  - Specific, concrete implementations
+  - Well-defined procedures with clear steps
+  - Research papers refer to them as "techniques," "methods," or "approaches"
+  - Examples: Chain-of-Thought, Tree-of-Thought, ReAct, Self-Correction
+
+  Patterns (the higher-level categories):
+  - Abstract design principles or architectural approaches
+  - Describe general ways of organizing AI systems
+  - Examples: Reasoning Patterns, Prompt Chaining Patterns, Multi-Agent Patterns
+
+  In your codebase, you have the right structure:
+  - Categories represent the patterns (e.g., "Reasoning Techniques" category)
+  - Techniques represent the specific implementations (e.g., "Chain-of-Thought" technique)
+
+  The literature consistently uses:
+  - "Chain-of-Thought prompting technique"
+  - "Tree-of-Thought method"
+  - "ReAct approach"
+
+
+
+  model hub ?

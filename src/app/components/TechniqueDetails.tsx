@@ -375,18 +375,7 @@ export const TechniqueDetails = ({
                     </div>
                   )}
                 </div>
-              </div>
-              
-              {/* Pattern Information */}
-              <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
-                <h4 className="text-lg font-medium text-white mb-3">About Interactive Demos</h4>
-                <div className="text-slate-300 space-y-2 text-sm">
-                  <p>• <strong>Step-by-step:</strong> Watch how the pattern processes information through each stage</p>
-                  <p>• <strong>Real examples:</strong> See actual inputs and outputs at every step</p>
-                  <p>• <strong>Interactive controls:</strong> Play, pause, step forward/backward, or reset</p>
-                  <p>• <strong>Educational:</strong> Learn by seeing the pattern in action with detailed explanations</p>
-                </div>
-              </div>
+              </div>            
             </div>
           ) : (
             <div className="space-y-6">

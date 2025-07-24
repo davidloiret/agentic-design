@@ -7,7 +7,7 @@ export const Header = () => {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent">
-              Agentic Design Patterns
+              Agentic Design Patterns & Techniques
             </h1>
             <p className="text-gray-400 mt-1">Learn how to craft reliable agentic systems</p>
           </div>

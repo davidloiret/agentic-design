@@ -210,7 +210,7 @@ export const TechniquesList = ({
       <div className="flex-1 overflow-y-auto space-y-3 pr-8">
         <div className="flex items-center gap-2 px-1 pb-2">
           <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">
-            Design Patterns
+            Design Patterns & Techniques
           </h2>
           <div className="flex-1 h-px bg-gradient-to-r from-gray-600 to-transparent"></div>
         </div>
