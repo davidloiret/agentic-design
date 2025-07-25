@@ -119,14 +119,14 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
       tabs: [
         { id: 'explore', label: 'Explore Patterns', icon: BookOpen, description: 'Browse AI design patterns' },
         { id: 'learning', label: 'Learning Hub', icon: GraduationCap, description: 'Gamified learning & certification' },
-        { id: 'mindmap', label: 'Mind Map', icon: Brain, description: 'Visual pattern relationships' },
-        { id: 'evaluate', label: 'Evaluate & Compare', icon: FlaskConical, description: 'Compare techniques' },
+        // { id: 'mindmap', label: 'Mind Map', icon: Brain, description: 'Visual pattern relationships' },
+        // { id: 'evaluate', label: 'Evaluate & Compare', icon: FlaskConical, description: 'Compare techniques' },
       ]
     },
     {
       name: 'Development',
       tabs: [
-        { id: 'builder', label: 'System Builder', icon: Boxes, description: 'Build AI systems' },
+        // { id: 'builder', label: 'System Builder', icon: Boxes, description: 'Build AI systems' },
         { id: 'finetuning', label: 'Fine Tuning', icon: Settings, description: 'Model optimization' },
         { id: 'inference', label: 'AI Inference', icon: Cpu, description: 'Inference strategies' },
       ]

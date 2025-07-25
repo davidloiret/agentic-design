@@ -450,46 +450,6 @@ export const ProjectHub = () => {
                 ))}
               </div>
             </div>
-
-            {/* Quick Actions */}
-            <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-xl p-6">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center space-x-2">
-                <span>⚡</span>
-                <span>Quick Actions</span>
-              </h3>
-              <div className="flex flex-wrap gap-3">
-                <button 
-                  onClick={() => setActiveSection('projects')}
-                  className="flex items-center space-x-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg text-sm font-medium transition-all"
-                >
-                  <span>🚀</span>
-                  <span>Browse Projects</span>
-                </button>
-                <button 
-                  onClick={() => setActiveSection('libraries')}
-                  className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm font-medium transition-all"
-                >
-                  <span>📚</span>
-                  <span>Explore Libraries</span>
-                </button>
-                <button 
-                  onClick={() => setActiveSection('contribute')}
-                  className="flex items-center space-x-2 px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg text-sm font-medium transition-all"
-                >
-                  <span>➕</span>
-                  <span>Contribute Project</span>
-                </button>
-                <a 
-                  href="https://github.com/your-org/agentic-design" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="flex items-center space-x-2 px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded-lg text-sm font-medium transition-all"
-                >
-                  <Github className="w-4 h-4" />
-                  <span>View on GitHub</span>
-                </a>
-              </div>
-            </div>
           </div>
         )}
 

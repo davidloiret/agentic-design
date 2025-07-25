@@ -654,32 +654,32 @@ export const LearningHub: React.FC<LearningHubProps> = ({ techniques = [], categ
 
         <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
           <div className="flex items-center space-x-4 mb-4">
-            <div className={`p-3 rounded-full ${getDifficultyColor(module.difficulty)}`}>
+            <div className={`p-3 rounded-full ${getDifficultyColor(learningModule.difficulty)}`}>
               <GraduationCap className="w-8 h-8" />
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-white">{module.title}</h2>
-              <p className="text-gray-400">{module.description}</p>
+              <h2 className="text-2xl font-bold text-white">{learningModule.title}</h2>
+              <p className="text-gray-400">{learningModule.description}</p>
             </div>
           </div>
           
           <div className="flex items-center space-x-6 mt-4">
-            <span className={`px-3 py-1 rounded-full text-sm ${getDifficultyColor(module.difficulty)}`}>
-              {module.difficulty}
+            <span className={`px-3 py-1 rounded-full text-sm ${getDifficultyColor(learningModule.difficulty)}`}>
+              {learningModule.difficulty}
             </span>
             <span className="text-sm text-gray-400 flex items-center">
               <Star className="w-4 h-4 mr-1" />
-              {module.xpReward} XP Total
+              {learningModule.xpReward} XP Total
             </span>
             <span className="text-sm text-gray-400 flex items-center">
               <Clock className="w-4 h-4 mr-1" />
-              {module.challenges.reduce((sum, c) => sum + c.timeEstimate, 0)} min
+              {(learningModule.challenges || []).reduce((sum, c) => sum + c.timeEstimate, 0)} min
             </span>
           </div>
         </div>
 
         {/* Unlock Requirements */}
-        {module.isLocked && (
+        {learningModule.isLocked && (
           <div className="mb-4 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
             <div className="flex items-center space-x-2 mb-2">
               <Info className="w-4 h-4 text-yellow-400" />
@@ -712,7 +712,7 @@ export const LearningHub: React.FC<LearningHubProps> = ({ techniques = [], categ
         )}
 
         <div className="grid gap-4">
-          {module.challenges.map((challenge) => {
+          {(learningModule.challenges || []).map((challenge) => {
             const Icon = getChallengeIcon(challenge.type);
             return (
               <div 
