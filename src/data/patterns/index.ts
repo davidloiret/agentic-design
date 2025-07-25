@@ -23,6 +23,11 @@ import { functionCallingPattern } from './function-calling';
 import { codeExecutionPattern } from './code-execution';
 import { hierarchicalPlanningPattern } from './hierarchical-planning';
 import { goalDecompositionPattern } from './goal-decomposition';
+import { constraintSatisfactionPattern } from './constraint-satisfaction';
+import { scenarioPlanningPattern } from './scenario-planning';
+import { latentRecurrentThinkingPattern } from './latent-recurrent-thinking';
+import { graphOfThoughtPattern } from './graph-of-thought';
+import { controlPlanePattern } from './control-plane';
 
 export * from './types';
 export * from './styles';
@@ -30,6 +35,8 @@ export * from './styles';
 export const patternScenarios: { [key: string]: PatternScenario } = {
   'cot': chainOfThoughtPattern,
   'tot': treeOfThoughtsPattern,
+  'lrt': latentRecurrentThinkingPattern,
+  'got': graphOfThoughtPattern,
   'react': reactPattern,
   'sequential-chaining': sequentialChainingPattern,
   'parallel-chaining': parallelChainingPattern,
@@ -52,6 +59,9 @@ export const patternScenarios: { [key: string]: PatternScenario } = {
   'code-execution': codeExecutionPattern,
   'hierarchical-planning': hierarchicalPlanningPattern,
   'goal-decomposition': goalDecompositionPattern,
+  'constraint-satisfaction': constraintSatisfactionPattern,
+  'scenario-planning': scenarioPlanningPattern,
+  'control-plane': controlPlanePattern,
 };
 
 export default patternScenarios;

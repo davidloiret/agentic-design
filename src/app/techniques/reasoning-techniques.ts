@@ -38,6 +38,46 @@ export const reasoningTechniques: Technique[] = [
     example: 'Problem: "Plan a 3-day trip to Paris with a $1000 budget"\n\nToT Branches:\n├─ Budget-focused path\n│  ├─ Hostels + street food\n│  └─ Airbnb + cooking\n├─ Experience-focused path\n│  ├─ Mid-range hotel + restaurants\n│  └─ Budget hotel + select dining\n└─ Balanced path (selected)\n   ├─ Budget hotel\n   ├─ Mix of dining options\n   └─ Free/low-cost attractions'
   },
   {
+    id: 'lrt',
+    name: 'Latent Recurrent Thinking',
+    abbr: 'LRT',
+    icon: '🧠',
+    color: 'from-violet-500 to-violet-600',
+    category: 'reasoning-techniques',
+    description: 'Iterative reasoning within continuous latent space without explicit token generation',
+    features: [
+      '60% reduction in computational overhead vs CoT',
+      'Dynamic reasoning depth adjustment',
+      'Parallel pathway exploration in latent space',
+      'No intermediate token generation required',
+      'Scales efficiently to trillion-parameter models',
+      'Mimics human intuitive thinking processes'
+    ],
+    useCases: ['complex-math', 'scientific-reasoning', 'real-time-decisions', 'multimodal-analysis', 'autonomous-systems'],
+    complexity: 'high',
+    example: 'Problem: "Optimize supply chain for global logistics"\n\nLRT Process:\n• Encodes problem into latent representation\n• Iteratively refines solution space internally:\n  - Cycle 1: Initial constraint mapping\n  - Cycle 2: Resource optimization refinement\n  - Cycle 3: Risk factor integration\n  - Cycle 4: Cost-benefit convergence\n• Decodes optimized solution:\n  "Hub-spoke model with 3 regional centers,\n   predictive inventory management,\n   and 23% cost reduction through AI routing"\n\nAdvantages: No verbose intermediate steps,\nfaster inference, adaptive complexity'
+  },
+  {
+    id: 'got',
+    name: 'Graph-of-Thought',
+    abbr: 'GoT',
+    icon: '🕸️',
+    color: 'from-emerald-500 to-teal-600',
+    category: 'reasoning-techniques',
+    description: 'Non-linear reasoning with thoughts as nodes and dependencies as edges',
+    features: [
+      'Non-linear thought exploration',
+      'Thoughts as vertices, dependencies as edges',
+      'Synergistic idea combination',
+      'Feedback loops and backtracking',
+      'Complex network distillation',
+      'Superior to linear CoT for complex problems'
+    ],
+    useCases: ['creative-problem-solving', 'research-synthesis', 'strategic-planning', 'complex-analysis', 'innovation'],
+    complexity: 'high',
+    example: 'Problem: "Design sustainable city planning strategy"\n\nGoT Network:\n[Energy Systems] ←→ [Transportation]\n       ↓ influences     ↑ affects\n[Housing Policy] ←→ [Economic Zones]\n       ↓ connects       ↑ enables\n[Green Spaces] ←→ [Water Management]\n\nSynergistic Connections:\n• Solar + Electric Transit = Carbon neutral transport\n• Green Roofs + Water Collection = Urban farming\n• Mixed-use + Public Transit = Reduced commuting\n\nDistilled Solution: Integrated eco-districts with\nenergy-positive buildings, autonomous transit,\nand circular resource management'
+  },
+  {
     id: 'self-correction',
     name: 'Self-Correction',
     abbr: '',
@@ -164,5 +204,85 @@ export const reasoningTechniques: Technique[] = [
     useCases: ['complex-math', 'research', 'strategic-analysis', 'scientific-reasoning', 'multi-step-planning'],
     complexity: 'high',
     example: 'Problem: "Design a sustainable urban transportation system"\n\nLong CoT Process:\n1. Extended Analysis Phase (30+ reasoning steps):\n   • Population density considerations\n   • Environmental impact assessment\n   • Economic feasibility analysis\n   • Technology integration options\n   • Social equity implications\n\n2. Self-Correction Cycles:\n   • Reviews initial assumptions\n   • Identifies logical gaps\n   • Refines solution approach\n   • Validates against constraints\n\n3. Multi-Modal Integration:\n   • Electric buses for main routes\n   • Bike-sharing networks\n   • Pedestrian-friendly zones\n   • Smart traffic management\n\nResult: Comprehensive 50-step reasoning chain leading to optimized transportation blueprint'
+  },
+  {
+    id: 'neuro-symbolic-reasoning',
+    name: 'Neuro-Symbolic Reasoning',
+    abbr: 'NSR',
+    icon: '🧬',
+    color: 'from-cyan-500 to-blue-600',
+    category: 'reasoning-techniques',
+    description: 'Combines neural network learning with symbolic logic for hybrid reasoning capabilities',
+    features: [
+      'Neural-symbolic integration',
+      'Logical constraint satisfaction',
+      'Interpretable rule learning',
+      'Symbolic knowledge injection',
+      'Differentiable programming',
+      'Compositional generalization'
+    ],
+    useCases: ['legal-reasoning', 'scientific-discovery', 'knowledge-graphs', 'formal-verification', 'expert-systems'],
+    complexity: 'high',
+    example: 'Legal Contract Analysis:\n\nNeural Component:\n• Learns patterns from 10,000+ contracts\n• Identifies clause types and relationships\n• Extracts key terms and obligations\n\nSymbolic Component:\n• Applies formal legal rules:\n  - "If consideration < $500 AND no written agreement THEN contract invalid"\n  - "If party A breaches THEN party B may terminate"\n• Ensures logical consistency\n• Provides formal proofs\n\nHybrid Reasoning:\n1. Neural: Extract "Payment due in 30 days"\n2. Symbolic: Apply rule "Payment > 30 days = breach"\n3. Conclusion: "Late payment constitutes breach with 95% confidence"\n\nAdvantages:\n• Combines learning flexibility with logical rigor\n• Interpretable reasoning chains\n• Guaranteed constraint satisfaction\n• Generalizes beyond training data'
+  },
+  {
+    id: 'symbolic-program-synthesis',
+    name: 'Symbolic Program Synthesis',
+    abbr: 'SPS',
+    icon: '⚙️',
+    color: 'from-purple-500 to-indigo-600',
+    category: 'reasoning-techniques',
+    description: 'Automatically generates symbolic programs from examples and specifications',
+    features: [
+      'Program synthesis from examples',
+      'Specification-driven generation',
+      'Inductive programming',
+      'Verification-guided synthesis',
+      'Domain-specific languages',
+      'Compositional program building'
+    ],
+    useCases: ['code-generation', 'automation-scripts', 'data-transformation', 'api-integration', 'workflow-automation'],
+    complexity: 'high',
+    example: 'Data Processing Task:\n\nInput Examples:\n• [1, 2, 3] → [2, 4, 6]\n• [5, 10, 15] → [10, 20, 30]\n• [0, 7, 14] → [0, 14, 28]\n\nSynthesis Process:\n1. Pattern Recognition: Each output = input × 2\n2. Program Generation:\n   ```python\n   def transform(lst):\n       return [x * 2 for x in lst]\n   ```\n3. Verification: Test against all examples ✓\n4. Generalization: Works for any numeric list\n\nComplex Example - Excel Formula:\nUser Intent: "Sum values where category = \'Sales\' and date > \'2024-01-01\'"\n\nSynthesized Formula:\n=SUMIFS(C:C, A:A, "Sales", B:B, ">2024-01-01")\n\nAdvantages:\n• Reduces programming effort by 80%\n• Generates bug-free code\n• Handles complex specifications\n• Enables non-programmers to automate tasks'
+  },
+  {
+    id: 'hybrid-reasoning-fusion',
+    name: 'Hybrid Reasoning Fusion',
+    abbr: 'HRF',
+    icon: '🔀',
+    color: 'from-indigo-500 to-purple-600',
+    category: 'reasoning-techniques',
+    description: 'Seamlessly integrates multiple reasoning paradigms for optimal problem-solving',
+    features: [
+      'Multi-paradigm integration',
+      'Dynamic reasoning selection',
+      'Cross-paradigm knowledge transfer',
+      'Confidence-weighted fusion',
+      'Reasoning quality assessment',
+      'Adaptive paradigm switching'
+    ],
+    useCases: ['complex-problem-solving', 'multi-domain-analysis', 'robust-decision-making', 'adaptive-systems'],
+    complexity: 'high',
+    example: 'Medical Diagnosis Challenge:\n\nProblem: "65-year-old patient with chest pain, elevated troponin, family history of heart disease"\n\nHybrid Reasoning Approach:\n\n1. Statistical Reasoning (40% weight):\n   • Age + symptoms = 78% cardiac event probability\n   • Troponin level = 85% myocardial infarction likelihood\n\n2. Symbolic Logic (30% weight):\n   • IF troponin > 0.04 AND chest_pain THEN probable_MI\n   • IF age > 60 AND family_history THEN increased_risk\n   • Logical conclusion: HIGH cardiac risk\n\n3. Case-Based Reasoning (20% weight):\n   • Similar case #1847: Outcome = MI, Treatment = immediate catheterization\n   • Similar case #2103: Outcome = stable angina, Treatment = medication\n   • Pattern match: 72% similarity to emergency cases\n\n4. Causal Reasoning (10% weight):\n   • Atherosclerosis → plaque rupture → vessel occlusion → tissue damage\n   • Troponin elevation indicates cellular damage\n\nFusion Result:\n• Confidence: 89% acute coronary syndrome\n• Recommendation: Immediate emergency intervention\n• Reasoning: Multi-paradigm consensus with high statistical and logical support\n\nAdvantages:\n• Robust conclusions from multiple perspectives\n• Handles uncertainty better than single approaches\n• Provides comprehensive reasoning justification\n• Adapts to available information types'
+  },
+  {
+    id: 'contextual-self-refinement',
+    name: 'Contextual Self-Refinement',
+    abbr: 'CSR',
+    icon: '🔄',
+    color: 'from-purple-500 to-pink-600',
+    category: 'reasoning-techniques',
+    description: 'Iterative improvement of reasoning and context quality through self-evaluation, refinement, and adaptive optimization',
+    features: [
+      'Self-evaluation mechanisms',
+      'Iterative reasoning improvement',
+      'Quality assessment metrics',
+      'Adaptive refinement strategies',
+      'Context coherence optimization',
+      'Performance feedback loops'
+    ],
+    useCases: ['content-creation', 'research-synthesis', 'complex-reasoning', 'quality-assurance', 'knowledge-distillation'],
+    complexity: 'high',
+    example: 'Academic Paper Synthesis:\n\nInitial Context: Collection of 20 research papers on "AI Safety"\n\nRefinement Process:\n\n1. Initial Assembly (Iteration 1):\n   • Concatenate paper abstracts and conclusions\n   • Basic chronological ordering\n   • Context window: 80% utilized\n   • Quality score: 0.65 (coherence issues identified)\n\n2. Self-Evaluation:\n   • Detected: Conflicting terminology usage\n   • Identified: Missing key connections between papers\n   • Found: Redundant information in multiple papers\n   • Assessed: Insufficient depth in critical areas\n\n3. Refinement (Iteration 2):\n   • Standardize terminology across papers\n   • Extract and emphasize paper relationships\n   • Remove redundant content, add depth to key areas\n   • Reorganize by thematic clusters rather than chronology\n   • Quality score: 0.82 (significant improvement)\n\n4. Second Evaluation:\n   • Context coherence: Good\n   • Information density: Optimal\n   • Missing elements: Recent regulatory developments\n   • Refinement needed: Add policy implications\n\n5. Final Refinement (Iteration 3):\n   • Integrate recent regulatory context\n   • Add policy-technical bridges\n   • Optimize for synthesis task requirements\n   • Final quality score: 0.94\n\nResult: Highly coherent, comprehensive context optimized for synthesis\n\nImprovements:\n• 44% increase in context quality score\n• 25% better task performance\n• Reduced processing time through optimal organization\n• Enhanced logical flow and thematic coherence'
   }
 ];

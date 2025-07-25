@@ -42,18 +42,20 @@ export const toolUseTechniques: Technique[] = [
     name: 'Code Execution',
     abbr: '',
     icon: '💻',
-    color: 'from-red-500 to-orange-500',
+    color: 'from-green-500 to-emerald-500',
     category: 'tool-use',
-    description: 'Secure execution of generated code in sandboxed environments',
+    description: 'Execute code dynamically to solve computational problems',
     features: [
-      'Multi-language support',
-      'Sandboxed execution',
-      'Resource limiting',
-      'Output capture'
+      'Dynamic code generation',
+      'Safe execution environments',
+      'Multiple language support',
+      'Result validation',
+      'Error handling and debugging',
+      'Resource management'
     ],
-    useCases: ['data-analysis', 'calculations', 'automation', 'validation'],
+    useCases: ['data-analysis', 'mathematical-computation', 'automation', 'prototyping'],
     complexity: 'high',
-    example: 'Code Generation and Execution:\n\nGenerated Python Code:\n```python\nimport pandas as pd\ndata = [1, 2, 3, 4, 5]\nmean = sum(data) / len(data)\nprint(f"Mean: {mean}")\n```\n\nExecution Environment:\n• Language: Python 3.9\n• Timeout: 30 seconds\n• Memory limit: 512MB\n• Output: "Mean: 3.0"'
+    example: 'Data Analysis Request:\n\nUser: "Analyze sales data trends from CSV file"\n\nCode Execution Process:\n1. Generate Python code:\n   ```python\n   import pandas as pd\n   import matplotlib.pyplot as plt\n   \n   df = pd.read_csv("sales_data.csv")\n   monthly_sales = df.groupby("month").sum()\n   trend = monthly_sales["sales"].pct_change()\n   ```\n\n2. Execute in sandboxed environment\n3. Return analysis results and visualizations\n4. Provide insights based on computed trends\n\nResult: Automated data analysis with insights'
   },
   {
     id: 'plugin-architecture',

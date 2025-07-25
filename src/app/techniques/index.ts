@@ -7,6 +7,9 @@ import { memoryManagementTechniques } from './memory-management';
 import { workflowOrchestrationTechniques } from './workflow-orchestration';
 import { securitySafetyTechniques } from './security-safety';
 import { planningExecutionTechniques } from './planning-execution';
+import { interpretabilityTechniques } from './interpretability';
+import { humanAiCollaborationTechniques } from './human-ai-collaboration';
+import { knowledgeRetrievalTechniques } from './knowledge-retrieval';
 
 export * from './types';
 
@@ -43,6 +46,9 @@ export const techniques: Technique[] = [
   ...workflowOrchestrationTechniques,
   ...securitySafetyTechniques,
   ...planningExecutionTechniques,
+  ...interpretabilityTechniques,
+  ...humanAiCollaborationTechniques,
+  ...knowledgeRetrievalTechniques,
   ...remainingTechniques,
 ];
 

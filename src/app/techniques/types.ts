@@ -29,7 +29,6 @@ export type TechniqueCategory =
   | 'goal-setting-monitoring'
   | 'exception-handling-recovery'
   | 'workflow-orchestration'
-  | 'human-in-loop'
   | 'knowledge-retrieval'
   | 'inter-agent-communication'
   | 'resource-aware-optimization'

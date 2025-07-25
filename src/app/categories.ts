@@ -110,7 +110,7 @@ export const categories: Category[] = [
         'Ignoring the cost of routing decisions relative to processing costs'
       ]
     },
-    techniques: ['content-based-routing', 'capability-routing', 'load-balancing', 'geographic-routing', 'dynamic-routing']
+    techniques: ['content-based-routing', 'capability-routing', 'load-balancing', 'geographic-routing', 'dynamic-routing', 'dynamic-context-assembly']
   },
   { 
     id: 'parallelization', 
@@ -388,7 +388,7 @@ export const categories: Category[] = [
         'Not handling memory corruption or inconsistency gracefully'
       ]
     },
-    techniques: ['sliding-window', 'hierarchical-memory', 'attention-mechanisms', 'memory-consolidation', 'working-memory-patterns', 'context-compression']
+    techniques: ['sliding-window', 'hierarchical-memory', 'attention-mechanisms', 'memory-consolidation', 'working-memory-patterns', 'context-compression', 'context-compression-advanced', 'multimodal-context-integration', 'latent-memory-networks', 'adaptive-context-depth', 'latent-knowledge-retrieval']
   },
   { 
     id: 'learning-adaptation', 
@@ -530,69 +530,24 @@ export const categories: Category[] = [
     },
     techniques: ['circuit-breaker', 'retry-backoff', 'graceful-degradation', 'health-monitoring']
   },
-  { 
-    id: 'human-in-loop', 
-    name: 'Human-in-the-Loop', 
-    icon: '🤝', 
-    description: 'Human oversight and intervention patterns',
-    detailedDescription: 'Human-in-the-loop patterns integrate human judgment, oversight, and intervention capabilities into AI systems to ensure appropriate decision-making, maintain control, and leverage human expertise where it provides the most value. These patterns implement mechanisms for human review, approval workflows, collaborative decision-making, and seamless handoffs between AI automation and human control.',
-    useCases: [
-      'Content Moderation: Human reviewers validating AI moderation decisions for edge cases and sensitive content.',
-      'Medical Diagnosis: AI providing preliminary analysis with human medical professionals making final diagnoses.',
-      'Financial Decisions: AI analysis with human approval required for high-value or high-risk financial transactions.',
-      'Creative Review: Human editors reviewing and refining AI-generated creative content for quality and brand alignment.',
-      'Legal Analysis: AI research and initial analysis with human lawyers providing final legal opinions.',
-      'Quality Assurance: Human inspectors reviewing AI-automated processes for critical applications.',
-      'Ethical Oversight: Human review of AI decisions that may have ethical implications or societal impact.',
-      'Learning and Training: Human trainers providing feedback and corrections to improve AI system performance.'
-    ],
-    whyImportant: 'Human-in-the-loop patterns are essential for maintaining appropriate human control and oversight in AI systems, especially in high-stakes or sensitive applications. They leverage the complementary strengths of human judgment and AI capabilities, ensure accountability and ethical decision-making, and provide mechanisms for continuous improvement through human feedback. These patterns are crucial for building trustworthy AI systems that users and organizations can rely on.',
-    implementationGuide: {
-      whenToUse: [
-        'High-stakes decisions where human judgment and accountability are required',
-        'Applications dealing with sensitive, ethical, or subjective content',
-        'Systems where regulatory compliance requires human oversight',
-        'Learning systems that benefit from human feedback and correction',
-        'Applications where user trust depends on human involvement and control',
-        'Complex scenarios where AI confidence is low or context requires human expertise'
-      ],
-      bestPractices: [
-        'Design clear interfaces that present relevant information for human decision-making',
-        'Implement efficient workflows that minimize human cognitive load while maintaining oversight quality',
-        'Use AI confidence scores and uncertainty measures to trigger appropriate human involvement',
-        'Design escalation procedures that route complex or unusual cases to appropriate human experts',
-        'Implement feedback mechanisms that allow human input to improve AI performance',
-        'Provide proper training and support for humans working within AI-assisted workflows',
-        'Design systems that gracefully handle both human approval and rejection of AI recommendations'
-      ],
-      commonPitfalls: [
-        'Over-relying on human oversight leading to bottlenecks and reduced efficiency',
-        'Poor interface design that makes it difficult for humans to understand AI reasoning and recommendations',
-        'Insufficient training or support leading to inconsistent or poor-quality human decisions',
-        'Not considering human fatigue and cognitive limitations in high-volume review scenarios',
-        'Failing to learn from human feedback to improve AI performance over time',
-        'Creating human-AI workflows that are frustrating or counterproductive for human participants'
-      ]
-    },
-    techniques: ['approval-workflows', 'collaborative-filtering', 'escalation-procedures', 'feedback-loops']
-  },
+
   { 
     id: 'knowledge-retrieval', 
     name: 'Knowledge Retrieval (RAG)', 
     icon: '📚', 
     description: 'Information retrieval and augmented generation patterns',
-    detailedDescription: 'Knowledge retrieval patterns, particularly Retrieval-Augmented Generation (RAG), enhance AI systems by combining pre-trained knowledge with dynamically retrieved information from external sources. These patterns enable AI systems to access current information, domain-specific knowledge bases, and contextually relevant data to provide more accurate, up-to-date, and comprehensive responses than would be possible with static training data alone.',
+    detailedDescription: 'Knowledge retrieval patterns, particularly Retrieval-Augmented Generation (RAG), enhance AI systems by combining pre-trained knowledge with dynamically retrieved information from external sources. This comprehensive collection includes cutting-edge RAG variants from the latest research: Graph RAG for relationship-aware retrieval, Self-RAG for quality control, Corrective RAG for error correction, Adaptive RAG for dynamic optimization, and Multimodal RAG for cross-modal integration. These patterns enable AI systems to access current information, domain-specific knowledge bases, and contextually relevant data with unprecedented sophistication and reliability.',
     useCases: [
-      'Document Q&A: Answering questions based on large document collections, manuals, or knowledge bases.',
-      'Current Events: Providing up-to-date information on recent developments and news.',
-      'Technical Support: Accessing product documentation and troubleshooting guides for accurate assistance.',
-      'Research Assistance: Retrieving relevant academic papers, studies, and specialized knowledge for research tasks.',
-      'Legal Research: Finding relevant case law, statutes, and legal precedents for legal analysis.',
-      'Medical Information: Accessing current medical literature and guidelines for healthcare applications.',
-      'Business Intelligence: Retrieving and analyzing business data, reports, and market information.',
-      'Educational Content: Accessing textbooks, reference materials, and educational resources for learning support.'
+      'Advanced Document Analysis: Multi-level hierarchical retrieval from complex documents, legal texts, and technical manuals with granular precision.',
+      'Fact-Checking & Verification: Chain-of-verification processes for news validation, research verification, and misinformation detection with confidence scoring.',
+      'Knowledge Graph Exploration: Graph-based retrieval for discovering relationships, multi-hop reasoning, and entity-centric analysis in scientific and business domains.',
+      'Conversational Knowledge Assistance: Context-aware dialogue systems that maintain conversation history and build progressive understanding.',
+      'Quality-Controlled Research: Self-reflective and corrective RAG systems that automatically assess and improve retrieval quality for critical applications.',
+      'Multimodal Information Integration: Cross-modal retrieval combining text, images, audio, and structured data for comprehensive analysis.',
+      'Adaptive Domain Expertise: Dynamic systems that adjust retrieval strategies based on query complexity, domain requirements, and performance constraints.',
+      'Enterprise Knowledge Management: Modular, customizable RAG architectures for different departments with role-based access and specialized generation.'
     ],
-    whyImportant: 'Knowledge retrieval patterns are crucial for creating AI systems that can access and utilize information beyond their training data, enabling them to provide current, accurate, and contextually relevant responses. They address the knowledge cutoff limitations of pre-trained models, reduce hallucination risks by grounding responses in retrieved facts, and enable specialization in specific domains without requiring model retraining.',
+    whyImportant: 'Knowledge retrieval patterns represent the cutting edge of AI-human knowledge integration, enabling systems that not only access information beyond training data but do so with unprecedented intelligence and quality control. Advanced RAG variants like Graph RAG unlock relationship-aware reasoning, Self-RAG provides automatic quality assurance, and Multimodal RAG enables comprehensive understanding across data types. These patterns transform AI from simple knowledge lookup systems into sophisticated research assistants capable of fact-checking, cross-referencing, and adaptive learning.',
     implementationGuide: {
       whenToUse: [
         'Applications requiring access to current, dynamic, or frequently changing information',
@@ -620,7 +575,7 @@ export const categories: Category[] = [
         'Inadequate handling of cases where relevant information cannot be retrieved'
       ]
     },
-    techniques: ['semantic-search', 'hybrid-retrieval', 'document-chunking', 'vector-databases', 'dynamic-context-assembly', 'context-validation']
+    techniques: ['semantic-search', 'hybrid-retrieval', 'document-chunking', 'vector-databases', 'context-validation', 'graph-rag', 'node-rag', 'self-rag', 'corrective-rag', 'adaptive-rag', 'modular-rag', 'multimodal-rag', 'conversational-rag', 'hierarchical-rag', 'chain-of-verification-rag', 'agentic-rag-systems']
   },
   { 
     id: 'context-orchestration', 
@@ -898,7 +853,7 @@ export const categories: Category[] = [
         'Mixing incompatible reasoning paradigms without clear transition mechanisms'
       ]
     },
-    techniques: ['cot', 'tot', 'self-correction', 'palm', 'react', 'cod', 'god', 'rlvr']
+    techniques: ['cot', 'tot', 'self-correction', 'palm', 'react', 'cod', 'god', 'rlvr', 'lrt', 'got', 'neuro-symbolic-reasoning', 'symbolic-program-synthesis', 'hybrid-reasoning-fusion', 'contextual-self-refinement']
   },
   { 
     id: 'guardrails-safety', 
@@ -1085,5 +1040,90 @@ export const categories: Category[] = [
       ]
     },
     techniques: ['reinforcement-learning', 'curiosity-driven-search', 'multi-armed-bandits', 'evolutionary-algorithms']
-  }
+  },
+  {
+    id: 'planning-execution',
+    name: 'Planning & Execution',
+    icon: '🎯',
+    description: 'Advanced planning strategies for complex multi-step tasks and goal achievement',
+    detailedDescription: 'Sophisticated approaches to breaking down complex objectives into manageable steps, handling dependencies, and executing plans while adapting to changing conditions.',
+    useCases: [
+      'Strategic Business Planning: Automated decomposition of strategic goals into actionable plans with resource allocation, timeline management, and progress tracking across organizational levels.',
+      'Project Management Automation: Breaking down complex projects into manageable tasks with dependency tracking, risk assessment, and adaptive scheduling based on real-time progress.',
+      'Resource Allocation Optimization: Dynamic distribution of computational, human, and material resources based on priority, availability, and efficiency considerations.',
+      'Multi-Agent Task Coordination: Orchestrating multiple AI agents to work together on complex objectives with role assignment, communication protocols, and coordination mechanisms.'
+    ],
+    whyImportant: 'Planning and execution patterns are essential for handling complex, multi-faceted challenges that require systematic decomposition and coordinated execution. They enable AI systems to break down overwhelming objectives into manageable components while maintaining awareness of dependencies, constraints, and resource limitations.',
+    implementationGuide: {
+      whenToUse: [
+        'Complex objectives requiring systematic decomposition into subtasks',
+        'Multi-step processes with dependencies and resource constraints',
+        'Dynamic environments requiring adaptive planning and re-planning',
+        'Collaborative scenarios involving multiple agents or stakeholders',
+        'Time-sensitive situations requiring efficient resource utilization',
+        'Projects with uncertain outcomes requiring contingency planning'
+      ],
+      bestPractices: [
+        'Design modular plans that can be adapted without complete reconstruction',
+        'Implement continuous monitoring and feedback loops for plan adjustment',
+        'Build in contingency planning for likely failure modes and uncertainties',
+        'Use hierarchical planning to manage complexity at different abstraction levels',
+        'Implement proper resource tracking and constraint management',
+        'Design clear success metrics and progress indicators for plan validation'
+      ],
+      commonPitfalls: [
+        'Over-planning without execution flexibility or adaptation mechanisms',
+        'Ignoring resource constraints and dependencies in plan construction',
+        'Poor handling of plan failures and inadequate replanning capabilities',
+        'Creating plans that are too rigid to adapt to changing circumstances',
+        'Insufficient monitoring and feedback mechanisms for plan progress',
+        'Failing to account for uncertainty and risk in planning processes'
+      ]
+    },
+    techniques: ['hierarchical-planning', 'goal-decomposition', 'constraint-satisfaction', 'scenario-planning']
+  },
+
+  {
+    id: 'human-ai-collaboration',
+    name: 'Human-AI Collaboration',
+    icon: '🤝',
+    description: 'Patterns for effective collaboration between humans and AI systems',
+    detailedDescription: 'Frameworks for seamless integration of human expertise with AI capabilities, enabling collaborative workflows where both humans and AI contribute their unique strengths to achieve better outcomes than either could accomplish alone.',
+    useCases: [
+      'Medical Diagnosis Support: AI assists doctors with pattern recognition and data analysis while doctors provide clinical judgment, ethical reasoning, and patient interaction.',
+      'Legal Research Collaboration: AI handles large-scale document analysis and case law research while lawyers provide strategic thinking, argumentation, and client advocacy.',
+      'Creative Content Generation: AI generates initial ideas and variations while humans provide creative direction, quality judgment, and artistic vision.',
+      'Scientific Research Partnerships: AI processes large datasets and identifies patterns while researchers provide hypothesis generation, experimental design, and interpretation.'
+    ],
+    whyImportant: 'Human-AI collaboration patterns are critical for building AI systems that augment rather than replace human capabilities, ensuring ethical and effective partnerships that leverage the unique strengths of both humans and AI while maintaining human agency and accountability.',
+    implementationGuide: {
+      whenToUse: [
+        'Tasks requiring both analytical processing and human judgment',
+        'Domains where ethical considerations and human values are paramount',
+        'Complex decision-making scenarios with high stakes or consequences',
+        'Creative or innovative work requiring both generation and curation',
+        'Situations requiring trust, empathy, or human connection',
+        'Workflows where human expertise provides essential context or validation'
+      ],
+      bestPractices: [
+        'Design clear roles and responsibilities for both human and AI participants',
+        'Implement transparent communication mechanisms between humans and AI',
+        'Build trust through explainable AI and consistent performance',
+        'Provide appropriate training and support for human team members',
+        'Design workflows that leverage the unique strengths of each participant',
+        'Implement feedback loops for continuous improvement of collaboration'
+      ],
+      commonPitfalls: [
+        'Over-reliance on AI without maintaining human oversight and accountability',
+        'Poor communication interfaces leading to misunderstanding and errors',
+        'Misaligned goals and expectations between human and AI team members',
+        'Inadequate training or support for humans working with AI systems',
+        'Ignoring human factors like fatigue, bias, and emotional state',
+        'Failing to maintain human agency and decision-making authority'
+              ]
+      },
+      techniques: ['human-in-the-loop', 'human-on-the-loop', 'human-ai-team-formation', 'augmented-decision-making', 'collaborative-learning', 'explainable-ai-interaction', 'approval-workflows', 'collaborative-filtering', 'escalation-procedures', 'feedback-loops']
+  },
+
+  
 ];

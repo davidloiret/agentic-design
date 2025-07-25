@@ -183,3 +183,40 @@ AI assistant to help build and learn
 
 
   Add knowledge structuration / ontology / shacl etc
+
+  Add fine tuning
+
+  RAG should be inside Knowledge Management catégories
+  => LLM as judge etc
+
+
+  Revoir le livre agentic design patterns & blogpost
+
+
+  Add new indicator for new techniques
+
+
+  Edge 
+
+  And
+  Distributed inference
+
+  Inference
+  - Provider
+  - Librairie (web, mobile)
+  Fine tuning
+
+Ontology => knowledge retrieval
+
+Memory 
+Add Human On the loop
+Models
+Multi modal ity
+
+/ Ambient agent / Chatbot
+
+# Sources
+  - https://arxiv.org/abs/2507.13334 
+  - https://docs.google.com/document/d/1rsaK53T3Lg5KoGwvf8ukOUvbELRtH-V0LnOIFDxBryE/edit?tab=t.0
+  - https://www.philschmid.de/agentic-pattern
+

@@ -78,17 +78,39 @@ export const routingTechniques: Technique[] = [
     name: 'Geographic Routing',
     abbr: '',
     icon: '🌍',
-    color: 'from-emerald-500 to-green-500',
+    color: 'from-green-500 to-teal-500',
     category: 'routing',
-    description: 'Routes requests based on geographic location and regional requirements',
+    description: 'Route requests based on geographic location and regional optimization',
     features: [
-      'Location-aware routing',
-      'Regional compliance handling',
-      'Latency optimization',
-      'Data sovereignty compliance'
+      'Location-based routing',
+      'Regional processing optimization',
+      'Latency minimization',
+      'Compliance with data sovereignty',
+      'Cultural and language adaptation',
+      'Regional resource utilization'
     ],
-    useCases: ['global-services', 'compliance', 'latency-optimization', 'regional-customization'],
+    useCases: ['global-applications', 'cdn-optimization', 'compliance', 'localization'],
+    complexity: 'medium',
+    example: 'Global Customer Service:\n\nIncoming Request: User from Germany asking for support\n\nGeographic Routing Decision:\n• Route to EU data center (GDPR compliance)\n• Select German-speaking agent or German language model\n• Apply EU-specific business rules and policies\n• Use regional knowledge base with local regulations\n• Optimize for European timezone and cultural context\n\nResult: Culturally appropriate, compliant, and low-latency service'
+  },
+  {
+    id: 'dynamic-context-assembly',
+    name: 'Dynamic Context Assembly',
+    abbr: 'DCA',
+    icon: '🔧',
+    color: 'from-indigo-500 to-purple-600',
+    category: 'routing',
+    description: 'Intelligent, real-time composition of context from multiple sources based on query analysis and relevance scoring',
+    features: [
+      'Multi-source context fusion',
+      'Real-time relevance scoring',
+      'Adaptive context selection',
+      'Contextual routing mechanisms',
+      'Quality-based prioritization',
+      'Dynamic context window optimization'
+    ],
+    useCases: ['multi-domain-qa', 'research-assistance', 'expert-systems', 'personalized-ai', 'knowledge-synthesis'],
     complexity: 'high',
-    example: 'User Request from Germany:\n\nLocation Analysis:\n• IP Geolocation: Frankfurt, DE\n• Regulatory: GDPR compliance required\n• Language: German preferred\n• Data residency: EU required\n\nRouting: → EU Frankfurt Data Center\nwith GDPR-compliant processing pipeline'
+    example: 'Multi-Domain Research Query:\n\nQuery: "How do quantum computing advances affect cryptocurrency security?"\n\nDynamic Assembly Process:\n\n1. Query Analysis:\n   • Primary domains: Quantum computing, Cryptography, Blockchain\n   • Intent: Impact analysis, Security implications\n   • Complexity: High (requires expert knowledge)\n   • Time sensitivity: Medium\n\n2. Source Identification & Scoring:\n   • Recent quantum computing papers (relevance: 0.95)\n   • Cryptocurrency security research (relevance: 0.92)\n   • Post-quantum cryptography standards (relevance: 0.88)\n   • Industry reports on quantum threats (relevance: 0.85)\n   • General blockchain documentation (relevance: 0.60)\n\n3. Context Assembly Strategy:\n   • Allocate 40% context window to quantum computing advances\n   • Allocate 35% to current cryptographic methods in crypto\n   • Allocate 20% to post-quantum cryptography solutions\n   • Allocate 5% to implementation timelines\n\n4. Real-time Optimization:\n   • Monitor response quality during generation\n   • Adjust source weights based on utilization\n   • Cache frequently accessed combinations\n   • Update assembly rules based on feedback\n\nResult: Contextually rich, multi-domain response with balanced technical depth\n\nAdvantages:\n• Optimized context utilization (98% relevance score)\n• Reduced information overload\n• Adaptive to query complexity\n• Improved response coherence across domains'
   }
 ];

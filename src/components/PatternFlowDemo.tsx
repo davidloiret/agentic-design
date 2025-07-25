@@ -25,7 +25,9 @@ const PatternFlowDemo: React.FC = () => {
     { id: 'function-calling', name: 'Function Calling' },
     { id: 'code-execution', name: 'Code Execution' },
     { id: 'hierarchical-planning', name: 'Hierarchical Planning' },
-    { id: 'goal-decomposition', name: 'Goal Decomposition' }
+    { id: 'goal-decomposition', name: 'Goal Decomposition' },
+    { id: 'constraint-satisfaction', name: 'Constraint Satisfaction' },
+    { id: 'scenario-planning', name: 'Scenario Planning' }
   ];
 
   const currentScenario = patternScenarios[selectedPattern];
@@ -197,6 +199,20 @@ const PatternFlowDemo: React.FC = () => {
               <p><strong>Goal Decomposition</strong> systematically breaks down complex goals into manageable sub-goals with SMART criteria evaluation and progress tracking.</p>
               <p><strong>Key Benefits:</strong> SMART goal creation, dependency analysis, priority assignment, progress monitoring, achievement validation.</p>
               <p><strong>Best For:</strong> Task management, goal setting, project planning, personal productivity, performance optimization.</p>
+            </div>
+          )}
+          {selectedPattern === 'constraint-satisfaction' && (
+            <div>
+              <p><strong>Constraint Satisfaction</strong> systematically finds optimal solutions within specified constraints and limitations using advanced CSP algorithms.</p>
+              <p><strong>Key Benefits:</strong> Constraint modeling, solution space exploration, trade-off analysis, multi-objective optimization, guaranteed satisfaction.</p>
+              <p><strong>Best For:</strong> Resource allocation, scheduling optimization, configuration management, deployment planning, multi-agent coordination.</p>
+            </div>
+          )}
+          {selectedPattern === 'scenario-planning' && (
+            <div>
+              <p><strong>Scenario Planning</strong> develops strategic plans for multiple possible future scenarios with probability assessment and adaptive responses.</p>
+              <p><strong>Key Benefits:</strong> Strategic foresight, risk mitigation, adaptive planning, stakeholder alignment, uncertainty management, decision robustness.</p>
+              <p><strong>Best For:</strong> Strategic planning, risk management, technology roadmaps, regulatory compliance, market uncertainty, long-term investment decisions.</p>
             </div>
           )}
         </div>

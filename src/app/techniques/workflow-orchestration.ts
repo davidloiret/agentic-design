@@ -2,6 +2,86 @@ import { Technique } from './types';
 
 export const workflowOrchestrationTechniques: Technique[] = [
   {
+    id: 'event-driven-orchestrator-worker',
+    name: 'Event-Driven Orchestrator-Worker',
+    abbr: 'EDOW',
+    icon: '📋',
+    color: 'from-cyan-500 to-blue-600',
+    category: 'workflow-orchestration',
+    description: 'Central orchestrator assigns tasks to worker agents through event streaming',
+    features: [
+      'Asynchronous task distribution via events',
+      'Consumer group-based load balancing',
+      'Automatic worker scaling and rebalancing',
+      'Fault tolerance through event replay',
+      'Stateless worker agents',
+      'Decoupled orchestration architecture'
+    ],
+    useCases: ['distributed-processing', 'microservices-orchestration', 'batch-processing', 'real-time-workflows'],
+    complexity: 'medium',
+    example: 'Document Processing Pipeline:\n\nEvent Flow:\n1. Orchestrator publishes tasks to "work-queue" topic\n2. Worker agents form consumer group\n3. Each worker processes assigned partition\n4. Results published to "results" topic\n5. Orchestrator aggregates final output\n\nKey Benefits:\n• Workers auto-rebalance on failure/scale\n• Event replay enables recovery\n• No direct orchestrator-worker connections\n• Horizontal scaling without coordination\n\nImplementation:\n- Orchestrator: Keyed task distribution\n- Workers: Consumer group members\n- Topics: work-queue, results, errors\n- Rebalancing: Automatic via Kafka protocol'
+  },
+  {
+    id: 'event-driven-hierarchical',
+    name: 'Event-Driven Hierarchical Agents',
+    abbr: 'EDHA',
+    icon: '🏗️',
+    color: 'from-blue-600 to-purple-600',
+    category: 'workflow-orchestration',
+    description: 'Multi-level agent hierarchy with event-based coordination',
+    features: [
+      'Recursive orchestrator-worker patterns',
+      'Hierarchical event topic structure',
+      'Cascading task decomposition',
+      'Level-specific consumer groups',
+      'Fault isolation by hierarchy level',
+      'Dynamic hierarchy reconfiguration'
+    ],
+    useCases: ['enterprise-workflows', 'multi-level-planning', 'organizational-structures', 'complex-orchestration'],
+    complexity: 'high',
+    example: 'Enterprise Project Management:\n\nHierarchy Levels:\n• Executive Level: Strategic planning\n• Manager Level: Resource allocation\n• Team Level: Task execution\n\nEvent Topics:\n- executive-directives\n- manager-assignments\n- team-tasks\n- status-reports\n\nFlow Example:\n1. Executive publishes to executive-directives\n2. Managers consume and decompose to manager-assignments\n3. Team leads consume and create team-tasks\n4. Teams execute and publish status-reports\n5. Reports bubble up through hierarchy\n\nBenefits:\n• Clear separation of concerns\n• Scalable to large organizations\n• Fault isolation at each level\n• Flexible hierarchy restructuring'
+  },
+  {
+    id: 'event-driven-blackboard',
+    name: 'Event-Driven Blackboard',
+    abbr: 'EDB',
+    icon: '📝',
+    color: 'from-purple-600 to-pink-600',
+    category: 'workflow-orchestration',
+    description: 'Shared knowledge base through event streaming for asynchronous collaboration',
+    features: [
+      'Event-sourced shared knowledge',
+      'Asynchronous agent collaboration',
+      'Knowledge evolution tracking',
+      'Multi-agent contributions',
+      'Event-based triggers and reactions',
+      'Persistent collaboration history'
+    ],
+    useCases: ['collaborative-problem-solving', 'knowledge-building', 'research-coordination', 'consensus-formation'],
+    complexity: 'medium',
+    example: 'Scientific Research Collaboration:\n\nBlackboard Events:\n• hypothesis-posted\n• evidence-added\n• analysis-completed\n• peer-review-submitted\n• consensus-reached\n\nAgent Interactions:\n1. Research Agent posts hypothesis\n2. Data Agent adds supporting evidence\n3. Analysis Agent computes statistics\n4. Review Agent validates methodology\n5. Synthesis Agent builds consensus\n\nEvent-Driven Benefits:\n• Agents work independently\n• Knowledge builds incrementally\n• Full audit trail maintained\n• Asynchronous collaboration\n• No central coordination needed\n\nTopic Structure:\n- research-hypotheses\n- experimental-data\n- analysis-results\n- peer-reviews\n- final-conclusions'
+  },
+  {
+    id: 'event-driven-market-based',
+    name: 'Event-Driven Market-Based',
+    abbr: 'EDMB',
+    icon: '💱',
+    color: 'from-pink-600 to-red-600',
+    category: 'workflow-orchestration',
+    description: 'Decentralized task allocation through bid/ask event marketplace',
+    features: [
+      'Auction-based task allocation',
+      'Bid/ask event streams',
+      'Market maker coordination',
+      'Dynamic pricing mechanisms',
+      'Reputation-based selection',
+      'Decentralized negotiation'
+    ],
+    useCases: ['resource-allocation', 'dynamic-pricing', 'competitive-bidding', 'load-balancing'],
+    complexity: 'high',
+    example: 'AI Service Marketplace:\n\nMarket Events:\n• task-posted (with requirements)\n• bid-submitted (agent capabilities + price)\n• ask-matched (market maker decision)\n• service-delivered (completion proof)\n• payment-processed (reputation update)\n\nMarket Flow:\n1. Client posts task to task-marketplace topic\n2. Agent publish bids to bid-stream topic\n3. Market maker matches optimal bid/ask\n4. Winner executes and publishes results\n5. Payment and reputation updates\n\nAdvantages:\n• Self-organizing resource allocation\n• Market-driven pricing\n• No central planning needed\n• Scalable to many participants\n• Built-in quality incentives\n\nTopics:\n- task-requests\n- agent-bids\n- market-matches\n- service-delivery\n- reputation-updates'
+  },
+  {
     id: 'enterprise-orchestration',
     name: 'Enterprise Orchestration',
     abbr: '',
@@ -120,5 +200,85 @@ export const workflowOrchestrationTechniques: Technique[] = [
     useCases: ['distributed-systems', 'real-time-processing', 'fault-tolerant-systems', 'scalable-architectures'],
     complexity: 'high',
     example: 'Distributed Content Processing:\n\nActor Hierarchy:\n• Supervisor Actor\n  ├─ Content Ingestion Actor\n  ├─ Processing Coordinator\n  │  ├─ Text Processor Actor (3 instances)\n  │  ├─ Image Processor Actor (2 instances)\n  │  └─ Video Processor Actor (1 instance)\n  └─ Output Manager Actor\n\nMessage Flow:\n1. Ingestion → Coordinator: "New content batch"\n2. Coordinator → Processors: "Process item X"\n3. Processors → Coordinator: "Processing complete"\n4. Coordinator → Output Manager: "Batch ready"\n\nFault Tolerance:\n• Actor crashes are isolated\n• Supervisor restarts failed actors\n• Messages are persisted for replay\n• Load balancing across processor instances'
+  },
+  {
+    id: 'edge-ai-optimization',
+    name: 'Edge AI Optimization',
+    abbr: 'EAO',
+    icon: '📱',
+    color: 'from-green-500 to-emerald-600',
+    category: 'workflow-orchestration',
+    description: 'Optimizes AI workflows for resource-constrained edge devices and mobile environments',
+    features: [
+      'Model compression and quantization',
+      'Inference batching optimization',
+      'Memory-efficient processing',
+      'Power consumption management',
+      'Network-aware computation',
+      'Adaptive quality degradation'
+    ],
+    useCases: ['mobile-ai', 'iot-devices', 'autonomous-vehicles', 'smart-cameras', 'wearable-tech'],
+    complexity: 'high',
+    example: 'Smart Camera Security System:\n\nOptimization Strategy:\n1. Model Compression:\n   • Original model: 50MB, 95% accuracy\n   • Quantized model: 12MB, 93% accuracy\n   • Pruned model: 8MB, 91% accuracy\n   • Final edge model: 8MB with 91% accuracy\n\n2. Adaptive Processing:\n   • High motion: Full resolution analysis\n   • Normal activity: 50% resolution analysis\n   • No motion: Keyframe analysis only\n   • Battery < 20%: Essential detection only\n\n3. Intelligent Batching:\n   • Group similar frames for batch processing\n   • Process 4 frames simultaneously for 3x speedup\n   • Skip redundant analysis for static scenes\n\n4. Network Optimization:\n   • WiFi available: Upload all detections\n   • Cellular only: Upload high-confidence events\n   • Offline mode: Store critical events locally\n\nResults:\n• 80% reduction in processing time\n• 60% reduction in power consumption\n• 90% maintenance of detection accuracy\n• Real-time performance on mobile hardware'
+  },
+  {
+    id: 'federated-orchestration',
+    name: 'Federated Orchestration',
+    abbr: 'FO',
+    icon: '🌐',
+    color: 'from-emerald-500 to-teal-600',
+    category: 'workflow-orchestration',
+    description: 'Coordinates AI processing across distributed edge devices while preserving data privacy',
+    features: [
+      'Decentralized model training',
+      'Privacy-preserving aggregation',
+      'Heterogeneous device coordination',
+      'Bandwidth-efficient communication',
+      'Differential privacy integration',
+      'Fault-tolerant federation'
+    ],
+    useCases: ['healthcare-networks', 'financial-institutions', 'smart-cities', 'autonomous-fleets', 'industrial-iot'],
+    complexity: 'high',
+    example: 'Healthcare Network AI:\n\nScenario: 10 hospitals collaboratively train diagnostic AI while keeping patient data private\n\nFederated Process:\n1. Local Training:\n   • Each hospital trains on local patient data\n   • Model updates computed locally\n   • Raw data never leaves hospital premises\n   • Training time: 2 hours per hospital\n\n2. Secure Aggregation:\n   • Hospitals share only model weight updates\n   • Differential privacy applied to prevent data leakage\n   • Central coordinator aggregates updates\n   • Privacy budget: ε = 1.0 (strong privacy)\n\n3. Global Model Distribution:\n   • Improved model distributed to all hospitals\n   • Performance gains from collaborative learning\n   • Personalization for local patient populations\n\n4. Continuous Improvement:\n   • Monthly federated training cycles\n   • New hospitals can join network seamlessly\n   • Model performance monitored across network\n\nBenefits:\n• 40% improvement in diagnostic accuracy\n• Full patient privacy preservation\n• Reduced training time vs central approach\n• Scalable to hundreds of institutions\n• Regulatory compliance maintained'
+  },
+  {
+    id: 'resource-aware-scheduling',
+    name: 'Resource-Aware Scheduling',
+    abbr: 'RAS',
+    icon: '⚡',
+    color: 'from-teal-500 to-cyan-600',
+    category: 'workflow-orchestration',
+    description: 'Dynamically schedules AI tasks based on available computational resources and constraints',
+    features: [
+      'Real-time resource monitoring',
+      'Dynamic priority adjustment',
+      'Multi-resource optimization',
+      'Deadline-aware scheduling',
+      'Energy consumption balancing',
+      'Thermal management integration'
+    ],
+    useCases: ['cloud-computing', 'mobile-devices', 'iot-networks', 'datacenter-optimization', 'autonomous-systems'],
+    complexity: 'high',
+    example: 'Autonomous Vehicle Processing:\n\nReal-time Resource Management:\n\n1. Resource Monitoring:\n   • CPU usage: 75% (4 cores)\n   • GPU usage: 60% (dedicated AI chip)\n   • Memory: 6.2GB / 8GB available\n   • Temperature: 68°C (threshold: 85°C)\n   • Battery: 45% remaining\n\n2. Task Prioritization:\n   • Critical (Real-time):\n     - Obstacle detection: 16ms deadline\n     - Lane tracking: 33ms deadline\n     - Emergency braking: 8ms deadline\n   \n   • Important (Near real-time):\n     - Traffic sign recognition: 100ms deadline\n     - Route optimization: 500ms deadline\n   \n   • Optional (Background):\n     - Map updates: 30s deadline\n     - Passenger entertainment: No deadline\n\n3. Dynamic Scheduling:\n   • High CPU load detected → Defer map updates\n   • Emergency braking triggered → Preempt all non-critical tasks\n   • Temperature rising → Reduce inference frequency by 20%\n   • Low battery → Switch to power-saving AI models\n\n4. Adaptive Quality:\n   • Normal conditions: Full resolution, high accuracy\n   • Resource constraints: Reduced resolution, maintained safety\n   • Emergency mode: Safety-critical processing only\n\nResult: 99.9% safety deadline compliance with optimal resource utilization'
+  },
+  {
+    id: 'progressive-enhancement',
+    name: 'Progressive Enhancement',
+    abbr: 'PE',
+    icon: '📈',
+    color: 'from-cyan-500 to-blue-600',
+    category: 'workflow-orchestration',
+    description: 'Incrementally improves AI output quality based on available resources and time',
+    features: [
+      'Layered quality improvement',
+      'Anytime algorithm implementation',
+      'Resource-based enhancement',
+      'Graceful degradation support',
+      'Quality-time trade-offs',
+      'User preference adaptation'
+    ],
+    useCases: ['interactive-systems', 'real-time-applications', 'variable-latency-environments', 'user-experience-optimization'],
+    complexity: 'medium',
+    example: 'Image Enhancement Application:\n\nProgressive Processing Pipeline:\n\n1. Baseline Quality (50ms):\n   • Basic noise reduction\n   • Simple contrast adjustment\n   • Quality score: 6/10\n   • Acceptable for preview\n\n2. Standard Quality (200ms):\n   • + Advanced denoising\n   • + Color correction\n   • + Sharpness enhancement\n   • Quality score: 7.5/10\n   • Good for social media\n\n3. High Quality (800ms):\n   • + AI upscaling\n   • + Detail reconstruction\n   • + Professional color grading\n   • Quality score: 9/10\n   • Print-ready quality\n\n4. Premium Quality (3000ms):\n   • + Deep learning enhancement\n   • + Artifact removal\n   • + Perfect edge reconstruction\n   • Quality score: 9.5/10\n   • Professional photography\n\nAdaptive Behavior:\n• Mobile device + low battery → Stop at Standard Quality\n• Desktop + high priority → Continue to Premium Quality\n• User impatient (cancels) → Return current best quality\n• Network slow → Process locally at available quality level\n\nUser Experience:\n• Immediate preview (50ms)\n• Continuous quality improvements\n• User can stop at any satisfactory level\n• No "all or nothing" waiting periods'
   }
 ];
