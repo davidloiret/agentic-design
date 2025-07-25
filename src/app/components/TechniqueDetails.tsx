@@ -7,6 +7,11 @@ import HierarchicalChainingDemo from '../../components/demos/HierarchicalChainin
 import IterativeRefinementDemo from '../../components/demos/IterativeRefinementDemo';
 import ParallelSynthesisDemo from '../../components/demos/ParallelSynthesisDemo';
 import DynamicRoutingDemo from '../../components/demos/DynamicRoutingDemo';
+import DynamicContextAssemblyDemo from '../../components/demos/DynamicContextAssemblyDemo';
+import MessageQueuingDemo from '../../components/demos/MessageQueuingDemo';
+import LatentMemoryNetworksDemo from '../../components/demos/LatentMemoryNetworksDemo';
+import AdaptiveContextDepthDemo from '../../components/demos/AdaptiveContextDepthDemo';
+import LatentKnowledgeRetrievalDemo from '../../components/demos/LatentKnowledgeRetrievalDemo';
 import ContentBasedRoutingDemo from '../../components/demos/ContentBasedRoutingDemo';
 import CapabilityRoutingDemo from '../../components/demos/CapabilityRoutingDemo';
 import LoadBalancingDemo from '../../components/demos/LoadBalancingDemo';
@@ -397,7 +402,7 @@ export const TechniqueDetails = ({
                       <GitBranch className="w-12 h-12 mx-auto text-gray-500 mb-4" />
                       <h3 className="text-lg font-medium text-gray-300 mb-2">Flow Visualization Coming Soon</h3>
                       <p className="text-gray-400 text-sm max-w-md mx-auto">
-                        We're creating an interactive flow diagram for this technique. 
+                        We&apos;re creating an interactive flow diagram for this technique. 
                         Check back soon or explore other techniques with available flows.
                       </p>
                     </div>
@@ -453,7 +458,7 @@ export const TechniqueDetails = ({
                         }
                       </span>
                       <span className="text-xs text-gray-500">
-                        {selectedTechnique.id === 'feedback-chaining' || selectedTechnique.id === 'hierarchical-chaining' || selectedTechnique.id === 'iterative-refinement' || selectedTechnique.id === 'parallel-synthesis' || selectedTechnique.id === 'dynamic-routing' || selectedTechnique.id === 'content-based-routing' || selectedTechnique.id === 'capability-routing' || selectedTechnique.id === 'load-balancing' || selectedTechnique.id === 'geographic-routing' || selectedTechnique.id === 'map-reduce' || selectedTechnique.id === 'scatter-gather' || selectedTechnique.id === 'fork-join' || selectedTechnique.id === 'async-await' || selectedTechnique.id === 'self-critique' || selectedTechnique.id === 'function-calling' || selectedTechnique.id === 'code-execution' || selectedTechnique.id === 'hierarchical-planning' || selectedTechnique.id === 'goal-decomposition' || selectedTechnique.id === 'constraint-satisfaction' || selectedTechnique.id === 'scenario-planning' || selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining' || selectedTechnique.id === 'conditional-chaining' ? 'Interactive demo available' : 'Demo coming soon'}
+                        {selectedTechnique.id === 'feedback-chaining' || selectedTechnique.id === 'hierarchical-chaining' || selectedTechnique.id === 'iterative-refinement' || selectedTechnique.id === 'parallel-synthesis' || selectedTechnique.id === 'dynamic-routing' || selectedTechnique.id === 'dynamic-context-assembly' || selectedTechnique.id === 'message-queuing' || selectedTechnique.id === 'latent-memory-networks' || selectedTechnique.id === 'adaptive-context-depth' || selectedTechnique.id === 'latent-knowledge-retrieval' || selectedTechnique.id === 'content-based-routing' || selectedTechnique.id === 'capability-routing' || selectedTechnique.id === 'load-balancing' || selectedTechnique.id === 'geographic-routing' || selectedTechnique.id === 'map-reduce' || selectedTechnique.id === 'scatter-gather' || selectedTechnique.id === 'fork-join' || selectedTechnique.id === 'async-await' || selectedTechnique.id === 'self-critique' || selectedTechnique.id === 'function-calling' || selectedTechnique.id === 'code-execution' || selectedTechnique.id === 'hierarchical-planning' || selectedTechnique.id === 'goal-decomposition' || selectedTechnique.id === 'constraint-satisfaction' || selectedTechnique.id === 'scenario-planning' || selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining' || selectedTechnique.id === 'conditional-chaining' ? 'Interactive demo available' : 'Demo coming soon'}
                       </span>
                     </div>
                   </div>
@@ -467,6 +472,16 @@ export const TechniqueDetails = ({
                     <ParallelSynthesisDemo />
                   ) : selectedTechnique.id === 'dynamic-routing' ? (
                     <DynamicRoutingDemo />
+                  ) : selectedTechnique.id === 'dynamic-context-assembly' ? (
+                    <DynamicContextAssemblyDemo />
+                  ) : selectedTechnique.id === 'message-queuing' ? (
+                    <MessageQueuingDemo />
+                  ) : selectedTechnique.id === 'latent-memory-networks' ? (
+                    <LatentMemoryNetworksDemo />
+                  ) : selectedTechnique.id === 'adaptive-context-depth' ? (
+                    <AdaptiveContextDepthDemo />
+                  ) : selectedTechnique.id === 'latent-knowledge-retrieval' ? (
+                    <LatentKnowledgeRetrievalDemo />
                   ) : selectedTechnique.id === 'content-based-routing' ? (
                     <ContentBasedRoutingDemo />
                   ) : selectedTechnique.id === 'capability-routing' ? (
@@ -508,7 +523,7 @@ export const TechniqueDetails = ({
                       <Play className="w-12 h-12 mx-auto text-gray-500 mb-4" />
                       <h3 className="text-lg font-medium text-gray-300 mb-2">Interactive Demo Coming Soon</h3>
                       <p className="text-gray-400 text-sm max-w-md mx-auto">
-                        We're working on an interactive hands-on demonstration for this technique. 
+                        We&apos;re working on an interactive hands-on demonstration for this technique. 
                         Check back soon or explore other techniques with available demos.
                       </p>
                     </div>

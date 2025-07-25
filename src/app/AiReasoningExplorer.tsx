@@ -22,6 +22,33 @@ import { useCases } from './use-cases';
 import { categories } from './categories';
 import { constraints } from './constraints';
 import { type LanguageType } from './pattern-examples';
+import { Technique, TechniqueCategory } from './techniques/types';
+
+// Add proper type interfaces
+interface EvaluationCriteria {
+  id: string;
+  name: string;
+  weight: number;
+}
+
+interface ModelConfig {
+  id: string;
+  name: string;
+  provider: string;
+  enabled: boolean;
+}
+
+interface EvaluationResult {
+  modelId: string;
+  patternId: string;
+  score: number;
+  metrics: { [key: string]: number };
+  feedback: string;
+}
+
+interface ApiTokens {
+  [provider: string]: string;
+}
 
 export const AIReasoningExplorer = () => {
   const [selectedTechnique, setSelectedTechnique] = useState(null);
@@ -47,20 +74,20 @@ export const AIReasoningExplorer = () => {
   const [detailsTab, setDetailsTab] = useState<'overview' | 'flow' | 'interactive' | 'code'>('overview');
   
   // Evaluation state
-  const [selectedPatterns, setSelectedPatterns] = useState<any[]>([]);
-  const [evaluationCriteria, setEvaluationCriteria] = useState<any[]>([]);
+  const [selectedPatterns, setSelectedPatterns] = useState<Technique[]>([]);
+  const [evaluationCriteria, setEvaluationCriteria] = useState<EvaluationCriteria[]>([]);
   const [testScenario, setTestScenario] = useState('');
-  const [selectedModels, setSelectedModels] = useState<any[]>([]);
-  const [evaluationResults, setEvaluationResults] = useState<any>(null);
-  const [apiTokens, setApiTokens] = useState<any>({});
+  const [selectedModels, setSelectedModels] = useState<ModelConfig[]>([]);
+  const [evaluationResults, setEvaluationResults] = useState<EvaluationResult[] | null>(null);
+  const [apiTokens, setApiTokens] = useState<ApiTokens>({});
   const [showTokenModal, setShowTokenModal] = useState(false);
 
   const getRecommendations = () => {
     if (!selectedUseCase && !userComplexity) return [];
 
-    let recommendations = techniques.map(technique => {
+    const recommendations = techniques.map(technique => {
       let score = 0;
-      let reasons = [];
+      const reasons: string[] = [];
 
       // Use case matching
       if (selectedUseCase && technique.useCases.includes(selectedUseCase)) {

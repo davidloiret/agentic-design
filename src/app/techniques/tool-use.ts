@@ -150,19 +150,23 @@ export const toolUseTechniques: Technique[] = [
   {
     id: 'message-queuing',
     name: 'Message Queuing',
-    abbr: '',
+    abbr: 'MQ',
     icon: '📬',
     color: 'from-pink-500 to-red-500',
     category: 'tool-use',
-    description: 'Asynchronous message passing for decoupled system communication',
+    description: 'Asynchronous message passing system enabling decoupled communication between AI agents and services in distributed agentic systems',
     features: [
-      'Asynchronous processing',
-      'Message persistence',
-      'Load distribution',
-      'Fault tolerance'
+      'Asynchronous agent communication',
+      'Message persistence and durability',
+      'Priority-based task distribution',
+      'Multi-agent coordination',
+      'Fault tolerance and recovery',
+      'Scalable load balancing',
+      'Event-driven workflows',
+      'Dead letter queue handling'
     ],
-    useCases: ['background-processing', 'event-driven-architecture', 'workflow-orchestration', 'scalability'],
+    useCases: ['multi-agent-systems', 'distributed-ai-processing', 'agent-coordination', 'workflow-orchestration', 'event-driven-ai', 'background-inference', 'task-delegation', 'system-integration'],
     complexity: 'high',
-    example: 'AI Agent Task Queue:\n\nPublisher: Web Interface\nQueue: "ai_tasks"\nMessage: {\n  "task_id": "task_456",\n  "type": "document_analysis",\n  "payload": {"document_url": "..."},\n  "priority": "high"\n}\n\nConsumer: AI Processing Agent\nProcesses tasks asynchronously and publishes results'
+    example: 'Multi-Agent Research System:\n\n**Research Coordinator Agent** publishes:\n```json\n{\n  "queue": "research_tasks",\n  "message": {\n    "task_id": "research_789",\n    "type": "literature_review",\n    "topic": "quantum computing applications",\n    "priority": "high",\n    "deadline": "2024-01-15T10:00:00Z",\n    "requirements": {\n      "sources": ["arxiv", "ieee", "acm"],\n      "date_range": "2023-2024",\n      "max_papers": 50\n    },\n    "callback_queue": "research_results"\n  }\n}\n```\n\n**Specialist Agents** consume from different queues:\n- **ArXiv Agent**: Processes "arxiv_search" messages\n- **Analysis Agent**: Processes "paper_analysis" messages  \n- **Summary Agent**: Processes "content_synthesis" messages\n\n**Message Flow**:\n1. Coordinator → research_tasks → Specialist agents\n2. Specialists → analysis_tasks → Analysis agent\n3. Analysis agent → synthesis_tasks → Summary agent\n4. Summary agent → research_results → Coordinator\n\n**Result**: Coordinated multi-agent research with fault tolerance, parallel processing, and automatic retry mechanisms'
   }
 ];

@@ -248,7 +248,7 @@ export const DynamicContextAssemblyDemo: React.FC = () => {
     const activeSources = sources.filter(s => s.isActive).sort((a, b) => b.relevanceScore - a.relevanceScore);
     const totalContextWindow = 4000; // tokens
     
-    let remainingWindow = totalContextWindow;
+    const remainingWindow = totalContextWindow;
     const allocations = activeSources.map((source, index) => {
       let percentage;
       if (index === 0) {

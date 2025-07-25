@@ -289,7 +289,7 @@ export const ContentBasedRoutingDemo: React.FC = () => {
   }, [selectedContent, resetDemo]);
 
   const determineHandler = (analysis: ContentAnalysis): { handler: string; confidence: number; reasoning: string[] } => {
-    let scores = CONTENT_HANDLERS.map(handler => ({ id: handler.id, score: 0, reasons: [] as string[] }));
+    const scores = CONTENT_HANDLERS.map(handler => ({ id: handler.id, score: 0, reasons: [] as string[] }));
     
     // Pattern-based scoring
     if (analysis.pattern.format.includes('Python') || analysis.pattern.format.includes('SQL')) {

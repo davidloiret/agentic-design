@@ -10,6 +10,8 @@ import { feedbackChainingPattern } from './feedback-chaining';
 import { iterativeRefinementPattern } from './iterative-refinement';
 import { parallelSynthesisPattern } from './parallel-synthesis';
 import { dynamicRoutingPattern } from './dynamic-routing';
+import { dynamicContextAssemblyPattern } from './dynamic-context-assembly';
+import { messageQueuingPattern } from './message-queuing';
 import { contentBasedRoutingPattern } from './content-based-routing';
 import { capabilityRoutingPattern } from './capability-routing';
 import { loadBalancingPattern } from './load-balancing';
@@ -28,6 +30,9 @@ import { scenarioPlanningPattern } from './scenario-planning';
 import { latentRecurrentThinkingPattern } from './latent-recurrent-thinking';
 import { graphOfThoughtPattern } from './graph-of-thought';
 import { controlPlanePattern } from './control-plane';
+import { latentMemoryNetworksPattern } from './latent-memory-networks';
+import { adaptiveContextDepthPattern } from './adaptive-context-depth';
+import { latentKnowledgeRetrievalPattern } from './latent-knowledge-retrieval';
 
 export * from './types';
 export * from './styles';
@@ -46,6 +51,8 @@ export const patternScenarios: { [key: string]: PatternScenario } = {
   'iterative-refinement': iterativeRefinementPattern,
   'parallel-synthesis': parallelSynthesisPattern,
   'dynamic-routing': dynamicRoutingPattern,
+  'dynamic-context-assembly': dynamicContextAssemblyPattern,
+  'message-queuing': messageQueuingPattern,
   'content-based-routing': contentBasedRoutingPattern,
   'capability-routing': capabilityRoutingPattern,
   'load-balancing': loadBalancingPattern,
@@ -62,6 +69,9 @@ export const patternScenarios: { [key: string]: PatternScenario } = {
   'constraint-satisfaction': constraintSatisfactionPattern,
   'scenario-planning': scenarioPlanningPattern,
   'control-plane': controlPlanePattern,
+  'latent-memory-networks': latentMemoryNetworksPattern,
+  'adaptive-context-depth': adaptiveContextDepthPattern,
+  'latent-knowledge-retrieval': latentKnowledgeRetrievalPattern,
 };
 
 export default patternScenarios;

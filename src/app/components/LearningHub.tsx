@@ -620,8 +620,8 @@ export const LearningHub: React.FC<LearningHubProps> = ({ techniques = [], categ
   };
 
   const renderLearningModule = () => {
-    const module = learningModules.find(m => m.id === selectedModule);
-    if (!module) return null;
+    const learningModule = learningModules.find(m => m.id === selectedModule);
+    if (!learningModule) return null;
 
     const currentLevel = getCurrentLevel();
     const nextLevel = getNextLevel();
@@ -638,8 +638,8 @@ export const LearningHub: React.FC<LearningHubProps> = ({ techniques = [], categ
       }
     };
 
-    const unlockRequirement = getUnlockRequirement(module.id);
-    const isUnlockable = module.isLocked && userProgress.xp >= unlockRequirement;
+    const unlockRequirement = getUnlockRequirement(learningModule.id);
+    const isUnlockable = learningModule.isLocked && userProgress.xp >= unlockRequirement;
     
     return (
       <div className="space-y-6">

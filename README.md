@@ -258,3 +258,10 @@ to not have to read it, I should have girl or man voice that do that for me.
 LLM mascote to help learn and follow learning.
 
 Learn pattern and techniques not framework
+
+What about semantic embedding ?
+
+Context engineering tips
+Decaying memory => add ressources video etc
+
+Framework Agnostic vs not sgnostic

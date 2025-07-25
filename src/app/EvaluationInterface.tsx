@@ -1,10 +1,51 @@
 import { useEffect, useState } from "react";
-import { Search, Filter, ChevronRight, Brain, Target, Code, MessageSquare, TreePine, RefreshCw, Network, Zap, X, Check, ArrowRight, Lightbulb, BookOpen, Sparkles, Share2, FlaskConical, Play, BarChart3, TestTube } from 'lucide-react';
+import { Brain, Target, X, ArrowRight, TestTube, BarChart3, Play } from 'lucide-react';
+import { Technique, TechniqueCategory } from './techniques/types';
+
+// Add proper type interfaces
+interface EvaluationCriteria {
+  id: string;
+  name: string;
+  weight: number;
+}
+
+interface ModelConfig {
+  id: string;
+  name: string;
+  provider: string;
+  enabled: boolean;
+}
+
+interface EvaluationResult {
+  modelId: string;
+  patternId: string;
+  score: number;
+  metrics: { [key: string]: number };
+  feedback: string;
+}
+
+interface ApiTokens {
+  [provider: string]: string;
+}
+
+interface UseCase {
+  id: string;
+  name: string;
+  icon: string;
+  description: string;
+}
+
+interface Category {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+}
+
 // Evaluation Interface Component
 export const EvaluationInterface = ({ 
   techniques, 
   categories, 
-  useCases, 
   selectedPatterns, 
   setSelectedPatterns,
   evaluationCriteria,
@@ -20,21 +61,20 @@ export const EvaluationInterface = ({
   showTokenModal,
   setShowTokenModal
 }: {
-  techniques: any[];
-  categories: any[];
-  useCases: any[];
-  selectedPatterns: any[];
-  setSelectedPatterns: (patterns: any[]) => void;
-  evaluationCriteria: any[];
-  setEvaluationCriteria: (criteria: any[]) => void;
+  techniques: Technique[];
+  categories: Category[];
+  selectedPatterns: Technique[];
+  setSelectedPatterns: (patterns: Technique[]) => void;
+  evaluationCriteria: EvaluationCriteria[];
+  setEvaluationCriteria: (criteria: EvaluationCriteria[]) => void;
   testScenario: string;
   setTestScenario: (scenario: string) => void;
-  selectedModels: any[];
-  setSelectedModels: (models: any[]) => void;
-  evaluationResults: any;
-  setEvaluationResults: (results: any) => void;
-  apiTokens: any;
-  setApiTokens: (tokens: any) => void;
+  selectedModels: ModelConfig[];
+  setSelectedModels: (models: ModelConfig[]) => void;
+  evaluationResults: EvaluationResult[] | null;
+  setEvaluationResults: (results: EvaluationResult[] | null) => void;
+  apiTokens: ApiTokens;
+  setApiTokens: (tokens: ApiTokens) => void;
   showTokenModal: boolean;
   setShowTokenModal: (show: boolean) => void;
 }) => {
@@ -152,7 +192,7 @@ export const EvaluationInterface = ({
     }
   ];
 
-  const togglePatternSelection = (pattern) => {
+  const togglePatternSelection = (pattern: Technique) => {
     setSelectedPatterns(prev => {
       const isSelected = prev.find(p => p.id === pattern.id);
       if (isSelected) {
@@ -163,7 +203,7 @@ export const EvaluationInterface = ({
     });
   };
 
-  const toggleCriteriaSelection = (criteria) => {
+  const toggleCriteriaSelection = (criteria: EvaluationCriteria) => {
     setEvaluationCriteria(prev => {
       const isSelected = prev.find(c => c.id === criteria.id);
       if (isSelected) {
@@ -174,7 +214,7 @@ export const EvaluationInterface = ({
     });
   };
 
-  const updateCriteriaWeight = (criteriaId, weight) => {
+  const updateCriteriaWeight = (criteriaId: string, weight: string) => {
     setEvaluationCriteria(prev =>
       prev.map(c => c.id === criteriaId ? { ...c, weight: parseFloat(weight) } : c)
     );
@@ -371,26 +411,25 @@ export const EvaluationInterface = ({
     setIsRunning(true);
     
     try {
-      const results = {
-        timestamp: new Date().toISOString(),
-        patterns: []
-      };
+      const results: EvaluationResult[] = [];
 
       for (const pattern of selectedPatterns) {
-        const patternResult = {
-          pattern,
-          models: []
+        const patternResult: EvaluationResult = {
+          modelId: '', // Placeholder, will be filled later
+          patternId: pattern.id,
+          score: 0,
+          metrics: {},
+          feedback: ''
         };
 
         for (const model of selectedModels) {
           const startTime = Date.now();
-          let modelResult = {
-            model,
-            scores: {},
-            overallScore: 0,
-            executionTime: 0,
-            output: '',
-            errors: []
+                     const modelResult: EvaluationResult = {
+            modelId: model.id,
+            patternId: pattern.id,
+            score: 0,
+            metrics: {},
+            feedback: ''
           };
 
           try {
@@ -398,29 +437,36 @@ export const EvaluationInterface = ({
             const response = await callModel(model, prompt);
             const executionTime = Date.now() - startTime;
             
-            modelResult.output = response;
-            modelResult.executionTime = executionTime;
-            modelResult.scores = evaluateResponse(response, evaluationCriteria, executionTime);
+            modelResult.feedback = response;
+            modelResult.metrics = evaluateResponse(response, evaluationCriteria, executionTime);
             
             // Calculate weighted overall score
             const totalWeight = evaluationCriteria.reduce((sum, c) => sum + c.weight, 0);
-            modelResult.overallScore = evaluationCriteria.reduce((sum, c) => 
-              sum + (modelResult.scores[c.id] * c.weight), 0) / totalWeight;
+            modelResult.score = evaluationCriteria.reduce((sum, c) => 
+              sum + (modelResult.metrics[c.id] * c.weight), 0) / totalWeight;
             
           } catch (error) {
-            modelResult.errors.push(error.message);
-            modelResult.executionTime = Date.now() - startTime;
-            // Set low scores for failed requests
-            evaluationCriteria.forEach(c => {
-              modelResult.scores[c.id] = 0.5;
-            });
-            modelResult.overallScore = 0.5;
+            modelResult.feedback = `Error: ${error.message}`;
+            modelResult.metrics = {}; // No scores on error
+            modelResult.score = 0;
           }
 
-          patternResult.models.push(modelResult);
+          results.push(modelResult);
         }
 
-        results.patterns.push(patternResult);
+        // Find the best model for this pattern based on overall score
+        const bestModelForPattern = results.reduce((best, current) => {
+          if (current.score > best.score) {
+            return current;
+          }
+          return best;
+        }, results[0]);
+
+        patternResult.modelId = bestModelForPattern.modelId;
+        patternResult.score = bestModelForPattern.score;
+        patternResult.metrics = bestModelForPattern.metrics;
+        patternResult.feedback = bestModelForPattern.feedback;
+        results.push(patternResult);
       }
       
       setEvaluationResults(results);
@@ -956,8 +1002,8 @@ export const EvaluationInterface = ({
                 </div>
                 <div className="bg-gray-800 p-4 rounded-lg border border-gray-700">
                   <div className="text-2xl font-bold text-white">
-                    {(evaluationResults.patterns.reduce((sum, p) => 
-                      sum + p.models.reduce((s, m) => s + m.executionTime, 0), 0) / 
+                    {(evaluationResults.reduce((sum, r) => 
+                      sum + r.metrics.speed, 0) / 
                       (selectedPatterns.length * selectedModels.length) / 1000).toFixed(1)}s
                   </div>
                   <div className="text-gray-400">Avg Response Time</div>
@@ -966,25 +1012,21 @@ export const EvaluationInterface = ({
 
               {/* Detailed Results */}
               <div className="space-y-6">
-                {evaluationResults.patterns.map((patternResult, idx) => (
+                {evaluationResults.map((result, idx) => (
                   <div key={idx} className="bg-gray-800 rounded-lg border border-gray-700 p-6">
                     <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-3">
-                      <span className="text-2xl">{patternResult.pattern.icon}</span>
-                      {patternResult.pattern.name}
+                      <span className="text-2xl">{result.patternId.charAt(0).toUpperCase() + result.patternId.slice(1)}</span>
+                      {result.patternId.charAt(0).toUpperCase() + result.patternId.slice(1)}
                     </h3>
                     
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                      {patternResult.models.map((modelResult, midx) => (
-                        <div key={midx} className="bg-gray-700 rounded-lg p-4">
-                          <div className="flex justify-between items-center mb-4">
-                            <h4 className="font-semibold text-white">{modelResult.model.name}</h4>
-                            <div className="text-right">
-                              <div className="text-lg font-bold text-white">{modelResult.overallScore.toFixed(1)}/5</div>
-                              <div className="text-xs text-gray-400">{modelResult.executionTime.toFixed(0)}ms</div>
+                      <div className="bg-gray-700 rounded-lg p-4">
+                        <h4 className="font-semibold text-white mb-3">Best Model: {result.modelId.charAt(0).toUpperCase() + result.modelId.slice(1)}</h4>
+                        <div className="text-sm text-gray-400">Overall Score: {result.score.toFixed(1)}/5</div>
+                        <div className="text-sm text-gray-400">Execution Time: {result.metrics.speed.toFixed(0)}ms</div>
                             </div>
-                          </div>
-                          
-                          {/* Criteria Scores */}
+                      <div className="bg-gray-700 rounded-lg p-4">
+                        <h4 className="font-semibold text-white mb-3">Criteria Scores</h4>
                           <div className="space-y-2">
                             {evaluationCriteria.map(criteria => (
                               <div key={criteria.id} className="flex justify-between items-center">
@@ -993,41 +1035,29 @@ export const EvaluationInterface = ({
                                   <div className="w-20 bg-gray-600 rounded-full h-2">
                                     <div 
                                       className="bg-orange-500 h-2 rounded-full" 
-                                      style={{ width: `${(modelResult.scores[criteria.id] / 5) * 100}%` }}
+                                    style={{ width: `${(result.metrics[criteria.id] / 5) * 100}%` }}
                                     />
                                   </div>
-                                  <span className="text-sm text-white w-8">{modelResult.scores[criteria.id].toFixed(1)}</span>
+                                <span className="text-sm text-white w-8">{result.metrics[criteria.id].toFixed(1)}</span>
                                 </div>
                               </div>
                             ))}
+                        </div>
+                      </div>
                           </div>
 
-                          {/* API Response */}
-                          {modelResult.output && (
+                    {result.feedback && (
                             <div className="mt-4">
                               <details className="bg-gray-800 rounded p-3">
                                 <summary className="cursor-pointer text-sm font-medium text-gray-300 hover:text-white">
                                   View Response Output
                                 </summary>
                                 <div className="mt-3 p-3 bg-gray-900 rounded text-xs text-gray-300 max-h-40 overflow-y-auto">
-                                  <pre className="whitespace-pre-wrap">{modelResult.output}</pre>
+                            <pre className="whitespace-pre-wrap">{result.feedback}</pre>
                                 </div>
                               </details>
                             </div>
                           )}
-
-                          {/* Errors */}
-                          {modelResult.errors.length > 0 && (
-                            <div className="mt-3 p-2 bg-red-900/20 border border-red-700 rounded">
-                              <div className="text-sm text-red-400">Issues:</div>
-                              {modelResult.errors.map((error, eidx) => (
-                                <div key={eidx} className="text-xs text-red-300">• {error}</div>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
                   </div>
                 ))}
               </div>

@@ -73,7 +73,7 @@ export const ChatBot = ({ onRecommendationSelect, getRecommendations, techniques
     }
     
     if (lowerMessage.includes('fast') || lowerMessage.includes('speed') || lowerMessage.includes('quick')) {
-      return "For speed, Chain-of-Thought is your best bet! It's lightweight and fast. Self-Correction is also quick while improving accuracy. Avoid Tree-of-Thoughts for speed-critical apps.";
+              return "For speed, Chain-of-Thought is your best bet! It&apos;s lightweight and fast. Self-Correction is also quick while improving accuracy. Avoid Tree-of-Thoughts for speed-critical apps.";
     }
     
     if (lowerMessage.includes('accurate') || lowerMessage.includes('quality')) {
@@ -81,7 +81,7 @@ export const ChatBot = ({ onRecommendationSelect, getRecommendations, techniques
     }
     
     if (lowerMessage.includes('simple') || lowerMessage.includes('beginner') || lowerMessage.includes('easy')) {
-      return "Start with Chain-of-Thought! It's the most straightforward pattern and works great for most use cases. You can always upgrade to more complex patterns later.";
+              return "Start with Chain-of-Thought! It&apos;s the most straightforward pattern and works great for most use cases. You can always upgrade to more complex patterns later.";
     }
     
     if (lowerMessage.includes('code') || lowerMessage.includes('example') || lowerMessage.includes('implement')) {

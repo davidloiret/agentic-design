@@ -1,0 +1,357 @@
+
+> agentic-design@0.1.0 build
+> next build
+
+   ▲ Next.js 15.4.2
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 1000ms
+   Linting and checking validity of types ...
+
+Failed to compile.
+
+./src/app/AiReasoningExplorer.tsx
+25:21  Warning: 'TechniqueCategory' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/EvaluationInterface.tsx
+3:21  Warning: 'TechniqueCategory' is defined but never used.  @typescript-eslint/no-unused-vars
+31:11  Warning: 'UseCase' is defined but never used.  @typescript-eslint/no-unused-vars
+94:6  Warning: React Hook useEffect has a missing dependency: 'setApiTokens'. Either include it or remove the dependency array. If 'setApiTokens' changes too often, find the parent component that defines it and wrap that definition in useCallback.  react-hooks/exhaustive-deps
+832:111  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+
+./src/app/MindMap.tsx
+490:6  Warning: React Hook useMemo has unnecessary dependencies: 'showRelationships' and 'useCases'. Either exclude them or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/app/NetworkGraph.tsx
+14:56  Warning: 'useCases' is defined but never used.  @typescript-eslint/no-unused-vars
+331:6  Warning: React Hook useEffect has missing dependencies: 'buildGraphData' and 'onTechniqueSelect'. Either include them or remove the dependency array. If 'onTechniqueSelect' changes too often, find the parent component that defines it and wrap that definition in useCallback.  react-hooks/exhaustive-deps
+
+./src/app/components/CategoryDetails.tsx
+7:16  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+8:35  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/app/components/ChatBot.tsx
+8:30  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+9:16  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+20:27  Warning: 'onRecommendationSelect' is defined but never used.  @typescript-eslint/no-unused-vars
+20:51  Warning: 'getRecommendations' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/components/FineTuningTab.tsx
+17:3  Warning: 'DollarSign' is defined but never used.  @typescript-eslint/no-unused-vars
+18:3  Warning: 'Clock' is defined but never used.  @typescript-eslint/no-unused-vars
+32:29  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+817:28  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+906:58  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+912:56  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+939:59  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+954:56  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+
+./src/app/components/InferenceTab.tsx
+21:3  Warning: 'Github' is defined but never used.  @typescript-eslint/no-unused-vars
+22:3  Warning: 'Play' is defined but never used.  @typescript-eslint/no-unused-vars
+28:29  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+332:94  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+693:43  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+693:66  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+726:83  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+739:44  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+739:72  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+785:39  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+785:54  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+
+./src/app/components/LearningHub.tsx
+1:27  Warning: 'useEffect' is defined but never used.  @typescript-eslint/no-unused-vars
+16:3  Warning: 'Users' is defined but never used.  @typescript-eslint/no-unused-vars
+17:3  Warning: 'TrendingUp' is defined but never used.  @typescript-eslint/no-unused-vars
+30:16  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+31:16  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+75:7  Warning: 'ACHIEVEMENTS' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+83:59  Warning: 'techniques' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+83:76  Warning: 'categories' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+335:9  Warning: 'getProgressToNextLevel' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+440:9  Warning: 'getPatternSelectionContent' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+440:39  Warning: 'challengeId' is defined but never used.  @typescript-eslint/no-unused-vars
+560:123  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+626:11  Warning: 'currentLevel' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+627:11  Warning: 'nextLevel' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+642:11  Warning: 'isUnlockable' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+846:21  Warning: 'isUnlockable' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+1032:80  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+
+./src/app/components/NavigationTabs.tsx
+2:20  Warning: 'Lightbulb' is defined but never used.  @typescript-eslint/no-unused-vars
+2:31  Warning: 'Share2' is defined but never used.  @typescript-eslint/no-unused-vars
+2:105  Warning: 'ChevronDown' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/components/NewsTab.tsx
+464:55  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+603:66  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+673:69  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+1121:103  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/app/components/ProjectHub.tsx
+4:81  Warning: 'Users' is defined but never used.  @typescript-eslint/no-unused-vars
+348:44  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/app/components/RecommendationTab.tsx
+12:29  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+13:37  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+15:13  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+16:16  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+41:65  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+
+./src/app/components/SystemBuilder.tsx
+55:18  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+74:18  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+1209:87  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/app/components/TechniquesList.tsx
+1:32  Warning: 'ChevronDown' is defined but never used.  @typescript-eslint/no-unused-vars
+1:45  Warning: 'ChevronUp' is defined but never used.  @typescript-eslint/no-unused-vars
+6:15  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+8:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+9:37  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+14:23  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+54:39  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+115:11  Warning: 'isSubcategory' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/components/learning/CodeChallengeComponent.tsx
+11:3  Warning: 'ArrowRight' is defined but never used.  @typescript-eslint/no-unused-vars
+18:3  Warning: 'Settings' is defined but never used.  @typescript-eslint/no-unused-vars
+31:12  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+32:21  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+58:10  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+59:19  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+60:17  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+164:53  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+164:59  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/app/components/learning/QuizComponent.tsx
+204:46  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+
+./src/app/data/learning-content.ts
+34:12  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+35:21  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/app/page.tsx
+1:8  Warning: 'Image' is defined but never used.  @typescript-eslint/no-unused-vars
+2:8  Warning: 'Link' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/CodeSandbox.tsx
+3:35  Warning: 'useEffect' is defined but never used.  @typescript-eslint/no-unused-vars
+25:28  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+27:41  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+27:54  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/components/MessageQueuingFlow.tsx
+16:57  Warning: 'Users' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/demos/AdaptiveContextDepthDemo.tsx
+4:67  Warning: 'ArrowRight' is defined but never used.  @typescript-eslint/no-unused-vars
+4:86  Warning: 'ChevronRight' is defined but never used.  @typescript-eslint/no-unused-vars
+4:100  Warning: 'Cpu' is defined but never used.  @typescript-eslint/no-unused-vars
+25:29  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+326:6  Warning: React Hook useCallback has a missing dependency: 'processTask'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+403:61  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+403:81  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+561:49  Warning: 'index' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/demos/AsyncAwaitDemo.tsx
+3:27  Warning: 'useEffect' is defined but never used.  @typescript-eslint/no-unused-vars
+4:59  Warning: 'AlertCircle' is defined but never used.  @typescript-eslint/no-unused-vars
+14:12  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+124:52  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+124:66  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+174:20  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+279:20  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+293:20  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+550:52  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+550:61  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+
+./src/components/demos/CapabilityRoutingDemo.tsx
+531:34  Warning: 'idx' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/demos/CodeExecutionDemo.tsx
+3:27  Warning: 'useEffect' is defined but never used.  @typescript-eslint/no-unused-vars
+13:9  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+258:31  Warning: 'setSelectedEnvironment' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+495:13  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+495:36  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+685:49  Warning: 'index' is defined but never used.  @typescript-eslint/no-unused-vars
+727:52  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+727:65  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+
+./src/components/demos/ConditionalChainingDemo.tsx
+4:54  Warning: 'AlertCircle' is defined but never used.  @typescript-eslint/no-unused-vars
+4:78  Warning: 'ArrowRight' is defined but never used.  @typescript-eslint/no-unused-vars
+330:10  Warning: 'selectedPath' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+395:85  Warning: 'probabilities' is defined but never used.  @typescript-eslint/no-unused-vars
+672:42  Warning: 'stepIndex' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/demos/ContentBasedRoutingDemo.tsx
+4:100  Warning: 'AlertCircle' is defined but never used.  @typescript-eslint/no-unused-vars
+84:11  Warning: Image elements must have an alt prop, either with meaningful text, or an empty string for decorative images.  jsx-a11y/alt-text
+343:61  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+433:9  Warning: 'getHandlerColor' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/demos/DynamicContextAssemblyDemo.tsx
+4:59  Warning: 'ArrowRight' is defined but never used.  @typescript-eslint/no-unused-vars
+4:84  Warning: 'AlertCircle' is defined but never used.  @typescript-eslint/no-unused-vars
+196:10  Warning: 'currentPhase' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+251:11  Warning: 'remainingWindow' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+365:6  Warning: React Hook useCallback has a missing dependency: 'calculateRelevanceScores'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+462:47  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+462:68  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+
+./src/components/demos/DynamicRoutingDemo.tsx
+4:72  Warning: 'BarChart3' is defined but never used.  @typescript-eslint/no-unused-vars
+4:96  Warning: 'ArrowRight' is defined but never used.  @typescript-eslint/no-unused-vars
+357:47  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+357:70  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+
+./src/components/demos/FeedbackChainingDemo.tsx
+3:40  Warning: 'useEffect' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/demos/ForkJoinDemo.tsx
+3:27  Warning: 'useEffect' is defined but never used.  @typescript-eslint/no-unused-vars
+4:34  Warning: 'Zap' is defined but never used.  @typescript-eslint/no-unused-vars
+4:59  Warning: 'AlertCircle' is defined but never used.  @typescript-eslint/no-unused-vars
+4:95  Warning: 'Memory' is defined but never used.  @typescript-eslint/no-unused-vars
+4:125  Warning: 'Hash' is defined but never used.  @typescript-eslint/no-unused-vars
+66:10  Warning: 'currentStep' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+463:50  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+463:59  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+
+./src/components/demos/GeographicRoutingDemo.tsx
+4:64  Warning: 'AlertTriangle' is defined but never used.  @typescript-eslint/no-unused-vars
+207:58  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+208:58  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+211:64  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+306:11  Warning: 'latencyResults' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+368:6  Warning: React Hook useCallback has a missing dependency: 'selectOptimalDataCenter'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+536:61  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/components/demos/GoalDecompositionDemo.tsx
+2:62  Warning: 'ArrowRight' is defined but never used.  @typescript-eslint/no-unused-vars
+41:10  Warning: 'metrics' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/demos/GraphOfThoughtDemo.tsx
+104:18  Warning: 'prevNodes' is defined but never used.  @typescript-eslint/no-unused-vars
+118:18  Warning: 'prevEdges' is defined but never used.  @typescript-eslint/no-unused-vars
+131:6  Warning: React Hook useEffect has missing dependencies: 'allEdges', 'feedbackNode', 'initialNodes', 'solutionNode', 'steps', and 'synergyNodes'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/demos/HierarchicalPlanningDemo.tsx
+3:27  Warning: 'useEffect' is defined but never used.  @typescript-eslint/no-unused-vars
+4:82  Warning: 'DollarSign' is defined but never used.  @typescript-eslint/no-unused-vars
+4:94  Warning: 'Calendar' is defined but never used.  @typescript-eslint/no-unused-vars
+4:116  Warning: 'Settings' is defined but never used.  @typescript-eslint/no-unused-vars
+4:166  Warning: 'AlertTriangle' is defined but never used.  @typescript-eslint/no-unused-vars
+412:13  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+412:33  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+602:46  Warning: 'index' is defined but never used.  @typescript-eslint/no-unused-vars
+644:52  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+644:67  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+
+./src/components/demos/IterativeRefinementDemo.tsx
+3:40  Warning: 'useEffect' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/demos/LatentKnowledgeRetrievalDemo.tsx
+4:69  Warning: 'ArrowRight' is defined but never used.  @typescript-eslint/no-unused-vars
+4:88  Warning: 'ChevronRight' is defined but never used.  @typescript-eslint/no-unused-vars
+23:29  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+371:6  Warning: React Hook useCallback has a missing dependency: 'discoverConceptsForAgent'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+449:61  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+449:86  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+
+./src/components/demos/LatentMemoryNetworksDemo.tsx
+4:51  Warning: 'Network' is defined but never used.  @typescript-eslint/no-unused-vars
+4:65  Warning: 'ArrowRight' is defined but never used.  @typescript-eslint/no-unused-vars
+4:84  Warning: 'ChevronRight' is defined but never used.  @typescript-eslint/no-unused-vars
+22:29  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+340:6  Warning: React Hook useCallback has missing dependencies: 'addNewPattern', 'simulateQuery', and 'steps.length'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
+502:54  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+502:69  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+
+./src/components/demos/LatentRecurrentThinkingDemo.tsx
+60:6  Warning: React Hook useEffect has a missing dependency: 'lrtSteps'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+141:17  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+141:35  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+
+./src/components/demos/LoadBalancingDemo.tsx
+199:15  Warning: 'totalTasks' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/demos/MapReduceDemo.tsx
+95:62  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/components/demos/MessageQueuingDemo.tsx
+4:34  Warning: 'Send' is defined but never used.  @typescript-eslint/no-unused-vars
+4:40  Warning: 'CheckCircle' is defined but never used.  @typescript-eslint/no-unused-vars
+4:60  Warning: 'AlertTriangle' is defined but never used.  @typescript-eslint/no-unused-vars
+4:87  Warning: 'ArrowRight' is defined but never used.  @typescript-eslint/no-unused-vars
+4:99  Warning: 'MessageSquare' is defined but never used.  @typescript-eslint/no-unused-vars
+13:12  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+135:10  Warning: 'messages' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+147:113  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+191:11  Warning: 'agent' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/demos/ParallelChainingDemo.tsx
+4:67  Warning: 'Zap' is defined but never used.  @typescript-eslint/no-unused-vars
+423:33  Warning: 'index' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/demos/ParallelSynthesisDemo.tsx
+4:88  Warning: 'AlertTriangle' is defined but never used.  @typescript-eslint/no-unused-vars
+16:9  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+194:10  Warning: 'currentPhase' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+253:55  Warning: 'index' is defined but never used.  @typescript-eslint/no-unused-vars
+329:9  Warning: 'anyPhaseRunning' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/demos/ScatterGatherDemo.tsx
+3:27  Warning: 'useEffect' is defined but never used.  @typescript-eslint/no-unused-vars
+10:10  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+137:67  Warning: 'index' is defined but never used.  @typescript-eslint/no-unused-vars
+170:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+192:38  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+323:59  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+323:76  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+365:42  Warning: 'index' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/demos/ScenarioPlanningDemo.tsx
+2:79  Warning: 'Shield' is defined but never used.  @typescript-eslint/no-unused-vars
+2:87  Warning: 'DollarSign' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/demos/SelfCritiqueDemo.tsx
+3:27  Warning: 'useEffect' is defined but never used.  @typescript-eslint/no-unused-vars
+4:55  Warning: 'AlertCircle' is defined but never used.  @typescript-eslint/no-unused-vars
+398:13  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+398:39  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+508:46  Warning: 'index' is defined but never used.  @typescript-eslint/no-unused-vars
+574:52  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+574:67  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+
+./src/components/demos/SequentialChainingDemo.tsx
+4:10  Warning: 'ChevronRight' is defined but never used.  @typescript-eslint/no-unused-vars
+178:10  Warning: 'currentInput' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+299:90  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+299:121  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+
+./src/components/demos/ToolUseDemo.tsx
+3:27  Warning: 'useEffect' is defined but never used.  @typescript-eslint/no-unused-vars
+9:30  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+11:12  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+34:32  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+35:11  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+37:17  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+201:48  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+201:53  Warning: 'parameters' is defined but never used.  @typescript-eslint/no-unused-vars
+201:80  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+201:95  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+240:38  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+337:13  Warning: 'search' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+468:13  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+468:30  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+481:51  Warning: 'index' is defined but never used.  @typescript-eslint/no-unused-vars
+612:47  Warning: 'index' is defined but never used.  @typescript-eslint/no-unused-vars
+652:52  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+652:70  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules

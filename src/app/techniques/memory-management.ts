@@ -8,18 +8,20 @@ export const memoryManagementTechniques: Technique[] = [
     icon: '🧬',
     color: 'from-violet-500 to-purple-600',
     category: 'memory-management',
-    description: 'Store reasoning patterns and knowledge in continuous latent space representations',
+    description: 'Store reasoning patterns and knowledge in continuous latent space representations for multi-agent agentic AI systems',
     features: [
       'Continuous latent space encoding',
       'Pattern-based memory storage',
-      'Abstract reasoning preservation',
+      'Cross-agent knowledge sharing',
       'Semantic similarity retrieval',
-      'Efficient memory compression',
-      'Cross-domain knowledge transfer'
+      'Dynamic memory consolidation',
+      'Multi-domain pattern transfer',
+      'Distributed memory networks',
+      'Adaptive memory compression'
     ],
-    useCases: ['knowledge-reasoning', 'cross-domain-transfer', 'pattern-recognition', 'semantic-memory'],
+    useCases: ['multi-agent-coordination', 'knowledge-sharing', 'pattern-recognition', 'cross-domain-reasoning', 'collaborative-learning', 'memory-optimization'],
     complexity: 'high',
-    example: 'Scientific Knowledge Storage:\n\nTraditional Approach:\n"The mitochondria is the powerhouse of the cell"\n"ATP synthesis occurs in mitochondria"\n"Cellular respiration produces ATP"\n\nLatent Memory Network:\n• Encodes knowledge as dense vectors in latent space\n• Stores abstract relationships: [energy_production] ↔ [cellular_organelles]\n• Enables queries like "What produces energy?" → retrieves mitochondria concept\n• Cross-domain transfer: Energy production patterns apply to batteries, engines\n\nAdvantages:\n• 80% memory compression vs text storage\n• Semantic relationships preserved\n• Enables analogical reasoning\n• Generalizes across similar concepts'
+    example: 'Multi-Agent Research System:\n\nScenario: AI research lab with 4 specialized agents\n\nTraditional Memory:\n• Agent A: "Neural networks require backpropagation"\n• Agent B: "Transformers use attention mechanisms"\n• Agent C: "GANs use adversarial training"\n• No shared understanding or pattern recognition\n\nLatent Memory Network Implementation:\n\n1. Memory Formation:\n   • Research Agent encodes: [learning_algorithm] ↔ [optimization_method]\n   • Analysis Agent stores: [attention_pattern] ↔ [sequence_modeling]\n   • Synthesis Agent maps: [adversarial_training] ↔ [game_theory]\n\n2. Cross-Agent Pattern Sharing:\n   • Shared latent space: 512-dimensional vectors\n   • Pattern encoding: research_methodology → [0.23, -0.15, 0.78, ...]\n   • Semantic clustering: similar concepts group together\n\n3. Collaborative Retrieval:\n   Query: "How to improve sequence modeling?"\n   • Latent retrieval finds: attention mechanisms, recurrent patterns\n   • Cross-domain transfer: applies optimization patterns from GANs\n   • Multi-agent synthesis: combines insights from all specialists\n\n4. Dynamic Memory Evolution:\n   • New research findings update latent representations\n   • Pattern relationships strengthen with repeated access\n   • Memory consolidation removes redundant encodings\n\nBenefits for Agentic AI:\n• 90% reduction in memory redundancy across agents\n• 3x faster knowledge discovery through pattern matching\n• Emergent reasoning from combined agent knowledge\n• Scalable to 100+ agents with constant retrieval time\n• Cross-domain innovation through pattern transfer'
   },
   {
     id: 'adaptive-context-depth',
@@ -28,18 +30,20 @@ export const memoryManagementTechniques: Technique[] = [
     icon: '📊',
     color: 'from-cyan-500 to-blue-600',
     category: 'memory-management',
-    description: 'Dynamically adjust memory depth and context complexity based on task requirements',
+    description: 'Dynamically adjust memory depth and context complexity based on task requirements in multi-agent agentic AI systems',
     features: [
       'Dynamic depth adjustment',
-      'Complexity-aware memory allocation',
+      'Multi-agent complexity assessment',
       'Real-time resource optimization',
-      'Task-specific context sizing',
-      'Automated difficulty assessment',
-      'Energy-efficient processing'
+      'Task-specific context scaling',
+      'Automated difficulty prediction',
+      'Agent workload balancing',
+      'Context hierarchy management',
+      'Performance-aware adaptation'
     ],
-    useCases: ['resource-optimization', 'real-time-systems', 'adaptive-ai', 'context-management'],
+    useCases: ['multi-agent-coordination', 'resource-optimization', 'real-time-systems', 'adaptive-ai', 'context-management', 'scalable-reasoning'],
     complexity: 'high',
-    example: 'Dynamic Context Management:\n\nSimple Query: "What\'s 2+2?"\n→ Context Depth: 1 (immediate calculation)\n→ Memory Usage: 50 tokens\n→ Processing Time: 10ms\n\nComplex Query: "Analyze geopolitical implications of renewable energy adoption"\n→ Context Depth: 5 (multi-step reasoning)\n→ Memory Usage: 2000 tokens\n→ Processing Time: 500ms\n→ Includes: Historical data, economic models, political patterns\n\nAdaptive Benefits:\n• 70% reduction in unnecessary computation\n• Optimal resource allocation per task\n• Real-time adjustment based on complexity\n• Maintains quality while reducing costs'
+    example: 'Multi-Agent Research System with Adaptive Context:\n\nScenario: Research coordination across 5 specialized agents\n\n1. Simple Task Distribution:\n   Query: "What are the basic ML algorithms?"\n   • Context Depth: Level 1 (factual retrieval)\n   • Agent Assignment: Single knowledge agent\n   • Memory Allocation: 200 tokens per agent\n   • Processing Time: 15ms\n   • Coordination Overhead: Minimal\n\n2. Moderate Complexity Task:\n   Query: "Compare deep learning frameworks for computer vision"\n   • Context Depth: Level 3 (comparative analysis)\n   • Agent Assignment: 2 specialist agents (CV + Framework experts)\n   • Memory Allocation: 800 tokens per agent\n   • Cross-agent context sharing: 400 tokens\n   • Processing Time: 150ms\n   • Includes: Framework features, performance benchmarks\n\n3. High Complexity Multi-Domain Task:\n   Query: "Design AI system for autonomous vehicle safety in urban environments"\n   • Context Depth: Level 5 (system design + safety analysis)\n   • Agent Assignment: All 5 agents (CV, Control, Safety, Ethics, Systems)\n   • Memory Allocation: 2000+ tokens per agent\n   • Shared context pool: 3000 tokens\n   • Cross-domain dependencies: 15 connections\n   • Processing Time: 1.2 seconds\n   • Includes: Technical specs, regulatory compliance, ethical considerations\n\n4. Dynamic Adaptation in Action:\n   • System monitors agent load and adjusts context depth in real-time\n   • If CV agent is overloaded → reduce visual processing context for non-critical tasks\n   • If new safety regulation emerges → automatically increase context depth for safety agent\n   • Context sharing optimized based on task dependencies\n\nAdaptive Benefits for Agentic AI:\n• 75% reduction in unnecessary cross-agent communication\n• Optimal resource allocation across agent network\n• Real-time scaling from simple facts to complex system design\n• Maintains quality while minimizing computational overhead\n• Enables efficient coordination of 100+ agents\n• Context-aware load balancing prevents agent bottlenecks'
   },
   {
     id: 'latent-knowledge-retrieval',
@@ -48,18 +52,20 @@ export const memoryManagementTechniques: Technique[] = [
     icon: '🔍',
     color: 'from-purple-500 to-indigo-600',
     category: 'memory-management',
-    description: 'Retrieve information based on abstract reasoning patterns rather than explicit queries',
+    description: 'Retrieve information based on abstract reasoning patterns rather than explicit queries in multi-agent agentic AI systems',
     features: [
       'Pattern-based knowledge access',
-      'Implicit reasoning integration',
+      'Cross-agent implicit reasoning',
       'Contextual relevance scoring',
       'Abstract concept matching',
       'Dynamic knowledge synthesis',
-      'Latent space navigation'
+      'Multi-dimensional latent navigation',
+      'Emergent insight discovery',
+      'Analogical reasoning chains'
     ],
-    useCases: ['creative-problem-solving', 'research-discovery', 'pattern-recognition', 'intuitive-reasoning'],
+    useCases: ['multi-agent-reasoning', 'creative-problem-solving', 'research-discovery', 'pattern-recognition', 'intuitive-reasoning', 'cross-domain-innovation'],
     complexity: 'high',
-    example: 'Creative Writing Assistant:\n\nTask: "Write about loneliness in a bustling city"\n\nLatent Retrieval Process:\n• Abstract pattern: "isolation amid crowd"\n• Retrieved concepts:\n  - Urban architecture creating barriers\n  - Social media creating shallow connections\n  - Economic pressures reducing leisure time\n  - Anonymous transportation systems\n• Synthesis: Creates narrative weaving together urbanization, technology, and human psychology\n\nResult: Rich, nuanced exploration beyond simple keyword matching'
+    example: 'Multi-Agent Research System with Latent Knowledge Retrieval:\n\nScenario: 4 AI agents collaborating on breakthrough innovation\n\n1. Initial Challenge:\n   Human Query: "How can we solve the urban heat island effect?"\n   \n2. Traditional Keyword Retrieval Would Find:\n   • Building materials with high albedo\n   • Green roof technologies\n   • Urban planning guidelines\n   • HVAC efficiency improvements\n\n3. Latent Knowledge Retrieval Process:\n   \n   Research Agent:\n   • Abstract pattern recognition: "thermal regulation in complex systems"\n   • Latent navigation discovers: Biomimetic cooling (elephant ears, termite mounds)\n   • Cross-domain insight: How desert organisms manage heat\n   \n   Analysis Agent:\n   • Pattern: "distributed vs centralized solutions"\n   • Latent retrieval finds: Swarm intelligence, mycelial networks\n   • Emergent insight: Decentralized cooling networks\n   \n   Innovation Agent:\n   • Abstract reasoning: "phase change + distribution + feedback"\n   • Latent space navigation reveals: Ocean thermal layers, forest canopy dynamics\n   • Synthesis: Multi-layer urban thermal management\n   \n   Systems Agent:\n   • Pattern: "adaptive systems responding to environmental stress"\n   • Implicit reasoning uncovers: Immune system responses, ecosystem resilience\n   • Discovery: Self-regulating urban infrastructure\n\n4. Latent Synthesis & Breakthrough Innovation:\n   \n   Combined Abstract Patterns:\n   • Biomimetic thermal regulation\n   • Distributed swarm-like cooling networks\n   • Multi-layer adaptive systems\n   • Self-regulating feedback mechanisms\n   \n   Novel Solution Emerged:\n   "Mycelial Urban Cooling Network"\n   • Bio-inspired underground cooling pipes mimicking fungal networks\n   • Phase-change materials that activate based on thermal stress\n   • Distributed sensors creating adaptive cooling swarms\n   • Self-healing infrastructure using biomimetic principles\n\n5. Retrieval Insights That Keyword Search Would Miss:\n   • How elephant ear blood vessel patterns could inspire cooling pipe design\n   • Why termite mound ventilation principles apply to building clusters\n   • How forest canopy thermal regulation could scale to city districts\n   • Connection between immune system adaptation and urban infrastructure resilience\n\nBenefits for Agentic AI:\n• 89% more novel solutions compared to keyword-based retrieval\n• Cross-domain breakthrough innovations through pattern abstraction\n• Emergent insights from multi-agent latent space exploration\n• Discovers non-obvious connections across knowledge domains\n• Enables truly creative problem-solving beyond human query limitations\n• Scales to 100+ agents sharing latent reasoning patterns'
   },
   {
     id: 'context-compression-advanced',
@@ -68,18 +74,20 @@ export const memoryManagementTechniques: Technique[] = [
     icon: '🗜️',
     color: 'from-blue-500 to-indigo-600',
     category: 'memory-management',
-    description: 'Advanced techniques for compressing and optimizing context information while preserving semantic meaning',
+    description: 'Advanced techniques for compressing and optimizing context information while preserving semantic meaning across multi-agent agentic AI systems',
     features: [
-      'Token-level compression algorithms',
+      'Multi-agent compression coordination',
       'Semantic-preserving reduction',
       'Hierarchical context summarization',
-      'Attention-based context pruning',
+      'Cross-agent attention pruning',
       'Dynamic compression ratios',
-      'Quality-aware compression metrics'
+      'Quality-aware compression metrics',
+      'Agent-specific compression profiles',
+      'Real-time compression adaptation'
     ],
-    useCases: ['long-document-processing', 'memory-optimization', 'cost-reduction', 'real-time-systems', 'mobile-deployment'],
+    useCases: ['multi-agent-coordination', 'long-document-processing', 'memory-optimization', 'cost-reduction', 'real-time-systems', 'distributed-ai-systems'],
     complexity: 'high',
-    example: 'Long Document Analysis:\n\nOriginal Context: 50,000 tokens (research paper)\nCompression Process:\n\n1. Semantic Analysis:\n   • Identify key concepts and relationships\n   • Score paragraph importance (0.1-1.0)\n   • Detect redundant information patterns\n\n2. Hierarchical Compression:\n   • Level 1: Remove low-importance sentences (20% reduction)\n   • Level 2: Abstractive summarization of paragraphs (40% reduction)\n   • Level 3: Concept-based compression (60% reduction)\n   • Level 4: Core insight extraction (80% reduction)\n\n3. Quality Preservation:\n   • Maintain key technical terms\n   • Preserve logical flow and conclusions\n   • Retain critical numerical data\n   • Keep essential citations and references\n\nResult: 10,000 tokens (80% compression) with 95% semantic fidelity\n\nBenefits:\n• 5x faster processing time\n• 80% cost reduction in API calls\n• Maintained answer accuracy for downstream tasks\n• Enabled processing within context window limits'
+    example: 'Multi-Agent Research Collaboration with Advanced Context Compression:\n\nScenario: 5 AI agents collaborating on 100,000-token research corpus\n\n1. Initial Context Distribution:\n   • Research Corpus: 100,000 tokens\n   • Agent Context Limits: 8,000 tokens each\n   • Challenge: How to distribute relevant information efficiently\n\n2. Agent-Specific Compression Profiles:\n   \n   Literature Review Agent:\n   • Input: 25,000 tokens (academic papers)\n   • Compression Focus: Citation networks, methodology patterns\n   • Output: 6,000 tokens (76% compression)\n   • Preserved: Key findings, experimental designs, statistical significance\n   \n   Data Analysis Agent:\n   • Input: 30,000 tokens (datasets, results)\n   • Compression Focus: Numerical data, statistical patterns\n   • Output: 7,200 tokens (76% compression)\n   • Preserved: Statistical significance, data relationships, outliers\n   \n   Methodology Agent:\n   • Input: 20,000 tokens (procedures, protocols)\n   • Compression Focus: Sequential steps, dependencies\n   • Output: 5,500 tokens (72.5% compression)\n   • Preserved: Critical procedures, safety protocols, validation steps\n   \n   Synthesis Agent:\n   • Input: 15,000 tokens (conclusions, implications)\n   • Compression Focus: Logical relationships, insights\n   • Output: 4,800 tokens (68% compression)\n   • Preserved: Key insights, logical flow, future directions\n   \n   Validation Agent:\n   • Input: 10,000 tokens (quality checks, references)\n   • Compression Focus: Verification points, credibility markers\n   • Output: 3,500 tokens (65% compression)\n   • Preserved: Validation criteria, source credibility, fact-checking\n\n3. Advanced Compression Techniques:\n   \n   Cross-Agent Context Sharing:\n   • Shared Core Context: 2,000 tokens (essential background)\n   • Agent-Specific Context: Variable based on role\n   • Cross-references: Lightweight pointers to full data\n   \n   Dynamic Compression Adaptation:\n   • Real-time quality monitoring\n   • Automatic re-compression if quality drops below 90%\n   • Progressive decompression for critical sections\n   \n   Semantic Preservation Algorithms:\n   • Concept graph preservation (maintains key relationships)\n   • Attention-weighted summarization (focuses on agent-relevant content)\n   • Hierarchical abstraction (preserves detail at appropriate levels)\n\n4. Multi-Agent Coordination Benefits:\n   \n   Before Compression:\n   • Total Context: 100,000 tokens\n   • Per-Agent Processing: 20,000 tokens average\n   • Processing Time: 45 seconds per agent\n   • API Costs: $12.50 per analysis\n   • Memory Usage: 95% of available context windows\n   \n   After Advanced Compression:\n   • Total Compressed Context: 27,000 tokens (73% reduction)\n   • Per-Agent Processing: 5,400 tokens average\n   • Processing Time: 8 seconds per agent (82% faster)\n   • API Costs: $2.25 per analysis (82% cost reduction)\n   • Memory Usage: 35% of available context windows\n   • Semantic Fidelity: 94% preserved\n\n5. Quality Preservation Metrics:\n   • Answer Accuracy: 96% (vs 98% uncompressed)\n   • Key Concept Retention: 99%\n   • Logical Flow Preservation: 95%\n   • Cross-Agent Coherence: 93%\n   • Processing Speed Improvement: 5.6x\n\n6. Advanced Features for Agentic AI:\n   • Attention-based relevance scoring per agent specialization\n   • Dynamic recompression based on downstream task performance\n   • Cross-agent context deduplication (removes redundant information)\n   • Lossless compression for critical data (preserves exact numbers, formulas)\n   • Adaptive quality thresholds based on task complexity\n   • Multi-modal compression (text, tables, figures)\n\nResult: 73% compression ratio with 94% semantic fidelity across all agents\nEnables processing 3.7x larger documents within same resource constraints\nMaintains high-quality outputs while dramatically reducing costs and latency'
   },
   {
     id: 'multimodal-context-integration',

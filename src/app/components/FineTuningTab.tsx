@@ -441,7 +441,7 @@ export const FineTuningTab = () => {
                 <div className="bg-gray-800/50 rounded-lg p-4">
                   <h4 className="font-semibold text-purple-300 mb-2">DeepSpeed</h4>
                   <p className="text-sm text-gray-300">
-                    Microsoft's distributed training optimization library with ZeRO stages.
+                    Microsoft&apos;s distributed training optimization library with ZeRO stages.
                   </p>
                 </div>
               </div>
@@ -897,7 +897,7 @@ export const FineTuningTab = () => {
               <div className="space-y-3 text-sm">
                 <div className="bg-gray-800/50 rounded p-3">
                   <div className="font-semibold text-green-400">Phi-4 (4.5B)</div>
-                  <div className="text-gray-300">• Microsoft's latest SLM</div>
+                  <div className="text-gray-300">• Microsoft&apos;s latest SLM</div>
                   <div className="text-gray-300">• Excellent reasoning</div>
                   <div className="text-gray-300">• MIT License</div>
                 </div>
