@@ -22,6 +22,9 @@ import HierarchicalPlanningDemo from '../../components/demos/HierarchicalPlannin
 import GoalDecompositionDemo from '../../components/demos/GoalDecompositionDemo';
 import ConstraintSatisfactionDemo from '../../components/demos/ConstraintSatisfactionDemo';
 import ScenarioPlanningDemo from '../../components/demos/ScenarioPlanningDemo';
+import SequentialChainingDemo from '../../components/demos/SequentialChainingDemo';
+import ParallelChainingDemo from '../../components/demos/ParallelChainingDemo';
+import ConditionalChainingDemo from '../../components/demos/ConditionalChainingDemo';
 import { patternExamples, type PatternId, type LanguageType } from '../pattern-examples';
 import { patternScenarios } from '../../data/patterns';
 
@@ -450,7 +453,7 @@ export const TechniqueDetails = ({
                         }
                       </span>
                       <span className="text-xs text-gray-500">
-                        {selectedTechnique.id === 'feedback-chaining' || selectedTechnique.id === 'hierarchical-chaining' || selectedTechnique.id === 'iterative-refinement' || selectedTechnique.id === 'parallel-synthesis' || selectedTechnique.id === 'dynamic-routing' || selectedTechnique.id === 'content-based-routing' || selectedTechnique.id === 'capability-routing' || selectedTechnique.id === 'load-balancing' || selectedTechnique.id === 'geographic-routing' || selectedTechnique.id === 'map-reduce' || selectedTechnique.id === 'scatter-gather' || selectedTechnique.id === 'fork-join' || selectedTechnique.id === 'async-await' || selectedTechnique.id === 'self-critique' || selectedTechnique.id === 'function-calling' || selectedTechnique.id === 'code-execution' || selectedTechnique.id === 'hierarchical-planning' || selectedTechnique.id === 'goal-decomposition' || selectedTechnique.id === 'constraint-satisfaction' || selectedTechnique.id === 'scenario-planning' ? 'Interactive demo available' : 'Demo coming soon'}
+                        {selectedTechnique.id === 'feedback-chaining' || selectedTechnique.id === 'hierarchical-chaining' || selectedTechnique.id === 'iterative-refinement' || selectedTechnique.id === 'parallel-synthesis' || selectedTechnique.id === 'dynamic-routing' || selectedTechnique.id === 'content-based-routing' || selectedTechnique.id === 'capability-routing' || selectedTechnique.id === 'load-balancing' || selectedTechnique.id === 'geographic-routing' || selectedTechnique.id === 'map-reduce' || selectedTechnique.id === 'scatter-gather' || selectedTechnique.id === 'fork-join' || selectedTechnique.id === 'async-await' || selectedTechnique.id === 'self-critique' || selectedTechnique.id === 'function-calling' || selectedTechnique.id === 'code-execution' || selectedTechnique.id === 'hierarchical-planning' || selectedTechnique.id === 'goal-decomposition' || selectedTechnique.id === 'constraint-satisfaction' || selectedTechnique.id === 'scenario-planning' || selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining' || selectedTechnique.id === 'conditional-chaining' ? 'Interactive demo available' : 'Demo coming soon'}
                       </span>
                     </div>
                   </div>
@@ -494,6 +497,12 @@ export const TechniqueDetails = ({
                     <ConstraintSatisfactionDemo />
                   ) : selectedTechnique.id === 'scenario-planning' ? (
                     <ScenarioPlanningDemo />
+                  ) : selectedTechnique.id === 'sequential-chaining' ? (
+                    <SequentialChainingDemo />
+                  ) : selectedTechnique.id === 'parallel-chaining' ? (
+                    <ParallelChainingDemo />
+                  ) : selectedTechnique.id === 'conditional-chaining' ? (
+                    <ConditionalChainingDemo />
                   ) : (
                     <div className="p-8 text-center">
                       <Play className="w-12 h-12 mx-auto text-gray-500 mb-4" />

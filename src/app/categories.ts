@@ -534,6 +534,52 @@ export const categories: Category[] = [
     techniques: ['semantic-search', 'hybrid-retrieval', 'document-chunking', 'vector-databases', 'context-validation', 'graph-rag', 'node-rag', 'self-rag', 'corrective-rag', 'adaptive-rag', 'modular-rag', 'multimodal-rag', 'conversational-rag', 'hierarchical-rag', 'chain-of-verification-rag', 'agentic-rag-systems']
   },
   { 
+    id: 'knowledge-representation', 
+    name: 'Knowledge Representation', 
+    icon: '🕸️', 
+    description: 'Semantic modeling and ontological representation patterns',
+    detailedDescription: 'Knowledge representation patterns enable AI systems to structure, validate, and reason about information using formal semantic frameworks. These patterns implement ontological modeling, constraint validation, and semantic reasoning capabilities that transform unstructured data into machine-readable knowledge graphs. By leveraging standards like RDF, SHACL, and OWL, these patterns create intelligent data structures that support advanced reasoning, automatic inference, and semantic interoperability across diverse domains and applications.',
+    useCases: [
+      'Semantic Data Integration: Unifying heterogeneous data sources through common ontological frameworks, enabling cross-system interoperability and consistent data interpretation.',
+      'Knowledge Graph Construction: Building comprehensive knowledge networks that capture entities, relationships, and semantic context for domain-specific applications.',
+      'Automated Compliance Validation: Using SHACL constraints and business rules to ensure data quality, regulatory compliance, and policy adherence across enterprise systems.',
+      'Intelligent Reasoning Systems: Implementing OWL-based logical inference for automated classification, relationship discovery, and decision support in expert systems.',
+      'Scientific Knowledge Management: Organizing research data, publications, and experimental results in semantically rich formats that support discovery and hypothesis generation.',
+      'Enterprise Knowledge Governance: Creating standardized knowledge representations that ensure data consistency, quality, and accessibility across organizational boundaries.',
+      'Regulatory Compliance Monitoring: Building semantic validation systems that automatically check business processes and data against complex regulatory requirements.',
+      'Cross-Domain Knowledge Integration: Connecting knowledge from different domains through shared ontological frameworks, enabling interdisciplinary insights and analysis.'
+    ],
+    whyImportant: 'Knowledge representation patterns are fundamental for building AI systems that can understand, reason about, and validate complex domain knowledge. They bridge the gap between raw data and meaningful information by providing structured frameworks for knowledge modeling, validation, and inference. These patterns enable AI systems to work with semantically rich data, perform automated reasoning, and maintain data integrity across large-scale applications. They are essential for creating interoperable, trustworthy AI systems that can handle complex real-world knowledge domains.',
+    implementationGuide: {
+      whenToUse: [
+        'Applications requiring formal knowledge modeling and semantic reasoning capabilities',
+        'Systems dealing with complex domain knowledge that benefits from ontological structure',
+        'Data integration scenarios where semantic interoperability is critical',
+        'Applications requiring automated validation against complex business rules and constraints',
+        'Knowledge-intensive domains where relationships and inference are as important as facts',
+        'Enterprise systems requiring consistent knowledge governance and quality assurance'
+      ],
+      bestPractices: [
+        'Start with well-established ontology standards and vocabularies when available',
+        'Design modular ontologies that can be composed and extended for different use cases',
+        'Implement comprehensive validation and constraint checking throughout the knowledge lifecycle',
+        'Use version control and governance processes for ontology management and evolution',
+        'Design knowledge representations with clear provenance and lineage tracking',
+        'Implement efficient querying and reasoning mechanisms appropriate for your scale requirements',
+        'Ensure proper documentation and training for teams working with semantic technologies'
+      ],
+      commonPitfalls: [
+        'Over-engineering ontologies with excessive complexity that hampers usability and performance',
+        'Insufficient domain expert involvement leading to ontologies that don\'t reflect real-world semantics',
+        'Poor planning for ontology evolution and versioning, making long-term maintenance difficult',
+        'Ignoring performance implications of complex reasoning and inference operations',
+        'Not considering interoperability with existing systems and standards in the target domain',
+        'Inadequate validation and testing of semantic constraints leading to data quality issues'
+      ]
+    },
+    techniques: ['rdf-knowledge-modeling', 'shacl-validation', 'owl-reasoning', 'knowledge-graph-construction', 'semantic-validation']
+  },
+  { 
     id: 'context-orchestration', 
     name: 'Context Orchestration', 
     icon: '🎛️', 

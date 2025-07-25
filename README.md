@@ -246,3 +246,15 @@ Agentic Design Patterns
 Craft reliable AI systems
 
 Pin and save
+
+-------------------------------
+We are missing coding challenge no ? I don't see it.
+
+
+- I want a feature to listen content of the website
+to not have to read it, I should have girl or man voice that do that for me.
+
+----
+LLM mascote to help learn and follow learning.
+
+Learn pattern and techniques not framework

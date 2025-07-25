@@ -10,6 +10,7 @@ import { planningExecutionTechniques } from './planning-execution';
 import { interpretabilityTechniques } from './interpretability';
 import { humanAiCollaborationTechniques } from './human-ai-collaboration';
 import { knowledgeRetrievalTechniques } from './knowledge-retrieval';
+import { knowledgeRepresentationTechniques } from './knowledge-representation';
 import { parallelizationTechniques } from './parallelization';
 import { multiAgentTechniques } from './multi-agent';
 
@@ -53,6 +54,7 @@ export const techniques: Technique[] = [
   ...interpretabilityTechniques,
   ...humanAiCollaborationTechniques,
   ...knowledgeRetrievalTechniques,
+  ...knowledgeRepresentationTechniques,
   ...remainingTechniques,
 ];
 

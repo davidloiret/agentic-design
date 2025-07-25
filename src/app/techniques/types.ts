@@ -29,6 +29,7 @@ export type TechniqueCategory =
   | 'exception-handling-recovery'
   | 'workflow-orchestration'
   | 'knowledge-retrieval'
+  | 'knowledge-representation'
   | 'resource-aware-optimization'
   | 'evaluation-monitoring'
   | 'prioritization'

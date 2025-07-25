@@ -15,6 +15,7 @@ import { NewsTab } from './components/NewsTab';
 import { ProjectHub } from './components/ProjectHub';
 import { InferenceTab } from './components/InferenceTab';
 import { FineTuningTab } from './components/FineTuningTab';
+import { LearningHub } from './components/LearningHub';
 import { ChatBot } from './components/ChatBot';
 import { techniques } from './techniques';
 import { useCases } from './use-cases';
@@ -277,6 +278,14 @@ export const AIReasoningExplorer = () => {
           /* News Tab */
           <div className="h-[calc(100vh-15rem)]">
             <NewsTab />
+          </div>
+        ) : activeTab === 'learning' ? (
+          /* Learning Hub Tab */
+          <div className="h-[calc(100vh-11rem)]">
+            <LearningHub 
+              techniques={techniques}
+              categories={categories}
+            />
           </div>
         ) : (
           /* Evaluation Tab */

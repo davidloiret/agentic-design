@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { BookOpen, Lightbulb, Share2, FlaskConical, Brain, Boxes, Newspaper, FolderOpen, Cpu, Settings, ChevronDown, Menu, X } from 'lucide-react';
+import { BookOpen, Lightbulb, Share2, FlaskConical, Brain, Boxes, Newspaper, FolderOpen, Cpu, Settings, ChevronDown, Menu, X, GraduationCap } from 'lucide-react';
 
 interface NavigationTabsProps {
   activeTab: string;
@@ -89,6 +89,7 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
       projects: 'text-yellow-400',
       inference: 'text-indigo-400',
       finetuning: 'text-violet-400',
+      learning: 'text-rose-400',
     };
 
     return `${baseClasses} ${colorMap[tabId as keyof typeof colorMap] || 'text-blue-400 bg-blue-400/10'}`;
@@ -106,6 +107,7 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
       projects: 'bg-yellow-400',
       inference: 'bg-indigo-400',
       finetuning: 'bg-violet-400',
+      learning: 'bg-rose-400',
     };
     return colorMap[tabId as keyof typeof colorMap] || 'bg-blue-400';
   };
@@ -116,6 +118,7 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
       name: 'Core',
       tabs: [
         { id: 'explore', label: 'Explore Patterns', icon: BookOpen, description: 'Browse AI design patterns' },
+        { id: 'learning', label: 'Learning Hub', icon: GraduationCap, description: 'Gamified learning & certification' },
         { id: 'mindmap', label: 'Mind Map', icon: Brain, description: 'Visual pattern relationships' },
         { id: 'evaluate', label: 'Evaluate & Compare', icon: FlaskConical, description: 'Compare techniques' },
       ]
