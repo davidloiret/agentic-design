@@ -41,7 +41,7 @@ export const AIReasoningExplorer = () => {
   
   // Code sandbox state
   const [selectedLanguage, setSelectedLanguage] = useState<LanguageType>('typescript');
-  const [detailsTab, setDetailsTab] = useState<'overview' | 'code' | 'interactive'>('overview');
+  const [detailsTab, setDetailsTab] = useState<'overview' | 'flow' | 'interactive' | 'code'>('overview');
   
   // Evaluation state
   const [selectedPatterns, setSelectedPatterns] = useState<any[]>([]);

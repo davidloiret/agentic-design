@@ -1,15 +1,34 @@
+import React from 'react';
 import { BookOpen, Code, Check, Brain, GitBranch, Play } from 'lucide-react';
 import CodeSandbox from '../../components/CodeSandbox';
 import { InteractivePatternFlow } from '../../components/InteractivePatternFlow';
+import FeedbackChainingDemo from '../../components/demos/FeedbackChainingDemo';
+import HierarchicalChainingDemo from '../../components/demos/HierarchicalChainingDemo';
+import IterativeRefinementDemo from '../../components/demos/IterativeRefinementDemo';
+import ParallelSynthesisDemo from '../../components/demos/ParallelSynthesisDemo';
+import DynamicRoutingDemo from '../../components/demos/DynamicRoutingDemo';
+import ContentBasedRoutingDemo from '../../components/demos/ContentBasedRoutingDemo';
+import CapabilityRoutingDemo from '../../components/demos/CapabilityRoutingDemo';
+import LoadBalancingDemo from '../../components/demos/LoadBalancingDemo';
+import GeographicRoutingDemo from '../../components/demos/GeographicRoutingDemo';
+import MapReduceDemo from '../../components/demos/MapReduceDemo';
+import ScatterGatherDemo from '../../components/demos/ScatterGatherDemo';
+import ForkJoinDemo from '../../components/demos/ForkJoinDemo';
+import AsyncAwaitDemo from '../../components/demos/AsyncAwaitDemo';
+import SelfCritiqueDemo from '../../components/demos/SelfCritiqueDemo';
+import ToolUseDemo from '../../components/demos/ToolUseDemo';
+import CodeExecutionDemo from '../../components/demos/CodeExecutionDemo';
+import HierarchicalPlanningDemo from '../../components/demos/HierarchicalPlanningDemo';
+import GoalDecompositionDemo from '../../components/demos/GoalDecompositionDemo';
 import { patternExamples, type PatternId, type LanguageType } from '../pattern-examples';
-import { patternScenarios } from '../../data/pattern-scenarios';
+import { patternScenarios } from '../../data/patterns';
 
 interface TechniqueDetailsProps {
   selectedTechnique: any;
   categories: any[];
   useCases: any[];
-  detailsTab: 'overview' | 'code' | 'interactive';
-  setDetailsTab: (tab: 'overview' | 'code' | 'interactive') => void;
+  detailsTab: 'overview' | 'flow' | 'interactive' | 'code';
+  setDetailsTab: (tab: 'overview' | 'flow' | 'interactive' | 'code') => void;
   selectedLanguage: LanguageType;
   setSelectedLanguage: (lang: LanguageType) => void;
 }
@@ -86,6 +105,17 @@ export const TechniqueDetails = ({
               Overview
             </button>
             <button
+              onClick={() => setDetailsTab('flow')}
+              className={`py-4 px-2 font-medium transition-all border-b-2 ${
+                detailsTab === 'flow'
+                  ? 'text-orange-400 border-orange-400'
+                  : 'text-gray-400 border-transparent hover:text-gray-200'
+              }`}
+            >
+              <GitBranch className="w-4 h-4 inline mr-2" />
+              Flow Visualization
+            </button>
+            <button
               onClick={() => setDetailsTab('interactive')}
               className={`py-4 px-2 font-medium transition-all border-b-2 ${
                 detailsTab === 'interactive'
@@ -105,7 +135,7 @@ export const TechniqueDetails = ({
               }`}
             >
               <Code className="w-4 h-4 inline mr-2" />
-              Interactive Code
+              Code Playground
             </button>
           </div>
         </div>
@@ -329,33 +359,26 @@ export const TechniqueDetails = ({
                       </div>
                     </div>
                   </div>
-
-                  <div className="mt-6 p-4 bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-lg">
-                    <p className="text-sm text-gray-200 leading-relaxed">
-                      <strong className="text-white">Note:</strong> These references provide foundational knowledge and advanced techniques related to {selectedTechnique.name}. 
-                      Start with the implementation guides for practical application, then explore academic papers for deeper theoretical understanding.
-                    </p>
-                  </div>
                 </div>
               </section>
 
             </div>
-          ) : detailsTab === 'interactive' ? (
+          ) : detailsTab === 'flow' ? (
             <div className="space-y-6">
-              {/* Interactive Pattern Flow */}
+              {/* Flow Visualization */}
               <div>
                 <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                  <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
-                  Interactive Pattern Demonstration
+                  <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                  Step-by-Step Flow Visualization
                 </h2>
                 <div className="bg-gray-900/60 rounded-xl border border-gray-700/30">
                   <div className="bg-gray-900/60 px-4 py-3 border-b border-gray-700/30">
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-medium text-gray-300">
-                        Step-by-step visualization of {selectedTechnique.name}
+                        Interactive flow diagram showing the execution pattern
                       </span>
                       <span className="text-xs text-gray-500">
-                        {patternScenarios[selectedTechnique.id] ? 'Interactive scenario available' : 'Scenario coming soon'}
+                        {patternScenarios[selectedTechnique.id] ? 'Flow diagram available' : 'Flow coming soon'}
                       </span>
                     </div>
                   </div>
@@ -366,16 +389,113 @@ export const TechniqueDetails = ({
                     />
                   ) : (
                     <div className="p-8 text-center">
-                      <Play className="w-12 h-12 mx-auto text-gray-500 mb-4" />
-                      <h3 className="text-lg font-medium text-gray-300 mb-2">Interactive Demo Coming Soon</h3>
+                      <GitBranch className="w-12 h-12 mx-auto text-gray-500 mb-4" />
+                      <h3 className="text-lg font-medium text-gray-300 mb-2">Flow Visualization Coming Soon</h3>
                       <p className="text-gray-400 text-sm max-w-md mx-auto">
-                        We're working on an interactive step-by-step demonstration for this pattern. 
-                        Check back soon or explore other patterns with available demos.
+                        We're creating an interactive flow diagram for this technique. 
+                        Check back soon or explore other techniques with available flows.
                       </p>
                     </div>
                   )}
                 </div>
-              </div>            
+              </div>
+            </div>
+          ) : detailsTab === 'interactive' ? (
+            <div className="space-y-6">
+              {/* Interactive Demos */}
+              <div>
+                <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                  <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                  Interactive Demonstrations
+                </h2>
+                <div className="bg-gray-900/60 rounded-xl border border-gray-700/30">
+                  <div className="bg-gray-900/60 px-4 py-3 border-b border-gray-700/30">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-gray-300">
+                        {selectedTechnique.id === 'feedback-chaining' 
+                          ? 'Interactive feedback loop demonstration'
+                          : selectedTechnique.id === 'hierarchical-chaining'
+                          ? 'Interactive project management simulation'
+                          : selectedTechnique.id === 'capability-routing'
+                          ? 'Interactive capability-based routing simulation'
+                          : selectedTechnique.id === 'load-balancing'
+                          ? 'Interactive load balancing and distribution simulation'
+                          : selectedTechnique.id === 'geographic-routing'
+                          ? 'Interactive geographic routing and compliance simulation'
+                          : selectedTechnique.id === 'map-reduce'
+                          ? 'Interactive distributed computing and data processing simulation'
+                          : selectedTechnique.id === 'scatter-gather'
+                          ? 'Interactive scatter-gather service orchestration simulation'
+                          : selectedTechnique.id === 'fork-join'
+                          ? 'Interactive fork-join recursive decomposition simulation'
+                          : selectedTechnique.id === 'async-await'
+                          ? 'Interactive async-await promise coordination simulation'
+                          : selectedTechnique.id === 'self-critique'
+                          ? 'Interactive self-critique quality assessment simulation'
+                          : selectedTechnique.id === 'function-calling'
+                          ? 'Interactive function calling and tool use simulation'
+                          : selectedTechnique.id === 'code-execution'
+                          ? 'Interactive code generation, validation, and execution simulation'
+                          : selectedTechnique.id === 'hierarchical-planning'
+                          ? 'Interactive hierarchical goal decomposition and project planning simulation'
+                          : selectedTechnique.id === 'goal-decomposition'
+                          ? 'Interactive goal breakdown, SMART criteria evaluation, and progress tracking simulation'
+                          : 'Hands-on demonstration of the technique'
+                        }
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        {selectedTechnique.id === 'feedback-chaining' || selectedTechnique.id === 'hierarchical-chaining' || selectedTechnique.id === 'iterative-refinement' || selectedTechnique.id === 'parallel-synthesis' || selectedTechnique.id === 'dynamic-routing' || selectedTechnique.id === 'content-based-routing' || selectedTechnique.id === 'capability-routing' || selectedTechnique.id === 'load-balancing' || selectedTechnique.id === 'geographic-routing' || selectedTechnique.id === 'map-reduce' || selectedTechnique.id === 'scatter-gather' || selectedTechnique.id === 'fork-join' || selectedTechnique.id === 'async-await' || selectedTechnique.id === 'self-critique' || selectedTechnique.id === 'function-calling' || selectedTechnique.id === 'code-execution' || selectedTechnique.id === 'hierarchical-planning' || selectedTechnique.id === 'goal-decomposition' ? 'Interactive demo available' : 'Demo coming soon'}
+                      </span>
+                    </div>
+                  </div>
+                  {selectedTechnique.id === 'feedback-chaining' ? (
+                    <FeedbackChainingDemo />
+                  ) : selectedTechnique.id === 'hierarchical-chaining' ? (
+                    <HierarchicalChainingDemo />
+                  ) : selectedTechnique.id === 'iterative-refinement' ? (
+                    <IterativeRefinementDemo />
+                  ) : selectedTechnique.id === 'parallel-synthesis' ? (
+                    <ParallelSynthesisDemo />
+                  ) : selectedTechnique.id === 'dynamic-routing' ? (
+                    <DynamicRoutingDemo />
+                  ) : selectedTechnique.id === 'content-based-routing' ? (
+                    <ContentBasedRoutingDemo />
+                  ) : selectedTechnique.id === 'capability-routing' ? (
+                    <CapabilityRoutingDemo />
+                  ) : selectedTechnique.id === 'load-balancing' ? (
+                    <LoadBalancingDemo />
+                  ) : selectedTechnique.id === 'geographic-routing' ? (
+                    <GeographicRoutingDemo />
+                  ) : selectedTechnique.id === 'map-reduce' ? (
+                    <MapReduceDemo />
+                  ) : selectedTechnique.id === 'scatter-gather' ? (
+                    <ScatterGatherDemo />
+                  ) : selectedTechnique.id === 'fork-join' ? (
+                    <ForkJoinDemo />
+                  ) : selectedTechnique.id === 'async-await' ? (
+                    <AsyncAwaitDemo />
+                  ) : selectedTechnique.id === 'self-critique' ? (
+                    <SelfCritiqueDemo />
+                  ) : selectedTechnique.id === 'function-calling' ? (
+                    <ToolUseDemo />
+                  ) : selectedTechnique.id === 'code-execution' ? (
+                    <CodeExecutionDemo />
+                  ) : selectedTechnique.id === 'hierarchical-planning' ? (
+                    <HierarchicalPlanningDemo />
+                  ) : selectedTechnique.id === 'goal-decomposition' ? (
+                    <GoalDecompositionDemo />
+                  ) : (
+                    <div className="p-8 text-center">
+                      <Play className="w-12 h-12 mx-auto text-gray-500 mb-4" />
+                      <h3 className="text-lg font-medium text-gray-300 mb-2">Interactive Demo Coming Soon</h3>
+                      <p className="text-gray-400 text-sm max-w-md mx-auto">
+                        We're working on an interactive hands-on demonstration for this technique. 
+                        Check back soon or explore other techniques with available demos.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           ) : (
             <div className="space-y-6">
@@ -383,7 +503,7 @@ export const TechniqueDetails = ({
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-bold text-white flex items-center gap-2">
                   <div className="w-1 h-6 bg-green-500 rounded-full"></div>
-                  Interactive Code Examples
+                  Code Playground
                 </h2>
                 <div className="flex gap-2">
                   {(['typescript', 'python', 'rust'] as LanguageType[]).map(lang => (

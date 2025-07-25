@@ -58,7 +58,7 @@ export const TechniquesList = ({
       <button
         key={technique.id}
         onClick={() => setSelectedTechnique(technique)}
-        className={`w-full text-left p-3 rounded-xl transition-all duration-200 group ml-8 ${
+        className={`w-full text-left p-2 rounded-xl transition-all duration-200 group ml-4 ${
           isSelected
             ? 'bg-gradient-to-r ' + technique.color + ' shadow-lg scale-[0.98]'
             : 'bg-gray-800/30 hover:bg-gray-800/50 hover:scale-[0.99]'
@@ -118,10 +118,10 @@ export const TechniquesList = ({
       <div key={category.id} className="space-y-1">
         <div className={`w-full rounded-xl transition-all duration-200 text-left group ${
             isParent 
-              ? `p-4 ${isSelected ? 'bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg' : 'bg-gray-800/60 hover:bg-gray-800/80'}`
+              ? `p-2 ${isSelected ? 'bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg' : 'bg-gray-800/60 hover:bg-gray-800/80'}`
               : `p-3 ml-4 ${isSelected ? 'bg-blue-500/20 border border-blue-500/30' : 'bg-gray-800/30 hover:bg-gray-800/50'}`
           }`}>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1">
             {(hasChildren || categoryTechniques.length > 0) && (
               <button
                 onClick={(e) => {
@@ -154,19 +154,19 @@ export const TechniquesList = ({
                 </span>
               </div>
               
-              <div className="flex-1 min-w-0">
+              <div className="text-left flex-1 min-w-0">
                 <h3 className={`font-semibold ${isParent ? 'text-base' : 'text-sm'} truncate ${
                   isSelected ? 'text-white' : 'text-gray-200 group-hover:text-white'
                 }`}>
                   {category.name}
                 </h3>
-                {isParent && (
+                {/* {isParent && (
                   <p className={`text-xs mt-0.5 ${
                     isSelected ? 'text-white/70' : 'text-gray-400'
                   }`}>
                     {category.description}
                   </p>
-                )}
+                )} */}
               </div>
               
               <div className="flex items-center gap-2">

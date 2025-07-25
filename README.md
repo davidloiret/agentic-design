@@ -157,3 +157,29 @@ ou alors on parle de patterns et catégorie de pattern
 
 
   model hub ?
+
+  lib directly from patterns ?
+
+
+  https://www.philschmid.de/agentic-pattern
+
+
+  cheatsheet / interactive try / with and without framework
+  follow news advancement 
+  help build agentoic systems
+  get recommendation
+  xmind
+  system builder
+
+  chat / rapid search / learning / gamification / quizz / fashcard / challenge => leetcode like => coder un pattern
+  checklist for production
+AI assistant to help build and learn
+
+  graph RAG
+
+  ---
+
+  help make the right design decision => database selection etc
+
+
+  Add knowledge structuration / ontology / shacl etc

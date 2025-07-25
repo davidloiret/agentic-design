@@ -17,7 +17,7 @@ export interface Category {
 }
 
 export const categories: Category[] = [
-  { id: 'all', name: 'All Patterns', icon: '🔮', description: 'View all available patterns' },
+  // { id: 'all', name: 'All Patterns', icon: '🔮', description: 'View all available patterns' },
   
   // Core Execution Patterns
   { 
