@@ -13,6 +13,8 @@ import { RecommendationTab } from './components/RecommendationTab';
 import { SystemBuilder } from './components/SystemBuilder';
 import { NewsTab } from './components/NewsTab';
 import { ProjectHub } from './components/ProjectHub';
+import { InferenceTab } from './components/InferenceTab';
+import { FineTuningTab } from './components/FineTuningTab';
 import { ChatBot } from './components/ChatBot';
 import { techniques } from './techniques';
 import { useCases } from './use-cases';
@@ -146,9 +148,9 @@ export const AIReasoningExplorer = () => {
       <Header />
       <NavigationTabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      <div className="mx-auto px-6 py-8 h-[calc(100vh-8rem)]">
+      <div className="mx-auto px-6 py-8 h-[calc(100vh-5rem)]">
         {activeTab === 'explore' ? (
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-full">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-full overflow-hidden">
             <TechniquesList
               techniques={techniques}
               categories={categories}
@@ -166,22 +168,24 @@ export const AIReasoningExplorer = () => {
               // Prioritize showing technique details if a technique is selected
               if (selectedTechnique) {
                 return (
-                  <TechniqueDetails
-                    selectedTechnique={selectedTechnique}
-                    categories={categories}
-                    useCases={useCases}
-                    detailsTab={detailsTab}
-                    setDetailsTab={setDetailsTab}
-                    selectedLanguage={selectedLanguage}
-                    setSelectedLanguage={setSelectedLanguage}
-                  />
+                  <div className="lg:col-span-3 overflow-y-auto">
+                    <TechniqueDetails
+                      selectedTechnique={selectedTechnique}
+                      categories={categories}
+                      useCases={useCases}
+                      detailsTab={detailsTab}
+                      setDetailsTab={setDetailsTab}
+                      selectedLanguage={selectedLanguage}
+                      setSelectedLanguage={setSelectedLanguage}
+                    />
+                  </div>
                 );
               }
               
               // Show CategoryDetails if the category has detailed description and no technique is selected
               if (selectedCategoryData?.detailedDescription) {
                 return (
-                  <div className="lg:col-span-3">
+                  <div className="lg:col-span-3 overflow-y-auto">
                     <CategoryDetails
                       category={selectedCategoryData}
                       onBack={() => setSelectedCategory('all')}
@@ -193,15 +197,17 @@ export const AIReasoningExplorer = () => {
               }
               
               return (
-                <TechniqueDetails
-                  selectedTechnique={selectedTechnique}
-                  categories={categories}
-                  useCases={useCases}
-                  detailsTab={detailsTab}
-                  setDetailsTab={setDetailsTab}
-                  selectedLanguage={selectedLanguage}
-                  setSelectedLanguage={setSelectedLanguage}
-                />
+                <div className="lg:col-span-3 overflow-y-auto">
+                  <TechniqueDetails
+                    selectedTechnique={selectedTechnique}
+                    categories={categories}
+                    useCases={useCases}
+                    detailsTab={detailsTab}
+                    setDetailsTab={setDetailsTab}
+                    selectedLanguage={selectedLanguage}
+                    setSelectedLanguage={setSelectedLanguage}
+                  />
+                </div>
               );
             })()}
           </div>
@@ -223,7 +229,7 @@ export const AIReasoningExplorer = () => {
           />
         ) : activeTab === 'graph' ? (
           /* Graph Tab */
-          <div className="h-[calc(100vh-16rem)]">
+          <div className="h-[calc(100vh-15rem)]">
             <NetworkGraph 
               techniques={techniques} 
               categories={categories} 
@@ -232,9 +238,19 @@ export const AIReasoningExplorer = () => {
               selectedTechnique={selectedTechnique}
             />
           </div>
+        ) : activeTab === 'inference' ? (
+          /* Inference Tab */
+          <div className="h-[calc(100vh-11rem)]">
+            <InferenceTab />
+          </div>
+        ) : activeTab === 'finetuning' ? (
+          /* Fine Tuning Tab */
+          <div className="h-[calc(100vh-11rem)]">
+            <FineTuningTab />
+          </div>
         ) : activeTab === 'mindmap' ? (
           /* Mind Map Tab */
-          <div className="h-[calc(100vh-12rem)] min-h-[600px]">
+          <div className="h-[calc(100vh-11rem)] min-h-[600px]">
             <MindMap 
               techniques={techniques} 
               categories={categories} 
@@ -245,7 +261,7 @@ export const AIReasoningExplorer = () => {
           </div>
         ) : activeTab === 'builder' ? (
           /* System Builder Tab */
-          <div className="h-[calc(100vh-16rem)]">
+          <div className="h-[calc(100vh-15rem)]">
             <SystemBuilder 
               techniques={techniques} 
               categories={categories} 
@@ -254,12 +270,12 @@ export const AIReasoningExplorer = () => {
           </div>
         ) : activeTab === 'projects' ? (
           /* Project Hub Tab */
-          <div className="h-[calc(100vh-16rem)]">
+          <div className="h-[calc(100vh-15rem)]">
             <ProjectHub />
           </div>
         ) : activeTab === 'news' ? (
           /* News Tab */
-          <div className="h-[calc(100vh-16rem)]">
+          <div className="h-[calc(100vh-15rem)]">
             <NewsTab />
           </div>
         ) : (

@@ -1,18 +1,64 @@
-import { Sparkles } from 'lucide-react';
+import { Sparkles, Search, Settings } from 'lucide-react';
 
 export const Header = () => {
   return (
-    <div className="bg-gradient-to-r from-gray-900 to-gray-800 border-b border-gray-700">
-      <div className="mx-auto px-6 py-6">
+    <div className="relative bg-gradient-to-r from-gray-900 via-gray-900 to-gray-800 border-b border-gray-700/50 overflow-hidden">
+      {/* Subtle background pattern */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/10 via-transparent to-purple-900/10"></div>
+      
+      {/* Animated background dots */}
+      <div className="absolute inset-0 opacity-30">
+        <div className="absolute top-2 left-1/4 w-1 h-1 bg-blue-400 rounded-full animate-pulse"></div>
+        <div className="absolute top-3 right-1/3 w-1 h-1 bg-purple-400 rounded-full animate-pulse delay-700"></div>
+        <div className="absolute bottom-2 left-1/3 w-1 h-1 bg-cyan-400 rounded-full animate-pulse delay-1000"></div>
+      </div>
+
+      <div className="relative mx-auto px-6 py-2">
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent">
-              Agentic Design Patterns & Techniques
-            </h1>
-            <p className="text-gray-400 mt-1">Learn how to craft reliable agentic systems</p>
+          {/* Left side - Logo and Title */}
+          <div className="flex items-center space-x-3 flex-shrink-0">
+            <div className="flex items-center space-x-3">
+              <div className="relative">
+                <div className="w-7 h-7 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center shadow-lg">
+                  <Sparkles className="w-3.5 h-3.5 text-white" />
+                </div>
+              </div>
+              
+              <div className="flex items-center space-x-2">
+                <h1 className="text-lg font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
+                  Agentic Design Patterns
+                </h1>
+                <span className="text-xs text-gray-400 font-medium">
+                  • Craft reliable AI systems
+                </span>
+              </div>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-8 h-8 text-purple-500" />
+
+          {/* Middle - Search Bar */}
+          <div className="flex-1 max-w-md mx-8">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <input
+                type="text"
+                placeholder="Search"
+                className="w-full pl-10 pr-4 py-2 bg-gray-800/50 border border-gray-700/50 rounded-lg focus:outline-none focus:border-blue-500/50 focus:bg-gray-800/70 transition-all duration-200 text-gray-200 placeholder-gray-400 text-sm"
+              />
+            </div>
+          </div>
+
+          {/* Right side - Settings and Status */}
+          <div className="flex items-center space-x-3 flex-shrink-0">
+            {/* Status indicator */}
+            <div className="flex items-center space-x-2 px-2.5 py-1 bg-gray-800/50 rounded-full border border-gray-700/50">
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+              <span className="text-xs font-medium text-gray-300">Live</span>
+            </div>
+            
+            {/* Settings icon */}
+            <button className="p-1.5 rounded-lg hover:bg-gray-800/50 transition-colors duration-200 group">
+              <Settings className="w-5 h-5 text-gray-400 hover:text-gray-300 group-hover:rotate-90 transition-all duration-200" />
+            </button>
           </div>
         </div>
       </div>

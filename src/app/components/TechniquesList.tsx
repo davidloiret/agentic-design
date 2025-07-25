@@ -193,7 +193,7 @@ export const TechniquesList = ({
   };
 
   return (
-    <div className="lg:col-span-1 h-full flex flex-col">
+    <div className="lg:col-span-1 h-full flex flex-col min-h-0">
       {/* Search */}
       <div className="relative flex-shrink-0 mb-4">
         <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -207,7 +207,7 @@ export const TechniquesList = ({
       </div>
       
       {/* Categories Tree */}
-      <div className="flex-1 overflow-y-auto space-y-3 pr-8">
+      <div className="flex-1 overflow-y-auto space-y-3 pr-2 min-h-0" style={{ scrollbarWidth: 'thin', scrollbarColor: '#374151 transparent' }}>
         <div className="flex items-center gap-2 px-1 pb-2">
           <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">
             Design Patterns & Techniques

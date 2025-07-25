@@ -220,3 +220,29 @@ Multi modal ity
   - https://docs.google.com/document/d/1rsaK53T3Lg5KoGwvf8ukOUvbELRtH-V0LnOIFDxBryE/edit?tab=t.0
   - https://www.philschmid.de/agentic-pattern
 
+Memory vs context management should we have a dedicated category on Memory (such like human perpetual etc)
+
+------------
+Anonymisation
+Secure Enclave Inference
+
+Embedding / semantic 
+
+Type of models
+
+Open source models etc
+
+model whisper / etc
+
+
+add inference hardware
+
+add => ask a expert for help
+
+
+---------------
+
+Agentic Design Patterns
+Craft reliable AI systems
+
+Pin and save

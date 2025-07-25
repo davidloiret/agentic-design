@@ -250,67 +250,23 @@ export const categories: Category[] = [
     },
     techniques: ['function-calling', 'api-integration', 'code-execution', 'plugin-architecture', 'model-context-protocol', 'json-schema', 'grpc-protocols', 'rest-apis', 'message-queuing']
   },
-  { 
-    id: 'planning', 
-    name: 'Planning', 
-    icon: '📋', 
-    description: 'Task decomposition and execution planning patterns',
-    detailedDescription: 'Planning patterns enable AI systems to break down complex, multi-step tasks into manageable components, create execution strategies, and adapt plans based on intermediate results. These patterns implement systematic approaches to problem-solving that consider dependencies, resource constraints, and alternative pathways to achieve desired outcomes efficiently and reliably.',
-    useCases: [
-      'Project Management: Breaking down complex projects into phases, tasks, and dependencies with timeline estimation.',
-      'Research Planning: Structuring comprehensive research efforts with defined objectives, methodologies, and deliverables.',
-      'Software Development: Planning development cycles including requirements analysis, design, implementation, and testing phases.',
-      'Travel Planning: Creating detailed itineraries considering preferences, constraints, logistics, and contingencies.',
-      'Educational Curriculum Design: Structuring learning paths with progressive skill building and assessment checkpoints.',
-      'Business Strategy Development: Creating strategic plans with market analysis, goal setting, and implementation roadmaps.',
-      'Problem-Solving Workflows: Designing systematic approaches to complex problems with alternative solution paths.',
-      'Resource Allocation: Planning optimal distribution of resources across multiple competing priorities and constraints.'
-    ],
-    whyImportant: 'Planning patterns are essential for handling complex tasks that cannot be solved in a single step or require coordination of multiple activities. They enable AI systems to think strategically, consider long-term consequences, and create actionable roadmaps for achieving goals. These patterns improve success rates by identifying potential obstacles early, optimizing resource usage, and providing structured approaches to complex challenges.',
-    implementationGuide: {
-      whenToUse: [
-        'Complex tasks requiring multiple coordinated steps or phases',
-        'Projects with dependencies, constraints, or resource limitations',
-        'Scenarios where multiple solution approaches should be considered',
-        'Long-term objectives requiring strategic thinking and adaptation',
-        'Situations where planning quality significantly impacts execution success',
-        'Collaborative environments requiring shared understanding of objectives and methods'
-      ],
-      bestPractices: [
-        'Start with clear goal definition and success criteria',
-        'Consider multiple alternative approaches and their trade-offs',
-        'Build in checkpoints for plan evaluation and adjustment',
-        'Account for resource constraints and availability in planning',
-        'Include risk assessment and contingency planning',
-        'Make plans actionable with specific steps and timelines',
-        'Design plans to be communicable and understandable to stakeholders'
-      ],
-      commonPitfalls: [
-        'Over-planning leading to analysis paralysis and delayed execution',
-        'Creating inflexible plans that cannot adapt to changing circumstances',
-        'Insufficient consideration of constraints and dependencies',
-        'Planning at inappropriate levels of detail for the task complexity',
-        'Not validating plan feasibility before committing to execution',
-        'Ignoring stakeholder input and collaboration requirements in planning'
-      ]
-    },
-    techniques: ['hierarchical-planning', 'goal-decomposition', 'constraint-satisfaction', 'scenario-planning']
-  },
+
   { 
     id: 'multi-agent', 
     name: 'Multi-Agent', 
     icon: '👥', 
-    description: 'Coordination patterns for multiple AI agents',
-    detailedDescription: 'Multi-agent patterns enable coordination and collaboration between multiple AI agents, each potentially specialized for different tasks or domains. These patterns implement communication protocols, task distribution strategies, and coordination mechanisms that allow multiple agents to work together effectively, combining their unique capabilities to solve complex problems that exceed the capacity of individual agents.',
+    description: 'Coordination and communication patterns for multiple AI agents',
+    detailedDescription: 'Multi-agent patterns enable coordination, collaboration, and communication between multiple AI agents, each potentially specialized for different tasks or domains. These patterns implement communication protocols, task distribution strategies, coordination mechanisms, and inter-agent messaging that allow multiple agents to work together effectively. They support both centralized orchestration and distributed peer-to-peer collaboration, combining unique agent capabilities to solve complex problems that exceed the capacity of individual agents.',
     useCases: [
       'Specialized Task Division: Distributing complex workflows among agents with different expertise areas and capabilities.',
       'Collaborative Problem Solving: Multiple agents contributing different perspectives and approaches to challenging problems.',
-      'Peer Review Systems: Agents reviewing and validating each other\'s work for improved quality and accuracy.',
+      'Distributed Communication: Agents communicating directly to share information, negotiate resources, and coordinate activities.',
+      'Peer Review Systems: Agents reviewing and validating each other\'s work through structured communication protocols.',
       'Distributed Computing: Coordinating agents across different computational resources for scalable processing.',
-      'Role-Playing Scenarios: Multiple agents taking on different roles or personas for comprehensive analysis or simulation.',
-      'Consensus Building: Agents negotiating and reaching agreements on complex decisions or recommendations.',
+      'Consensus Building: Multiple agents communicating to reach agreement on decisions or recommendations through voting and negotiation.',
+      'Market Mechanisms: Agents participating in auction-like mechanisms for resource allocation or task assignment.',
       'Hierarchical Organizations: Implementing management structures with supervisor and worker agent relationships.',
-      'Knowledge Synthesis: Combining insights from multiple specialized agents into comprehensive solutions.'
+      'Knowledge Synthesis: Combining insights from multiple specialized agents into comprehensive solutions through collaborative learning.'
     ],
     whyImportant: 'Multi-agent patterns enable the creation of sophisticated AI systems that leverage specialized capabilities and distributed processing. They allow for better scalability, improved reliability through redundancy, and enhanced problem-solving through diverse perspectives. These patterns are essential for complex applications that benefit from division of labor, specialized expertise, or require processing at scale beyond single-agent capabilities.',
     implementationGuide: {
@@ -340,7 +296,7 @@ export const categories: Category[] = [
         'Inadequate monitoring making it difficult to diagnose multi-agent system issues'
       ]
     },
-    techniques: ['agent-orchestration', 'peer-collaboration', 'hierarchical-coordination', 'consensus-algorithms']
+    techniques: ['agent-orchestration', 'peer-collaboration', 'hierarchical-coordination', 'consensus-algorithms', 'agent-to-agent', 'message-passing', 'pub-sub-patterns', 'gossip-protocols', 'actor-frameworks', 'distributed-coordination', 'a2a-protocol']
   },
 
   // Memory and Context Patterns
@@ -480,7 +436,7 @@ export const categories: Category[] = [
         'Failing to align individual component goals with overall system objectives'
       ]
     },
-    techniques: ['okr-framework', 'milestone-tracking', 'metrics-dashboard', 'adaptive-planning']
+    techniques: ['adaptive-complexity-scaling', 'self-regulating-depth-control', 'meta-reasoning-orchestration', 'hierarchical-planning', 'goal-decomposition', 'constraint-satisfaction', 'scenario-planning']
   },
 
   // Error Handling and Human Interaction
@@ -717,52 +673,7 @@ export const categories: Category[] = [
     },
     techniques: ['stateful-graph-workflows', 'conversational-orchestration', 'role-based-teamwork', 'graph-state-machines', 'actor-model-coordination', 'enterprise-orchestration']
   },
-  { 
-    id: 'inter-agent-communication', 
-    name: 'Inter-Agent Communication', 
-    icon: '💬', 
-    description: 'Communication and coordination patterns between AI agents',
-    detailedDescription: 'Inter-agent communication patterns enable direct communication and coordination between AI agents, allowing them to share information, negotiate, collaborate, and coordinate their activities without requiring central orchestration. These patterns implement protocols, message formats, and interaction mechanisms that enable autonomous agents to work together effectively in distributed systems.',
-    useCases: [
-      'Distributed Problem Solving: Agents communicating to solve complex problems that require diverse expertise and perspectives.',
-      'Resource Negotiation: Agents negotiating for shared resources, priorities, or access to limited computational capacity.',
-      'Knowledge Sharing: Agents sharing discoveries, learnings, and specialized knowledge with relevant peer agents.',
-      'Task Coordination: Agents coordinating their activities to avoid conflicts and optimize overall system performance.',
-      'Peer Review: Agents reviewing and validating each other\'s work through structured communication protocols.',
-      'Consensus Building: Multiple agents communicating to reach agreement on decisions or recommendations.',
-      'Market Mechanisms: Agents participating in auction-like mechanisms for resource allocation or task assignment.',
-      'Collaborative Learning: Agents sharing learning experiences and training each other through communication.'
-    ],
-    whyImportant: 'Inter-agent communication patterns enable the creation of truly distributed AI systems where agents can operate autonomously while still benefiting from collaboration and coordination. They reduce the need for centralized control, improve system resilience, and enable emergent behaviors that arise from agent interactions. These patterns are essential for scalable multi-agent systems and enable more sophisticated forms of AI collaboration.',
-    implementationGuide: {
-      whenToUse: [
-        'Distributed systems where agents operate with significant autonomy',
-        'Applications where peer-to-peer collaboration provides advantages over centralized coordination',
-        'Systems where agents have specialized knowledge or capabilities that benefit other agents',
-        'Scenarios requiring resilient operation even when some agents or central systems fail',
-        'Applications where negotiation and consensus-building between agents are valuable',
-        'Systems where emergent behaviors from agent interactions are desired'
-      ],
-      bestPractices: [
-        'Design clear communication protocols with standardized message formats',
-        'Implement proper authentication and security measures for agent communications',
-        'Use asynchronous communication patterns to avoid blocking and improve scalability',
-        'Design communication protocols that are resilient to network failures and agent unavailability',
-        'Implement rate limiting and anti-spam measures to prevent communication abuse',
-        'Design protocols that support both broadcast and targeted communication patterns',
-        'Implement logging and monitoring of inter-agent communications for debugging and analysis'
-      ],
-      commonPitfalls: [
-        'Over-communication leading to network congestion and reduced system performance',
-        'Poor protocol design causing misunderstandings or communication failures between agents',
-        'Insufficient security measures allowing malicious agents to disrupt communications',
-        'Creating communication dependencies that make the system fragile to individual agent failures',
-        'Not handling communication latency and reliability issues in distributed environments',
-        'Designing protocols that are too complex and difficult to implement correctly'
-      ]
-    },
-    techniques: ['agent-to-agent', 'message-passing', 'pub-sub-patterns', 'gossip-protocols', 'consensus-algorithms', 'actor-frameworks', 'distributed-coordination']
-  },
+
   { 
     id: 'resource-aware-optimization', 
     name: 'Resource-Aware Optimization', 
