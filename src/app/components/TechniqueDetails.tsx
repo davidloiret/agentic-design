@@ -1,4 +1,5 @@
-import React from 'react';
+'use client';
+import React, { useState } from 'react';
 import { BookOpen, Code, Check, Brain, GitBranch, Play } from 'lucide-react';
 import CodeSandbox from '../../components/CodeSandbox';
 import { InteractivePatternFlow } from '../../components/InteractivePatternFlow';
@@ -46,21 +47,28 @@ interface TechniqueDetailsProps {
   selectedTechnique: any;
   categories: any[];
   useCases: any[];
-  detailsTab: 'overview' | 'flow' | 'interactive' | 'code';
-  setDetailsTab: (tab: 'overview' | 'flow' | 'interactive' | 'code') => void;
-  selectedLanguage: LanguageType;
-  setSelectedLanguage: (lang: LanguageType) => void;
+  detailsTab?: 'overview' | 'flow' | 'interactive' | 'code';
+  setDetailsTab?: (tab: 'overview' | 'flow' | 'interactive' | 'code') => void;
+  selectedLanguage?: LanguageType;
+  setSelectedLanguage?: (lang: LanguageType) => void;
 }
 
 export const TechniqueDetails = ({
   selectedTechnique,
   categories,
   useCases,
-  detailsTab,
-  setDetailsTab,
-  selectedLanguage,
-  setSelectedLanguage,
+  detailsTab: propDetailsTab,
+  setDetailsTab: propSetDetailsTab,
+  selectedLanguage: propSelectedLanguage,
+  setSelectedLanguage: propSetSelectedLanguage,
 }: TechniqueDetailsProps) => {
+  const [localDetailsTab, setLocalDetailsTab] = useState<'overview' | 'flow' | 'interactive' | 'code'>('overview');
+  const [localSelectedLanguage, setLocalSelectedLanguage] = useState<LanguageType>('typescript');
+  
+  const detailsTab = propDetailsTab || localDetailsTab;
+  const setDetailsTab = propSetDetailsTab || setLocalDetailsTab;
+  const selectedLanguage = propSelectedLanguage || localSelectedLanguage;
+  const setSelectedLanguage = propSetSelectedLanguage || setLocalSelectedLanguage;
   if (!selectedTechnique) {
     return (
       <div className="lg:col-span-3">
@@ -114,7 +122,7 @@ export const TechniqueDetails = ({
           <div className="flex gap-6 px-6">
             <button
               onClick={() => setDetailsTab('overview')}
-              className={`py-4 px-2 font-medium transition-all border-b-2 ${
+              className={`cursor-pointer py-4 px-2 font-medium transition-all border-b-2 ${
                 detailsTab === 'overview'
                   ? 'text-blue-400 border-blue-400'
                   : 'text-gray-400 border-transparent hover:text-gray-200'
@@ -125,7 +133,7 @@ export const TechniqueDetails = ({
             </button>
             <button
               onClick={() => setDetailsTab('flow')}
-              className={`py-4 px-2 font-medium transition-all border-b-2 ${
+              className={`cursor-pointer py-4 px-2 font-medium transition-all border-b-2 ${
                 detailsTab === 'flow'
                   ? 'text-orange-400 border-orange-400'
                   : 'text-gray-400 border-transparent hover:text-gray-200'
@@ -136,7 +144,7 @@ export const TechniqueDetails = ({
             </button>
             <button
               onClick={() => setDetailsTab('interactive')}
-              className={`py-4 px-2 font-medium transition-all border-b-2 ${
+              className={`cursor-pointer py-4 px-2 font-medium transition-all border-b-2 ${
                 detailsTab === 'interactive'
                   ? 'text-purple-400 border-purple-400'
                   : 'text-gray-400 border-transparent hover:text-gray-200'
@@ -147,7 +155,7 @@ export const TechniqueDetails = ({
             </button>
             <button
               onClick={() => setDetailsTab('code')}
-              className={`py-4 px-2 font-medium transition-all border-b-2 ${
+              className={`cursor-pointer py-4 px-2 font-medium transition-all border-b-2 ${
                 detailsTab === 'code'
                   ? 'text-green-400 border-green-400'
                   : 'text-gray-400 border-transparent hover:text-gray-200'

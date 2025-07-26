@@ -1,21 +1,41 @@
+"use client"
+
 import { ArrowLeft, CheckCircle2, Lightbulb, Target, AlertTriangle, Zap, BookOpen, Link, Clock } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { Category } from '../categories';
 
 interface CategoryDetailsProps {
   category: Category;
-  onBack: () => void;
+  onBack?: () => void;
   techniques?: any[];
   onTechniqueSelect?: (technique: any) => void;
 }
 
 export const CategoryDetails = ({ category, onBack, techniques = [], onTechniqueSelect }: CategoryDetailsProps) => {
+  const router = useRouter();
+
+  const handleBack = () => {
+    if (onBack) {
+      onBack();
+    } else {
+      router.push('/patterns');
+    }
+  };
+
+  const handleTechniqueSelect = (technique: any) => {
+    if (onTechniqueSelect) {
+      onTechniqueSelect(technique);
+    } else {
+      router.push(`/patterns/${technique.category}/${technique.id}`);
+    }
+  };
   return (
     <div className="h-full bg-gray-900/50 backdrop-blur-sm rounded-2xl border border-gray-700/30 shadow-2xl">
       <div className="p-8 h-full overflow-y-auto">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
           <button
-            onClick={onBack}
+            onClick={handleBack}
             className="p-2 rounded-xl bg-gray-800/50 hover:bg-gray-700/50 transition-colors"
           >
             <ArrowLeft className="w-5 h-5 text-gray-400" />
@@ -188,7 +208,7 @@ export const CategoryDetails = ({ category, onBack, techniques = [], onTechnique
                 return (
                   <button
                     key={index}
-                    onClick={() => onTechniqueSelect?.(technique)}
+                    onClick={() => handleTechniqueSelect(technique)}
                     className="bg-cyan-500/10 rounded-xl p-4 border border-cyan-500/20 hover:bg-cyan-500/20 transition-all duration-200 text-left group"
                   >
                     <div className="flex items-start gap-3">

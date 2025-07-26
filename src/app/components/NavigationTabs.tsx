@@ -174,7 +174,7 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
                     key={tab.id}
                     onClick={() => handleTabClick(tab.id, tab.route)}
                     onKeyDown={(e) => handleKeyDown(e, tab.id, tab.route)}
-                    className={`px-4 py-4 rounded-lg transition-all duration-200 ${getTabClasses(tab.id, isActive)}`}
+                    className={`cursor-pointer px-4 py-4 rounded-lg transition-all duration-200 ${getTabClasses(tab.id, isActive)}`}
                     role="tab"
                     aria-selected={isActive}
                     aria-controls={`${tab.id}-panel`}
