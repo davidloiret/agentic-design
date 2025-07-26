@@ -1,8 +1,8 @@
 "use client"
 
 import { Search, ChevronRight, ChevronDown, ChevronUp } from 'lucide-react';
-import { useState } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useState, useEffect, Suspense } from 'react';
+import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import { Category } from '../categories';
 import { techniques } from '../techniques';
 import { categories } from '../categories';
@@ -18,12 +18,71 @@ const options = {
   threshold: 0.3
 };
 
-export const RoutedTechniquesList = ({ selectedCategory, selectedTechnique }: RoutedTechniquesListProps) => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
-    selectedCategory ? new Set([selectedCategory]) : new Set()
-  );
+const RoutedTechniquesListInner = ({ selectedCategory, selectedTechnique }: RoutedTechniquesListProps) => {
+  const searchParams = useSearchParams();
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
+  
+  // Initialize expanded categories from URL params or include selected category
+  const getInitialExpandedCategories = () => {
+    const expandedFromUrl = searchParams.get('expanded');
+    const expandedSet = expandedFromUrl ? new Set(expandedFromUrl.split(',').filter(Boolean)) : new Set();
+    if (selectedCategory) {
+      expandedSet.add(selectedCategory);
+    }
+    return expandedSet;
+  };
+  
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(getInitialExpandedCategories());
   const router = useRouter();
+
+  useEffect(() => {
+    const searchFromParams = searchParams.get('search') || '';
+    setSearchQuery(searchFromParams);
+    
+    // Update expanded categories from URL params
+    const expandedFromUrl = searchParams.get('expanded');
+    const expandedSet = expandedFromUrl ? new Set(expandedFromUrl.split(',').filter(Boolean)) : new Set();
+    if (selectedCategory) {
+      expandedSet.add(selectedCategory);
+    }
+    setExpandedCategories(expandedSet);
+  }, [searchParams, selectedCategory]);
+
+  // Update URL when expandedCategories changes (but not during initial load)
+  useEffect(() => {
+    const expandedFromUrl = searchParams.get('expanded');
+    const currentExpanded = Array.from(expandedCategories).join(',');
+    
+    // Only update if expanded state actually changed and not during initial load
+    if (expandedFromUrl !== currentExpanded && expandedCategories.size > 0) {
+      const currentPath = window.location.pathname;
+      const url = buildUrl(currentPath, searchQuery, expandedCategories);
+      router.replace(url);
+    }
+  }, [expandedCategories, searchQuery, searchParams, router]);
+
+  // Helper function to build URL with search and expanded parameters
+  const buildUrl = (path: string, searchQuery?: string, expandedCategories?: Set<string>) => {
+    const params = new URLSearchParams();
+    const search = searchQuery || searchParams.get('search');
+    const expanded = expandedCategories || new Set(searchParams.get('expanded')?.split(',').filter(Boolean) || []);
+    
+    if (search) {
+      params.set('search', search);
+    }
+    if (expanded.size > 0) {
+      params.set('expanded', Array.from(expanded).join(','));
+    }
+    
+    return params.toString() ? `${path}?${params.toString()}` : path;
+  };
+
+  const handleSearchChange = (query: string) => {
+    setSearchQuery(query);
+    const currentPath = window.location.pathname;
+    const url = buildUrl(currentPath, query, expandedCategories);
+    router.replace(url);
+  };
 
   const toggleCategory = (categoryId: string) => {
     setExpandedCategories(prev => {
@@ -46,12 +105,17 @@ export const RoutedTechniquesList = ({ selectedCategory, selectedTechnique }: Ro
   };
 
   const handleCategorySelect = (categoryId: string) => {
-    openCategory(categoryId);
-    router.push(`/patterns/${categoryId}`);
+    // First update the expanded categories to include the new category
+    const updatedExpanded = new Set(expandedCategories);
+    updatedExpanded.add(categoryId);
+    
+    const url = buildUrl(`/patterns/${categoryId}`, searchQuery, updatedExpanded);
+    router.push(url);
   };
 
   const handleTechniqueSelect = (technique: any) => {
-    router.push(`/patterns/${technique.category}/${technique.id}`);
+    const url = buildUrl(`/patterns/${technique.category}/${technique.id}`, searchQuery, expandedCategories);
+    router.push(url);
   };
 
   const fuse = new Fuse(techniques, options);
@@ -144,7 +208,6 @@ export const RoutedTechniquesList = ({ selectedCategory, selectedTechnique }: Ro
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleCategorySelect(category.id);
                   toggleCategory(category.id);
                 }}
                 className="p-1 rounded hover:bg-white/10 transition-colors duration-200 cursor-pointer"
@@ -206,7 +269,7 @@ export const RoutedTechniquesList = ({ selectedCategory, selectedTechnique }: Ro
           placeholder="Search patterns..."
           className="w-full pl-12 pr-4 py-3 bg-gray-800/50 border border-gray-700/50 rounded-xl focus:outline-none focus:border-blue-500/50 focus:bg-gray-800/70 transition-all duration-200 text-gray-200 placeholder-gray-400"
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={(e) => handleSearchChange(e.target.value)}
         />
       </div>
 
@@ -224,5 +287,30 @@ export const RoutedTechniquesList = ({ selectedCategory, selectedTechnique }: Ro
         </div>
       </div>
     </div>
+  );
+};
+
+export const RoutedTechniquesList = ({ selectedCategory, selectedTechnique }: RoutedTechniquesListProps) => {
+  return (
+    <Suspense fallback={<div className="lg:col-span-1 h-full flex flex-col min-h-0">
+      <div className="relative flex-shrink-0 mb-4">
+        <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+        <input
+          type="text"
+          placeholder="Search patterns..."
+          className="w-full pl-12 pr-4 py-3 bg-gray-800/50 border border-gray-700/50 rounded-xl focus:outline-none focus:border-blue-500/50 focus:bg-gray-800/70 transition-all duration-200 text-gray-200 placeholder-gray-400"
+          disabled
+        />
+      </div>
+      <div className="flex-1 overflow-y-auto space-y-3 pr-2 min-h-0">
+        <div className="flex items-center gap-2 px-1 pb-2">
+          <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">
+            Loading...
+          </h2>
+        </div>
+      </div>
+    </div>}>
+      <RoutedTechniquesListInner selectedCategory={selectedCategory} selectedTechnique={selectedTechnique} />
+    </Suspense>
   );
 };

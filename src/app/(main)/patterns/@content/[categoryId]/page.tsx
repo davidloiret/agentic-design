@@ -6,11 +6,12 @@ import { redirect } from 'next/navigation';
 import { Metadata } from 'next';
 
 interface ContentCategoryPageProps {
-  params: { categoryId: string };
+  params: Promise<{ categoryId: string }>;
 }
 
 export async function generateMetadata({ params }: ContentCategoryPageProps): Promise<Metadata> {
-  const category = categories.find(cat => cat.id === params.categoryId);
+  const { categoryId } = await params;
+  const category = categories.find(cat => cat.id === categoryId);
   
   if (!category) {
     return {
@@ -22,8 +23,9 @@ export async function generateMetadata({ params }: ContentCategoryPageProps): Pr
   return generateCategoryMetadata(category);
 }
 
-export default function ContentCategoryPage({ params }: ContentCategoryPageProps) {
-  const category = categories.find(cat => cat.id === params.categoryId);
+export default async function ContentCategoryPage({ params }: ContentCategoryPageProps) {
+  const { categoryId } = await params;
+  const category = categories.find(cat => cat.id === categoryId);
   
   if (!category) {
     redirect('/patterns');
