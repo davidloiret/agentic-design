@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { BookOpen, Lightbulb, Share2, FlaskConical, Brain, Boxes, Newspaper, FolderOpen, Cpu, Settings, ChevronDown, Menu, X, GraduationCap } from 'lucide-react';
+import { BookOpen, Lightbulb, Share2, FlaskConical, Brain, Boxes, Newspaper, FolderOpen, Cpu, Settings, ChevronDown, Menu, X, GraduationCap, Shield } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 
 interface Tab {
@@ -96,6 +96,7 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
       'ai-inference': 'text-indigo-400',
       'project-hub': 'text-yellow-400',
       'news-hub': 'text-emerald-400',
+      'ai-red-teaming': 'text-red-400',
     };
 
     return `${baseClasses} ${colorMap[tabId as keyof typeof colorMap]}`;
@@ -109,6 +110,7 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
       'ai-inference': 'bg-indigo-400',
       'project-hub': 'bg-yellow-400',
       'news-hub': 'bg-emerald-400',
+      'ai-red-teaming': 'bg-red-400',
     };
     return colorMap[tabId as keyof typeof colorMap] || 'bg-blue-400';
   };
@@ -120,6 +122,7 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
       tabs: [
         { id: 'patterns', label: 'Patterns', icon: BookOpen, description: 'Browse AI design patterns', route: '/patterns' },
         { id: 'learning-hub', label: 'Learning Hub', icon: GraduationCap, description: 'Gamified learning & certification', route: '/learning-hub' },
+        { id: 'ai-red-teaming', label: 'AI Red Teaming', icon: Shield, description: 'AI security & defensive techniques', route: '/ai-red-teaming' },
         { id: 'fine-tuning', label: 'Fine Tuning', icon: Settings, description: 'Model optimization', route: '/fine-tuning' },
         { id: 'ai-inference', label: 'AI Inference', icon: Cpu, description: 'Inference strategies', route: '/ai-inference' },
         { id: 'project-hub', label: 'Project Hub', icon: FolderOpen, description: 'Example projects', route: '/project-hub' },

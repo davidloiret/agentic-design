@@ -330,3 +330,16 @@ when searching and clicking it should not reset the search.
 patterns / techniques
 
 patterns en gros c la catégorie => techniques 
+
+There is an issue, when I click on category, it rerender the navbar, so for example If I have uncollapse a category and click on another it will collapse the previous, this is not wanted, we want to keep the state, maybe memoization can fix this.
+
+
+in nestjs route slot parallelization are slow when I click, to change a route I need to wait, this is not instant, how to improve this.
+
+make a audio TLDR summary of news
+
+
+Add inspirating CVE categories such as CVE about MCP etc add a category for that with detail and how to reproduce etc. 
+
+
+Add factual example than I can copy paste, be exhaustif, add people to follow on this topic.
