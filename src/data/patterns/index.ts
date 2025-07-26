@@ -33,6 +33,9 @@ import { controlPlanePattern } from './control-plane';
 import { latentMemoryNetworksPattern } from './latent-memory-networks';
 import { adaptiveContextDepthPattern } from './adaptive-context-depth';
 import { latentKnowledgeRetrievalPattern } from './latent-knowledge-retrieval';
+import { advancedContextCompressionPattern } from './advanced-context-compression';
+import { multimodalContextIntegrationPattern } from './multimodal-context-integration';
+import { slidingWindowPattern } from './sliding-window';
 
 export * from './types';
 export * from './styles';
@@ -72,6 +75,9 @@ export const patternScenarios: { [key: string]: PatternScenario } = {
   'latent-memory-networks': latentMemoryNetworksPattern,
   'adaptive-context-depth': adaptiveContextDepthPattern,
   'latent-knowledge-retrieval': latentKnowledgeRetrievalPattern,
+  'context-compression-advanced': advancedContextCompressionPattern,
+  'multimodal-context-integration': multimodalContextIntegrationPattern,
+  'sliding-window': slidingWindowPattern,
 };
 
 export default patternScenarios;

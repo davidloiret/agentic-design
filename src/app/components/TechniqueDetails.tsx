@@ -2,6 +2,7 @@ import React from 'react';
 import { BookOpen, Code, Check, Brain, GitBranch, Play } from 'lucide-react';
 import CodeSandbox from '../../components/CodeSandbox';
 import { InteractivePatternFlow } from '../../components/InteractivePatternFlow';
+import { RemotionPlayer } from '../../components/RemotionPlayer';
 import FeedbackChainingDemo from '../../components/demos/FeedbackChainingDemo';
 import HierarchicalChainingDemo from '../../components/demos/HierarchicalChainingDemo';
 import IterativeRefinementDemo from '../../components/demos/IterativeRefinementDemo';
@@ -12,6 +13,9 @@ import MessageQueuingDemo from '../../components/demos/MessageQueuingDemo';
 import LatentMemoryNetworksDemo from '../../components/demos/LatentMemoryNetworksDemo';
 import AdaptiveContextDepthDemo from '../../components/demos/AdaptiveContextDepthDemo';
 import LatentKnowledgeRetrievalDemo from '../../components/demos/LatentKnowledgeRetrievalDemo';
+import AdvancedContextCompressionDemo from '../../components/demos/AdvancedContextCompressionDemo';
+import MultimodalContextIntegrationDemo from '../../components/demos/MultimodalContextIntegrationDemo';
+import SlidingWindowDemo from '../../components/demos/SlidingWindowDemo';
 import ContentBasedRoutingDemo from '../../components/demos/ContentBasedRoutingDemo';
 import CapabilityRoutingDemo from '../../components/demos/CapabilityRoutingDemo';
 import LoadBalancingDemo from '../../components/demos/LoadBalancingDemo';
@@ -154,6 +158,22 @@ export const TechniqueDetails = ({
         <div className="p-6">
           {detailsTab === 'overview' ? (
             <div className="space-y-8">
+              {/* Video Explanation - Only for Chain of Thought */}
+              {selectedTechnique.id === 'cot' && (
+                <section>
+                  <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                    <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                    Video Explanation
+                  </h2>
+                  <div className="mb-8">
+                    <RemotionPlayer 
+                      compositionId="ChainOfThoughtWithAudio" 
+                      className="w-full"
+                    />
+                  </div>
+                </section>
+              )}
+
               {/* What is this pattern? */}
               <section>
                 <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
@@ -454,11 +474,17 @@ export const TechniqueDetails = ({
                           ? 'Interactive constraint satisfaction problem solving with multiple algorithms and optimization'
                           : selectedTechnique.id === 'scenario-planning'
                           ? 'Interactive strategic scenario planning with real-world AI system design contexts and adaptive strategies'
+                          : selectedTechnique.id === 'context-compression-advanced'
+                          ? 'Interactive multi-agent compression coordination with semantic preservation and dynamic optimization'
+                          : selectedTechnique.id === 'multimodal-context-integration'
+                          ? 'Interactive multimodal context processing with text, visual, and audio input integration'
+                          : selectedTechnique.id === 'sliding-window'
+                          ? 'Interactive sliding window memory management with automatic eviction and real-time processing'
                           : 'Hands-on demonstration of the technique'
                         }
                       </span>
                       <span className="text-xs text-gray-500">
-                        {selectedTechnique.id === 'feedback-chaining' || selectedTechnique.id === 'hierarchical-chaining' || selectedTechnique.id === 'iterative-refinement' || selectedTechnique.id === 'parallel-synthesis' || selectedTechnique.id === 'dynamic-routing' || selectedTechnique.id === 'dynamic-context-assembly' || selectedTechnique.id === 'message-queuing' || selectedTechnique.id === 'latent-memory-networks' || selectedTechnique.id === 'adaptive-context-depth' || selectedTechnique.id === 'latent-knowledge-retrieval' || selectedTechnique.id === 'content-based-routing' || selectedTechnique.id === 'capability-routing' || selectedTechnique.id === 'load-balancing' || selectedTechnique.id === 'geographic-routing' || selectedTechnique.id === 'map-reduce' || selectedTechnique.id === 'scatter-gather' || selectedTechnique.id === 'fork-join' || selectedTechnique.id === 'async-await' || selectedTechnique.id === 'self-critique' || selectedTechnique.id === 'function-calling' || selectedTechnique.id === 'code-execution' || selectedTechnique.id === 'hierarchical-planning' || selectedTechnique.id === 'goal-decomposition' || selectedTechnique.id === 'constraint-satisfaction' || selectedTechnique.id === 'scenario-planning' || selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining' || selectedTechnique.id === 'conditional-chaining' ? 'Interactive demo available' : 'Demo coming soon'}
+                        {selectedTechnique.id === 'feedback-chaining' || selectedTechnique.id === 'hierarchical-chaining' || selectedTechnique.id === 'iterative-refinement' || selectedTechnique.id === 'parallel-synthesis' || selectedTechnique.id === 'dynamic-routing' || selectedTechnique.id === 'dynamic-context-assembly' || selectedTechnique.id === 'message-queuing' || selectedTechnique.id === 'latent-memory-networks' || selectedTechnique.id === 'adaptive-context-depth' || selectedTechnique.id === 'latent-knowledge-retrieval' || selectedTechnique.id === 'context-compression-advanced' || selectedTechnique.id === 'multimodal-context-integration' || selectedTechnique.id === 'sliding-window' || selectedTechnique.id === 'content-based-routing' || selectedTechnique.id === 'capability-routing' || selectedTechnique.id === 'load-balancing' || selectedTechnique.id === 'geographic-routing' || selectedTechnique.id === 'map-reduce' || selectedTechnique.id === 'scatter-gather' || selectedTechnique.id === 'fork-join' || selectedTechnique.id === 'async-await' || selectedTechnique.id === 'self-critique' || selectedTechnique.id === 'function-calling' || selectedTechnique.id === 'code-execution' || selectedTechnique.id === 'hierarchical-planning' || selectedTechnique.id === 'goal-decomposition' || selectedTechnique.id === 'constraint-satisfaction' || selectedTechnique.id === 'scenario-planning' || selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining' || selectedTechnique.id === 'conditional-chaining' ? 'Interactive demo available' : 'Demo coming soon'}
                       </span>
                     </div>
                   </div>
@@ -482,6 +508,12 @@ export const TechniqueDetails = ({
                     <AdaptiveContextDepthDemo />
                   ) : selectedTechnique.id === 'latent-knowledge-retrieval' ? (
                     <LatentKnowledgeRetrievalDemo />
+                  ) : selectedTechnique.id === 'context-compression-advanced' ? (
+                    <AdvancedContextCompressionDemo />
+                  ) : selectedTechnique.id === 'multimodal-context-integration' ? (
+                    <MultimodalContextIntegrationDemo />
+                  ) : selectedTechnique.id === 'sliding-window' ? (
+                    <SlidingWindowDemo />
                   ) : selectedTechnique.id === 'content-based-routing' ? (
                     <ContentBasedRoutingDemo />
                   ) : selectedTechnique.id === 'capability-routing' ? (

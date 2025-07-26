@@ -265,3 +265,29 @@ Context engineering tips
 Decaying memory => add ressources video etc
 
 Framework Agnostic vs not sgnostic
+
+
+fix description
+
+Rajouter video ressource apprentissage
+
+https://www.youtube.com/watch?v=XNneh6-eyPg&list=PLcfpQ4tk2k0U35MFGllN31nmEP9EdCge8&index=15
+
+
+Ajourter video avec 
+
+----
+
+
+Add to Chat⌘L
+⌘K to generate a command
+Make a deepResearch about Chain Of Thought, What it is, how it works, why it is needed, key features; when use it, use cases. You job is to explain to AI system builder how this is working and how/when they should use it. 
+
+Improve the remotion video to be perfect explication.
+
+Pros / cons
+
+
+Compare technique according to use case (I already have a dedicated table)
+
+Personalized learning roadmap with badge on patterns validated

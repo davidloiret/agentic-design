@@ -12,6 +12,7 @@ interface TechniquesListProps {
   selectedCategory: string;
   setSelectedCategory: (category: string) => void;
   filteredTechniques: any[];
+  searchFilteredTechniques: any[]; // For calculating category counts
 }
 
 export const TechniquesList = ({
@@ -22,6 +23,7 @@ export const TechniquesList = ({
   selectedCategory,
   setSelectedCategory,
   filteredTechniques,
+  searchFilteredTechniques,
   categories,
 }: TechniquesListProps) => {
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set(['reasoning', 'safety', 'chaining']));
@@ -38,17 +40,23 @@ export const TechniquesList = ({
     });
   };
 
-  const parentCategories = categories.filter(cat => !cat.parent);
-  const getChildCategories = (parentId: string) => categories.filter(cat => cat.parent === parentId);
+  // All categories are flat - no parent/child relationships
+  const parentCategories = categories;
+  
+  // For calculating category counts (ignores selected category filter)
+  const getTechniquesForCategoryCount = (categoryId: string) => {
+    if (categoryId === 'all') {
+      return searchFilteredTechniques;
+    }
+    return searchFilteredTechniques.filter(technique => technique.category === categoryId);
+  };
+  
+  // For displaying techniques (respects selected category filter)
   const getTechniquesForCategory = (categoryId: string) => {
     if (categoryId === 'all') {
       return filteredTechniques;
     }
-    return filteredTechniques.filter(technique => {
-      if (technique.category === categoryId) return true;
-      const category = categories.find(cat => cat.id === categoryId);
-      return category?.children?.includes(technique.category);
-    });
+    return filteredTechniques.filter(technique => technique.category === categoryId);
   };
 
   const renderTechnique = (technique: any) => {
@@ -99,30 +107,23 @@ export const TechniquesList = ({
     );
   };
 
-  const renderCategory = (category: Category, level = 0) => {
-    const hasChildren = category.children && category.children.length > 0;
+  const renderCategory = (category: Category) => {
     const isExpanded = expandedCategories.has(category.id);
     const isSelected = selectedCategory === category.id;
     const categoryTechniques = getTechniquesForCategory(category.id);
+    const categoryTechniquesCount = getTechniquesForCategoryCount(category.id);
     const hasMatchingTechniques = categoryTechniques.length > 0;
-    const isParent = level === 0;
 
-    // Always show parent categories, only filter child categories
-    if (!isParent && !hasMatchingTechniques && !hasChildren) {
+    // Show categories that have techniques or are selected
+    if (!hasMatchingTechniques && !isSelected && categoryTechniquesCount.length === 0) {
       return null;
     }
 
-    const isSubcategory = level === 1;
-
     return (
       <div key={category.id} className="space-y-1">
-        <div className={`w-full rounded-xl transition-all duration-200 text-left group ${
-            isParent 
-              ? `p-2 ${isSelected ? 'bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg' : 'bg-gray-800/60 hover:bg-gray-800/80'}`
-              : `p-3 ml-4 ${isSelected ? 'bg-blue-500/20 border border-blue-500/30' : 'bg-gray-800/30 hover:bg-gray-800/50'}`
-          }`}>
+        <div className="w-full rounded-xl transition-all duration-200 text-left group p-2 bg-gray-800/60 hover:bg-gray-800/80">
           <div className="flex items-center gap-1">
-            {(hasChildren || categoryTechniques.length > 0) && (
+            {categoryTechniques.length > 0 && (
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -131,7 +132,7 @@ export const TechniquesList = ({
                 className="p-1 rounded hover:bg-white/10 transition-colors duration-200 cursor-pointer"
               >
                 <div className={`transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`}>
-                  <ChevronRight className={`${isParent ? 'w-4 h-4' : 'w-3 h-3'} ${
+                  <ChevronRight className={`w-4 h-4 ${
                     isSelected ? 'text-white' : 'text-gray-400 group-hover:text-gray-300'
                   }`} />
                 </div>
@@ -142,31 +143,22 @@ export const TechniquesList = ({
               onClick={() => setSelectedCategory(category.id)}
               className="flex-1 flex items-center gap-3 cursor-pointer hover:scale-[0.99] transition-transform"
             >
-              <div className={`${isParent ? 'w-10 h-10' : 'w-8 h-8'} rounded-xl flex items-center justify-center ${
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
                 isSelected 
                   ? 'bg-white/20' 
-                  : isParent 
-                    ? 'bg-gray-700/50 group-hover:bg-gray-600/50' 
-                    : 'bg-gray-700/30 group-hover:bg-gray-600/30'
+                  : 'bg-gray-700/50 group-hover:bg-gray-600/50'
               }`}>
-                <span className={`${isParent ? 'text-lg' : 'text-base'}`}>
+                <span className="text-lg">
                   {category.icon}
                 </span>
               </div>
               
               <div className="text-left flex-1 min-w-0">
-                <h3 className={`font-semibold ${isParent ? 'text-base' : 'text-sm'} truncate ${
+                <h3 className={`font-semibold text-base truncate ${
                   isSelected ? 'text-white' : 'text-gray-200 group-hover:text-white'
                 }`}>
                   {category.name}
                 </h3>
-                {/* {isParent && (
-                  <p className={`text-xs mt-0.5 ${
-                    isSelected ? 'text-white/70' : 'text-gray-400'
-                  }`}>
-                    {category.description}
-                  </p>
-                )} */}
               </div>
               
               <div className="flex items-center gap-2">
@@ -175,7 +167,7 @@ export const TechniquesList = ({
                     ? 'bg-white/20 text-white' 
                     : 'bg-gray-700/50 text-gray-400 group-hover:bg-gray-600/50'
                 }`}>
-                  {hasChildren ? getChildCategories(category.id).length : categoryTechniques.length}
+                  {categoryTechniquesCount.length}
                 </span>
               </div>
             </button>
@@ -183,9 +175,8 @@ export const TechniquesList = ({
         </div>
         
         {isExpanded && (
-          <div className={`space-y-1 ${isParent ? 'ml-0' : 'ml-4'}`}>
-            {hasChildren && getChildCategories(category.id).map(child => renderCategory(child, level + 1))}
-            {!hasChildren && categoryTechniques.map(technique => renderTechnique(technique))}
+          <div className="space-y-1 ml-0">
+            {categoryTechniques.map(technique => renderTechnique(technique))}
           </div>
         )}
       </div>
@@ -216,7 +207,7 @@ export const TechniquesList = ({
         </div>
         
         <div className="space-y-2 pb-6">
-          {parentCategories.map(category => renderCategory(category, 0))}
+          {parentCategories.map(category => renderCategory(category))}
         </div>
       </div>
     </div>

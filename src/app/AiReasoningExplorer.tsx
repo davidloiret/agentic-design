@@ -140,10 +140,14 @@ export const AIReasoningExplorer = () => {
       .slice(0, 5);
   };
 
-  const filteredTechniques = techniques.filter(technique => {
-    const matchesSearch = technique.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  // Filter techniques by search query only (for category counts)
+  const searchFilteredTechniques = techniques.filter(technique => {
+    return technique.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       technique.description.toLowerCase().includes(searchQuery.toLowerCase());
-    
+  });
+
+  // Filter techniques by both search and category (for display)
+  const filteredTechniques = searchFilteredTechniques.filter(technique => {
     let matchesCategory = false;
     if (selectedCategory === 'all') {
       matchesCategory = true;
@@ -160,7 +164,7 @@ export const AIReasoningExplorer = () => {
       }
     }
     
-    return matchesSearch && matchesCategory;
+    return matchesCategory;
   });
 
   const toggleConstraint = (constraintId: string) => {
@@ -189,6 +193,7 @@ export const AIReasoningExplorer = () => {
               selectedCategory={selectedCategory}
               setSelectedCategory={setSelectedCategory}
               filteredTechniques={filteredTechniques}
+              searchFilteredTechniques={searchFilteredTechniques}
             />
             {(() => {
               const selectedCategoryData = categories.find(cat => cat.id === selectedCategory);
