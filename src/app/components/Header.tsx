@@ -29,7 +29,7 @@ export const Header = () => {
                   Agentic Design Patterns
                 </h1>
                 <span className="text-xs text-gray-400 font-medium">
-                  • Craft reliable AI systems
+                  • Learn how to build reliable AI systems
                 </span>
               </div>
             </div>

@@ -36,6 +36,10 @@ import { latentKnowledgeRetrievalPattern } from './latent-knowledge-retrieval';
 import { advancedContextCompressionPattern } from './advanced-context-compression';
 import { multimodalContextIntegrationPattern } from './multimodal-context-integration';
 import { slidingWindowPattern } from './sliding-window';
+import { hierarchicalMemoryPattern } from './hierarchical-memory';
+import { attentionMechanismsPattern } from './attention-mechanisms';
+import { memoryConsolidationPattern } from './memory-consolidation';
+import { workingMemoryPatternsPattern } from './working-memory-patterns';
 
 export * from './types';
 export * from './styles';
@@ -78,6 +82,10 @@ export const patternScenarios: { [key: string]: PatternScenario } = {
   'context-compression-advanced': advancedContextCompressionPattern,
   'multimodal-context-integration': multimodalContextIntegrationPattern,
   'sliding-window': slidingWindowPattern,
+  'hierarchical-memory': hierarchicalMemoryPattern,
+  'attention-mechanisms': attentionMechanismsPattern,
+  'memory-consolidation': memoryConsolidationPattern,
+  'working-memory-patterns': workingMemoryPatternsPattern,
 };
 
 export default patternScenarios;

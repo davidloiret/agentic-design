@@ -1,16 +1,116 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   AbsoluteFill, 
   useCurrentFrame, 
+  useVideoConfig, 
   interpolate, 
+  spring, 
+  Audio, 
   Easing,
-  spring,
-  useVideoConfig,
-  Audio,
   Sequence,
   staticFile
 } from 'remotion';
 import { Brain, CheckCircle, Lightbulb, Volume2, Calculator, TrendingUp, AlertTriangle, Target, Code, Zap, ArrowRight } from 'lucide-react';
+import DynamicTimingService from '../services/DynamicTimingService';
+
+// Custom Progress Brain Component with fill effect
+const ProgressBrain: React.FC<{ 
+  size: number; 
+  progress: number; 
+  glow: number; 
+  scale: number; 
+  className?: string;
+  style?: React.CSSProperties;
+}> = ({ size, progress, glow, scale, className, style }) => {
+  const fillPercentage = progress * 100;
+  
+  return (
+    <div 
+      className={className}
+      style={{
+        position: 'relative',
+        width: size,
+        height: size,
+        transform: `scale(${scale})`,
+        filter: `drop-shadow(0 ${glow}px ${glow * 1.5}px rgba(59, 130, 246, ${0.3 + progress * 0.4})) 
+                 drop-shadow(0 0 ${glow * 0.5}px rgba(59, 130, 246, ${0.2 + progress * 0.3}))`,
+        transition: 'all 0.3s ease',
+        ...style,
+      }}
+    >
+      {/* Background (empty/unfilled) brain */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        zIndex: 1,
+      }}>
+        <Brain 
+          size={size} 
+          color="rgba(100, 116, 139, 0.3)"
+          strokeWidth={2}
+        />
+      </div>
+      
+      {/* Filled brain with gradient mask */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        zIndex: 2,
+        maskImage: `linear-gradient(to top, 
+          black 0%, 
+          black ${fillPercentage}%, 
+          transparent ${fillPercentage}%, 
+          transparent 100%)`,
+        WebkitMaskImage: `linear-gradient(to top, 
+          black 0%, 
+          black ${fillPercentage}%, 
+          transparent ${fillPercentage}%, 
+          transparent 100%)`,
+      }}>
+        <Brain 
+          size={size} 
+          color="#3b82f6"
+          strokeWidth={2}
+        />
+      </div>
+      
+      {/* Additional glow overlay for filled portion */}
+      {progress > 0.1 && (
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: 3,
+          maskImage: `linear-gradient(to top, 
+            black 0%, 
+            black ${Math.max(0, fillPercentage - 10)}%, 
+            transparent ${fillPercentage}%, 
+            transparent 100%)`,
+          WebkitMaskImage: `linear-gradient(to top, 
+            black 0%, 
+            black ${Math.max(0, fillPercentage - 10)}%, 
+            transparent ${fillPercentage}%, 
+            transparent 100%)`,
+          opacity: progress * 0.6,
+        }}>
+          <Brain 
+            size={size} 
+            color="#60a5fa"
+            strokeWidth={2.5}
+          />
+        </div>
+      )}
+    </div>
+  );
+};
 
 interface StepProps {
   step: number;
@@ -34,6 +134,8 @@ interface NarrationSegment {
   filename: string;
   audioPath?: string;
   highlight?: boolean;
+  duration: number;
+  durationFrames: number;
 }
 
 const AnimatedStep: React.FC<StepProps> = ({ 
@@ -473,78 +575,89 @@ export const ChainOfThoughtVideoWithAudio: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   
-  // Updated narration segments focused on engineering implementation
-  const defaultNarrationSegments: NarrationSegment[] = [
-    {
-      id: 'intro',
-      text: "Chain of Thought reasoning transforms how AI solves complex problems - and it's surprisingly simple to implement.",
-      startFrame: 60,
-      endFrame: 331,
-      filename: 'cot-intro.wav',
-      highlight: true
-    },
-    {
-      id: 'implementation',
-      text: "For engineers, implementing CoT is as easy as adding 'Let's think step by step' to your prompts.",
-      startFrame: 391,
-      endFrame: 621,
-      filename: 'cot-implementation.wav'
-    },
-    {
-      id: 'comparison',
-      text: "Let's see the dramatic difference between regular prompts and Chain of Thought prompts in action.",
-      startFrame: 681,
-      endFrame: 914,
-      filename: 'cot-comparison.wav'
-    },
-    {
-      id: 'regular',
-      text: "Regular prompts give you direct answers with no reasoning - you can't verify or understand the process.",
-      startFrame: 974,
-      endFrame: 1221,
-      filename: 'cot-regular.wav'
-    },
-    {
-      id: 'magic',
-      text: "Chain of Thought prompts unlock the model's reasoning ability - just add the magic phrase and watch it think.",
-      startFrame: 1281,
-      endFrame: 1543,
-      filename: 'cot-magic.wav'
-    },
-    {
-      id: 'automatic',
-      text: "The model automatically breaks down complex problems into clear, verifiable steps - no additional coding required.",
-      startFrame: 1603,
-      endFrame: 1877,
-      filename: 'cot-automatic.wav'
-    },
-    {
-      id: 'conclusion',
-      text: "This simple technique delivers 40-70% accuracy improvements and complete transparency in AI decision-making.",
-      startFrame: 1937,
-      endFrame: 2196,
-      filename: 'cot-conclusion.wav',
-      highlight: true
-    }
-  ];
+  // State for dynamic timing
+  const [narrationSegments, setNarrationSegments] = useState<NarrationSegment[]>([]);
+  const [visualTiming, setVisualTiming] = useState<any>(null);
+  const [isTimingLoaded, setIsTimingLoaded] = useState(false);
   
-  // Enhanced title animation
-  const titleScale = spring({
-    frame,
-    fps,
-    config: {
-      damping: 12,
-      stiffness: 200,
-    },
-  });
+  // Load dynamic timing configuration
+  useEffect(() => {
+    const loadTiming = async () => {
+      try {
+        const timingService = DynamicTimingService.getInstance();
+        await timingService.loadTimingConfig('/audio/cot/');
+        
+        const segments = timingService.getNarrationSegments();
+        const visualElements = timingService.getVisualElementTiming('promptComparison');
+        
+        if (segments) {
+          setNarrationSegments(segments.map(seg => ({
+            ...seg,
+            highlight: seg.id === 'intro' || seg.id === 'conclusion'
+          })));
+        }
+        
+        setVisualTiming({
+          promptComparison: visualElements || { startFrame: 400, duration: 300 },
+          steps: [
+            { startFrame: 450, duration: 300 },
+            { startFrame: 750, duration: 300 },
+            { startFrame: 1050, duration: 300 }
+          ]
+        });
+      } catch (error) {
+        console.warn('Using fallback timing:', error);
+        // Fallback timing if dynamic loading fails
+        setNarrationSegments([
+          { 
+            id: 'intro', 
+            text: 'Chain of Thought reasoning transforms how AI solves complex problems - and it\'s surprisingly simple to implement.', 
+            startFrame: 60, 
+            endFrame: 300, 
+            filename: 'cot-intro.wav', 
+            duration: 8, 
+            durationFrames: 240,
+            highlight: true
+          },
+        ]);
+        setVisualTiming({
+          promptComparison: { startFrame: 400, duration: 300 },
+          steps: [
+            { startFrame: 450, duration: 300 },
+            { startFrame: 750, duration: 300 },
+            { startFrame: 1050, duration: 300 }
+          ]
+        });
+      } finally {
+        setIsTimingLoaded(true);
+      }
+    };
+    
+    loadTiming();
+  }, []);
   
-  const titleOpacity = interpolate(frame, [0, 40], [0, 1], {
+  // Brain progress animation - shows video progress with color fill
+  const videoProgress = isTimingLoaded && narrationSegments.length > 0 
+    ? interpolate(frame, [0, (narrationSegments.find(s => s.id === 'conclusion')?.endFrame || 2200) + 100], [0, 1], {
+        extrapolateRight: 'clamp',
+        extrapolateLeft: 'clamp',
+      })
+    : interpolate(frame, [0, 900], [0, 1], {
+        extrapolateRight: 'clamp',
+        extrapolateLeft: 'clamp',
+      });
+  
+  // Ensure minimum brain fill for visibility (20% minimum, scaling to 100%)
+  const brainProgress = Math.max(0.2, videoProgress * 0.8 + 0.2);
+  
+  // Brain visual effects based on progress
+  const brainGlow = interpolate(brainProgress, [0.2, 1], [6, 16]);
+  const brainScale = 1 + (Math.sin(frame * 0.08) * 0.03 * brainProgress);
+  
+  // Title always visible from frame 0
+  const titleOpacity = 1;
+  const titleScale = interpolate(frame, [0, 30], [0.95, 1], {
     extrapolateRight: 'clamp',
-  });
-  
-  // Brain icon rotation with easing
-  const brainRotation = interpolate(frame, [0, 900], [0, 720], {
-    easing: Easing.out(Easing.cubic),
   });
   
   return (
@@ -556,12 +669,12 @@ export const ChainOfThoughtVideoWithAudio: React.FC = () => {
       flexDirection: 'column',
     }}>
       {/* TTS Audio Narration - Load all audio tracks */}
-      {defaultNarrationSegments.map((segment, index) => (
+      {narrationSegments.map((segment, index) => (
         <AudioNarrationSequence key={`audio-${index}`} segment={segment} />
       ))}
       
       {/* Visual Narration Overlays as backup */}
-      {defaultNarrationSegments.map((segment, index) => (
+      {narrationSegments.map((segment, index) => (
         <NarrationOverlay key={`text-${index}`} segment={segment} />
       ))}
       
@@ -580,7 +693,44 @@ export const ChainOfThoughtVideoWithAudio: React.FC = () => {
         zIndex: 0,
       }} />
       
-      {/* Enhanced title section */}
+      {/* Watermark */}
+      <div style={{
+        position: 'absolute',
+        bottom: '20px',
+        right: '30px',
+        zIndex: 1000,
+        opacity: 0.7,
+        background: 'rgba(15, 23, 42, 0.8)',
+        padding: '8px 16px',
+        borderRadius: '8px',
+        border: '1px solid rgba(59, 130, 246, 0.3)',
+        backdropFilter: 'blur(8px)',
+      }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+        }}>
+          <Brain size={16} color={`rgba(59, 130, 246, ${Math.max(0.7, brainProgress)})`} />
+          <span style={{
+            fontSize: '14px',
+            color: '#94a3b8',
+            fontFamily: 'Inter, system-ui, sans-serif',
+            fontWeight: '500',
+          }}>
+            Agentic Design
+          </span>
+          <span style={{
+            fontSize: '12px',
+            color: '#64748b',
+            fontFamily: 'Monaco, monospace',
+          }}>
+            https://agentic-design.ai
+          </span>
+        </div>
+      </div>
+      
+      {/* Enhanced title section - Always visible from frame 0 */}
       <div style={{
         display: 'flex',
         alignItems: 'center',
@@ -590,14 +740,12 @@ export const ChainOfThoughtVideoWithAudio: React.FC = () => {
         transform: `scale(${titleScale})`,
         zIndex: 1,
       }}>
-        <Brain 
-          size={72} 
-          color="#3b82f6" 
-          style={{ 
-            marginRight: '24px',
-            transform: `rotate(${brainRotation}deg)`,
-            filter: 'drop-shadow(0 8px 16px rgba(59, 130, 246, 0.3))',
-          }} 
+        <ProgressBrain
+          size={72}
+          progress={brainProgress}
+          glow={brainGlow}
+          scale={brainScale}
+          style={{ marginRight: '24px' }}
         />
         <div>
           <h1 style={{
@@ -625,12 +773,43 @@ export const ChainOfThoughtVideoWithAudio: React.FC = () => {
         </div>
       </div>
       
-      {/* Prompt Comparison */}
-      {frame >= 650 && (
-        <PromptComparison delay={650} duration={300} />
+      {/* Loading indicator while timing loads */}
+      {!isTimingLoaded && frame > 60 && (
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flex: 1,
+          zIndex: 1,
+        }}>
+          <div style={{
+            padding: '24px',
+            background: 'rgba(15, 23, 42, 0.8)',
+            borderRadius: '16px',
+            border: '1px solid rgba(59, 130, 246, 0.3)',
+            textAlign: 'center',
+          }}>
+            <div style={{
+              width: '40px',
+              height: '40px',
+              border: '3px solid rgba(59, 130, 246, 0.3)',
+              borderTop: '3px solid #3b82f6',
+              borderRadius: '50%',
+              animation: 'spin 1s linear infinite',
+              margin: '0 auto 16px',
+            }} />
+            <p style={{
+              color: '#94a3b8',
+              fontSize: '16px',
+              margin: 0,
+            }}>
+              Loading dynamic timing...
+            </p>
+          </div>
+        </div>
       )}
       
-      {/* Implementation steps container */}
+      {/* Main content container */}
       <div style={{ 
         flex: 1,
         zIndex: 1,
@@ -639,11 +818,103 @@ export const ChainOfThoughtVideoWithAudio: React.FC = () => {
         width: '100%'
       }}>
         
-        <AnimatedStep
-          step={1}
-          title="Simple Implementation"
-          content="Add Chain of Thought triggers to your prompts. The model does all the reasoning automatically - no additional coding required."
-          code={`// Regular prompt - direct answer
+        {/* Immediate intro content - always visible on early frames */}
+        {frame < 60 && (
+          <div style={{
+            opacity: interpolate(frame, [0, 30], [1, 0.7], { extrapolateRight: 'clamp' }),
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            textAlign: 'center',
+            padding: '40px',
+            background: 'rgba(15, 23, 42, 0.6)',
+            borderRadius: '20px',
+            border: '1px solid rgba(59, 130, 246, 0.2)',
+            backdropFilter: 'blur(8px)',
+            maxWidth: '800px',
+            margin: '0 auto',
+          }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '16px',
+              marginBottom: '20px',
+            }}>
+              <Zap size={28} color="#f59e0b" />
+              <span style={{
+                fontSize: '18px',
+                color: '#f59e0b',
+                fontWeight: '600',
+                letterSpacing: '0.05em',
+              }}>
+                AI REASONING TECHNIQUE
+              </span>
+            </div>
+            
+            <h2 style={{
+              fontSize: '28px',
+              color: 'white',
+              margin: '0 0 16px 0',
+              fontWeight: '700',
+              lineHeight: '1.2',
+            }}>
+              Unlock Transparent AI Decision Making
+            </h2>
+            
+            <p style={{
+              fontSize: '16px',
+              color: '#94a3b8',
+              margin: 0,
+              maxWidth: '600px',
+              lineHeight: '1.5',
+            }}>
+              Discover how a simple prompt addition transforms opaque AI responses into clear, step-by-step reasoning
+            </p>
+          </div>
+        )}
+        
+        {/* Content during 'intro' segment - Key benefits overview */}
+        {isTimingLoaded && narrationSegments.length > 0 && frame >= (narrationSegments.find(s => s.id === 'intro')?.startFrame || 60) && 
+         frame <= (narrationSegments.find(s => s.id === 'intro')?.endFrame || 300) && (
+          <div style={{
+            opacity: interpolate(frame, [(narrationSegments.find(s => s.id === 'intro')?.startFrame || 60), (narrationSegments.find(s => s.id === 'intro')?.startFrame || 60) + 40], [0, 1], { extrapolateRight: 'clamp' }),
+            display: 'flex',
+            justifyContent: 'space-around',
+            alignItems: 'center',
+            padding: '40px',
+            background: 'rgba(15, 23, 42, 0.8)',
+            borderRadius: '20px',
+            border: '1px solid rgba(59, 130, 246, 0.2)',
+            backdropFilter: 'blur(8px)',
+          }}>
+            <div style={{ textAlign: 'center', color: '#10b981', maxWidth: '250px' }}>
+              <Brain size={48} style={{ marginBottom: '16px' }} />
+              <p style={{ margin: 0, fontSize: '20px', fontWeight: '700' }}>Transparent Reasoning</p>
+              <p style={{ margin: '8px 0 0 0', fontSize: '14px', color: '#6b7280' }}>See every step of AI thinking</p>
+            </div>
+            <div style={{ textAlign: 'center', color: '#3b82f6', maxWidth: '250px' }}>
+              <Zap size={48} style={{ marginBottom: '16px' }} />
+              <p style={{ margin: 0, fontSize: '20px', fontWeight: '700' }}>40-70% Better Accuracy</p>
+              <p style={{ margin: '8px 0 0 0', fontSize: '14px', color: '#6b7280' }}>Proven performance improvement</p>
+            </div>
+            <div style={{ textAlign: 'center', color: '#8b5cf6', maxWidth: '250px' }}>
+              <Code size={48} style={{ marginBottom: '16px' }} />
+              <p style={{ margin: 0, fontSize: '20px', fontWeight: '700' }}>Simple Implementation</p>
+              <p style={{ margin: '8px 0 0 0', fontSize: '14px', color: '#6b7280' }}>Just add to your prompts</p>
+            </div>
+          </div>
+        )}
+        
+        {/* Content during 'implementation' segment - Simple setup */}
+        {isTimingLoaded && narrationSegments.length > 0 && frame >= (narrationSegments.find(s => s.id === 'implementation')?.startFrame || 400) && 
+         frame <= (narrationSegments.find(s => s.id === 'implementation')?.endFrame || 700) && (
+          <AnimatedStep
+            step={1}
+            title="Simple Implementation"
+            content="Add Chain of Thought triggers to your prompts. The model does all the reasoning automatically - no additional coding required."
+            code={`// Regular prompt - direct answer
 const basicPrompt = "What's 15% of 240 plus 30?";
 
 // Chain of Thought prompt - step by step reasoning  
@@ -654,17 +925,78 @@ const response = await openai.chat.completions.create({
   model: "gpt-4",
   messages: [{ role: "user", content: cotPrompt }]
 });`}
-          delay={1250}
-          duration={300}
-          icon={<Code size={24} />}
-          color="#3b82f6"
-        />
+            delay={narrationSegments.find(s => s.id === 'implementation')?.startFrame || 400}
+            duration={narrationSegments.find(s => s.id === 'implementation')?.durationFrames || 300}
+            icon={<Code size={24} />}
+            color="#3b82f6"
+          />
+        )}
         
-        <AnimatedStep
-          step={2}
-          title="Automatic Reasoning"
-          content="The model automatically breaks down complex problems into logical steps. You get transparent reasoning without any extra programming effort."
-          result={`Step 1: Calculate 15% of 240
+        {/* Content during 'comparison' segment - Prompt comparison setup */}
+        {isTimingLoaded && narrationSegments.length > 0 && frame >= (narrationSegments.find(s => s.id === 'comparison')?.startFrame || 800) && 
+         frame <= (narrationSegments.find(s => s.id === 'comparison')?.endFrame || 900) && (
+          <div style={{
+            opacity: interpolate(frame, [(narrationSegments.find(s => s.id === 'comparison')?.startFrame || 800), (narrationSegments.find(s => s.id === 'comparison')?.startFrame || 800) + 30], [0, 1], { extrapolateRight: 'clamp' }),
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            textAlign: 'center',
+            padding: '60px 40px',
+            background: 'rgba(15, 23, 42, 0.8)',
+            borderRadius: '20px',
+            border: '1px solid rgba(59, 130, 246, 0.2)',
+            backdropFilter: 'blur(8px)',
+            maxWidth: '800px',
+            margin: '0 auto',
+          }}>
+            <ArrowRight size={56} color="#3b82f6" style={{ 
+              marginBottom: '24px',
+              filter: 'drop-shadow(0 4px 12px rgba(59, 130, 246, 0.3))'
+            }} />
+            <h2 style={{
+              fontSize: '36px',
+              color: 'white',
+              margin: '0 0 20px 0',
+              fontWeight: '700',
+              background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)',
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              letterSpacing: '-0.025em',
+            }}>
+              Regular vs Chain of Thought
+            </h2>
+            <p style={{
+              fontSize: '18px',
+              color: '#94a3b8',
+              margin: 0,
+              maxWidth: '600px',
+              lineHeight: '1.6',
+              fontWeight: '400',
+            }}>
+              Watch how adding one simple phrase transforms AI reasoning from opaque to transparent
+            </p>
+          </div>
+        )}
+        
+        {/* Content during 'regular' and 'magic' segments - Side-by-side comparison */}
+        {isTimingLoaded && narrationSegments.length > 0 && frame >= (narrationSegments.find(s => s.id === 'regular')?.startFrame || 1000) && 
+         frame <= (narrationSegments.find(s => s.id === 'magic')?.endFrame || 1400) && (
+          <PromptComparison 
+            delay={narrationSegments.find(s => s.id === 'regular')?.startFrame || 1000} 
+            duration={((narrationSegments.find(s => s.id === 'magic')?.endFrame || 1400) - (narrationSegments.find(s => s.id === 'regular')?.startFrame || 1000))} 
+          />
+        )}
+        
+        {/* Content during 'automatic' segment - Automatic reasoning */}
+        {isTimingLoaded && narrationSegments.length > 0 && frame >= (narrationSegments.find(s => s.id === 'automatic')?.startFrame || 1500) && 
+         frame <= (narrationSegments.find(s => s.id === 'automatic')?.endFrame || 1800) && (
+          <AnimatedStep
+            step={2}
+            title="Automatic Reasoning"
+            content="The model automatically breaks down complex problems into logical steps. You get transparent reasoning without any extra programming effort."
+            result={`Step 1: Calculate 15% of 240
 15% = 0.15
 0.15 × 240 = 36
 
@@ -672,17 +1004,21 @@ Step 2: Add 30 to the result
 36 + 30 = 66
 
 Therefore: 15% of 240 plus 30 = 66`}
-          delay={1570}
-          duration={300}
-          icon={<Zap size={24} />}
-          color="#10b981"
-        />
+            delay={narrationSegments.find(s => s.id === 'automatic')?.startFrame || 1500}
+            duration={narrationSegments.find(s => s.id === 'automatic')?.durationFrames || 300}
+            icon={<Zap size={24} />}
+            color="#10b981"
+          />
+        )}
         
-        <AnimatedStep
-          step={3}
-          title="Production-Ready Patterns"
-          content="Use different CoT triggers for various scenarios. The model adapts its reasoning style to your specific needs."
-          code={`// For mathematical problems
+        {/* Content during 'conclusion' segment - Final benefits and patterns */}
+        {isTimingLoaded && narrationSegments.length > 0 && frame >= (narrationSegments.find(s => s.id === 'conclusion')?.startFrame || 1900) && 
+         frame <= (narrationSegments.find(s => s.id === 'conclusion')?.endFrame || 2200) && (
+          <AnimatedStep
+            step={3}
+            title="Production-Ready Patterns"
+            content="Use different CoT triggers for various scenarios. This simple technique delivers 40-70% accuracy improvements and complete transparency."
+            code={`// For mathematical problems
 "Let's solve this step by step."
 
 // For analysis tasks  
@@ -696,21 +1032,23 @@ Therefore: 15% of 240 plus 30 = 66`}
 
 // Zero-shot CoT (most common)
 "Let's think step by step."`}
-          delay={1900}
-          duration={300}
-          icon={<Target size={24} />}
-          color="#8b5cf6"
-        />
+            delay={narrationSegments.find(s => s.id === 'conclusion')?.startFrame || 1900}
+            duration={narrationSegments.find(s => s.id === 'conclusion')?.durationFrames || 300}
+            icon={<Target size={24} />}
+            color="#8b5cf6"
+          />
+        )}
+        
       </div>
       
-      {/* Enhanced benefits section */}
-      {frame >= 2000 && (
+      {/* Enhanced benefits section - appears after conclusion narration */}
+      {isTimingLoaded && narrationSegments.length > 0 && frame >= (narrationSegments.find(s => s.id === 'conclusion')?.endFrame || 2200) + 30 && (
         <div style={{
-          opacity: interpolate(frame, [2000, 2040], [0, 1], { extrapolateRight: 'clamp' }),
+          opacity: interpolate(frame, [(narrationSegments.find(s => s.id === 'conclusion')?.endFrame || 2200) + 30, (narrationSegments.find(s => s.id === 'conclusion')?.endFrame || 2200) + 70], [0, 1], { extrapolateRight: 'clamp' }),
           display: 'flex',
           justifyContent: 'space-around',
           alignItems: 'center',
-          marginTop: '60px',
+          marginTop: '40px',
           padding: '40px',
           background: 'rgba(15, 23, 42, 0.8)',
           borderRadius: '20px',
@@ -742,9 +1080,9 @@ Therefore: 15% of 240 plus 30 = 66`}
       )}
 
       {/* Final call-to-action that holds at the end */}
-      {frame >= 2220 && (
+      {isTimingLoaded && narrationSegments.length > 0 && frame >= (narrationSegments.find(s => s.id === 'conclusion')?.endFrame || 2200) + 100 && (
         <div style={{
-          opacity: interpolate(frame, [2220, 2260], [0, 1], { extrapolateRight: 'clamp' }),
+          opacity: interpolate(frame, [(narrationSegments.find(s => s.id === 'conclusion')?.endFrame || 2200) + 100, (narrationSegments.find(s => s.id === 'conclusion')?.endFrame || 2200) + 140], [0, 1], { extrapolateRight: 'clamp' }),
           position: 'absolute',
           bottom: '40px',
           left: '50%',

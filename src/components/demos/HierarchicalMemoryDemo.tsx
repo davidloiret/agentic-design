@@ -622,7 +622,7 @@ export const HierarchicalMemoryDemo: React.FC = () => {
                 <ArrowUp className="w-4 h-4 text-green-400 mt-0.5" />
                 <div>
                   <div className="font-medium text-green-400">Tier 1 → 2</div>
-                  <div className="text-gray-400">Retention > 70%, Access ≥ 3</div>
+                  <div className="text-gray-400">Retention &gt; 70%, Access ≥ 3</div>
                 </div>
               </div>
               
@@ -630,7 +630,7 @@ export const HierarchicalMemoryDemo: React.FC = () => {
                 <ArrowUp className="w-4 h-4 text-yellow-400 mt-0.5" />
                 <div>
                   <div className="font-medium text-yellow-400">Tier 2 → 3</div>
-                  <div className="text-gray-400">Retention > 80%, Access ≥ 8</div>
+                  <div className="text-gray-400">Retention &gt; 80%, Access ≥ 8</div>
                 </div>
               </div>
               
@@ -638,7 +638,7 @@ export const HierarchicalMemoryDemo: React.FC = () => {
                 <ArrowUp className="w-4 h-4 text-purple-400 mt-0.5" />
                 <div>
                   <div className="font-medium text-purple-400">Tier 3 → 4</div>
-                  <div className="text-gray-400">Retention > 90%, Access ≥ 15</div>
+                  <div className="text-gray-400">Retention &gt; 90%, Access ≥ 15</div>
                 </div>
               </div>
             </div>

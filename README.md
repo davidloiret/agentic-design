@@ -291,3 +291,16 @@ Pros / cons
 Compare technique according to use case (I already have a dedicated table)
 
 Personalized learning roadmap with badge on patterns validated
+
+
+learning mascot
+
+
+propose new technique etc
+
+
+add supabase + nestjs backend for learning hub => prendre la base abelec
+
+Poster video => lien vers agentic design
+
+check remotion license

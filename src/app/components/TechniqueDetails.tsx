@@ -16,6 +16,10 @@ import LatentKnowledgeRetrievalDemo from '../../components/demos/LatentKnowledge
 import AdvancedContextCompressionDemo from '../../components/demos/AdvancedContextCompressionDemo';
 import MultimodalContextIntegrationDemo from '../../components/demos/MultimodalContextIntegrationDemo';
 import SlidingWindowDemo from '../../components/demos/SlidingWindowDemo';
+import HierarchicalMemoryDemo from '../../components/demos/HierarchicalMemoryDemo';
+import AttentionMechanismsDemo from '../../components/demos/AttentionMechanismsDemo';
+import MemoryConsolidationDemo from '../../components/demos/MemoryConsolidationDemo';
+import WorkingMemoryPatternsDemo from '../../components/demos/WorkingMemoryPatternsDemo';
 import ContentBasedRoutingDemo from '../../components/demos/ContentBasedRoutingDemo';
 import CapabilityRoutingDemo from '../../components/demos/CapabilityRoutingDemo';
 import LoadBalancingDemo from '../../components/demos/LoadBalancingDemo';
@@ -480,11 +484,19 @@ export const TechniqueDetails = ({
                           ? 'Interactive multimodal context processing with text, visual, and audio input integration'
                           : selectedTechnique.id === 'sliding-window'
                           ? 'Interactive sliding window memory management with automatic eviction and real-time processing'
+                          : selectedTechnique.id === 'hierarchical-memory'
+                          ? 'Interactive multi-tier memory system with intelligent promotion policies and retention management'
+                          : selectedTechnique.id === 'attention-mechanisms'
+                          ? 'Interactive attention scoring demonstration with semantic similarity, temporal relevance, and contextual importance'
+                          : selectedTechnique.id === 'memory-consolidation'
+                          ? 'Interactive memory consolidation process with pattern extraction, redundancy removal, and schema formation'
+                          : selectedTechnique.id === 'working-memory-patterns'
+                          ? 'Interactive working memory simulation with capacity management, attention control, and interference suppression'
                           : 'Hands-on demonstration of the technique'
                         }
                       </span>
                       <span className="text-xs text-gray-500">
-                        {selectedTechnique.id === 'feedback-chaining' || selectedTechnique.id === 'hierarchical-chaining' || selectedTechnique.id === 'iterative-refinement' || selectedTechnique.id === 'parallel-synthesis' || selectedTechnique.id === 'dynamic-routing' || selectedTechnique.id === 'dynamic-context-assembly' || selectedTechnique.id === 'message-queuing' || selectedTechnique.id === 'latent-memory-networks' || selectedTechnique.id === 'adaptive-context-depth' || selectedTechnique.id === 'latent-knowledge-retrieval' || selectedTechnique.id === 'context-compression-advanced' || selectedTechnique.id === 'multimodal-context-integration' || selectedTechnique.id === 'sliding-window' || selectedTechnique.id === 'content-based-routing' || selectedTechnique.id === 'capability-routing' || selectedTechnique.id === 'load-balancing' || selectedTechnique.id === 'geographic-routing' || selectedTechnique.id === 'map-reduce' || selectedTechnique.id === 'scatter-gather' || selectedTechnique.id === 'fork-join' || selectedTechnique.id === 'async-await' || selectedTechnique.id === 'self-critique' || selectedTechnique.id === 'function-calling' || selectedTechnique.id === 'code-execution' || selectedTechnique.id === 'hierarchical-planning' || selectedTechnique.id === 'goal-decomposition' || selectedTechnique.id === 'constraint-satisfaction' || selectedTechnique.id === 'scenario-planning' || selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining' || selectedTechnique.id === 'conditional-chaining' ? 'Interactive demo available' : 'Demo coming soon'}
+                        {selectedTechnique.id === 'feedback-chaining' || selectedTechnique.id === 'hierarchical-chaining' || selectedTechnique.id === 'iterative-refinement' || selectedTechnique.id === 'parallel-synthesis' || selectedTechnique.id === 'dynamic-routing' || selectedTechnique.id === 'dynamic-context-assembly' || selectedTechnique.id === 'message-queuing' || selectedTechnique.id === 'latent-memory-networks' || selectedTechnique.id === 'adaptive-context-depth' || selectedTechnique.id === 'latent-knowledge-retrieval' || selectedTechnique.id === 'context-compression-advanced' || selectedTechnique.id === 'multimodal-context-integration' || selectedTechnique.id === 'sliding-window' || selectedTechnique.id === 'hierarchical-memory' || selectedTechnique.id === 'attention-mechanisms' || selectedTechnique.id === 'memory-consolidation' || selectedTechnique.id === 'working-memory-patterns' || selectedTechnique.id === 'content-based-routing' || selectedTechnique.id === 'capability-routing' || selectedTechnique.id === 'load-balancing' || selectedTechnique.id === 'geographic-routing' || selectedTechnique.id === 'map-reduce' || selectedTechnique.id === 'scatter-gather' || selectedTechnique.id === 'fork-join' || selectedTechnique.id === 'async-await' || selectedTechnique.id === 'self-critique' || selectedTechnique.id === 'function-calling' || selectedTechnique.id === 'code-execution' || selectedTechnique.id === 'hierarchical-planning' || selectedTechnique.id === 'goal-decomposition' || selectedTechnique.id === 'constraint-satisfaction' || selectedTechnique.id === 'scenario-planning' || selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining' || selectedTechnique.id === 'conditional-chaining' ? 'Interactive demo available' : 'Demo coming soon'}
                       </span>
                     </div>
                   </div>
@@ -514,6 +526,14 @@ export const TechniqueDetails = ({
                     <MultimodalContextIntegrationDemo />
                   ) : selectedTechnique.id === 'sliding-window' ? (
                     <SlidingWindowDemo />
+                  ) : selectedTechnique.id === 'hierarchical-memory' ? (
+                    <HierarchicalMemoryDemo />
+                  ) : selectedTechnique.id === 'attention-mechanisms' ? (
+                    <AttentionMechanismsDemo />
+                  ) : selectedTechnique.id === 'memory-consolidation' ? (
+                    <MemoryConsolidationDemo />
+                  ) : selectedTechnique.id === 'working-memory-patterns' ? (
+                    <WorkingMemoryPatternsDemo />
                   ) : selectedTechnique.id === 'content-based-routing' ? (
                     <ContentBasedRoutingDemo />
                   ) : selectedTechnique.id === 'capability-routing' ? (
