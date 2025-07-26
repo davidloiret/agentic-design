@@ -1,7 +1,7 @@
 import { CategoryDetails } from '../../../../components/CategoryDetails';
 import { categories } from '../../../../categories';
 import { techniques } from '../../../../techniques';
-import { generateCategoryMetadata } from '../../../lib/metadata';
+import { generateCategoryMetadata } from '../../../../lib/metadata';
 import { redirect } from 'next/navigation';
 import { Metadata } from 'next';
 

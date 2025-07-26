@@ -2,7 +2,7 @@ import { TechniqueDetails } from '../../../../../components/TechniqueDetails';
 import { techniques } from '../../../../../techniques';
 import { categories } from '../../../../../categories';
 import { useCases } from '../../../../../use-cases';
-import { generateTechniqueMetadata } from '../../../../lib/metadata';
+import { generateTechniqueMetadata } from '../../../../../lib/metadata';
 import { redirect } from 'next/navigation';
 import { Metadata } from 'next';
 

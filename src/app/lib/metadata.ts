@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { Category } from '../categories';
 
 const SITE_NAME = 'Agentic Design Patterns';
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://agentic-design.vercel.app';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://agentic-design.ai';
 const SITE_DESCRIPTION = 'Comprehensive collection of AI agent design patterns, techniques, and best practices for building intelligent systems.';
 
 export function generateCategoryMetadata(category: Category): Metadata {
@@ -66,9 +66,6 @@ export function generateCategoryMetadata(category: Category): Metadata {
         'max-image-preview': 'large',
         'max-snippet': -1,
       },
-    },
-    verification: {
-      google: 'your-google-verification-code',
     },
     alternates: {
       canonical: url,
@@ -160,9 +157,6 @@ export function generateTechniqueMetadata(technique: any, category?: Category): 
         'max-snippet': -1,
       },
     },
-    verification: {
-      google: 'your-google-verification-code',
-    },
     alternates: {
       canonical: url,
     },
@@ -219,9 +213,6 @@ export function generateDefaultMetadata(): Metadata {
         'max-image-preview': 'large',
         'max-snippet': -1,
       },
-    },
-    verification: {
-      google: 'your-google-verification-code',
     },
     alternates: {
       canonical: SITE_URL,
