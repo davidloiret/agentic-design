@@ -36,7 +36,7 @@ export default function PatternsLayout({
               <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center pb-20">
                 <div className="text-center text-gray-400 px-6">
                   <Brain className="w-20 h-20 mx-auto mb-6 text-gray-600" />
-                  <h3 className="text-2xl font-semibold mb-4 text-white">Welcome to Agentic Design Patterns</h3>
+                  <h3 className="text-2xl font-semibold mb-4 text-white">Welcome to Agentic Design</h3>
                   <p className="mb-6 text-lg leading-relaxed">Discover powerful AI design patterns and techniques to build more reliable AI systems.</p>
                   <p className="text-sm text-gray-500 mb-8">Swipe up to browse patterns</p>
                   <div className="flex items-center justify-center">

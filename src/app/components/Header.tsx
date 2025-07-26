@@ -20,7 +20,7 @@ export const Header = () => {
               
               <div className="flex items-center space-x-2">
                 <h1 className="text-lg font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
-                  Agentic Design Patterns
+                  Agentic Design
                 </h1>
                 <span className="hidden lg:inline text-xs text-gray-400 font-medium">
                   • Learn how to build reliable and secure AI systems
