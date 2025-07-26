@@ -162,8 +162,8 @@ export const TechniqueDetails = ({
         <div className="p-6">
           {detailsTab === 'overview' ? (
             <div className="space-y-8">
-              {/* Video Explanation - Only for Chain of Thought */}
-              {selectedTechnique.id === 'cot' && (
+              {/* Video Explanation - For Chain of Thought and Chain of Debates */}
+              {(selectedTechnique.id === 'cot' || selectedTechnique.id === 'cod') && (
                 <section>
                   <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
                     <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
@@ -171,8 +171,9 @@ export const TechniqueDetails = ({
                   </h2>
                   <div className="mb-8">
                     <RemotionPlayer 
-                      compositionId="ChainOfThoughtWithAudio" 
+                      compositionId={selectedTechnique.id === 'cot' ? "ChainOfThoughtWithAudio" : "ChainOfDebatesWithAudio"} 
                       className="w-full"
+                      audioPath={selectedTechnique.id === 'cot' ? "/audio/cot/" : "/audio/cod/"}
                     />
                   </div>
                 </section>

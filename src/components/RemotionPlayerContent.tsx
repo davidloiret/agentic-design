@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Player } from '@remotion/player';
 import { ChainOfThoughtVideo } from '../remotion/compositions/ChainOfThoughtVideo';
 import { ChainOfThoughtVideoWithAudio } from '../remotion/compositions/ChainOfThoughtVideoWithAudio';
+import { ChainOfDebatesVideoWithAudio } from '../remotion/compositions/ChainOfDebatesVideoWithAudio';
 
 interface RemotionPlayerContentProps {
   compositionId: string;
@@ -33,6 +34,8 @@ const RemotionPlayerContent: React.FC<RemotionPlayerContentProps> = ({ compositi
         return ChainOfThoughtVideo;
       case 'ChainOfThoughtWithAudio':
         return ChainOfThoughtVideoWithAudio;
+      case 'ChainOfDebatesWithAudio':
+        return ChainOfDebatesVideoWithAudio;
       default:
         return ChainOfThoughtVideoWithAudio; // Default to audio version
     }

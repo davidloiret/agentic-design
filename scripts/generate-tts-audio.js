@@ -18,44 +18,81 @@ const path = require('path');
 const OpenAI = require('openai');
 require('dotenv').config();
 
-// Base narration segments with text content (timing will be calculated dynamically)
-const baseNarrationSegments = [
-  {
-    id: 'intro',
-    text: "Chain of Thought reasoning transforms how AI solves complex problems - and it's surprisingly simple to implement.",
-    filename: 'cot-intro.wav'
-  },
-  {
-    id: 'implementation', 
-    text: "For engineers, implementing CoT is as easy as adding 'Let's think step by step' to your prompts.",
-    filename: 'cot-implementation.wav'
-  },
-  {
-    id: 'comparison',
-    text: "Let's see the dramatic difference between regular prompts and Chain of Thought prompts in action.",
-    filename: 'cot-comparison.wav'
-  },
-  {
-    id: 'regular',
-    text: "Regular prompts give you direct answers with no reasoning - you can't verify or understand the process.",
-    filename: 'cot-regular.wav'
-  },
-  {
-    id: 'magic',
-    text: "Chain of Thought prompts unlock the model's reasoning ability - just add the magic phrase and watch it think.",
-    filename: 'cot-magic.wav'
-  },
-  {
-    id: 'automatic',
-    text: "The model automatically breaks down complex problems into clear, verifiable steps - no additional coding required.",
-    filename: 'cot-automatic.wav'
-  },
-  {
-    id: 'conclusion',
-    text: "This simple technique delivers 40-70% accuracy improvements and complete transparency in AI decision-making.",
-    filename: 'cot-conclusion.wav'
-  }
-];
+// Narration content for different techniques
+const narrationContent = {
+  cot: [
+    {
+      id: 'intro',
+      text: "Chain of Thought reasoning transforms how AI solves complex problems - and it's surprisingly simple to implement.",
+      filename: 'cot-intro.wav'
+    },
+    {
+      id: 'implementation', 
+      text: "For engineers, implementing CoT is as easy as adding 'Let's think step by step' to your prompts.",
+      filename: 'cot-implementation.wav'
+    },
+    {
+      id: 'comparison',
+      text: "Let's see the dramatic difference between regular prompts and Chain of Thought prompts in action.",
+      filename: 'cot-comparison.wav'
+    },
+    {
+      id: 'regular',
+      text: "Regular prompts give you direct answers with no reasoning - you can't verify or understand the process.",
+      filename: 'cot-regular.wav'
+    },
+    {
+      id: 'magic',
+      text: "Chain of Thought prompts unlock the model's reasoning ability - just add the magic phrase and watch it think.",
+      filename: 'cot-magic.wav'
+    },
+    {
+      id: 'automatic',
+      text: "The model automatically breaks down complex problems into clear, verifiable steps - no additional coding required.",
+      filename: 'cot-automatic.wav'
+    },
+    {
+      id: 'conclusion',
+      text: "This simple technique delivers 40-70% accuracy improvements and complete transparency in AI decision-making.",
+      filename: 'cot-conclusion.wav'
+    }
+  ],
+  cod: [
+    {
+      id: 'intro',
+      text: "Chain of Debates revolutionizes AI decision-making by bringing multiple perspectives together to collaborate, argue, and reach better conclusions through structured dialogue.",
+      filename: 'cod-intro.wav'
+    },
+    {
+      id: 'perspectives',
+      text: "Instead of relying on a single AI viewpoint, we assign different roles - an advocate, a skeptic, and an analyst - each bringing unique perspectives to the problem.",
+      filename: 'cod-perspectives.wav'
+    },
+    {
+      id: 'debate',
+      text: "Watch as each perspective presents their arguments, challenges others' positions, and refines their reasoning through multiple rounds of structured debate.",
+      filename: 'cod-debate.wav'
+    },
+    {
+      id: 'collaboration',
+      text: "The real magic happens when perspectives collaborate - biases are exposed, assumptions are challenged, and edge cases are discovered through peer review.",
+      filename: 'cod-collaboration.wav'
+    },
+    {
+      id: 'synthesis',
+      text: "A moderator synthesizes all viewpoints into a comprehensive decision that's more robust and well-reasoned than any single perspective could achieve.",
+      filename: 'cod-synthesis.wav'
+    },
+    {
+      id: 'conclusion',
+      text: "Chain of Debates delivers 30-50% better decision quality by leveraging collective intelligence and reducing individual model biases through collaborative reasoning.",
+      filename: 'cod-conclusion.wav'
+    }
+  ]
+};
+
+// Dynamic base narration segments (will be set based on technique parameter)
+let baseNarrationSegments = [];
 
 /**
  * Get actual audio duration from MP3 file using a simple approach
@@ -177,13 +214,27 @@ function generateTimingConfig(narrationSegments, totalFrames) {
   return timingConfig;
 }
 
+// Parse command line arguments
+const args = process.argv.slice(2);
+const techniqueArg = args.find(arg => arg.startsWith('--technique=')) || args.find((arg, index) => args[index - 1] === '--technique');
+const technique = techniqueArg ? techniqueArg.replace('--technique=', '') : 'cot';
+
+// Validate technique parameter
+if (!narrationContent[technique]) {
+  console.error(`❌ Invalid technique: ${technique}. Available options: ${Object.keys(narrationContent).join(', ')}`);
+  process.exit(1);
+}
+
+// Set dynamic content based on technique
+baseNarrationSegments = narrationContent[technique];
+
 // Initialize OpenAI client
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-// Ensure audio directory exists
-const audioDir = path.join(__dirname, '../public/audio/cot');
+// Dynamic audio directory based on technique
+const audioDir = path.join(__dirname, `../public/audio/${technique}`);
 if (!fs.existsSync(audioDir)) {
   fs.mkdirSync(audioDir, { recursive: true });
 }
@@ -271,11 +322,14 @@ function estimateDuration(text) {
  * Generate all TTS audio files
  */
 async function generateAllTTSAudio() {
-  // Check for command line arguments
-  const args = process.argv.slice(2);
+  // Parse force flag (args already parsed globally)
   const forceRegenerate = args.includes('--force') || args.includes('-f');
   
-  console.log('🚀 Starting OpenAI TTS audio generation for Chain of Thought video...');
+  const techniqueNames = {
+    cot: 'Chain of Thought',
+    cod: 'Chain of Debates'
+  };
+  console.log(`🚀 Starting OpenAI TTS audio generation for ${techniqueNames[technique]} video...`);
   console.log(`📁 Output directory: ${audioDir}`);
   console.log(`🔑 Using OpenAI API key: ${process.env.OPENAI_API_KEY ? '✅ Found' : '❌ Missing'}`);
   console.log(`🔄 Force regeneration: ${forceRegenerate ? '✅ Enabled' : '❌ Disabled (will skip existing files)'}`);
@@ -383,7 +437,7 @@ async function generateAllTTSAudio() {
       const result = results.find(r => r.id === segment.id);
       return {
         ...segment,
-        audioPath: `/audio/cot/${segment.filename}`,
+        audioPath: `/audio/${technique}/${segment.filename}`,
         success: result?.success || false,
         duration: result?.duration || 0,
         cached: result?.cached || false,
@@ -417,7 +471,7 @@ async function generateAllTTSAudio() {
         totalFrames,
         totalDuration,
         narrationSegments,
-        configPath: '/audio/cot/timing-config.json'
+        configPath: `/audio/${technique}/timing-config.json`
       };
       
       fs.writeFileSync(indexPath, JSON.stringify(audioIndex, null, 2));
@@ -426,10 +480,13 @@ async function generateAllTTSAudio() {
       console.warn('⚠️  Could not generate dynamic timing:', error.message);
     }
     
-    console.log('You can now use the ChainOfThoughtVideoWithAudio component.');
+    console.log(`You can now use the ${technique === 'cot' ? 'ChainOfThoughtVideoWithAudio' : 'ChainOfDebatesVideoWithAudio'} component.`);
     
     if (skippedCount > 0) {
-      console.log(`\n💡 Tip: Use "npm run tts:generate -- --force" to regenerate all files if needed.`);
+      console.log(`\n💡 Tips:`);
+  console.log(`   - Use "--force" to regenerate existing files`);
+  console.log(`   - Use "--technique cod" to generate Chain of Debates audio`);
+  console.log(`   - Use "--technique cot" to generate Chain of Thought audio (default)`);
     }
   }
   
@@ -459,10 +516,12 @@ function printSetupInstructions() {
   console.log('   - Current: nova (professional, clear female voice)\n');
   
   console.log('5. 🚀 Usage:');
-  console.log('   node scripts/generate-tts-audio.js           # Generate new files, skip existing');
-  console.log('   node scripts/generate-tts-audio.js --force   # Force regenerate all files');
-  console.log('   npm run tts:generate                         # Same as first option');
-  console.log('   npm run tts:generate -- --force              # Force regenerate via npm\n');
+  console.log('   node scripts/generate-tts-audio.js                           # Generate CoT files, skip existing');
+  console.log('   node scripts/generate-tts-audio.js --technique cod           # Generate Chain of Debates');
+  console.log('   node scripts/generate-tts-audio.js --force                   # Force regenerate CoT files');
+  console.log('   node scripts/generate-tts-audio.js --technique cod --force   # Force regenerate CoD files');
+  console.log('   npm run tts:generate                                         # Same as first option');
+  console.log('   npm run tts:generate -- --technique cod                      # Generate CoD via npm\n');
   
   console.log('6. 💾 Smart Caching:');
   console.log('   - Existing audio files are automatically detected and skipped');

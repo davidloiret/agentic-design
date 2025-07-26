@@ -23,8 +23,13 @@ import { categories } from './categories';
 import { constraints } from './constraints';
 import { type LanguageType } from './pattern-examples';
 import { Technique, TechniqueCategory } from './techniques/types';
+import Fuse from 'fuse.js';
 
-// Add proper type interfaces
+const options = {
+  keys: ['name', 'abbr', 'description', 'category', 'useCases'],
+  threshold: 0.3
+};
+
 interface EvaluationCriteria {
   id: string;
   name: string;
@@ -60,20 +65,16 @@ export const AIReasoningExplorer = () => {
   const [userConstraints, setUserConstraints] = useState<string[]>([]);
   const [selectedCategoryState, setSelectedCategoryState] = useState('all');
   
-  // Updated to allow parent category selection for details view
   const setSelectedCategory = (categoryId: string) => {
     setSelectedCategoryState(categoryId);
-    // Clear selected technique when switching categories
     setSelectedTechnique(null);
   };
   
   const selectedCategory = selectedCategoryState;
   
-  // Code sandbox state
   const [selectedLanguage, setSelectedLanguage] = useState<LanguageType>('typescript');
   const [detailsTab, setDetailsTab] = useState<'overview' | 'flow' | 'interactive' | 'code'>('overview');
   
-  // Evaluation state
   const [selectedPatterns, setSelectedPatterns] = useState<Technique[]>([]);
   const [evaluationCriteria, setEvaluationCriteria] = useState<EvaluationCriteria[]>([]);
   const [testScenario, setTestScenario] = useState('');
@@ -89,14 +90,12 @@ export const AIReasoningExplorer = () => {
       let score = 0;
       const reasons: string[] = [];
 
-      // Use case matching
       if (selectedUseCase && technique.useCases.includes(selectedUseCase)) {
         score += 3;
         const useCase = useCases.find(uc => uc.id === selectedUseCase);
         reasons.push(`Excellent for ${useCase?.name}`);
       }
 
-      // Complexity matching
       if (userComplexity === 'simple' && technique.complexity === 'low') {
         score += 2;
         reasons.push('Simple to implement');
@@ -108,7 +107,6 @@ export const AIReasoningExplorer = () => {
         reasons.push('Handles complex scenarios');
       }
 
-      // Constraint matching
       if (userConstraints.includes('speed') && ['cot', 'self-correction'].includes(technique.id)) {
         score += 1;
         reasons.push('Relatively fast execution');
@@ -140,31 +138,15 @@ export const AIReasoningExplorer = () => {
       .slice(0, 5);
   };
 
-  // Filter techniques by search query only (for category counts)
-  const searchFilteredTechniques = techniques.filter(technique => {
-    return technique.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      technique.description.toLowerCase().includes(searchQuery.toLowerCase());
-  });
+  const fuse = new Fuse(techniques, options);
 
-  // Filter techniques by both search and category (for display)
+  // Perform search
+  const searchFilteredTechniques = searchQuery
+    ? fuse.search(searchQuery).map(result => result.item)
+    : techniques;
+
   const filteredTechniques = searchFilteredTechniques.filter(technique => {
-    let matchesCategory = false;
-    if (selectedCategory === 'all') {
-      matchesCategory = true;
-    } else {
-      // Direct category match
-      if (technique.category === selectedCategory) {
-        matchesCategory = true;
-      } else {
-        // Check if selected category is a parent of the technique's category
-        const selectedCat = categories.find(cat => cat.id === selectedCategory);
-        if (selectedCat?.children?.includes(technique.category)) {
-          matchesCategory = true;
-        }
-      }
-    }
-    
-    return matchesCategory;
+    return true;
   });
 
   const toggleConstraint = (constraintId: string) => {
@@ -198,7 +180,6 @@ export const AIReasoningExplorer = () => {
             {(() => {
               const selectedCategoryData = categories.find(cat => cat.id === selectedCategory);
               
-              // Prioritize showing technique details if a technique is selected
               if (selectedTechnique) {
                 return (
                   <div className="lg:col-span-3 overflow-y-auto">
@@ -215,7 +196,6 @@ export const AIReasoningExplorer = () => {
                 );
               }
               
-              // Show CategoryDetails if the category has detailed description and no technique is selected
               if (selectedCategoryData?.detailedDescription) {
                 return (
                   <div className="lg:col-span-3 overflow-y-auto">
@@ -261,7 +241,6 @@ export const AIReasoningExplorer = () => {
             constraints={constraints}
           />
         ) : activeTab === 'graph' ? (
-          /* Graph Tab */
           <div className="h-[calc(100vh-15rem)]">
             <NetworkGraph 
               techniques={techniques} 
@@ -272,17 +251,14 @@ export const AIReasoningExplorer = () => {
             />
           </div>
         ) : activeTab === 'inference' ? (
-          /* Inference Tab */
           <div className="h-[calc(100vh-11rem)]">
             <InferenceTab />
           </div>
         ) : activeTab === 'finetuning' ? (
-          /* Fine Tuning Tab */
           <div className="h-[calc(100vh-11rem)]">
             <FineTuningTab />
           </div>
         ) : activeTab === 'mindmap' ? (
-          /* Mind Map Tab */
           <div className="h-[calc(100vh-11rem)] min-h-[600px]">
             <MindMap 
               techniques={techniques} 
@@ -293,7 +269,6 @@ export const AIReasoningExplorer = () => {
             />
           </div>
         ) : activeTab === 'builder' ? (
-          /* System Builder Tab */
           <div className="h-[calc(100vh-15rem)]">
             <SystemBuilder 
               techniques={techniques} 
@@ -302,17 +277,14 @@ export const AIReasoningExplorer = () => {
             />
           </div>
         ) : activeTab === 'projects' ? (
-          /* Project Hub Tab */
           <div className="h-[calc(100vh-15rem)]">
             <ProjectHub />
           </div>
         ) : activeTab === 'news' ? (
-          /* News Tab */
           <div className="h-[calc(100vh-15rem)]">
             <NewsTab />
           </div>
         ) : activeTab === 'learning' ? (
-          /* Learning Hub Tab */
           <div className="h-[calc(100vh-11rem)]">
             <LearningHub 
               techniques={techniques}
@@ -320,7 +292,6 @@ export const AIReasoningExplorer = () => {
             />
           </div>
         ) : (
-          /* Evaluation Tab */
           <EvaluationInterface 
             techniques={techniques}
             categories={categories}

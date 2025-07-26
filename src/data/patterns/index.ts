@@ -1,5 +1,6 @@
 import { PatternScenario } from './types';
 import { chainOfThoughtPattern } from './chain-of-thought';
+import { chainOfDebatesPattern } from './chain-of-debates';
 import { treeOfThoughtsPattern } from './tree-of-thoughts';
 import { reactPattern } from './react';
 import { sequentialChainingPattern } from './sequential-chaining';
@@ -46,6 +47,7 @@ export * from './styles';
 
 export const patternScenarios: { [key: string]: PatternScenario } = {
   'cot': chainOfThoughtPattern,
+  'cod': chainOfDebatesPattern,
   'tot': treeOfThoughtsPattern,
   'lrt': latentRecurrentThinkingPattern,
   'got': graphOfThoughtPattern,

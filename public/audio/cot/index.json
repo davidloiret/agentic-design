@@ -1,14 +1,14 @@
 {
-  "generated": "2025-07-26T11:24:16.405Z",
+  "generated": "2025-07-26T11:36:26.713Z",
   "model": "tts-1-hd",
   "voice": "nova",
   "totalSegments": 7,
   "successfulSegments": 7,
   "failedSegments": 0,
-  "generatedSegments": 7,
-  "cachedSegments": 0,
-  "totalEstimatedCost": 0.0222,
-  "forceRegenerate": true,
+  "generatedSegments": 0,
+  "cachedSegments": 7,
+  "totalEstimatedCost": 0,
+  "forceRegenerate": false,
   "segments": [
     {
       "id": "intro",
@@ -17,7 +17,7 @@
       "audioPath": "/audio/cot/cot-intro.wav",
       "success": true,
       "duration": 9.040000000000001,
-      "cached": false,
+      "cached": true,
       "error": null
     },
     {
@@ -27,7 +27,7 @@
       "audioPath": "/audio/cot/cot-implementation.wav",
       "success": true,
       "duration": 7.68,
-      "cached": false,
+      "cached": true,
       "error": null
     },
     {
@@ -37,7 +37,7 @@
       "audioPath": "/audio/cot/cot-comparison.wav",
       "success": true,
       "duration": 7.76,
-      "cached": false,
+      "cached": true,
       "error": null
     },
     {
@@ -47,7 +47,7 @@
       "audioPath": "/audio/cot/cot-regular.wav",
       "success": true,
       "duration": 8.24,
-      "cached": false,
+      "cached": true,
       "error": null
     },
     {
@@ -57,7 +57,7 @@
       "audioPath": "/audio/cot/cot-magic.wav",
       "success": true,
       "duration": 8.72,
-      "cached": false,
+      "cached": true,
       "error": null
     },
     {
@@ -67,7 +67,7 @@
       "audioPath": "/audio/cot/cot-automatic.wav",
       "success": true,
       "duration": 9.12,
-      "cached": false,
+      "cached": true,
       "error": null
     },
     {
@@ -77,7 +77,7 @@
       "audioPath": "/audio/cot/cot-conclusion.wav",
       "success": true,
       "duration": 8.639999999999999,
-      "cached": false,
+      "cached": true,
       "error": null
     }
   ],

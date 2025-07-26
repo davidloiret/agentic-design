@@ -549,46 +549,7 @@ export const NewsTab: React.FC = () => {
                 </p>
               </div>
             </div>
-          </div>
-
-          {/* Quick Actions */}
-          <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-xl p-6">
-            <h3 className="text-lg font-semibold text-white mb-4 flex items-center space-x-2">
-              <span>⚡</span>
-              <span>Quick Actions</span>
-            </h3>
-            <div className="flex flex-wrap gap-3">
-              <button 
-                onClick={() => setActiveSection('articles')}
-                className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm font-medium transition-all"
-              >
-                <span>📄</span>
-                <span>Browse Articles</span>
-              </button>
-              <button 
-                onClick={() => setActiveSection('people')}
-                className="flex items-center space-x-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 rounded-lg text-sm font-medium transition-all"
-              >
-                <span>👥</span>
-                <span>View Experts</span>
-              </button>
-              <button 
-                onClick={() => setActiveSection('companies')}
-                className="flex items-center space-x-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg text-sm font-medium transition-all"
-              >
-                <span>🏢</span>
-                <span>Track Companies</span>
-              </button>
-              <button 
-                onClick={handleRefresh}
-                disabled={refreshing}
-                className="flex items-center space-x-2 px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded-lg text-sm font-medium transition-all disabled:opacity-50"
-              >
-                <span className={`${refreshing ? 'animate-spin' : ''}`}>🔄</span>
-                <span>{refreshing ? 'Refreshing...' : 'Refresh All'}</span>
-              </button>
-            </div>
-          </div>
+          </div>          
         </div>
       )}
 

@@ -304,3 +304,17 @@ add supabase + nestjs backend for learning hub => prendre la base abelec
 Poster video => lien vers agentic design
 
 check remotion license
+
+
+create battle => learning battle between different user
+
+we should have the ability to go next or previous from techniques
+
+Each technique and category should ve acceble on dedeicated url
+
+chat with content
+
+video sur toute une catégorie avec presentation des differentes techniques
+
+
+add breadcrumb and category selection indicator

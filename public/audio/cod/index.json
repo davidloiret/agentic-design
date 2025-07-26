@@ -1,0 +1,135 @@
+{
+  "generated": "2025-07-26T11:46:39.226Z",
+  "model": "tts-1-hd",
+  "voice": "nova",
+  "totalSegments": 6,
+  "successfulSegments": 6,
+  "failedSegments": 0,
+  "generatedSegments": 6,
+  "cachedSegments": 0,
+  "totalEstimatedCost": 0.02871,
+  "forceRegenerate": true,
+  "segments": [
+    {
+      "id": "intro",
+      "text": "Chain of Debates revolutionizes AI decision-making by bringing multiple perspectives together to collaborate, argue, and reach better conclusions through structured dialogue.",
+      "filename": "cod-intro.wav",
+      "audioPath": "/audio/cod/cod-intro.wav",
+      "success": true,
+      "duration": 13.92,
+      "cached": false,
+      "error": null
+    },
+    {
+      "id": "perspectives",
+      "text": "Instead of relying on a single AI viewpoint, we assign different roles - an advocate, a skeptic, and an analyst - each bringing unique perspectives to the problem.",
+      "filename": "cod-perspectives.wav",
+      "audioPath": "/audio/cod/cod-perspectives.wav",
+      "success": true,
+      "duration": 13.04,
+      "cached": false,
+      "error": null
+    },
+    {
+      "id": "debate",
+      "text": "Watch as each perspective presents their arguments, challenges others' positions, and refines their reasoning through multiple rounds of structured debate.",
+      "filename": "cod-debate.wav",
+      "audioPath": "/audio/cod/cod-debate.wav",
+      "success": true,
+      "duration": 12.4,
+      "cached": false,
+      "error": null
+    },
+    {
+      "id": "collaboration",
+      "text": "The real magic happens when perspectives collaborate - biases are exposed, assumptions are challenged, and edge cases are discovered through peer review.",
+      "filename": "cod-collaboration.wav",
+      "audioPath": "/audio/cod/cod-collaboration.wav",
+      "success": true,
+      "duration": 12.239999999999998,
+      "cached": false,
+      "error": null
+    },
+    {
+      "id": "synthesis",
+      "text": "A moderator synthesizes all viewpoints into a comprehensive decision that's more robust and well-reasoned than any single perspective could achieve.",
+      "filename": "cod-synthesis.wav",
+      "audioPath": "/audio/cod/cod-synthesis.wav",
+      "success": true,
+      "duration": 11.84,
+      "cached": false,
+      "error": null
+    },
+    {
+      "id": "conclusion",
+      "text": "Chain of Debates delivers 30-50% better decision quality by leveraging collective intelligence and reducing individual model biases through collaborative reasoning.",
+      "filename": "cod-conclusion.wav",
+      "audioPath": "/audio/cod/cod-conclusion.wav",
+      "success": true,
+      "duration": 13.120000000000001,
+      "cached": false,
+      "error": null
+    }
+  ],
+  "dynamicTiming": {
+    "totalFrames": 2795,
+    "totalDuration": 93.16666666666667,
+    "narrationSegments": [
+      {
+        "id": "intro",
+        "text": "Chain of Debates revolutionizes AI decision-making by bringing multiple perspectives together to collaborate, argue, and reach better conclusions through structured dialogue.",
+        "filename": "cod-intro.wav",
+        "startFrame": 60,
+        "endFrame": 485,
+        "duration": 14.150390625,
+        "durationFrames": 425
+      },
+      {
+        "id": "perspectives",
+        "text": "Instead of relying on a single AI viewpoint, we assign different roles - an advocate, a skeptic, and an analyst - each bringing unique perspectives to the problem.",
+        "filename": "cod-perspectives.wav",
+        "startFrame": 545,
+        "endFrame": 937,
+        "duration": 13.06640625,
+        "durationFrames": 392
+      },
+      {
+        "id": "debate",
+        "text": "Watch as each perspective presents their arguments, challenges others' positions, and refines their reasoning through multiple rounds of structured debate.",
+        "filename": "cod-debate.wav",
+        "startFrame": 997,
+        "endFrame": 1368,
+        "duration": 12.36328125,
+        "durationFrames": 371
+      },
+      {
+        "id": "collaboration",
+        "text": "The real magic happens when perspectives collaborate - biases are exposed, assumptions are challenged, and edge cases are discovered through peer review.",
+        "filename": "cod-collaboration.wav",
+        "startFrame": 1428,
+        "endFrame": 1783,
+        "duration": 11.806640625,
+        "durationFrames": 355
+      },
+      {
+        "id": "synthesis",
+        "text": "A moderator synthesizes all viewpoints into a comprehensive decision that's more robust and well-reasoned than any single perspective could achieve.",
+        "filename": "cod-synthesis.wav",
+        "startFrame": 1843,
+        "endFrame": 2194,
+        "duration": 11.689453125,
+        "durationFrames": 351
+      },
+      {
+        "id": "conclusion",
+        "text": "Chain of Debates delivers 30-50% better decision quality by leveraging collective intelligence and reducing individual model biases through collaborative reasoning.",
+        "filename": "cod-conclusion.wav",
+        "startFrame": 2254,
+        "endFrame": 2675,
+        "duration": 14.033203125,
+        "durationFrames": 421
+      }
+    ],
+    "configPath": "/audio/cod/timing-config.json"
+  }
+}

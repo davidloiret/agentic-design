@@ -314,6 +314,13 @@ export const FineTuningTab = () => {
                   </p>
                 </div>
 
+                <div className="border-l-4 border-cyan-400 pl-4">
+                  <h4 className="font-semibold text-cyan-300">Group Sequence Policy Optimisation GSPO</h4>
+                  <p className="text-sm text-gray-300">
+                   
+                  </p>
+                </div>
+
                 <div className="border-l-4 border-pink-400 pl-4">
                   <h4 className="font-semibold text-pink-300">Quantization-Aware Training</h4>
                   <p className="text-sm text-gray-300">

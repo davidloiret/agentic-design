@@ -239,7 +239,6 @@ export const ChatBot = ({ onRecommendationSelect, getRecommendations, techniques
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Quick Actions */}
       <div className="p-3 border-t border-gray-700">
         <div className="grid grid-cols-2 gap-2 mb-3">
           {quickSuggestions.map((suggestion, idx) => {

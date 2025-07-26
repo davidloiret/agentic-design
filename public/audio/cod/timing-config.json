@@ -1,0 +1,98 @@
+{
+  "version": "1.0.0",
+  "generated": "2025-07-26T11:46:39.228Z",
+  "fps": 30,
+  "totalFrames": 2795,
+  "totalDuration": 93.16666666666667,
+  "narrationSegments": [
+    {
+      "id": "intro",
+      "text": "Chain of Debates revolutionizes AI decision-making by bringing multiple perspectives together to collaborate, argue, and reach better conclusions through structured dialogue.",
+      "filename": "cod-intro.wav",
+      "startFrame": 60,
+      "endFrame": 485,
+      "duration": 14.150390625,
+      "durationFrames": 425
+    },
+    {
+      "id": "perspectives",
+      "text": "Instead of relying on a single AI viewpoint, we assign different roles - an advocate, a skeptic, and an analyst - each bringing unique perspectives to the problem.",
+      "filename": "cod-perspectives.wav",
+      "startFrame": 545,
+      "endFrame": 937,
+      "duration": 13.06640625,
+      "durationFrames": 392
+    },
+    {
+      "id": "debate",
+      "text": "Watch as each perspective presents their arguments, challenges others' positions, and refines their reasoning through multiple rounds of structured debate.",
+      "filename": "cod-debate.wav",
+      "startFrame": 997,
+      "endFrame": 1368,
+      "duration": 12.36328125,
+      "durationFrames": 371
+    },
+    {
+      "id": "collaboration",
+      "text": "The real magic happens when perspectives collaborate - biases are exposed, assumptions are challenged, and edge cases are discovered through peer review.",
+      "filename": "cod-collaboration.wav",
+      "startFrame": 1428,
+      "endFrame": 1783,
+      "duration": 11.806640625,
+      "durationFrames": 355
+    },
+    {
+      "id": "synthesis",
+      "text": "A moderator synthesizes all viewpoints into a comprehensive decision that's more robust and well-reasoned than any single perspective could achieve.",
+      "filename": "cod-synthesis.wav",
+      "startFrame": 1843,
+      "endFrame": 2194,
+      "duration": 11.689453125,
+      "durationFrames": 351
+    },
+    {
+      "id": "conclusion",
+      "text": "Chain of Debates delivers 30-50% better decision quality by leveraging collective intelligence and reducing individual model biases through collaborative reasoning.",
+      "filename": "cod-conclusion.wav",
+      "startFrame": 2254,
+      "endFrame": 2675,
+      "duration": 14.033203125,
+      "durationFrames": 421
+    }
+  ],
+  "visualElements": {
+    "titleAnimation": {
+      "startFrame": 0,
+      "endFrame": 60
+    },
+    "promptComparison": {
+      "startFrame": 967,
+      "duration": 300
+    },
+    "steps": [
+      {
+        "id": "step1",
+        "startFrame": 515,
+        "duration": 300
+      },
+      {
+        "id": "step2",
+        "startFrame": 967,
+        "duration": 300
+      },
+      {
+        "id": "step3",
+        "startFrame": 1398,
+        "duration": 300
+      }
+    ],
+    "benefits": {
+      "startFrame": 2735,
+      "duration": 200
+    },
+    "callToAction": {
+      "startFrame": 2695,
+      "duration": 100
+    }
+  }
+}
