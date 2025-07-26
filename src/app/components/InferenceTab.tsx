@@ -1643,7 +1643,7 @@ console.log(response.choices[0].message.content);`}
       {/* Main Content */}
       <div className="flex-1 overflow-y-auto">
         <div className="p-6">
-          <div className="max-w-5xl mx-auto">
+          <div className="w-full">
             {getCurrentSection() && (
               <div>
                 <div className="flex items-center gap-3 mb-6">

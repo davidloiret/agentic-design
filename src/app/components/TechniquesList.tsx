@@ -1,3 +1,5 @@
+"use client"
+
 import { Search, ChevronRight, ChevronDown, ChevronUp } from 'lucide-react';
 import { useState } from 'react';
 import { Category } from '../categories';

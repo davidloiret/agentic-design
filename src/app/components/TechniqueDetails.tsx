@@ -20,6 +20,7 @@ import HierarchicalMemoryDemo from '../../components/demos/HierarchicalMemoryDem
 import AttentionMechanismsDemo from '../../components/demos/AttentionMechanismsDemo';
 import MemoryConsolidationDemo from '../../components/demos/MemoryConsolidationDemo';
 import WorkingMemoryPatternsDemo from '../../components/demos/WorkingMemoryPatternsDemo';
+import ContextCompressionDemo from '../../components/demos/ContextCompressionDemo';
 import ContentBasedRoutingDemo from '../../components/demos/ContentBasedRoutingDemo';
 import CapabilityRoutingDemo from '../../components/demos/CapabilityRoutingDemo';
 import LoadBalancingDemo from '../../components/demos/LoadBalancingDemo';
@@ -493,11 +494,13 @@ export const TechniqueDetails = ({
                           ? 'Interactive memory consolidation process with pattern extraction, redundancy removal, and schema formation'
                           : selectedTechnique.id === 'working-memory-patterns'
                           ? 'Interactive working memory simulation with capacity management, attention control, and interference suppression'
+                          : selectedTechnique.id === 'context-compression'
+                          ? 'Interactive context compression demo with lossy/lossless options, semantic preservation, and compression metrics'
                           : 'Hands-on demonstration of the technique'
                         }
                       </span>
                       <span className="text-xs text-gray-500">
-                        {selectedTechnique.id === 'feedback-chaining' || selectedTechnique.id === 'hierarchical-chaining' || selectedTechnique.id === 'iterative-refinement' || selectedTechnique.id === 'parallel-synthesis' || selectedTechnique.id === 'dynamic-routing' || selectedTechnique.id === 'dynamic-context-assembly' || selectedTechnique.id === 'message-queuing' || selectedTechnique.id === 'latent-memory-networks' || selectedTechnique.id === 'adaptive-context-depth' || selectedTechnique.id === 'latent-knowledge-retrieval' || selectedTechnique.id === 'context-compression-advanced' || selectedTechnique.id === 'multimodal-context-integration' || selectedTechnique.id === 'sliding-window' || selectedTechnique.id === 'hierarchical-memory' || selectedTechnique.id === 'attention-mechanisms' || selectedTechnique.id === 'memory-consolidation' || selectedTechnique.id === 'working-memory-patterns' || selectedTechnique.id === 'content-based-routing' || selectedTechnique.id === 'capability-routing' || selectedTechnique.id === 'load-balancing' || selectedTechnique.id === 'geographic-routing' || selectedTechnique.id === 'map-reduce' || selectedTechnique.id === 'scatter-gather' || selectedTechnique.id === 'fork-join' || selectedTechnique.id === 'async-await' || selectedTechnique.id === 'self-critique' || selectedTechnique.id === 'function-calling' || selectedTechnique.id === 'code-execution' || selectedTechnique.id === 'hierarchical-planning' || selectedTechnique.id === 'goal-decomposition' || selectedTechnique.id === 'constraint-satisfaction' || selectedTechnique.id === 'scenario-planning' || selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining' || selectedTechnique.id === 'conditional-chaining' ? 'Interactive demo available' : 'Demo coming soon'}
+                        {selectedTechnique.id === 'feedback-chaining' || selectedTechnique.id === 'hierarchical-chaining' || selectedTechnique.id === 'iterative-refinement' || selectedTechnique.id === 'parallel-synthesis' || selectedTechnique.id === 'dynamic-routing' || selectedTechnique.id === 'dynamic-context-assembly' || selectedTechnique.id === 'message-queuing' || selectedTechnique.id === 'latent-memory-networks' || selectedTechnique.id === 'adaptive-context-depth' || selectedTechnique.id === 'latent-knowledge-retrieval' || selectedTechnique.id === 'context-compression-advanced' || selectedTechnique.id === 'multimodal-context-integration' || selectedTechnique.id === 'sliding-window' || selectedTechnique.id === 'hierarchical-memory' || selectedTechnique.id === 'attention-mechanisms' || selectedTechnique.id === 'memory-consolidation' || selectedTechnique.id === 'working-memory-patterns' || selectedTechnique.id === 'context-compression' || selectedTechnique.id === 'content-based-routing' || selectedTechnique.id === 'capability-routing' || selectedTechnique.id === 'load-balancing' || selectedTechnique.id === 'geographic-routing' || selectedTechnique.id === 'map-reduce' || selectedTechnique.id === 'scatter-gather' || selectedTechnique.id === 'fork-join' || selectedTechnique.id === 'async-await' || selectedTechnique.id === 'self-critique' || selectedTechnique.id === 'function-calling' || selectedTechnique.id === 'code-execution' || selectedTechnique.id === 'hierarchical-planning' || selectedTechnique.id === 'goal-decomposition' || selectedTechnique.id === 'constraint-satisfaction' || selectedTechnique.id === 'scenario-planning' || selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining' || selectedTechnique.id === 'conditional-chaining' ? 'Interactive demo available' : 'Demo coming soon'}
                       </span>
                     </div>
                   </div>
@@ -535,6 +538,8 @@ export const TechniqueDetails = ({
                     <MemoryConsolidationDemo />
                   ) : selectedTechnique.id === 'working-memory-patterns' ? (
                     <WorkingMemoryPatternsDemo />
+                  ) : selectedTechnique.id === 'context-compression' ? (
+                    <ContextCompressionDemo />
                   ) : selectedTechnique.id === 'content-based-routing' ? (
                     <ContentBasedRoutingDemo />
                   ) : selectedTechnique.id === 'capability-routing' ? (

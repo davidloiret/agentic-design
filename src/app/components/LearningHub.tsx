@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState, useEffect } from 'react';
 import { 
   Trophy, 
@@ -756,7 +758,7 @@ export const LearningHub: React.FC<LearningHubProps> = ({ techniques = [], categ
   };
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="w-full">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>

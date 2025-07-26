@@ -318,3 +318,9 @@ video sur toute une catégorie avec presentation des differentes techniques
 
 
 add breadcrumb and category selection indicator
+
+couleur doit etre moins flashy bg opacity
+
+news resumé audio
+
+faire une app mobile

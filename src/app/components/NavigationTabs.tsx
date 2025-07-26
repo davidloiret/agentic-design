@@ -1,5 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { BookOpen, Lightbulb, Share2, FlaskConical, Brain, Boxes, Newspaper, FolderOpen, Cpu, Settings, ChevronDown, Menu, X, GraduationCap } from 'lucide-react';
+import { useRouter, usePathname } from 'next/navigation';
+
+interface Tab {
+  id: string;
+  label: string;
+  icon: React.ComponentType<any>;
+  description: string;
+  route: string;
+}
 
 interface NavigationTabsProps {
   activeTab: string;
@@ -12,6 +21,8 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
   const [navbarHeight, setNavbarHeight] = useState(0);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const navbarRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+  const pathname = usePathname();
 
   // Measure navbar height on mount
   useEffect(() => {
@@ -79,78 +90,58 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
     }
 
     const colorMap = {
-      explore: 'text-blue-400',
-      recommend: 'text-purple-400',
-      graph: 'text-green-400',
-      evaluate: 'text-orange-400',
-      mindmap: 'text-pink-400',
-      builder: 'text-cyan-400',
-      news: 'text-emerald-400',
-      projects: 'text-yellow-400',
-      inference: 'text-indigo-400',
-      finetuning: 'text-violet-400',
-      learning: 'text-rose-400',
+      'patterns': 'text-blue-400',
+      'learning-hub': 'text-rose-400',
+      'fine-tuning': 'text-violet-400',
+      'ai-inference': 'text-indigo-400',
+      'project-hub': 'text-yellow-400',
+      'news-hub': 'text-emerald-400',
     };
 
-    return `${baseClasses} ${colorMap[tabId as keyof typeof colorMap] || 'text-blue-400 bg-blue-400/10'}`;
+    return `${baseClasses} ${colorMap[tabId as keyof typeof colorMap]}`;
   };
 
   const getActiveIndicatorColor = (tabId: string) => {
     const colorMap = {
-      explore: 'bg-blue-400',
-      recommend: 'bg-purple-400',
-      graph: 'bg-green-400',
-      evaluate: 'bg-orange-400',
-      mindmap: 'bg-pink-400',
-      builder: 'bg-cyan-400',
-      news: 'bg-emerald-400',
-      projects: 'bg-yellow-400',
-      inference: 'bg-indigo-400',
-      finetuning: 'bg-violet-400',
-      learning: 'bg-rose-400',
+      'patterns': 'bg-blue-400',
+      'learning-hub': 'bg-rose-400',
+      'fine-tuning': 'bg-violet-400',
+      'ai-inference': 'bg-indigo-400',
+      'project-hub': 'bg-yellow-400',
+      'news-hub': 'bg-emerald-400',
     };
     return colorMap[tabId as keyof typeof colorMap] || 'bg-blue-400';
   };
 
-  // Group tabs for better organization
+  // Main slot navigation routes
   const tabGroups = [
     {
-      name: 'Core',
+      name: 'Main Navigation',
       tabs: [
-        { id: 'explore', label: 'Explore Patterns', icon: BookOpen, description: 'Browse AI design patterns' },
-        { id: 'learning', label: 'Learning Hub', icon: GraduationCap, description: 'Gamified learning & certification' },
-        // { id: 'mindmap', label: 'Mind Map', icon: Brain, description: 'Visual pattern relationships' },
-        // { id: 'evaluate', label: 'Evaluate & Compare', icon: FlaskConical, description: 'Compare techniques' },
-      ]
-    },
-    {
-      name: 'Development',
-      tabs: [
-        // { id: 'builder', label: 'System Builder', icon: Boxes, description: 'Build AI systems' },
-        { id: 'finetuning', label: 'Fine Tuning', icon: Settings, description: 'Model optimization' },
-        { id: 'inference', label: 'AI Inference', icon: Cpu, description: 'Inference strategies' },
-      ]
-    },
-    {
-      name: 'Resources',
-      tabs: [
-        { id: 'projects', label: 'Project Hub', icon: FolderOpen, description: 'Example projects' },
-        { id: 'news', label: 'News Hub', icon: Newspaper, description: 'Latest updates' },
+        { id: 'patterns', label: 'Patterns', icon: BookOpen, description: 'Browse AI design patterns', route: '/patterns' },
+        { id: 'learning-hub', label: 'Learning Hub', icon: GraduationCap, description: 'Gamified learning & certification', route: '/learning-hub' },
+        { id: 'fine-tuning', label: 'Fine Tuning', icon: Settings, description: 'Model optimization', route: '/fine-tuning' },
+        { id: 'ai-inference', label: 'AI Inference', icon: Cpu, description: 'Inference strategies', route: '/ai-inference' },
+        { id: 'project-hub', label: 'Project Hub', icon: FolderOpen, description: 'Example projects', route: '/project-hub' },
+        { id: 'news-hub', label: 'News Hub', icon: Newspaper, description: 'Latest updates', route: '/news-hub' },
       ]
     }
   ];
 
   const allTabs = tabGroups.flatMap(group => group.tabs);
 
-  const handleTabClick = (tabId: string) => {
+  const handleTabClick = (tabId: string, route?: string) => {
     setActiveTab(tabId);
     setIsMobileMenuOpen(false);
+    if (route) {
+      router.push(route);
+    }
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent, tabId: string) => {
+  const handleKeyDown = (event: React.KeyboardEvent, tabId: string, route?: string) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
-      handleTabClick(tabId);
+      handleTabClick(tabId, route);
     }
   };
 
@@ -181,8 +172,8 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
                 return (
                   <button
                     key={tab.id}
-                    onClick={() => handleTabClick(tab.id)}
-                    onKeyDown={(e) => handleKeyDown(e, tab.id)}
+                    onClick={() => handleTabClick(tab.id, tab.route)}
+                    onKeyDown={(e) => handleKeyDown(e, tab.id, tab.route)}
                     className={`px-4 py-4 rounded-lg transition-all duration-200 ${getTabClasses(tab.id, isActive)}`}
                     role="tab"
                     aria-selected={isActive}
@@ -263,8 +254,8 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
                       return (
                         <button
                           key={tab.id}
-                          onClick={() => handleTabClick(tab.id)}
-                          onKeyDown={(e) => handleKeyDown(e, tab.id)}
+                          onClick={() => handleTabClick(tab.id, tab.route)}
+                          onKeyDown={(e) => handleKeyDown(e, tab.id, tab.route)}
                           className={`w-full flex items-center space-x-3 px-3 py-3 rounded-lg text-left transition-all duration-200 ${
                             isActive 
                               ? `${getTabClasses(tab.id, true)} shadow-lg` 

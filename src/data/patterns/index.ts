@@ -41,6 +41,7 @@ import { hierarchicalMemoryPattern } from './hierarchical-memory';
 import { attentionMechanismsPattern } from './attention-mechanisms';
 import { memoryConsolidationPattern } from './memory-consolidation';
 import { workingMemoryPatternsPattern } from './working-memory-patterns';
+import { contextCompressionPattern } from './context-compression';
 
 export * from './types';
 export * from './styles';
@@ -88,6 +89,7 @@ export const patternScenarios: { [key: string]: PatternScenario } = {
   'attention-mechanisms': attentionMechanismsPattern,
   'memory-consolidation': memoryConsolidationPattern,
   'working-memory-patterns': workingMemoryPatternsPattern,
+  'context-compression': contextCompressionPattern,
 };
 
 export default patternScenarios;

@@ -6,13 +6,6 @@ export const Header = () => {
       {/* Subtle background pattern */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/10 via-transparent to-purple-900/10"></div>
       
-      {/* Animated background dots */}
-      <div className="absolute inset-0 opacity-30">
-        <div className="absolute top-2 left-1/4 w-1 h-1 bg-blue-400 rounded-full animate-pulse"></div>
-        <div className="absolute top-3 right-1/3 w-1 h-1 bg-purple-400 rounded-full animate-pulse delay-700"></div>
-        <div className="absolute bottom-2 left-1/3 w-1 h-1 bg-cyan-400 rounded-full animate-pulse delay-1000"></div>
-      </div>
-
       <div className="relative mx-auto px-6 py-2">
         <div className="flex items-center justify-between">
           {/* Left side - Logo and Title */}
