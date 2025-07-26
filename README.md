@@ -324,3 +324,9 @@ couleur doit etre moins flashy bg opacity
 news resumé audio
 
 faire une app mobile
+
+when searching and clicking it should not reset the search.
+
+patterns / techniques
+
+patterns en gros c la catégorie => techniques 
