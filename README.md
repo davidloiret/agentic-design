@@ -342,4 +342,6 @@ make a audio TLDR summary of news
 Add inspirating CVE categories such as CVE about MCP etc add a category for that with detail and how to reproduce etc. 
 
 
-Add factual example than I can copy paste, be exhaustif, add people to follow on this topic.
+Conduct a deep research on AI red teaming, add factual example, techniques, than I can copy paste, be exhaustif, don't forget anything.
+
+Also add a new category people to follow on this topic.

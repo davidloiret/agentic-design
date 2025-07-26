@@ -202,44 +202,45 @@ const RoutedTechniquesListInner = ({ selectedCategory, selectedTechnique }: Rout
 
     return (
       <div onClick={() => handleCategorySelect(category.id)} key={category.id} className="space-y-1">
-        <div className="w-full rounded-xl transition-all duration-200 text-left group p-2 bg-gray-800/60 hover:bg-gray-800/80">
-          <div className="flex items-center gap-1">
+        <div className="w-full rounded-lg lg:rounded-xl transition-all duration-200 text-left group p-1.5 lg:p-2 bg-gray-800/60 hover:bg-gray-800/80 min-h-[36px] lg:min-h-auto">
+          <div className="flex items-center gap-1 lg:gap-1">
             {categoryTechniques.length > 0 && (
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   toggleCategory(category.id);
                 }}
-                className="p-1 rounded hover:bg-white/10 transition-colors duration-200 cursor-pointer"
+                className="p-1 rounded hover:bg-white/10 transition-colors duration-200 cursor-pointer min-w-[28px] lg:min-w-[32px] min-h-[28px] lg:min-h-[32px] flex items-center justify-center"
               >
                 <div className={`transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`}>
-                  <ChevronRight className={`w-4 h-4 ${isSelected ? 'text-white' : 'text-gray-400 group-hover:text-gray-300'
+                  <ChevronRight className={`w-3 lg:w-4 h-3 lg:h-4 ${isSelected ? 'text-white' : 'text-gray-400 group-hover:text-gray-300'
                     }`} />
                 </div>
               </button>
             )}
 
             <button
-              className="flex-1 flex items-center gap-3 cursor-pointer hover:scale-[0.99] transition-transform"
+              className="flex-1 flex items-center gap-1.5 lg:gap-3 cursor-pointer hover:scale-[0.99] transition-transform min-h-[28px] lg:min-h-[32px]"
             >
-              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isSelected
+              <div className={`w-7 lg:w-10 h-7 lg:h-10 rounded-lg lg:rounded-xl flex items-center justify-center ${isSelected
                   ? 'bg-white/20'
                   : 'bg-gray-700/50 group-hover:bg-gray-600/50'
                 }`}>
-                <span className="text-lg">
+                <span className="text-sm lg:text-lg">
                   {category.icon}
                 </span>
               </div>
 
               <div className="text-left flex-1 min-w-0">
-                <h3 className={`font-semibold text-base truncate ${isSelected ? 'text-white' : 'text-gray-200 group-hover:text-white'
-                  }`}>
+                <h3 className={`font-semibold truncate ${
+                  isSelected ? 'text-white' : 'text-gray-200 group-hover:text-white'
+                } text-xs lg:text-base`}>
                   {category.name}
                 </h3>
               </div>
 
               <div className="flex items-center gap-2">
-                <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${isSelected
+                <span className={`text-xs px-1.5 lg:px-2.5 py-0.5 lg:py-1 rounded-full font-medium ${isSelected
                     ? 'bg-white/20 text-white'
                     : 'bg-gray-700/50 text-gray-400 group-hover:bg-gray-600/50'
                   }`}>
@@ -251,7 +252,7 @@ const RoutedTechniquesListInner = ({ selectedCategory, selectedTechnique }: Rout
         </div>
 
         {isExpanded && (
-          <div className="space-y-1 ml-0">
+          <div className="space-y-0.5 lg:space-y-1 ml-0">
             {categoryTechniques.map(technique => renderTechnique(technique))}
           </div>
         )}
@@ -261,28 +262,28 @@ const RoutedTechniquesListInner = ({ selectedCategory, selectedTechnique }: Rout
 
   return (
     <div className="lg:col-span-1 h-full flex flex-col min-h-0">
-      {/* Search */}
-      <div className="relative flex-shrink-0 mb-4">
-        <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+      {/* Search - responsive based on screen size */}
+      <div className="relative flex-shrink-0 mb-2 lg:mb-4 px-4 lg:px-0">
+        <Search className="absolute left-7 lg:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 lg:w-5 h-4 lg:h-5" />
         <input
           type="text"
           placeholder="Search patterns..."
-          className="w-full pl-12 pr-4 py-3 bg-gray-800/50 border border-gray-700/50 rounded-xl focus:outline-none focus:border-blue-500/50 focus:bg-gray-800/70 transition-all duration-200 text-gray-200 placeholder-gray-400"
+          className="w-full pl-11 lg:pl-12 pr-3 lg:pr-4 py-2 lg:py-3 bg-gray-800/50 border border-gray-700/50 rounded-lg lg:rounded-xl focus:outline-none focus:border-blue-500/50 focus:bg-gray-800/70 transition-all duration-200 text-gray-200 placeholder-gray-400 text-sm lg:text-base"
           value={searchQuery}
           onChange={(e) => handleSearchChange(e.target.value)}
         />
       </div>
 
       {/* Categories Tree */}
-      <div className="flex-1 overflow-y-auto space-y-3 pr-2 min-h-0" style={{ scrollbarWidth: 'thin', scrollbarColor: '#374151 transparent' }}>
-        <div className="flex items-center gap-2 px-1 pb-2">
+      <div className="flex-1 overflow-y-auto space-y-1 lg:space-y-3 px-4 lg:px-0 lg:pr-2 min-h-0" style={{ scrollbarWidth: 'thin', scrollbarColor: '#374151 transparent' }}>
+        <div className="hidden lg:flex items-center gap-2 px-1 pb-2">
           <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">
             Design Patterns & Techniques
           </h2>
           <div className="flex-1 h-px bg-gradient-to-r from-gray-600 to-transparent"></div>
         </div>
 
-        <div className="space-y-2 pb-6">
+        <div className="space-y-1 lg:space-y-2 pb-4 lg:pb-6">
           {categories.map(category => renderCategory(category))}
         </div>
       </div>

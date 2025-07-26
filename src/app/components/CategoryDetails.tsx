@@ -36,7 +36,8 @@ export const CategoryDetails = ({ category, onBack, techniques = [], onTechnique
         <div className="flex items-center gap-4 mb-8">
           <button
             onClick={handleBack}
-            className="p-2 rounded-xl bg-gray-800/50 hover:bg-gray-700/50 transition-colors"
+            className="p-3 rounded-xl bg-gray-800/50 hover:bg-gray-700/50 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
+            aria-label="Go back"
           >
             <ArrowLeft className="w-5 h-5 text-gray-400" />
           </button>

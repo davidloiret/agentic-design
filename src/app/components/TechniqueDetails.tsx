@@ -86,28 +86,28 @@ export const TechniqueDetails = ({
     <div className="lg:col-span-3">
       <div className="bg-gray-900/50 backdrop-blur-sm rounded-2xl border border-gray-700/30 shadow-2xl">
         {/* Header Section */}
-        <div className="bg-gradient-to-r from-gray-900/80 to-gray-800/80 p-6 border-b border-gray-700/30">
-          <div className="flex items-start gap-4">
+        <div className="bg-gradient-to-r from-gray-900/80 to-gray-800/80 p-4 lg:p-6 border-b border-gray-700/30">
+          <div className="flex items-start gap-3 lg:gap-4">
             <div className="flex-shrink-0">
-              <div className="w-16 h-16 bg-gray-800/60 rounded-2xl flex items-center justify-center text-2xl">
+              <div className="w-12 h-12 lg:w-16 lg:h-16 bg-gray-800/60 rounded-2xl flex items-center justify-center text-xl lg:text-2xl">
                 {selectedTechnique.icon}
               </div>
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-start justify-between">
                 <div>
-                  <h1 className="text-2xl font-bold text-white mb-1">
+                  <h1 className="text-xl lg:text-2xl font-bold text-white mb-1">
                     {selectedTechnique.name}
                     {selectedTechnique.abbr && (
-                      <span className="text-lg ml-2 text-gray-400 font-normal">({selectedTechnique.abbr})</span>
+                      <span className="text-sm lg:text-lg ml-2 text-gray-400 font-normal">({selectedTechnique.abbr})</span>
                     )}
                   </h1>
-                  <p className="text-gray-300 text-base leading-relaxed mb-3">{selectedTechnique.description}</p>
+                  <p className="text-gray-300 text-sm lg:text-base leading-relaxed mb-3">{selectedTechnique.description}</p>
                   <div className="flex flex-wrap gap-2">
-                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r ${selectedTechnique.color} text-white`}>
+                    <span className={`inline-flex items-center px-2.5 lg:px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r ${selectedTechnique.color} text-white`}>
                       Complexity: {selectedTechnique.complexity}
                     </span>
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-800/60 text-gray-200">
+                    <span className="inline-flex items-center px-2.5 lg:px-3 py-1 rounded-full text-xs font-medium bg-gray-800/60 text-gray-200">
                       {categories.find(c => c.id === selectedTechnique.category)?.name || 'Pattern'}
                     </span>
                   </div>
@@ -119,10 +119,11 @@ export const TechniqueDetails = ({
 
         {/* Details Tabs */}
         <div className="border-b border-gray-700/30">
-          <div className="flex gap-6 px-6">
+          {/* Desktop tabs */}
+          <div className="hidden md:flex gap-6 px-6">
             <button
               onClick={() => setDetailsTab('overview')}
-              className={`cursor-pointer py-4 px-2 font-medium transition-all border-b-2 ${
+              className={`cursor-pointer py-4 px-3 font-medium transition-all border-b-2 ${
                 detailsTab === 'overview'
                   ? 'text-blue-400 border-blue-400'
                   : 'text-gray-400 border-transparent hover:text-gray-200'
@@ -133,7 +134,7 @@ export const TechniqueDetails = ({
             </button>
             <button
               onClick={() => setDetailsTab('flow')}
-              className={`cursor-pointer py-4 px-2 font-medium transition-all border-b-2 ${
+              className={`cursor-pointer py-4 px-3 font-medium transition-all border-b-2 ${
                 detailsTab === 'flow'
                   ? 'text-orange-400 border-orange-400'
                   : 'text-gray-400 border-transparent hover:text-gray-200'
@@ -144,7 +145,7 @@ export const TechniqueDetails = ({
             </button>
             <button
               onClick={() => setDetailsTab('interactive')}
-              className={`cursor-pointer py-4 px-2 font-medium transition-all border-b-2 ${
+              className={`cursor-pointer py-4 px-3 font-medium transition-all border-b-2 ${
                 detailsTab === 'interactive'
                   ? 'text-purple-400 border-purple-400'
                   : 'text-gray-400 border-transparent hover:text-gray-200'
@@ -155,7 +156,7 @@ export const TechniqueDetails = ({
             </button>
             <button
               onClick={() => setDetailsTab('code')}
-              className={`cursor-pointer py-4 px-2 font-medium transition-all border-b-2 ${
+              className={`cursor-pointer py-4 px-3 font-medium transition-all border-b-2 ${
                 detailsTab === 'code'
                   ? 'text-green-400 border-green-400'
                   : 'text-gray-400 border-transparent hover:text-gray-200'
@@ -165,10 +166,60 @@ export const TechniqueDetails = ({
               Code Playground
             </button>
           </div>
+
+          {/* Mobile tabs */}
+          <div className="md:hidden px-4 py-3">
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                onClick={() => setDetailsTab('overview')}
+                className={`py-3 px-4 rounded-lg font-medium transition-all text-sm ${
+                  detailsTab === 'overview'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-800/50 text-gray-400 hover:text-gray-200 hover:bg-gray-700/50'
+                }`}
+              >
+                <BookOpen className="w-4 h-4 inline mr-2" />
+                Overview
+              </button>
+              <button
+                onClick={() => setDetailsTab('flow')}
+                className={`py-3 px-4 rounded-lg font-medium transition-all text-sm ${
+                  detailsTab === 'flow'
+                    ? 'bg-orange-600 text-white'
+                    : 'bg-gray-800/50 text-gray-400 hover:text-gray-200 hover:bg-gray-700/50'
+                }`}
+              >
+                <GitBranch className="w-4 h-4 inline mr-2" />
+                Flow
+              </button>
+              <button
+                onClick={() => setDetailsTab('interactive')}
+                className={`py-3 px-4 rounded-lg font-medium transition-all text-sm ${
+                  detailsTab === 'interactive'
+                    ? 'bg-purple-600 text-white'
+                    : 'bg-gray-800/50 text-gray-400 hover:text-gray-200 hover:bg-gray-700/50'
+                }`}
+              >
+                <Play className="w-4 h-4 inline mr-2" />
+                Demo
+              </button>
+              <button
+                onClick={() => setDetailsTab('code')}
+                className={`py-3 px-4 rounded-lg font-medium transition-all text-sm ${
+                  detailsTab === 'code'
+                    ? 'bg-green-600 text-white'
+                    : 'bg-gray-800/50 text-gray-400 hover:text-gray-200 hover:bg-gray-700/50'
+                }`}
+              >
+                <Code className="w-4 h-4 inline mr-2" />
+                Code
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* Content Sections */}
-        <div className="p-6">
+        <div className="p-4 lg:p-6">
           {detailsTab === 'overview' ? (
             <div className="space-y-8">
               {/* Video Explanation - For Chain of Thought and Chain of Debates */}
