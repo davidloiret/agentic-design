@@ -131,7 +131,7 @@ export const QuizComponent: React.FC<QuizComponentProps> = ({
   // Pre-quiz screen
   if (!hasStarted) {
     return (
-      <div className="max-w-4xl mx-auto p-6">
+      <div className="max-w-4xl mx-auto p-0 sm:p-6">
         <div className="bg-gray-800/50 rounded-xl p-8 border border-gray-700">
           <div className="text-center mb-8">
             <div className="p-4 bg-rose-400/20 rounded-full w-16 h-16 mx-auto mb-4">
@@ -188,7 +188,7 @@ export const QuizComponent: React.FC<QuizComponentProps> = ({
     const timeTaken = Math.floor((Date.now() - quizStartTime) / 1000);
 
     return (
-      <div className="max-w-4xl mx-auto p-6">
+      <div className="max-w-4xl mx-auto p-0 sm:p-6">
         <div className="bg-gray-800/50 rounded-xl p-8 border border-gray-700">
           <div className="text-center mb-8">
             <div className={`p-4 rounded-full w-16 h-16 mx-auto mb-4 ${
@@ -284,7 +284,7 @@ export const QuizComponent: React.FC<QuizComponentProps> = ({
 
   // Quiz question screen
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="max-w-4xl mx-auto p-0 sm:p-6">
       {/* Header */}
       <div className="bg-gray-800/50 rounded-xl p-4 border border-gray-700 mb-6">
         <div className="flex items-center justify-between">
