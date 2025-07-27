@@ -22,7 +22,7 @@ export const ChatBot = ({ onRecommendationSelect, getRecommendations, techniques
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      content: "Hi! I'm your AI reasoning assistant. I can help you find the best patterns for your project. What are you building?",
+      content: "Hi! I'm your AI reasoning assistant. I can help you learn or find the best patterns for your project. What are you building?",
       isUser: false,
       timestamp: new Date(),
       suggestions: [

@@ -1,8 +1,8 @@
 "use client"
 
-import React, { useState, useEffect, Suspense, useMemo } from 'react';
-import { ChevronRight, Shield, Search, AlertTriangle, Target, Lock, Zap, Users, Eye, BookOpen } from 'lucide-react';
-import { useRouter, usePathname } from 'next/navigation';
+import React, { Suspense } from 'react';
+import { Search } from 'lucide-react';
+import { TechniquesListLayout, type Technique, type Category as TechniqueCategory } from './TechniquesListLayout';
 import { redTeamingCategories, allRedTeamingTechniques } from '../red-teaming';
 
 interface RoutedRedTeamingTechniquesListProps {
@@ -11,248 +11,83 @@ interface RoutedRedTeamingTechniquesListProps {
 }
 
 const RoutedRedTeamingTechniquesListInner = ({ selectedCategory, selectedTechnique }: RoutedRedTeamingTechniquesListProps) => {
-  const router = useRouter();
-  const pathname = usePathname();
-  const [searchQuery, setSearchQuery] = useState('');
+  // Convert techniques to the generic component format
+  const convertedTechniques: Technique[] = allRedTeamingTechniques.map(tech => ({
+    id: tech.id,
+    name: tech.name,
+    category: tech.category,
+    complexity: tech.complexity,
+    abbr: tech.abbr
+  }));
 
-  // Initialize expanded categories with selected category
-  const getInitialExpandedCategories = () => {
-    const expandedSet = new Set<string>();
-    if (selectedCategory) {
-      expandedSet.add(selectedCategory);
-    }
-    return expandedSet;
+  // Convert categories to the generic component format
+  const convertedCategories: TechniqueCategory[] = Object.entries(redTeamingCategories).map(([id, category]) => ({
+    id,
+    name: category.name,
+    icon: category.icon,
+    techniques: category.techniques
+  }));
+
+  // Custom filter function for red teaming techniques
+  const filterTechniques = (techniques: Technique[], searchQuery: string) => {
+    if (!searchQuery) return techniques;
+    return techniques.filter(technique =>
+      technique.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      technique.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (technique.abbr && technique.abbr.toLowerCase().includes(searchQuery.toLowerCase()))
+    );
   };
 
-  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(getInitialExpandedCategories());
-
-  useEffect(() => {
-    // Ensure selected category is always expanded
-    if (selectedCategory) {
-      setExpandedCategories(prev => {
-        const newSet = new Set(prev);
-        newSet.add(selectedCategory);
-        return newSet;
-      });
-    }
-  }, [selectedCategory]);
-
-  const toggleCategory = (categoryId: string) => {
-    setExpandedCategories(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(categoryId)) {
-        newSet.delete(categoryId);
-      } else {
-        newSet.add(categoryId);
-      }
-      return newSet;
-    });
+  // Custom techniques for category function
+  const getTechniquesForCategory = (categoryId: string, techniques: Technique[]) => {
+    if (categoryId === 'all') return techniques;
+    return techniques.filter(technique => technique.category === categoryId);
   };
 
-  const handleCategorySelect = (categoryId: string) => {
-    router.push(`/ai-red-teaming/${categoryId}`);
-  };
-
-  const handleTechniqueSelect = (categoryId: string, techniqueId: string) => {
-    router.push(`/ai-red-teaming/${categoryId}/${techniqueId}`);
-  };
-
-  const searchFilteredTechniques = useMemo(() => {
-    return searchQuery
-      ? allRedTeamingTechniques.filter(technique =>
-          technique.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          technique.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          technique.category.toLowerCase().includes(searchQuery.toLowerCase())
-        )
-      : allRedTeamingTechniques;
-  }, [searchQuery]);
-
+  // Custom category count function
   const getCategoryCount = (categoryId: string) => {
     const category = redTeamingCategories[categoryId as keyof typeof redTeamingCategories];
     return category ? category.techniques.length : 0;
   };
 
-  const getDifficultyColor = (complexity: string) => {
-    switch (complexity) {
-      case 'low': return 'text-green-400';
-      case 'medium': return 'text-yellow-400';
-      case 'high': return 'text-red-400';
-      default: return 'text-gray-400';
-    }
-  };
-
   return (
-    <div className="lg:col-span-1 flex flex-col h-full">
-      {/* Header */}
-      <div className="mb-6">
-        <div className="flex items-center space-x-3 mb-4">
-          <Shield className="w-8 h-8 text-red-400" />
-          <div>
-            <h1 className="text-2xl font-bold text-white">AI Red Teaming</h1>
-            <p className="text-gray-400 text-sm">Defensive Security Techniques</p>
-          </div>
-        </div>
-
-        {/* Search */}
-        <div className="relative">
-          <Search className="absolute left-3 top-3 w-4 h-4 text-gray-500" />
-          <input
-            type="text"
-            placeholder="Search techniques..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-red-500 focus:outline-none"
-          />
-        </div>
-      </div>
-
-      {/* Ethical Warning */}
-      <div className="mb-4 bg-yellow-900/20 border border-yellow-500/30 rounded-lg p-3">
-        <div className="flex items-center space-x-2 mb-1">
-          <AlertTriangle className="w-4 h-4 text-yellow-400" />
-          <span className="text-yellow-400 text-sm font-medium">Ethical Use Only</span>
-        </div>
-        <p className="text-gray-300 text-xs">
-          For educational and defensive security purposes only.
-        </p>
-      </div>
-
-      {/* Content */}
-      <div className="flex-1 overflow-y-auto">
-        {searchQuery ? (
-          /* Search Results */
-          <div className="space-y-2">
-            <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-3">
-              Search Results ({searchFilteredTechniques.length})
-            </h3>
-            {searchFilteredTechniques.map((technique) => (
-              <button
-                key={technique.id}
-                onClick={() => handleTechniqueSelect(technique.category, technique.id)}
-                className={`w-full text-left p-3 rounded-lg transition-colors border ${
-                  selectedTechnique === technique.id
-                    ? 'bg-red-500/10 border-red-500/50 text-white'
-                    : 'bg-gray-800/50 border-gray-700 text-gray-300 hover:bg-gray-700/50'
-                }`}
-              >
-                <div className="flex items-center justify-between mb-1">
-                  <span className="font-medium text-sm">{technique.name}</span>
-                  <span className={`text-xs ${getDifficultyColor(technique.complexity)}`}>
-                    {technique.complexity}
-                  </span>
-                </div>
-                <div className="text-xs text-gray-500 capitalize">
-                  {technique.category.replace('-', ' ')}
-                </div>
-              </button>
-            ))}
-          </div>
-        ) : (
-          /* Categories */
-          <div className="space-y-2">
-            <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-3">
-              Security Categories
-            </h3>
-            {Object.entries(redTeamingCategories).map(([categoryId, category]) => {
-              const isExpanded = expandedCategories.has(categoryId);
-              const isSelected = selectedCategory === categoryId;
-              const count = getCategoryCount(categoryId);
-              
-              return (
-                <div key={categoryId} className="space-y-1">
-                  {/* Category Header */}
-                  <div
-                    className={`w-full flex items-center justify-between rounded-lg transition-colors border ${
-                      isSelected
-                        ? 'bg-red-500/10 border-red-500/50 text-white'
-                        : 'bg-gray-800/50 border-gray-700 text-gray-300 hover:bg-gray-700/50'
-                    }`}
-                  >
-                    <button
-                      onClick={() => handleCategorySelect(categoryId)}
-                      className="flex-1 flex items-center space-x-3 p-3 text-left"
-                    >
-                      <span className="text-lg">{category.icon}</span>
-                      <div>
-                        <div className="font-medium">{category.name}</div>
-                        <div className="text-xs text-gray-500">{count} techniques</div>
-                      </div>
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleCategory(categoryId);
-                      }}
-                      className="p-3 hover:bg-gray-700/30 rounded-r-lg transition-colors"
-                    >
-                      <ChevronRight 
-                        className={`w-4 h-4 transition-transform ${
-                          isExpanded ? 'rotate-90' : ''
-                        }`} 
-                      />
-                    </button>
-                  </div>
-
-                  {/* Techniques List */}
-                  {isExpanded && (
-                    <div className="ml-4 space-y-1">
-                      {category.techniques.map((technique) => (
-                        <button
-                          key={technique.id}
-                          onClick={() => handleTechniqueSelect(categoryId, technique.id)}
-                          className={`w-full text-left p-2 rounded-lg transition-colors ${
-                            selectedTechnique === technique.id
-                              ? 'bg-red-500/20 text-red-300'
-                              : 'text-gray-400 hover:bg-gray-800/50 hover:text-gray-200'
-                          }`}
-                        >
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm font-medium">{technique.name}</span>
-                            <span className={`text-xs ${getDifficultyColor(technique.complexity)}`}>
-                              {technique.complexity}
-                            </span>
-                          </div>
-                          {technique.abbr && (
-                            <div className="text-xs text-gray-500 mt-0.5">{technique.abbr}</div>
-                          )}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </div>
-    </div>
+    <TechniquesListLayout
+      techniques={convertedTechniques}
+      categories={convertedCategories}
+      selectedCategory={selectedCategory}
+      selectedTechnique={selectedTechnique}
+      searchPlaceholder="Search techniques..."
+      sectionTitle="AI Red Teaming Techniques"
+      basePath="/ai-red-teaming"
+      accentColor="red"
+      renderTechniqueIcon={() => '🛡️'}
+      filterTechniques={filterTechniques}
+      getTechniquesForCategory={getTechniquesForCategory}
+      getCategoryCount={getCategoryCount}
+    />
   );
 };
 
 export const RoutedRedTeamingTechniquesList = ({ selectedCategory, selectedTechnique }: RoutedRedTeamingTechniquesListProps = {}) => {
   return (
-    <Suspense fallback={
-      <div className="lg:col-span-1 flex flex-col h-full">
-        <div className="mb-6">
-          <div className="flex items-center space-x-3 mb-4">
-            <Shield className="w-8 h-8 text-red-400" />
-            <div>
-              <h1 className="text-2xl font-bold text-white">AI Red Teaming</h1>
-              <p className="text-gray-400 text-sm">Loading...</p>
-            </div>
-          </div>
-          <div className="relative">
-            <Search className="absolute left-3 top-3 w-4 h-4 text-gray-500" />
-            <input
-              type="text"
-              placeholder="Search techniques..."
-              disabled
-              className="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500"
-            />
-          </div>
+    <Suspense fallback={<div className="lg:col-span-1 h-full flex flex-col min-h-0">
+      <div className="relative flex-shrink-0 mb-4">
+        <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+        <input
+          type="text"
+          placeholder="Search techniques..."
+          className="w-full pl-12 pr-4 py-3 bg-gray-800/50 border border-gray-700/50 rounded-xl focus:outline-none focus:border-blue-500/50 focus:bg-gray-800/70 transition-all duration-200 text-gray-200 placeholder-gray-400"
+          disabled
+        />
+      </div>
+      <div className="flex-1 overflow-y-auto space-y-3 pr-2 min-h-0">
+        <div className="flex items-center gap-2 px-1 pb-2">
+          <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">
+            Loading...
+          </h2>
         </div>
       </div>
-    }>
+    </div>}>
       <RoutedRedTeamingTechniquesListInner 
         selectedCategory={selectedCategory} 
         selectedTechnique={selectedTechnique} 

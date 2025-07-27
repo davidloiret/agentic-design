@@ -76,7 +76,7 @@ Result: 100% jailbreak success rate across all tested models including GPT-4, Cl
     ]
   },
   {
-    id: 'indirect-prompt-injection',
+    id: 'advanced-indirect-prompt-injection',
     name: 'Indirect Prompt Injection via External Content',
     abbr: 'IPI',
     icon: '🔄',

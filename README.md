@@ -350,3 +350,10 @@ Also add a new category people to follow on this topic.
 
 Save pattern => pin or favoris
 used in project
+
+
+add leaked prompt
+=> rating des prompts
+
+Prompt hub ? avec explication highlight des endroits intéressant
+Context engineering tips ?

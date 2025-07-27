@@ -84,7 +84,7 @@ export const PatternsExplorer = () => {
 
 
         {/* Desktop layout */}
-        <div className="hidden lg:grid lg:grid-cols-4 gap-6 h-[calc(100vh-10rem)]">
+        <div className="lg:grid lg:grid-cols-4 gap-6 h-[calc(100vh-10rem)]">
           <TechniquesList
             techniques={techniques}
             categories={categories}

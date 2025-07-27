@@ -106,7 +106,7 @@ export const TechniquesList = ({
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between">
               <div className="flex-1 min-w-0">
-                <h4 className={`font-medium text-sm lg:text-sm truncate ${isSelected ? 'text-white' : 'text-gray-200 group-hover:text-white'
+                <h4 className={`font-medium text-sm lg:text-sm overflow-hidden text-ellipsis whitespace-nowrap ${isSelected ? 'text-white' : 'text-gray-200 group-hover:text-white'
                   }`}>
                   {technique.name}
                   {technique.abbr && (
@@ -177,7 +177,7 @@ export const TechniquesList = ({
                 isCompact ? 'gap-1.5 min-h-[28px]' : 'gap-2 lg:gap-3 min-h-[32px]'
               }`}
             >
-              <div className={`rounded-lg flex items-center justify-center ${
+              <div className={`rounded-lg flex items-center justify-center flex-shrink-0 ${
                 isCompact ? 'w-7 h-7' : 'w-8 h-8 lg:w-10 lg:h-10'
               } ${isSelected
                   ? 'bg-white/20'
@@ -188,8 +188,8 @@ export const TechniquesList = ({
                 </span>
               </div>
 
-              <div className="text-left flex-1 min-w-0">
-                <h3 className={`font-medium truncate ${
+              <div className="text-left flex-1 min-w-0 overflow-hidden">
+                <h3 className={`font-medium text-ellipsis whitespace-nowrap overflow-hidden ${
                   isCompact ? 'text-xs' : 'text-sm lg:text-base'
                 } ${isSelected ? 'text-white' : 'text-gray-200 group-hover:text-white'
                   }`}>
@@ -197,7 +197,7 @@ export const TechniquesList = ({
                 </h3>
               </div>
 
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 flex-shrink-0">
                 <span className={`rounded-full font-medium ${
                   isCompact ? 'text-xs px-1.5 py-0.5' : 'text-xs lg:text-xs px-2 py-0.5 lg:px-2.5 lg:py-1'
                 } ${isSelected

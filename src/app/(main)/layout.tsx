@@ -26,8 +26,17 @@ export default function MainLayout({
       '/news-hub': 'news-hub',
     };
 
-    const currentTab = routeToTab[pathname] || 'patterns';
-    setActiveTab(currentTab);
+    // Check for exact match first, then check if pathname starts with any route
+    let currentTab = routeToTab[pathname];
+    if (!currentTab) {
+      for (const [route, tab] of Object.entries(routeToTab)) {
+        if (pathname.startsWith(route)) {
+          currentTab = tab;
+          break;
+        }
+      }
+    }
+    setActiveTab(currentTab || 'patterns');
   }, [pathname]);
 
   return (

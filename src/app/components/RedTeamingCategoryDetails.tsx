@@ -49,7 +49,7 @@ export const RedTeamingCategoryDetails = ({ categoryId }: RedTeamingCategoryDeta
 
   return (
     <div className="lg:col-span-3 overflow-y-auto">
-      <div className="max-w-4xl">
+      <div className="">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center space-x-4 mb-4">
