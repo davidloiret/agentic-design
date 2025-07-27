@@ -15,7 +15,6 @@ import {
   Eye,
   EyeOff,
   Terminal,
-  Globe,
   Cpu,
   Package,
   Layers,

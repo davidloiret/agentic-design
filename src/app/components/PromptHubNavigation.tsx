@@ -6,6 +6,7 @@ import { Search, ChevronRight, X } from 'lucide-react';
 import { 
   Brain, 
   Github, 
+  Globe,
   FileText, 
   Eye, 
   Search as SearchIcon,

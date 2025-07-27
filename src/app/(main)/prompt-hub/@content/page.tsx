@@ -8,6 +8,7 @@ import {
   AlertTriangle,
   Brain,
   Github,
+  Globe,
   Eye,
   Shield,
   Search,
