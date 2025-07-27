@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, ReactNode, ReactElement, cloneElement } from 'react';
+import { useState, ReactNode, ReactElement, cloneElement, useEffect } from 'react';
 import { useParams, usePathname } from 'next/navigation';
 import { ExpandableBottomSheet, type BottomSheetState } from './ExpandableBottomSheet';
 import { Brain } from 'lucide-react';
@@ -51,14 +51,14 @@ export const SidenavLayout = ({
   className = ""
 }: SidenavLayoutProps) => {
   const [bottomSheetState, setBottomSheetState] = useState<BottomSheetState>('expanded');
-  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(true);
   const params = useParams();
   const pathname = usePathname();
-
+  
   // Extract category and technique from URL based on pathSegmentIndex
   const pathSegments = pathname.split('/').filter(Boolean);
   const selectedCategory = pathSegments[pathSegmentIndex] || undefined;
   const selectedTechnique = pathSegments[pathSegmentIndex + 1] || undefined;
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(!selectedCategory && !selectedTechnique);
 
   const handleClose = () => {
     setIsBottomSheetOpen(false);
@@ -86,6 +86,12 @@ export const SidenavLayout = ({
   const gridColsClass = `lg:grid-cols-${gridCols}`;
   const sidebarColSpan = sidebarSpan > 1 ? `lg:col-span-${sidebarSpan}` : '';
   const contentColSpan = gridCols - sidebarSpan > 1 ? `lg:col-span-${gridCols - sidebarSpan}` : '';
+
+  useEffect(() => {
+    if (selectedCategory || selectedTechnique) {
+      setIsBottomSheetOpen(false);
+    }
+  }, [selectedCategory, selectedTechnique]);
 
   return (
     <div className={`min-h-screen bg-gray-950 text-white ${className}`}>
