@@ -2,7 +2,7 @@ import { Sparkles, Search, Settings } from 'lucide-react';
 
 export const Header = () => {
   return (
-    <div className="relative bg-gradient-to-r from-gray-900 via-gray-900 to-gray-800 border-b border-gray-700/50 overflow-hidden">
+    <div className="z-50 relative bg-gradient-to-r from-gray-900 via-gray-900 to-gray-800 border-b border-gray-700/50 overflow-hidden">
       {/* Subtle background pattern */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/10 via-transparent to-purple-900/10"></div>
       

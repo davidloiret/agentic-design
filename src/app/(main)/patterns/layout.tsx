@@ -14,9 +14,14 @@ export default function PatternsLayout({
   content: React.ReactNode;
 }) {
   const [bottomSheetState, setBottomSheetState] = useState<BottomSheetState>('expanded');
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(true);
 
   const handleClose = () => {
-    setBottomSheetState('collapsed');
+    setIsBottomSheetOpen(false);
+  };
+
+  const handleReopen = () => {
+    setIsBottomSheetOpen(true);
   };
   
   return (
@@ -53,10 +58,13 @@ export default function PatternsLayout({
           
           {/* Mobile bottom sheet */}
           <ExpandableBottomSheet
-            isOpen={bottomSheetState === 'expanded' || bottomSheetState === 'fullscreen'}
+            isOpen={isBottomSheetOpen}
             onClose={handleClose}
+            onReopen={handleReopen}
             initialState="expanded"
             onStateChange={setBottomSheetState}
+            title="Patterns"
+            showReopenButton={true}
           >
             {sidebar}
           </ExpandableBottomSheet>

@@ -24,6 +24,7 @@ export const PatternsExplorer = () => {
   const [selectedLanguage, setSelectedLanguage] = useState<LanguageType>('typescript');
   const [detailsTab, setDetailsTab] = useState<'overview' | 'flow' | 'interactive' | 'code'>('overview');
   const [bottomSheetState, setBottomSheetState] = useState<BottomSheetState>('collapsed');
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(true);
   
   const setSelectedCategory = (categoryId: string) => {
     setSelectedCategoryState(categoryId);
@@ -161,10 +162,13 @@ export const PatternsExplorer = () => {
               </div>
               {/* Auto-show bottom sheet when no technique is selected */}
               <ExpandableBottomSheet
-                isOpen={true}
-                onClose={() => {}} // Don't allow closing when no technique is selected
+                isOpen={isBottomSheetOpen}
+                onClose={() => setIsBottomSheetOpen(false)}
+                onReopen={() => setIsBottomSheetOpen(true)}
                 initialState="collapsed"
                 onStateChange={setBottomSheetState}
+                title="Browse Patterns"
+                showReopenButton={true}
               >
                 <TechniquesList
                   techniques={techniques}
