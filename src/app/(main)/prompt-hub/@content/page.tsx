@@ -41,12 +41,12 @@ export default function PromptHubOverviewPage() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-gray-800 p-4 rounded-lg text-center">
           <Database className="w-8 h-8 text-blue-400 mx-auto mb-2" />
-          <div className="text-2xl font-bold text-white">50+</div>
+          <div className="text-2xl font-bold text-white">13</div>
           <div className="text-sm text-gray-400">Total Prompts</div>
         </div>
         <div className="bg-gray-800 p-4 rounded-lg text-center">
           <Brain className="w-8 h-8 text-green-400 mx-auto mb-2" />
-          <div className="text-2xl font-bold text-white">12</div>
+          <div className="text-2xl font-bold text-white">6</div>
           <div className="text-sm text-gray-400">AI Providers</div>
         </div>
         <div className="bg-gray-800 p-4 rounded-lg text-center">
@@ -79,8 +79,8 @@ export default function PromptHubOverviewPage() {
               Constitutional AI prompts from Claude 2.0 through 3.5 Sonnet, including the famous 24,000-token leak.
             </p>
             <div className="flex items-center justify-between">
-              <span className="text-blue-400 font-medium">17 prompts</span>
-              <span className="text-xs text-gray-500">2022-2025</span>
+              <span className="text-blue-400 font-medium">6 prompts</span>
+              <span className="text-xs text-gray-500">2024-2025</span>
             </div>
           </div>
 
@@ -97,8 +97,8 @@ export default function PromptHubOverviewPage() {
               ChatGPT, GPT-4o, DALL-E 3, and Assistants API system prompts revealing OpenAI's approach.
             </p>
             <div className="flex items-center justify-between">
-              <span className="text-green-400 font-medium">10 prompts</span>
-              <span className="text-xs text-gray-500">2023-2024</span>
+              <span className="text-green-400 font-medium">3 prompts</span>
+              <span className="text-xs text-gray-500">2022-2024</span>
             </div>
           </div>
 

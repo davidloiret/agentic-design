@@ -37,172 +37,159 @@ interface ProviderCategory {
 }
 
 const promptItems: PromptItem[] = [
-  // Anthropic Claude
+  // Anthropic Claude - Only existing pages
   {
-    id: 'claude-2-0',
-    name: 'Claude 2.0',
+    id: 'claude-2-0-20240306',
+    name: 'Claude 2.0 (2024-03-06)',
     provider: 'anthropic',
     category: 'anthropic',
     complexity: 'medium',
     icon: <Brain className="w-4 h-4" />,
-    href: '/prompt-hub/anthropic/claude-2-0',
-    dateLeaked: '2023-07',
+    href: '/prompt-hub/anthropic/claude-2-0-20240306',
+    dateLeaked: '2024-03-06',
     promptCount: 1
   },
   {
-    id: 'claude-3-opus',
-    name: 'Claude 3 Opus',
+    id: 'claude-2-1-20240306',
+    name: 'Claude 2.1 (2024-03-06)',
     provider: 'anthropic',
     category: 'anthropic',
-    complexity: 'high',
+    complexity: 'medium',
     icon: <Brain className="w-4 h-4" />,
-    href: '/prompt-hub/anthropic/claude-3-opus',
-    dateLeaked: '2024-03',
-    promptCount: 2
+    href: '/prompt-hub/anthropic/claude-2-1-20240306',
+    dateLeaked: '2024-03-06',
+    promptCount: 1
   },
   {
-    id: 'claude-35-sonnet',
-    name: 'Claude 3.5 Sonnet',
+    id: 'claude-3-opus-20240306',
+    name: 'Claude 3 Opus (2024-03-06)',
     provider: 'anthropic',
     category: 'anthropic',
     complexity: 'high',
     icon: <Brain className="w-4 h-4" />,
-    href: '/prompt-hub/anthropic/claude-35-sonnet',
-    dateLeaked: '2025-05',
-    promptCount: 4
+    href: '/prompt-hub/anthropic/claude-3-opus-20240306',
+    dateLeaked: '2024-03-06',
+    promptCount: 1
+  },
+  {
+    id: 'claude-35-sonnet-20240712',
+    name: 'Claude 3.5 Sonnet (2024-07-12)',
+    provider: 'anthropic',
+    category: 'anthropic',
+    complexity: 'high',
+    icon: <Brain className="w-4 h-4" />,
+    href: '/prompt-hub/anthropic/claude-35-sonnet-20240712',
+    dateLeaked: '2024-07-12',
+    promptCount: 1
+  },
+  {
+    id: 'claude-api-tool-use-20250119',
+    name: 'Claude API Tool Use (2025-01-19)',
+    provider: 'anthropic',
+    category: 'anthropic',
+    complexity: 'high',
+    icon: <Brain className="w-4 h-4" />,
+    href: '/prompt-hub/anthropic/claude-api-tool-use-20250119',
+    dateLeaked: '2025-01-19',
+    promptCount: 1
+  },
+  {
+    id: 'claude-37-sonnet-20250224',
+    name: 'Claude 3.7 Sonnet (2025-02-24)',
+    provider: 'anthropic',
+    category: 'anthropic',
+    complexity: 'high',
+    icon: <Brain className="w-4 h-4" />,
+    href: '/prompt-hub/anthropic/claude-37-sonnet-20250224',
+    dateLeaked: '2025-02-24',
+    promptCount: 1
   },
 
-  // OpenAI
+  // OpenAI - Only existing pages
   {
-    id: 'chatgpt-4',
-    name: 'ChatGPT-4',
+    id: 'chatgpt-20221201',
+    name: 'ChatGPT (2022-12-01)',
     provider: 'openai',
     category: 'openai',
     complexity: 'medium',
     icon: <Github className="w-4 h-4" />,
-    href: '/prompt-hub/openai/chatgpt-4',
-    dateLeaked: '2024-01',
-    promptCount: 2
+    href: '/prompt-hub/openai/chatgpt-20221201',
+    dateLeaked: '2022-12-01',
+    promptCount: 1
   },
   {
-    id: 'chatgpt-4o',
-    name: 'ChatGPT-4o',
+    id: 'chatgpt-4o-20241210',
+    name: 'ChatGPT-4o (2024-12-10)',
     provider: 'openai',
     category: 'openai',
     complexity: 'high',
     icon: <Github className="w-4 h-4" />,
-    href: '/prompt-hub/openai/chatgpt-4o',
-    dateLeaked: '2024-12',
-    promptCount: 3
+    href: '/prompt-hub/openai/chatgpt-4o-20241210',
+    dateLeaked: '2024-12-10',
+    promptCount: 1
   },
   {
-    id: 'dalle-3',
-    name: 'DALL-E 3',
+    id: 'dalle-3-20231007',
+    name: 'DALL-E 3 (2023-10-07)',
     provider: 'openai',
     category: 'openai',
     complexity: 'medium',
     icon: <Eye className="w-4 h-4" />,
-    href: '/prompt-hub/openai/dalle-3',
-    dateLeaked: '2023-10',
-    promptCount: 2
+    href: '/prompt-hub/openai/dalle-3-20231007',
+    dateLeaked: '2023-10-07',
+    promptCount: 1
   },
 
-  // Microsoft
+  // Bolt - AI Development Platform
   {
-    id: 'copilot',
-    name: 'Microsoft Copilot',
-    provider: 'microsoft',
-    category: 'microsoft',
-    complexity: 'medium',
-    icon: <FileText className="w-4 h-4" />,
-    href: '/prompt-hub/microsoft/copilot',
-    dateLeaked: '2024-02',
-    promptCount: 2
+    id: 'bolt-new-20241009',
+    name: 'Bolt.new (2024-10-09)',
+    provider: 'bolt',
+    category: 'bolt',
+    complexity: 'high',
+    icon: <Zap className="w-4 h-4" />,
+    href: '/prompt-hub/bolt/bolt-new-20241009',
+    dateLeaked: '2024-10-09',
+    promptCount: 1
   },
+
+  // Vercel - AI UI Generation
   {
-    id: 'github-copilot',
-    name: 'GitHub Copilot Chat',
-    provider: 'microsoft',
-    category: 'microsoft',
-    complexity: 'medium',
+    id: 'v0-20250306',
+    name: 'v0 (2025-03-06)',
+    provider: 'vercel',
+    category: 'vercel',
+    complexity: 'high',
     icon: <Code className="w-4 h-4" />,
-    href: '/prompt-hub/microsoft/github-copilot',
-    dateLeaked: '2023-11',
-    promptCount: 2
+    href: '/prompt-hub/vercel/v0-20250306',
+    dateLeaked: '2025-03-06',
+    promptCount: 1
   },
 
-  // xAI
+  // Codeium - Agentic IDE
   {
-    id: 'grok-1',
-    name: 'Grok 1',
-    provider: 'xai',
-    category: 'xai',
-    complexity: 'medium',
-    icon: <Zap className="w-4 h-4" />,
-    href: '/prompt-hub/xai/grok-1',
-    dateLeaked: '2023-12',
-    promptCount: 3
-  },
-  {
-    id: 'grok-2',
-    name: 'Grok 2',
-    provider: 'xai',
-    category: 'xai',
+    id: 'windsurf-cascade-r1-20250201',
+    name: 'Windsurf Cascade R1 (2025-02-01)',
+    provider: 'codeium',
+    category: 'codeium',
     complexity: 'high',
-    icon: <Zap className="w-4 h-4" />,
-    href: '/prompt-hub/xai/grok-2',
-    dateLeaked: '2024-08',
-    promptCount: 2
-  },
-  {
-    id: 'grok-3',
-    name: 'Grok 3',
-    provider: 'xai',
-    category: 'xai',
-    complexity: 'high',
-    icon: <Zap className="w-4 h-4" />,
-    href: '/prompt-hub/xai/grok-3',
-    dateLeaked: '2025-01',
-    promptCount: 5
+    icon: <Bot className="w-4 h-4" />,
+    href: '/prompt-hub/codeium/windsurf-cascade-r1-20250201',
+    dateLeaked: '2025-02-01',
+    promptCount: 1
   },
 
-  // Google
+  // Perplexity - Search AI
   {
-    id: 'gemini-pro',
-    name: 'Gemini Pro',
-    provider: 'google',
-    category: 'google',
-    complexity: 'high',
-    icon: <Eye className="w-4 h-4" />,
-    href: '/prompt-hub/google/gemini-pro',
-    dateLeaked: '2024-06',
-    promptCount: 2
-  },
-
-  // Perplexity
-  {
-    id: 'perplexity-ai',
-    name: 'Perplexity AI',
+    id: 'perplexity-ai-20250112',
+    name: 'Perplexity.ai (2025-01-12)',
     provider: 'perplexity',
     category: 'perplexity',
-    complexity: 'medium',
+    complexity: 'high',
     icon: <SearchIcon className="w-4 h-4" />,
-    href: '/prompt-hub/perplexity/perplexity-ai',
-    dateLeaked: '2024-04',
-    promptCount: 5
-  },
-
-  // Discord
-  {
-    id: 'discord-clyde',
-    name: 'Discord Clyde',
-    provider: 'discord',
-    category: 'other',
-    complexity: 'low',
-    icon: <MessageSquare className="w-4 h-4" />,
-    href: '/prompt-hub/other/discord-clyde',
-    dateLeaked: '2023-09',
-    promptCount: 5
+    href: '/prompt-hub/perplexity/perplexity-ai-20250112',
+    dateLeaked: '2025-01-12',
+    promptCount: 1
   }
 ];
 
@@ -222,27 +209,6 @@ const categories: ProviderCategory[] = [
     items: promptItems.filter(item => item.category === 'openai')
   },
   {
-    id: 'microsoft',
-    name: 'Microsoft',
-    icon: '🔷',
-    description: 'Enterprise AI integration',
-    items: promptItems.filter(item => item.category === 'microsoft')
-  },
-  {
-    id: 'xai',
-    name: 'xAI',
-    icon: '⚡',
-    description: 'Uncensored AI with real-time data',
-    items: promptItems.filter(item => item.category === 'xai')
-  },
-  {
-    id: 'google',
-    name: 'Google',
-    icon: '🔍',
-    description: 'Multimodal AI with search integration',
-    items: promptItems.filter(item => item.category === 'google')
-  },
-  {
     id: 'perplexity',
     name: 'Perplexity',
     icon: '🎯',
@@ -250,11 +216,25 @@ const categories: ProviderCategory[] = [
     items: promptItems.filter(item => item.category === 'perplexity')
   },
   {
-    id: 'other',
-    name: 'Other Providers',
-    icon: '📦',
-    description: 'Additional AI services',
-    items: promptItems.filter(item => item.category === 'other')
+    id: 'bolt',
+    name: 'Bolt',
+    icon: '⚡',
+    description: 'AI-powered full-stack development',
+    items: promptItems.filter(item => item.category === 'bolt')
+  },
+  {
+    id: 'vercel',
+    name: 'Vercel',
+    icon: '🎨',
+    description: 'AI-powered UI generation platform',
+    items: promptItems.filter(item => item.category === 'vercel')
+  },
+  {
+    id: 'codeium',
+    name: 'Codeium',
+    icon: '🤖',
+    description: 'Agentic IDE development assistant',
+    items: promptItems.filter(item => item.category === 'codeium')
   }
 ];
 
