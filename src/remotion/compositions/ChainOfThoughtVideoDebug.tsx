@@ -47,7 +47,7 @@ export const ChainOfThoughtVideoDebug: React.FC = () => {
           textAlign: 'center'
         }}>
           🎵 Audio should be playing now
-          <br />
+          <br/>
           <small>Frames 30-150</small>
         </div>
       </Sequence>

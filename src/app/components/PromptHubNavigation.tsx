@@ -129,6 +129,28 @@ const promptItems: PromptItem[] = [
     promptCount: 1
   },
   {
+    id: 'chatgpt-4o-20250506',
+    name: 'ChatGPT-4o (2025-05-06)',
+    provider: 'openai',
+    category: 'openai',
+    complexity: 'high',
+    icon: <Github className="w-4 h-4" />,
+    href: '/prompt-hub/openai/chatgpt-4o-20250506',
+    dateLeaked: '2025-05-06',
+    promptCount: 1
+  },
+  {
+    id: 'chatgpt-4o-mini-voice-mode-20250706',
+    name: 'ChatGPT-4o Mini Voice Mode (2025-07-06)',
+    provider: 'openai',
+    category: 'openai',
+    complexity: 'high',
+    icon: <Github className="w-4 h-4" />,
+    href: '/prompt-hub/openai/chatgpt-4o-mini-voice-mode-20250706',
+    dateLeaked: '2025-07-06',
+    promptCount: 1
+  },
+  {
     id: 'dalle-3-20231007',
     name: 'DALL-E 3 (2023-10-07)',
     provider: 'openai',
@@ -190,6 +212,19 @@ const promptItems: PromptItem[] = [
     href: '/prompt-hub/perplexity/perplexity-ai-20250112',
     dateLeaked: '2025-01-12',
     promptCount: 1
+  },
+
+  // The Browser Company - Browser-Native AI
+  {
+    id: 'dia-20250515',
+    name: 'Dia (2025-05-15)',
+    provider: 'browser-company',
+    category: 'browser-company',
+    complexity: 'high',
+    icon: <Globe className="w-4 h-4" />,
+    href: '/prompt-hub/browser-company/dia-20250515',
+    dateLeaked: '2025-05-15',
+    promptCount: 1
   }
 ];
 
@@ -235,6 +270,13 @@ const categories: ProviderCategory[] = [
     icon: '🤖',
     description: 'Agentic IDE development assistant',
     items: promptItems.filter(item => item.category === 'codeium')
+  },
+  {
+    id: 'browser-company',
+    name: 'The Browser Company',
+    icon: '🌐',
+    description: 'Browser-native AI assistant',
+    items: promptItems.filter(item => item.category === 'browser-company')
   }
 ];
 

@@ -369,3 +369,8 @@ Add suggest new techniques / new patterns / categorie
 bottom sheet should only be open by default if there is no category and technique selected
 
 When empty => I should have a call to action to open bottom sheet
+
+create a waitlist
+
+add tag so we can search rapidly not by provider but by use case
+coding agent, etc for the prompt
