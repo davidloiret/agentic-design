@@ -357,3 +357,15 @@ add leaked prompt
 
 Prompt hub ? avec explication highlight des endroits intéressant
 Context engineering tips ?
+
+
+Add CVE 
+
+And methodoloy to find vulnerability in AI systems with checklist etc.
+
+Add suggest new techniques / new patterns / categorie
+
+
+bottom sheet should only be open by default if there is no category and technique selected
+
+When empty => I should have a call to action to open bottom sheet

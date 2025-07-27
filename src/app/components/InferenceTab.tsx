@@ -29,8 +29,11 @@ interface Section {
   content: React.ReactNode;
 }
 
-export const InferenceTab: React.FC = () => {
-  const [activeCategory, setActiveCategory] = useState<string>('overview');
+interface InferenceTabProps {
+  activeCategory?: string;
+}
+
+export const InferenceTab: React.FC<InferenceTabProps> = ({ activeCategory = 'overview' }) => {
 
   const categories = [
     { id: 'overview', label: 'Overview', icon: BookOpen },
@@ -1610,54 +1613,18 @@ console.log(response.choices[0].message.content);`}
   ];
 
   return (
-    <div className="h-full flex">
-      {/* Sidebar */}
-      <div className="w-64 bg-gray-800 border-r border-gray-700 overflow-y-auto">
-        <div className="p-4">
-          <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-            <Cpu className="w-6 h-6 text-indigo-400" />
-            AI Inference
-          </h2>
-          <nav className="space-y-2">
-            {categories.map((category) => {
-              const Icon = category.icon;
-              return (
-                <button
-                  key={category.id}
-                  onClick={() => setActiveCategory(category.id)}
-                  className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-colors ${
-                    activeCategory === category.id
-                      ? 'bg-indigo-600 text-white'
-                      : 'text-gray-300 hover:bg-gray-700 hover:text-white'
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                  {category.label}
-                </button>
-              );
-            })}
-          </nav>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="flex-1 overflow-y-auto">
-        <div className="p-6">
-          <div className="w-full">
-            {getCurrentSection() && (
-              <div>
-                <div className="flex items-center gap-3 mb-6">
-                  {React.createElement(getCurrentSection()!.icon, { className: "w-6 h-6 text-indigo-400" })}
-                  <h2 className="text-2xl font-bold text-white">{getCurrentSection()!.title}</h2>
-                </div>
-                <div className="bg-gray-900 rounded-lg p-6">
-                  {getCurrentSection()!.content}
-                </div>
-              </div>
-            )}
+    <div className="w-full">
+      {getCurrentSection() && (
+        <div>
+          <div className="flex items-center gap-3 mb-6">
+            {React.createElement(getCurrentSection()!.icon, { className: "w-6 h-6 text-indigo-400" })}
+            <h2 className="text-2xl font-bold text-white">{getCurrentSection()!.title}</h2>
+          </div>
+          <div className="bg-gray-900 rounded-lg p-6">
+            {getCurrentSection()!.content}
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }; 

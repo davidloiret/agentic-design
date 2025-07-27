@@ -48,9 +48,8 @@ export const PatternsExplorer = () => {
   const handleTechniqueSelect = (technique: any) => {
     setSelectedTechnique(technique);
     // Auto-close bottom sheet on mobile when technique is selected
-    if (technique) {
-      setIsBottomSheetOpen(false);
-    }
+    console.log('handleTechniqueSelect', technique);
+    setIsBottomSheetOpen(false);
   };
 
   // Close mobile sidebar when category is selected

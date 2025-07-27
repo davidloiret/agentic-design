@@ -89,10 +89,10 @@ export const SidenavLayout = ({
 
   return (
     <div className={`min-h-screen bg-gray-950 text-white ${className}`}>
-      <div className="mx-auto px-0 sm:px-6 py-0 sm:py-8)]">
+      <div className="mx-auto px-4 sm:px-6 py-4 sm:py-8)]">
         {/* Desktop layout */}
         <div className={`hidden lg:grid ${gridColsClass} gap-6 h-full`}>
-          <div className={`${sidebarColSpan} h-screen sticky top-14 overflow-y-auto h-[calc(100vh-58px)]`}>
+          <div className={`${sidebarColSpan} sticky top-14 overflow-y-auto h-[calc(100vh-58px)]`}>
             {enhancedSidebarContent}
           </div>
           <div className={`${contentColSpan} pt-6 h-full overflow-y-auto`}>

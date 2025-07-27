@@ -23,8 +23,6 @@ const SHEET_HEIGHTS = {
   fullscreen: '95vh'
 } as const;
 
-const REOPEN_BUTTON_HEIGHT = '60px';
-
 export const ExpandableBottomSheet: React.FC<ExpandableBottomSheetProps> = ({
   isOpen,
   onClose,
@@ -146,9 +144,6 @@ export const ExpandableBottomSheet: React.FC<ExpandableBottomSheetProps> = ({
       setSheetState('closed');
     }
   }, [isOpen, initialState, sheetState]);
-
-  // Always render the component for mobile, but conditionally show content
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
   return (
     <>
