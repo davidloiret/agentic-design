@@ -19,7 +19,12 @@ import {
   Terminal,
   BookOpen,
   Github,
-  Play
+  Play,
+  FileText,
+  Lock,
+  Unlock,
+  AlertTriangle,
+  Brain
 } from 'lucide-react';
 
 interface Section {

@@ -229,7 +229,7 @@ export const TechniquesListLayout = ({
             )}
 
             <button
-              className="flex-1 flex items-center gap-1.5 lg:gap-3 cursor-pointer hover:scale-[0.99] transition-transform min-h-[28px] lg:min-h-[32px]"
+              className="lg:w-[200px] flex-1 flex items-center gap-1.5 lg:gap-3 cursor-pointer hover:scale-[0.99] transition-transform min-h-[28px] lg:min-h-[32px]"
             >
               <div className={`w-7 lg:w-10 h-7 lg:h-10 rounded-lg lg:rounded-xl flex items-center justify-center ${
                 isSelected ? 'bg-white/20' : 'bg-gray-700/50 group-hover:bg-gray-600/50'

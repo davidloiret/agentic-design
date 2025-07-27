@@ -192,7 +192,7 @@ export async function GET(request: Request) {
                 marginRight: '12px',
               }}
             />
-            agentic-design.com
+            agentic-design.ai
           </div>
         </div>
       ),

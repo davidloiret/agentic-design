@@ -1,9 +1,9 @@
 import { InferenceTab } from '../../../../components/InferenceTab';
 
-export default function MonitoringPage() {
+export default function AgenticPatternsPage() {
   return (
     <div className="w-full px-0 sm:px-6 py-0 sm:py-8">
-      <InferenceTab activeCategory="monitoring" />
+      <InferenceTab activeCategory="agentic-inference" />
     </div>
   );
 }

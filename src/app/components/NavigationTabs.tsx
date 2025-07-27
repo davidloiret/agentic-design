@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { BookOpen, Lightbulb, Share2, FlaskConical, Brain, Boxes, Newspaper, FolderOpen, Cpu, Settings, ChevronDown, Menu, X, GraduationCap, Shield } from 'lucide-react';
+import { BookOpen, Lightbulb, Share2, FlaskConical, Brain, Boxes, Newspaper, FolderOpen, Cpu, Settings, ChevronDown, Menu, X, GraduationCap, Shield, FileText } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 
 interface Tab {
@@ -94,6 +94,7 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
       'learning-hub': 'text-rose-400',
       'fine-tuning': 'text-violet-400',
       'ai-inference': 'text-indigo-400',
+      'prompt-hub': 'text-orange-400',
       'project-hub': 'text-yellow-400',
       'news-hub': 'text-emerald-400',
       'ai-red-teaming': 'text-red-400',
@@ -108,6 +109,7 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
       'learning-hub': 'bg-rose-400',
       'fine-tuning': 'bg-violet-400',
       'ai-inference': 'bg-indigo-400',
+      'prompt-hub': 'bg-orange-400',
       'project-hub': 'bg-yellow-400',
       'news-hub': 'bg-emerald-400',
       'ai-red-teaming': 'bg-red-400',
@@ -125,6 +127,7 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
         { id: 'ai-red-teaming', label: 'AI Red Teaming', icon: Shield, description: 'AI security & defensive techniques', route: '/ai-red-teaming' },
         { id: 'fine-tuning', label: 'Fine Tuning', icon: Settings, description: 'Model optimization', route: '/fine-tuning' },
         { id: 'ai-inference', label: 'AI Inference', icon: Cpu, description: 'Inference strategies', route: '/ai-inference' },
+        { id: 'prompt-hub', label: 'Prompt Hub', icon: FileText, description: 'Leaked AI system prompts', route: '/prompt-hub' },
         { id: 'project-hub', label: 'Project Hub', icon: FolderOpen, description: 'Example projects', route: '/project-hub' },
         { id: 'news-hub', label: 'News Hub', icon: Newspaper, description: 'Latest updates', route: '/news-hub' },
       ]
