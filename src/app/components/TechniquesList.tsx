@@ -43,7 +43,6 @@ export const TechniquesList = ({
 
   const toggleCategory = (categoryId: string) => {
     setExpandedCategories(prev => {
-      console.log('toggleCategory', categoryId);
       const newSet = new Set(prev);
       if (newSet.has(categoryId)) {
         newSet.delete(categoryId);

@@ -1,20 +1,27 @@
 "use client"
 
 import { useState } from 'react';
+import { useParams, usePathname } from 'next/navigation';
 import { ExpandableBottomSheet, type BottomSheetState } from '../../components/ExpandableBottomSheet';
+import { RoutedTechniquesList } from '../../components/RoutedTechniquesList';
 import { Brain } from 'lucide-react';
 
 export default function PatternsLayout({
   children,
-  sidebar,
   content,
 }: {
   children: React.ReactNode;
-  sidebar: React.ReactNode;
   content: React.ReactNode;
 }) {
   const [bottomSheetState, setBottomSheetState] = useState<BottomSheetState>('expanded');
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(true);
+  const params = useParams();
+  const pathname = usePathname();
+
+  // Extract category and technique from URL
+  const pathSegments = pathname.split('/').filter(Boolean);
+  const selectedCategory = pathSegments[1] || undefined;
+  const selectedTechnique = pathSegments[2] || undefined;
 
   const handleClose = () => {
     setIsBottomSheetOpen(false);
@@ -23,13 +30,21 @@ export default function PatternsLayout({
   const handleReopen = () => {
     setIsBottomSheetOpen(true);
   };
+
+  // Create the sidebar component that persists across route changes
+  const sidebarComponent = (
+    <RoutedTechniquesList 
+      selectedCategory={selectedCategory} 
+      selectedTechnique={selectedTechnique} 
+    />
+  );
   
   return (
     <div className="min-h-screen bg-gray-950 text-white">
-      <div className="mx-auto px-6 py-8 h-[calc(100vh-5rem)]">
+      <div className="mx-auto px-0 sm:px-6 py-0 sm:py-8 h-[calc(100vh-5rem)]">
         {/* Desktop layout */}
         <div className="hidden lg:grid lg:grid-cols-4 gap-6 h-full overflow-hidden">
-          {sidebar}
+          {sidebarComponent}
           {content}
         </div>
         
@@ -66,7 +81,7 @@ export default function PatternsLayout({
             title="Patterns"
             showReopenButton={true}
           >
-            {sidebar}
+            {sidebarComponent}
           </ExpandableBottomSheet>
         </div>
       </div>

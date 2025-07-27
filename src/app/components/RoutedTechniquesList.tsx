@@ -1,8 +1,8 @@
 "use client"
 
 import { Search, ChevronRight, ChevronDown, ChevronUp } from 'lucide-react';
-import { useState, useEffect, Suspense } from 'react';
-import { useRouter, useParams, useSearchParams } from 'next/navigation';
+import { useState, useEffect, Suspense, useMemo } from 'react';
+import { useRouter, useParams } from 'next/navigation';
 import { Category } from '../categories';
 import { techniques } from '../techniques';
 import { categories } from '../categories';
@@ -19,13 +19,11 @@ const options = {
 };
 
 const RoutedTechniquesListInner = ({ selectedCategory, selectedTechnique }: RoutedTechniquesListProps) => {
-  const searchParams = useSearchParams();
-  const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
+  const [searchQuery, setSearchQuery] = useState('');
   
-  // Initialize expanded categories from URL params or include selected category
+  // Initialize expanded categories with selected category
   const getInitialExpandedCategories = () => {
-    const expandedFromUrl = searchParams.get('expanded');
-    const expandedSet = expandedFromUrl ? new Set(expandedFromUrl.split(',').filter(Boolean)) : new Set();
+    const expandedSet = new Set<string>();
     if (selectedCategory) {
       expandedSet.add(selectedCategory);
     }
@@ -36,52 +34,18 @@ const RoutedTechniquesListInner = ({ selectedCategory, selectedTechnique }: Rout
   const router = useRouter();
 
   useEffect(() => {
-    const searchFromParams = searchParams.get('search') || '';
-    setSearchQuery(searchFromParams);
-    
-    // Update expanded categories from URL params
-    const expandedFromUrl = searchParams.get('expanded');
-    const expandedSet = expandedFromUrl ? new Set(expandedFromUrl.split(',').filter(Boolean)) : new Set();
+    // Ensure selected category is always expanded
     if (selectedCategory) {
-      expandedSet.add(selectedCategory);
+      setExpandedCategories(prev => {
+        const newSet = new Set(prev);
+        newSet.add(selectedCategory);
+        return newSet;
+      });
     }
-    setExpandedCategories(expandedSet);
-  }, [searchParams, selectedCategory]);
-
-  // Update URL when expandedCategories changes (but not during initial load)
-  useEffect(() => {
-    const expandedFromUrl = searchParams.get('expanded');
-    const currentExpanded = Array.from(expandedCategories).join(',');
-    
-    // Only update if expanded state actually changed and not during initial load
-    if (expandedFromUrl !== currentExpanded && expandedCategories.size > 0) {
-      const currentPath = window.location.pathname;
-      const url = buildUrl(currentPath, searchQuery, expandedCategories);
-      router.replace(url);
-    }
-  }, [expandedCategories, searchQuery, searchParams, router]);
-
-  // Helper function to build URL with search and expanded parameters
-  const buildUrl = (path: string, searchQuery?: string, expandedCategories?: Set<string>) => {
-    const params = new URLSearchParams();
-    const search = searchQuery || searchParams.get('search');
-    const expanded = expandedCategories || new Set(searchParams.get('expanded')?.split(',').filter(Boolean) || []);
-    
-    if (search) {
-      params.set('search', search);
-    }
-    if (expanded.size > 0) {
-      params.set('expanded', Array.from(expanded).join(','));
-    }
-    
-    return params.toString() ? `${path}?${params.toString()}` : path;
-  };
+  }, [selectedCategory]);
 
   const handleSearchChange = (query: string) => {
     setSearchQuery(query);
-    const currentPath = window.location.pathname;
-    const url = buildUrl(currentPath, query, expandedCategories);
-    router.replace(url);
   };
 
   const toggleCategory = (categoryId: string) => {
@@ -105,42 +69,44 @@ const RoutedTechniquesListInner = ({ selectedCategory, selectedTechnique }: Rout
   };
 
   const handleCategorySelect = (categoryId: string) => {
-    // First update the expanded categories to include the new category
-    const updatedExpanded = new Set(expandedCategories);
-    updatedExpanded.add(categoryId);
-    
-    const url = buildUrl(`/patterns/${categoryId}`, searchQuery, updatedExpanded);
-    router.push(url);
+    router.push(`/patterns/${categoryId}`);
   };
 
   const handleTechniqueSelect = (technique: any) => {
-    const url = buildUrl(`/patterns/${technique.category}/${technique.id}`, searchQuery, expandedCategories);
-    router.push(url);
+    router.push(`/patterns/${technique.category}/${technique.id}`);
   };
 
-  const fuse = new Fuse(techniques, options);
+  const fuse = useMemo(() => new Fuse(techniques, options), []);
 
-  const searchFilteredTechniques = searchQuery
-    ? fuse.search(searchQuery).map(result => result.item)
-    : techniques;
+  const searchFilteredTechniques = useMemo(() => {
+    return searchQuery
+      ? fuse.search(searchQuery).map(result => result.item)
+      : techniques;
+  }, [searchQuery, fuse]);
 
-  const filteredTechniques = searchFilteredTechniques.filter(technique => {
-    return true;
-  });
+  const filteredTechniques = useMemo(() => {
+    return searchFilteredTechniques.filter(technique => {
+      return true;
+    });
+  }, [searchFilteredTechniques]);
 
-  const getTechniquesForCategoryCount = (categoryId: string) => {
-    if (categoryId === 'all') {
-      return searchFilteredTechniques;
-    }
-    return searchFilteredTechniques.filter(technique => technique.category === categoryId);
-  };
+  const getTechniquesForCategoryCount = useMemo(() => {
+    return (categoryId: string) => {
+      if (categoryId === 'all') {
+        return searchFilteredTechniques;
+      }
+      return searchFilteredTechniques.filter(technique => technique.category === categoryId);
+    };
+  }, [searchFilteredTechniques]);
 
-  const getTechniquesForCategory = (categoryId: string) => {
-    if (categoryId === 'all') {
-      return filteredTechniques;
-    }
-    return filteredTechniques.filter(technique => technique.category === categoryId);
-  };
+  const getTechniquesForCategory = useMemo(() => {
+    return (categoryId: string) => {
+      if (categoryId === 'all') {
+        return filteredTechniques;
+      }
+      return filteredTechniques.filter(technique => technique.category === categoryId);
+    };
+  }, [filteredTechniques]);
 
   const renderTechnique = (technique: any) => {
     const isSelected = selectedTechnique === technique.id;
@@ -270,7 +236,7 @@ const RoutedTechniquesListInner = ({ selectedCategory, selectedTechnique }: Rout
           placeholder="Search patterns..."
           className="w-full pl-11 lg:pl-12 pr-3 lg:pr-4 py-2 lg:py-3 bg-gray-800/50 border border-gray-700/50 rounded-lg lg:rounded-xl focus:outline-none focus:border-blue-500/50 focus:bg-gray-800/70 transition-all duration-200 text-gray-200 placeholder-gray-400 text-sm lg:text-base"
           value={searchQuery}
-          onChange={(e) => handleSearchChange(e.target.value)}
+          onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
 

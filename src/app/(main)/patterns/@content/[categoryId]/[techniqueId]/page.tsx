@@ -11,8 +11,9 @@ interface ContentTechniquePageProps {
 }
 
 export async function generateMetadata({ params }: ContentTechniquePageProps): Promise<Metadata> {
-  const technique = techniques.find(t => t.id === params.techniqueId);
-  const category = categories.find(cat => cat.id === params.categoryId);
+  const { categoryId, techniqueId } = await params;
+  const technique = techniques.find(t => t.id === techniqueId);
+  const category = categories.find(cat => cat.id === categoryId);
   
   if (!technique) {
     return {
@@ -24,8 +25,9 @@ export async function generateMetadata({ params }: ContentTechniquePageProps): P
   return generateTechniqueMetadata(technique, category);
 }
 
-export default function ContentTechniquePage({ params }: ContentTechniquePageProps) {
-  const technique = techniques.find(t => t.id === params.techniqueId);
+export default async function ContentTechniquePage({ params }: ContentTechniquePageProps) {
+  const { techniqueId } = await params;
+  const technique = techniques.find(t => t.id === techniqueId);
   
   if (!technique) {
     redirect('/patterns');

@@ -20,7 +20,9 @@ import {
   GraduationCap,
   Medal,
   Info,
-  ArrowRight
+  ArrowRight,
+  Menu,
+  X
 } from 'lucide-react';
 import { QuizComponent } from './learning/QuizComponent';
 import { FlashcardComponent } from './learning/FlashcardComponent';
@@ -450,35 +452,35 @@ export const LearningHub: React.FC<LearningHubProps> = ({ techniques = [], categ
     return (
       <div className="space-y-8">
         {/* Progress Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-white">Your Level</h3>
-              <Star className="w-5 h-5 text-yellow-400" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+          <div className="bg-gray-800/50 rounded-xl p-4 md:p-6 border border-gray-700">
+            <div className="flex items-center justify-between mb-3 md:mb-4">
+              <h3 className="text-base md:text-lg font-semibold text-white">Your Level</h3>
+              <Star className="w-5 h-5 md:w-6 md:h-6 text-yellow-400" />
             </div>
-            <div className="text-2xl font-bold text-white mb-2">
+            <div className="text-xl md:text-2xl font-bold text-white mb-2">
               Level {currentLevel.level}
             </div>
             <div className="text-sm text-gray-400 mb-3">
               {currentLevel.title}
             </div>
-            <div className="w-full bg-gray-700 rounded-full h-2">
+            <div className="w-full bg-gray-700 rounded-full h-2 md:h-3">
               <div 
-                className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                className="bg-blue-500 h-2 md:h-3 rounded-full transition-all duration-300"
                 style={{ width: `${Math.min((userProgress.xp / nextLevel.xpRequired) * 100, 100)}%` }}
               />
             </div>
-            <div className="text-xs text-gray-400 mt-2">
+            <div className="text-xs md:text-sm text-gray-400 mt-2">
               {userProgress.xp} / {nextLevel.xpRequired} XP to next level
             </div>
           </div>
 
-          <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-white">Experience Points</h3>
-              <Zap className="w-5 h-5 text-blue-400" />
+          <div className="bg-gray-800/50 rounded-xl p-4 md:p-6 border border-gray-700">
+            <div className="flex items-center justify-between mb-3 md:mb-4">
+              <h3 className="text-base md:text-lg font-semibold text-white">Experience Points</h3>
+              <Zap className="w-5 h-5 md:w-6 md:h-6 text-blue-400" />
             </div>
-            <div className="text-2xl font-bold text-blue-400 mb-2">
+            <div className="text-xl md:text-2xl font-bold text-blue-400 mb-2">
               {userProgress.xp} XP
             </div>
             <div className="text-sm text-gray-400">
@@ -486,12 +488,12 @@ export const LearningHub: React.FC<LearningHubProps> = ({ techniques = [], categ
             </div>
           </div>
 
-          <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-white">Learning Streak</h3>
-              <Flame className="w-5 h-5 text-orange-400" />
+          <div className="bg-gray-800/50 rounded-xl p-4 md:p-6 border border-gray-700">
+            <div className="flex items-center justify-between mb-3 md:mb-4">
+              <h3 className="text-base md:text-lg font-semibold text-white">Learning Streak</h3>
+              <Flame className="w-5 h-5 md:w-6 md:h-6 text-orange-400" />
             </div>
-            <div className="text-2xl font-bold text-orange-400 mb-2">
+            <div className="text-xl md:text-2xl font-bold text-orange-400 mb-2">
               {userProgress.streak} days
             </div>
             <div className="text-sm text-gray-400">
@@ -610,7 +612,7 @@ export const LearningHub: React.FC<LearningHubProps> = ({ techniques = [], categ
               <p className="text-gray-400 mb-4">No completed challenges yet</p>
               <button
                 onClick={() => setActiveView('learning')}
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-base font-medium min-h-[44px] min-w-[120px]"
               >
                 Start Learning
               </button>
@@ -719,7 +721,7 @@ export const LearningHub: React.FC<LearningHubProps> = ({ techniques = [], categ
             return (
               <div 
                 key={challenge.id}
-                className="bg-gray-800/50 rounded-xl p-6 border border-gray-600 hover:bg-gray-700/50 transition-all cursor-pointer"
+                className="bg-gray-800/50 rounded-xl p-4 md:p-6 border border-gray-600 hover:bg-gray-700/50 transition-all cursor-pointer min-h-[80px] md:min-h-[auto]"
                 onClick={() => handleChallengeStart(challenge)}
               >
                 <div className="flex items-center justify-between">
@@ -760,55 +762,61 @@ export const LearningHub: React.FC<LearningHubProps> = ({ techniques = [], categ
   return (
     <div className="w-full">
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <div>
+      <div className="flex items-center justify-between mb-6 md:mb-8">
+        {/* Title - Hidden on mobile */}
+        <div className="hidden md:block">
           <h1 className="text-3xl font-bold text-white mb-2">Learning Hub</h1>
           <p className="text-gray-400">Master AI engineering through gamified challenges</p>
         </div>
         
-        <div className="flex space-x-2">
+        {/* Navigation - Always visible */}
+        <div className="flex space-x-1 md:space-x-2 w-full md:w-auto">
           <button
             onClick={() => setActiveView('dashboard')}
-            className={`px-4 py-2 rounded-lg transition-all ${
+            className={`flex-1 md:flex-none px-3 md:px-4 py-2 md:py-2 rounded-lg transition-all text-sm md:text-base ${
               activeView === 'dashboard' 
                 ? 'bg-rose-400 text-white' 
                 : 'bg-gray-800 text-gray-400 hover:text-white'
             }`}
           >
-            Dashboard
+            <span className="hidden sm:inline">Dashboard</span>
+            <Star className="w-4 h-4 sm:hidden mx-auto" />
           </button>
           <button
             onClick={() => {
               setActiveView('learning');
               setSelectedModule('');
             }}
-            className={`px-4 py-2 rounded-lg transition-all ${
+            className={`flex-1 md:flex-none px-3 md:px-4 py-2 md:py-2 rounded-lg transition-all text-sm md:text-base ${
               activeView === 'learning' 
                 ? 'bg-rose-400 text-white' 
                 : 'bg-gray-800 text-gray-400 hover:text-white'
             }`}
           >
-            Learning
+            <span className="hidden sm:inline">Learning</span>
+            <BookOpen className="w-4 h-4 sm:hidden mx-auto" />
           </button>
           <button
             onClick={() => setActiveView('achievements')}
-            className={`px-4 py-2 rounded-lg transition-all ${
+            className={`flex-1 md:flex-none px-3 md:px-4 py-2 md:py-2 rounded-lg transition-all text-sm md:text-base ${
               activeView === 'achievements' 
                 ? 'bg-rose-400 text-white' 
                 : 'bg-gray-800 text-gray-400 hover:text-white'
             }`}
           >
-            Achievements
+            <span className="hidden sm:inline">Achievements</span>
+            <Trophy className="w-4 h-4 sm:hidden mx-auto" />
           </button>
           <button
             onClick={() => setActiveView('certification')}
-            className={`px-4 py-2 rounded-lg transition-all ${
+            className={`flex-1 md:flex-none px-3 md:px-4 py-2 md:py-2 rounded-lg transition-all text-sm md:text-base ${
               activeView === 'certification' 
                 ? 'bg-rose-400 text-white' 
                 : 'bg-gray-800 text-gray-400 hover:text-white'
             }`}
           >
-            Certification
+            <span className="hidden sm:inline">Certification</span>
+            <Medal className="w-4 h-4 sm:hidden mx-auto" />
           </button>
         </div>
       </div>
@@ -953,7 +961,7 @@ export const LearningHub: React.FC<LearningHubProps> = ({ techniques = [], categ
                   {!module.isLocked && (
                     <button
                       onClick={() => setSelectedModule(module.id)}
-                      className="w-full py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center space-x-2"
+                      className="w-full py-3 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center space-x-2 text-base font-medium min-h-[44px]"
                     >
                       <span>{progress === 100 ? 'Review' : 'Continue'}</span>
                       <ArrowRight className="w-4 h-4" />

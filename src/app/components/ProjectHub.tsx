@@ -318,8 +318,9 @@ export const ProjectHub = () => {
     <div className="min-h-screen bg-gray-950 text-white">
       <div className="w-full px-4 sm:px-6 py-6">
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center space-x-3 mb-6">
+        <div className="flex items-center justify-between mb-6 md:mb-8">
+          {/* Title - Hidden on mobile */}
+          <div className="hidden md:flex items-center space-x-3">
             <div className="p-3 bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded-xl">
               <span className="text-2xl">🚀</span>
             </div>
@@ -332,41 +333,41 @@ export const ProjectHub = () => {
               </p>
             </div>
           </div>
-        </div>
-
-        {/* Navigation Tabs */}
-        <div className="flex flex-wrap gap-2 mb-8 bg-gray-800/30 backdrop-blur-sm p-2 rounded-2xl border border-gray-700/50">
-          {[
-            { id: 'overview', label: 'Overview', icon: '📊' },
-            { id: 'projects', label: 'Projects', icon: '🚀', count: projects.length },
-            { id: 'libraries', label: 'Libraries', icon: '📚', count: libraries.length },
-            { id: 'contribute', label: 'Contribute', icon: '➕' }
-          ].map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => {
-                setActiveSection(tab.id as any);
-                setSelectedCategory('all');
-              }}
-              className={`flex items-center space-x-2 px-4 py-3 rounded-xl transition-all font-medium text-sm ${
-                activeSection === tab.id 
-                  ? 'bg-purple-600 text-white shadow-lg shadow-purple-600/25' 
-                  : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
-              }`}
-            >
-              <span className="text-base">{tab.icon}</span>
-              <span>{tab.label}</span>
-              {tab.count !== undefined && (
-                <span className={`px-2 py-1 rounded-full text-xs ${
+          
+          {/* Navigation - Always visible */}
+          <div className="flex space-x-1 md:space-x-2 w-full md:w-auto bg-gray-800/30 backdrop-blur-sm p-2 rounded-2xl border border-gray-700/50">
+            {[
+              { id: 'overview', label: 'Overview', icon: '📊' },
+              { id: 'projects', label: 'Projects', icon: '🚀', count: projects.length },
+              { id: 'libraries', label: 'Libraries', icon: '📚', count: libraries.length },
+              { id: 'contribute', label: 'Contribute', icon: '➕' }
+            ].map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => {
+                  setActiveSection(tab.id as any);
+                  setSelectedCategory('all');
+                }}
+                className={`flex-1 md:flex-none flex items-center justify-center space-x-1 md:space-x-2 px-2 md:px-4 py-2 md:py-3 rounded-xl transition-all font-medium text-xs md:text-sm ${
                   activeSection === tab.id 
-                    ? 'bg-white/20 text-white' 
-                    : 'bg-gray-700 text-gray-300'
-                }`}>
-                  {tab.count}
-                </span>
-              )}
-            </button>
-          ))}
+                    ? 'bg-purple-600 text-white shadow-lg shadow-purple-600/25' 
+                    : 'text-gray-400 hover:text-white hover:bg-gray-700/50'
+                }`}
+              >
+                <span className="text-sm md:text-base">{tab.icon}</span>
+                <span className="hidden sm:inline">{tab.label}</span>
+                {tab.count !== undefined && (
+                  <span className={`px-2 py-1 rounded-full text-xs ${
+                    activeSection === tab.id 
+                      ? 'bg-white/20 text-white' 
+                      : 'bg-gray-700 text-gray-300'
+                  }`}>
+                    {tab.count}
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Overview Section */}

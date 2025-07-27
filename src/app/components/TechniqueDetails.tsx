@@ -86,28 +86,28 @@ export const TechniqueDetails = ({
     <div className="lg:col-span-3">
       <div className="bg-gray-900/50 backdrop-blur-sm rounded-2xl border border-gray-700/30 shadow-2xl">
         {/* Header Section */}
-        <div className="bg-gradient-to-r from-gray-900/80 to-gray-800/80 p-4 lg:p-6 border-b border-gray-700/30">
-          <div className="flex items-start gap-3 lg:gap-4">
+        <div className="bg-gradient-to-r from-gray-900/80 to-gray-800/80 p-6 lg:p-6 border-b border-gray-700/30">
+          <div className="flex items-start gap-4 lg:gap-4">
             <div className="flex-shrink-0">
-              <div className="w-12 h-12 lg:w-16 lg:h-16 bg-gray-800/60 rounded-2xl flex items-center justify-center text-xl lg:text-2xl">
+              <div className="w-16 h-16 lg:w-16 lg:h-16 bg-gray-800/60 rounded-2xl flex items-center justify-center text-2xl lg:text-2xl">
                 {selectedTechnique.icon}
               </div>
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-start justify-between">
                 <div>
-                  <h1 className="text-xl lg:text-2xl font-bold text-white mb-1">
+                  <h1 className="text-2xl lg:text-2xl font-semibold text-white mb-2">
                     {selectedTechnique.name}
                     {selectedTechnique.abbr && (
-                      <span className="text-sm lg:text-lg ml-2 text-gray-400 font-normal">({selectedTechnique.abbr})</span>
+                      <span className="text-lg lg:text-lg ml-2 text-gray-400 font-normal">({selectedTechnique.abbr})</span>
                     )}
                   </h1>
-                  <p className="text-gray-300 text-sm lg:text-base leading-relaxed mb-3">{selectedTechnique.description}</p>
-                  <div className="flex flex-wrap gap-2">
-                    <span className={`inline-flex items-center px-2.5 lg:px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r ${selectedTechnique.color} text-white`}>
+                  <p className="text-gray-300 text-base lg:text-base leading-relaxed mb-4">{selectedTechnique.description}</p>
+                  <div className="flex flex-wrap gap-3">
+                    <span className={`inline-flex items-center px-3 lg:px-3 py-1.5 rounded-full text-sm font-medium bg-gradient-to-r ${selectedTechnique.color} text-white`}>
                       Complexity: {selectedTechnique.complexity}
                     </span>
-                    <span className="inline-flex items-center px-2.5 lg:px-3 py-1 rounded-full text-xs font-medium bg-gray-800/60 text-gray-200">
+                    <span className="inline-flex items-center px-3 lg:px-3 py-1.5 rounded-full text-sm font-medium bg-gray-800/60 text-gray-200">
                       {categories.find(c => c.id === selectedTechnique.category)?.name || 'Pattern'}
                     </span>
                   </div>
@@ -172,46 +172,46 @@ export const TechniqueDetails = ({
             <div className="grid grid-cols-2 gap-2">
               <button
                 onClick={() => setDetailsTab('overview')}
-                className={`py-3 px-4 rounded-lg font-medium transition-all text-sm ${
+                className={`py-4 px-3 rounded-lg font-medium transition-all text-sm min-h-[48px] ${
                   detailsTab === 'overview'
                     ? 'bg-blue-600 text-white'
                     : 'bg-gray-800/50 text-gray-400 hover:text-gray-200 hover:bg-gray-700/50'
                 }`}
               >
-                <BookOpen className="w-4 h-4 inline mr-2" />
+                <BookOpen className="w-4 h-4 inline mr-1" />
                 Overview
               </button>
               <button
                 onClick={() => setDetailsTab('flow')}
-                className={`py-3 px-4 rounded-lg font-medium transition-all text-sm ${
+                className={`py-4 px-3 rounded-lg font-medium transition-all text-sm min-h-[48px] ${
                   detailsTab === 'flow'
                     ? 'bg-orange-600 text-white'
                     : 'bg-gray-800/50 text-gray-400 hover:text-gray-200 hover:bg-gray-700/50'
                 }`}
               >
-                <GitBranch className="w-4 h-4 inline mr-2" />
+                <GitBranch className="w-4 h-4 inline mr-1" />
                 Flow
               </button>
               <button
                 onClick={() => setDetailsTab('interactive')}
-                className={`py-3 px-4 rounded-lg font-medium transition-all text-sm ${
+                className={`py-4 px-3 rounded-lg font-medium transition-all text-sm min-h-[48px] ${
                   detailsTab === 'interactive'
                     ? 'bg-purple-600 text-white'
                     : 'bg-gray-800/50 text-gray-400 hover:text-gray-200 hover:bg-gray-700/50'
                 }`}
               >
-                <Play className="w-4 h-4 inline mr-2" />
+                <Play className="w-4 h-4 inline mr-1" />
                 Demo
               </button>
               <button
                 onClick={() => setDetailsTab('code')}
-                className={`py-3 px-4 rounded-lg font-medium transition-all text-sm ${
+                className={`py-4 px-3 rounded-lg font-medium transition-all text-sm min-h-[48px] ${
                   detailsTab === 'code'
                     ? 'bg-green-600 text-white'
                     : 'bg-gray-800/50 text-gray-400 hover:text-gray-200 hover:bg-gray-700/50'
                 }`}
               >
-                <Code className="w-4 h-4 inline mr-2" />
+                <Code className="w-4 h-4 inline mr-1" />
                 Code
               </button>
             </div>
@@ -219,7 +219,7 @@ export const TechniqueDetails = ({
         </div>
 
         {/* Content Sections */}
-        <div className="p-4 lg:p-6">
+        <div className="p-6 lg:p-6">
           {detailsTab === 'overview' ? (
             <div className="space-y-8">
               {/* Video Explanation - For Chain of Thought and Chain of Debates */}
@@ -241,42 +241,42 @@ export const TechniqueDetails = ({
 
               {/* What is this pattern? */}
               <section>
-                <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
                   <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
                   What is {selectedTechnique.name}?
                 </h2>
                 <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
-                  <p className="text-gray-200 text-base leading-relaxed mb-4">
+                  <p className="text-gray-200 text-base leading-relaxed mb-6">
                     {selectedTechnique.description}
                   </p>
-                  <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4 mt-4">
-                    <div className="text-center p-3 bg-gray-800/30 rounded-lg">
-                      <div className="text-2xl mb-2">{selectedTechnique.icon}</div>
-                      <div className="text-sm text-gray-400">Pattern Type</div>
+                  <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 mt-4">
+                    <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                      <div className="text-2xl mb-3">{selectedTechnique.icon}</div>
+                      <div className="text-sm text-gray-400 mb-1">Pattern Type</div>
                       <div className="text-sm font-medium text-white">
                         {categories.find(c => c.id === selectedTechnique.category)?.name || 'Design Pattern'}
                       </div>
                     </div>
-                    <div className="text-center p-3 bg-gray-800/30 rounded-lg">
-                      <div className="text-2xl mb-2">
+                    <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                      <div className="text-2xl mb-3">
                         {selectedTechnique.complexity === 'low' ? '🟢' : 
                          selectedTechnique.complexity === 'medium' ? '🟡' : '🔴'}
                       </div>
-                      <div className="text-sm text-gray-400">Complexity</div>
+                      <div className="text-sm text-gray-400 mb-1">Complexity</div>
                       <div className="text-sm font-medium text-white capitalize">
                         {selectedTechnique.complexity}
                       </div>
                     </div>
-                    <div className="text-center p-3 bg-gray-800/30 rounded-lg">
-                      <div className="text-2xl mb-2">🎯</div>
-                      <div className="text-sm text-gray-400">Use Cases</div>
+                    <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                      <div className="text-2xl mb-3">🎯</div>
+                      <div className="text-sm text-gray-400 mb-1">Use Cases</div>
                       <div className="text-sm font-medium text-white">
                         {selectedTechnique.useCases.length} scenarios
                       </div>
                     </div>
-                    <div className="text-center p-3 bg-gray-800/30 rounded-lg">
-                      <div className="text-2xl mb-2">⚡</div>
-                      <div className="text-sm text-gray-400">Features</div>
+                    <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                      <div className="text-2xl mb-3">⚡</div>
+                      <div className="text-sm text-gray-400 mb-1">Features</div>
                       <div className="text-sm font-medium text-white">
                         {selectedTechnique.features?.length || 0} features
                       </div>
@@ -287,7 +287,7 @@ export const TechniqueDetails = ({
 
               {/* How it Works */}
               <section>
-                <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
                   <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
                   How it Works
                 </h2>
@@ -334,7 +334,7 @@ export const TechniqueDetails = ({
 
               {/* Key Features */}
               <section>
-                <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
                   <div className="w-1 h-6 bg-green-500 rounded-full"></div>
                   Key Features
                 </h2>
@@ -350,7 +350,7 @@ export const TechniqueDetails = ({
 
               {/* Best Use Cases */}
               <section>
-                <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
                   <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
                   Best Use Cases
                 </h2>
@@ -372,7 +372,7 @@ export const TechniqueDetails = ({
 
               {/* References & Further Reading */}
               <section>
-                <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
                   <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
                   References & Further Reading
                 </h2>
@@ -651,17 +651,17 @@ export const TechniqueDetails = ({
           ) : (
             <div className="space-y-6">
               {/* Language Selection */}
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <h2 className="text-xl font-bold text-white flex items-center gap-2">
                   <div className="w-1 h-6 bg-green-500 rounded-full"></div>
                   Code Playground
                 </h2>
-                <div className="flex gap-2">
+                <div className="flex gap-2 w-full sm:w-auto">
                   {(['typescript', 'python', 'rust'] as LanguageType[]).map(lang => (
                     <button
                       key={lang}
                       onClick={() => setSelectedLanguage(lang)}
-                      className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                      className={`flex-1 sm:flex-none px-4 py-3 rounded-lg text-sm font-medium transition-colors min-h-[44px] ${
                         selectedLanguage === lang
                           ? 'bg-blue-600 text-white'
                           : 'bg-gray-700 text-gray-300 hover:bg-gray-600'

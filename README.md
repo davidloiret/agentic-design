@@ -345,3 +345,8 @@ Add inspirating CVE categories such as CVE about MCP etc add a category for that
 Conduct a deep research on AI red teaming, add factual example, techniques, than I can copy paste, be exhaustif, don't forget anything.
 
 Also add a new category people to follow on this topic.
+
+----------
+
+Save pattern => pin or favoris
+used in project

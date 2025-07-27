@@ -47,6 +47,17 @@ export const PatternsExplorer = () => {
   // Close mobile sidebar when technique is selected
   const handleTechniqueSelect = (technique: any) => {
     setSelectedTechnique(technique);
+    // Auto-close bottom sheet on mobile when technique is selected
+    if (technique) {
+      setIsBottomSheetOpen(false);
+    }
+  };
+
+  // Close mobile sidebar when category is selected
+  const handleCategorySelect = (categoryId: string) => {
+    setSelectedCategory(categoryId);
+    // Auto-close bottom sheet on mobile when category is selected
+    setIsBottomSheetOpen(false);
   };
 
   return (
@@ -178,7 +189,7 @@ export const PatternsExplorer = () => {
                   searchQuery={searchQuery}
                   setSearchQuery={setSearchQuery}
                   selectedCategory={selectedCategory}
-                  setSelectedCategory={setSelectedCategory}
+                  setSelectedCategory={handleCategorySelect}
                   filteredTechniques={filteredTechniques}
                   searchFilteredTechniques={searchFilteredTechniques}
                   bottomSheetState={bottomSheetState}

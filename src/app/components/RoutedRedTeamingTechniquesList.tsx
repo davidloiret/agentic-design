@@ -1,8 +1,8 @@
 "use client"
 
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect, Suspense, useMemo } from 'react';
 import { ChevronRight, Shield, Search, AlertTriangle, Target, Lock, Zap, Users, Eye, BookOpen } from 'lucide-react';
-import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { redTeamingCategories, allRedTeamingTechniques } from '../red-teaming';
 
 interface RoutedRedTeamingTechniquesListProps {
@@ -13,13 +13,11 @@ interface RoutedRedTeamingTechniquesListProps {
 const RoutedRedTeamingTechniquesListInner = ({ selectedCategory, selectedTechnique }: RoutedRedTeamingTechniquesListProps) => {
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
+  const [searchQuery, setSearchQuery] = useState('');
 
-  // Initialize expanded categories from URL params or include selected category
+  // Initialize expanded categories with selected category
   const getInitialExpandedCategories = () => {
-    const expandedFromUrl = searchParams.get('expanded');
-    const expandedSet = expandedFromUrl ? new Set(expandedFromUrl.split(',').filter(Boolean)) : new Set();
+    const expandedSet = new Set<string>();
     if (selectedCategory) {
       expandedSet.add(selectedCategory);
     }
@@ -29,53 +27,15 @@ const RoutedRedTeamingTechniquesListInner = ({ selectedCategory, selectedTechniq
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(getInitialExpandedCategories());
 
   useEffect(() => {
-    const searchFromParams = searchParams.get('search') || '';
-    setSearchQuery(searchFromParams);
-    
-    // Update expanded categories from URL params
-    const expandedFromUrl = searchParams.get('expanded');
-    const expandedSet = expandedFromUrl ? new Set(expandedFromUrl.split(',').filter(Boolean)) : new Set();
+    // Ensure selected category is always expanded
     if (selectedCategory) {
-      expandedSet.add(selectedCategory);
+      setExpandedCategories(prev => {
+        const newSet = new Set(prev);
+        newSet.add(selectedCategory);
+        return newSet;
+      });
     }
-    setExpandedCategories(expandedSet);
-  }, [searchParams, selectedCategory]);
-
-  // Update URL when expandedCategories changes (but not during initial load)
-  useEffect(() => {
-    const expandedFromUrl = searchParams.get('expanded');
-    const currentExpanded = Array.from(expandedCategories).join(',');
-    
-    // Only update if expanded state actually changed and not during initial load
-    if (expandedFromUrl !== currentExpanded && expandedCategories.size > 0) {
-      const currentPath = window.location.pathname;
-      const url = buildUrl(currentPath, searchQuery, expandedCategories);
-      router.replace(url);
-    }
-  }, [expandedCategories, searchQuery, searchParams, router]);
-
-  // Helper function to build URL with search and expanded parameters
-  const buildUrl = (path: string, searchQuery?: string, expandedCategories?: Set<string>) => {
-    const params = new URLSearchParams();
-    const search = searchQuery || searchParams.get('search');
-    const expanded = expandedCategories || new Set(searchParams.get('expanded')?.split(',').filter(Boolean) || []);
-    
-    if (search) {
-      params.set('search', search);
-    }
-    if (expanded.size > 0) {
-      params.set('expanded', Array.from(expanded).join(','));
-    }
-    
-    return params.toString() ? `${path}?${params.toString()}` : path;
-  };
-
-  const handleSearchChange = (query: string) => {
-    setSearchQuery(query);
-    const currentPath = window.location.pathname;
-    const url = buildUrl(currentPath, query, expandedCategories);
-    router.replace(url);
-  };
+  }, [selectedCategory]);
 
   const toggleCategory = (categoryId: string) => {
     setExpandedCategories(prev => {
@@ -90,26 +50,22 @@ const RoutedRedTeamingTechniquesListInner = ({ selectedCategory, selectedTechniq
   };
 
   const handleCategorySelect = (categoryId: string) => {
-    // First update the expanded categories to include the new category
-    const updatedExpanded = new Set(expandedCategories);
-    updatedExpanded.add(categoryId);
-    
-    const url = buildUrl(`/ai-red-teaming/${categoryId}`, searchQuery, updatedExpanded);
-    router.push(url);
+    router.push(`/ai-red-teaming/${categoryId}`);
   };
 
   const handleTechniqueSelect = (categoryId: string, techniqueId: string) => {
-    const url = buildUrl(`/ai-red-teaming/${categoryId}/${techniqueId}`, searchQuery, expandedCategories);
-    router.push(url);
+    router.push(`/ai-red-teaming/${categoryId}/${techniqueId}`);
   };
 
-  const searchFilteredTechniques = searchQuery
-    ? allRedTeamingTechniques.filter(technique =>
-        technique.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        technique.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        technique.category.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : allRedTeamingTechniques;
+  const searchFilteredTechniques = useMemo(() => {
+    return searchQuery
+      ? allRedTeamingTechniques.filter(technique =>
+          technique.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          technique.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          technique.category.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      : allRedTeamingTechniques;
+  }, [searchQuery]);
 
   const getCategoryCount = (categoryId: string) => {
     const category = redTeamingCategories[categoryId as keyof typeof redTeamingCategories];
@@ -144,7 +100,7 @@ const RoutedRedTeamingTechniquesListInner = ({ selectedCategory, selectedTechniq
             type="text"
             placeholder="Search techniques..."
             value={searchQuery}
-            onChange={(e) => handleSearchChange(e.target.value)}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:border-red-500 focus:outline-none"
           />
         </div>

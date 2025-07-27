@@ -185,35 +185,35 @@ export default function CodeSandbox({ patternId, initialCode, language, onCodeCh
         <div className="flex items-center gap-2">
           <button
             onClick={copyToClipboard}
-            className="flex items-center gap-1 px-3 py-1.5 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors"
+            className="flex items-center justify-center gap-1 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors min-h-[44px]"
             title="Copy code"
           >
             <Copy className="w-4 h-4" />
-            Copy
+            <span className="hidden sm:inline">Copy</span>
           </button>
           
           <button
             onClick={downloadCode}
-            className="flex items-center gap-1 px-3 py-1.5 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors"
+            className="flex items-center justify-center gap-1 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors min-h-[44px]"
             title="Download code"
           >
             <Download className="w-4 h-4" />
-            Download
+            <span className="hidden sm:inline">Download</span>
           </button>
           
           <button
             onClick={resetCode}
-            className="flex items-center gap-1 px-3 py-1.5 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors"
+            className="flex items-center justify-center gap-1 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors min-h-[44px]"
             title="Reset to original"
           >
             <RotateCcw className="w-4 h-4" />
-            Reset
+            <span className="hidden sm:inline">Reset</span>
           </button>
           
           <button
             onClick={runCode}
             disabled={isRunning}
-            className={`flex items-center gap-1 px-3 py-1.5 text-sm rounded-md transition-colors ${
+            className={`flex items-center gap-1 px-4 py-2 text-sm rounded-md transition-colors min-h-[44px] ${
               isRunning
                 ? 'text-white bg-blue-400 cursor-not-allowed'
                 : 'text-white bg-blue-600 hover:bg-blue-700'
@@ -227,7 +227,7 @@ export default function CodeSandbox({ patternId, initialCode, language, onCodeCh
       </div>
 
       {/* Editor */}
-      <div className="h-96">
+      <div className="h-64 sm:h-80 md:h-96">
         <Editor
           height="100%"
           defaultLanguage={language}
@@ -236,13 +236,24 @@ export default function CodeSandbox({ patternId, initialCode, language, onCodeCh
           onChange={handleCodeChange}
           options={{
             minimap: { enabled: false },
-            fontSize: 14,
+            fontSize: 12,
             wordWrap: 'on',
             lineNumbers: 'on',
             scrollBeyondLastLine: false,
             automaticLayout: true,
             tabSize: 2,
-            insertSpaces: true
+            insertSpaces: true,
+            folding: true,
+            glyphMargin: false,
+            lineDecorationsWidth: 0,
+            lineNumbersMinChars: 3,
+            overviewRulerLanes: 0,
+            hideCursorInOverviewRuler: true,
+            overviewRulerBorder: false,
+            scrollbar: {
+              verticalScrollbarSize: 8,
+              horizontalScrollbarSize: 8
+            }
           }}
           theme="vs-light"
         />
