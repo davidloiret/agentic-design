@@ -12,7 +12,7 @@ export class User extends BaseEntity {
   @Property()
   lastName: string;
 
-  @Property({ nullable: true })
+  @Property({ nullable: true, unique: true })
   supabaseId?: string; // Link to Supabase auth user
 
   constructor(

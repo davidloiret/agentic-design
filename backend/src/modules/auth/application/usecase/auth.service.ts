@@ -89,21 +89,37 @@ export class AuthService {
     const { user, session } = await this.supabaseAuthService.exchangeCodeForSession(code);
     console.log('Supabase session obtained for user:', user.email);
 
-    // Check if user exists in our database, if not create them
+    // First check if user exists by supabase ID
     let localUser = await this.userRepository.findBySupabaseId(user.id);
     
     if (!localUser) {
-      console.log('Creating new user in database for:', user.email);
-      const newUser = new User(
-        user.email,
-        user.user_metadata?.full_name?.split(' ')[0] || user.user_metadata?.firstName || '',
-        user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || user.user_metadata?.lastName || '',
-        user.id
-      );
-      await this.userRepository.save(newUser);
-      localUser = newUser;
+      // Check if user exists by email (they might have registered with email/password)
+      localUser = await this.userRepository.findByEmail(user.email);
+      
+      if (localUser) {
+        console.log('Found existing user by email, updating supabase ID:', user.email);
+        // Update the existing user with the Supabase ID
+        localUser.supabaseId = user.id;
+        // Update name if it's not set and Google provides it
+        if (!localUser.firstName && user.user_metadata?.full_name) {
+          localUser.firstName = user.user_metadata.full_name.split(' ')[0] || '';
+          localUser.lastName = user.user_metadata.full_name.split(' ').slice(1).join(' ') || '';
+        }
+        await this.userRepository.update(localUser);
+      } else {
+        // Create new user
+        console.log('Creating new user in database for:', user.email);
+        const newUser = new User(
+          user.email,
+          user.user_metadata?.full_name?.split(' ')[0] || user.user_metadata?.firstName || '',
+          user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || user.user_metadata?.lastName || '',
+          user.id
+        );
+        await this.userRepository.save(newUser);
+        localUser = newUser;
+      }
     } else {
-      console.log('Found existing user in database:', localUser.email);
+      console.log('Found existing user by supabase ID:', localUser.email);
     }
 
     const result = {
