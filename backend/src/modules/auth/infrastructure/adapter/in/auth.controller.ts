@@ -149,7 +149,7 @@ export class AuthController {
       
       return response.redirect(callbackUrl.toString());
     } catch (error) {
-      return response.redirect(`${process.env.FRONTEND_URL || 'http://localhost:3000'}/auth/callback?error=oauth_failed`);
+      return response.redirect(`${process.env.FRONTEND_URL || 'https://agentic-design.ai'}/auth/callback?error=oauth_failed`);
     }
   }
 
