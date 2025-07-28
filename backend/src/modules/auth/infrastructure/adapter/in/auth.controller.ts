@@ -132,6 +132,15 @@ export class AuthController {
   }
 
   @Public()
+  @Get('github')
+  async githubAuth(@Res() response: Response) {
+    console.log('[OAuth] Starting GitHub OAuth flow');
+    const { url } = await this.authService.signInWithGitHub();
+    console.log('[OAuth] Redirecting to GitHub:', url);
+    return response.redirect(url);
+  }
+
+  @Public()
   @Get('callback')
   async googleCallback(
     @Query('code') code: string,

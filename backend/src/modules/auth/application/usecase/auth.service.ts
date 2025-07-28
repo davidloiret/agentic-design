@@ -83,6 +83,10 @@ export class AuthService {
     return await this.supabaseAuthService.signInWithGoogle();
   }
 
+  async signInWithGitHub() {
+    return await this.supabaseAuthService.signInWithGitHub();
+  }
+
   async handleOAuthCallback(code: string): Promise<AuthResponseDto> {
     console.log('Processing OAuth callback with code:', code);
     

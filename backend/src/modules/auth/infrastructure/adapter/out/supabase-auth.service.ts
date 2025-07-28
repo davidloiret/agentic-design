@@ -176,6 +176,27 @@ export class SupabaseAuthService {
     return data;
   }
 
+  async signInWithGitHub() {
+    // Get the backend URL for OAuth callback
+    const backendUrl = this.configService.get<string>('BACKEND_URL') || 
+                      `http://localhost:${this.configService.get<number>('PORT') || 3001}`;
+    
+    const { data, error } = await this.supabase.auth.signInWithOAuth({
+      provider: 'github',
+      options: {
+        redirectTo: `${backendUrl}/api/v1/auth/callback`,
+      },
+    });
+
+    console.log('[Supabase] GitHub OAuth redirect URL:', `${backendUrl}/api/v1/auth/callback`);
+
+    if (error) {
+      this.handleAuthError(error);
+    }
+
+    return data;
+  }
+
   async exchangeCodeForSession(code: string) {
     const { data, error } = await this.supabase.auth.exchangeCodeForSession(code);
 

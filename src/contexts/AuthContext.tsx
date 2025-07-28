@@ -16,6 +16,7 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string, firstName: string, lastName: string) => Promise<void>;
   signInWithGoogle: () => void;
+  signInWithGitHub: () => void;
   signOut: () => Promise<void>;
   refreshUser: () => Promise<void>;
 }
@@ -72,13 +73,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     window.location.href = `${backendUrl}/api/v1/auth/google`;
   };
 
+  const signInWithGitHub = () => {
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001';
+    window.location.href = `${backendUrl}/api/v1/auth/github`;
+  };
+
   const signOut = async () => {
     await api.post('/api/v1/auth/logout', {});
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, signIn, signUp, signInWithGoogle, signOut, refreshUser }}>
+    <AuthContext.Provider value={{ user, loading, signIn, signUp, signInWithGoogle, signInWithGitHub, signOut, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );
