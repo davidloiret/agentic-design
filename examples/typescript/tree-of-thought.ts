@@ -147,4 +147,5 @@ if (require.main === module) {
   main();
 }
 
-export { TreeOfThoughtPlanner, ThoughtNode };
+export { TreeOfThoughtPlanner };
+export type { ThoughtNode };

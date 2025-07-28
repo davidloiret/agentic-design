@@ -276,7 +276,7 @@ export const ContextCompressionFlow: React.FC = () => {
             fitView
             attributionPosition="bottom-left"
           >
-            <Background color="#374151" variant="dots" />
+            <Background color="#374151"/>
             <Controls className="bg-gray-800 border-gray-600" />
             <MiniMap 
               className="bg-gray-800 border-gray-600"

@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import { Category } from '../categories';
 
-const SITE_NAME = 'Agentic Design Patterns';
+const SITE_NAME = 'Agentic Design';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://agentic-design.ai';
 const SITE_DESCRIPTION = 'Comprehensive collection of AI agent design patterns, techniques, and best practices for building intelligent systems.';
 
@@ -134,10 +134,8 @@ export function generateTechniqueMetadata(technique: any, category?: Category): 
         }
       ],
       locale: 'en_US',
-      article: {
-        section: category?.name || 'Design Patterns',
-        tags: keywords,
-      },
+      section: category?.name || 'Design Patterns',
+      tags: keywords,
     },
     twitter: {
       card: 'summary_large_image',
@@ -163,8 +161,8 @@ export function generateTechniqueMetadata(technique: any, category?: Category): 
   };
 }
 
-export function generateDefaultMetadata(): Metadata {
-  return {
+export function generateDefaultMetadata(config: Metadata = {}): Metadata {
+  const defaults: Metadata = {
     title: SITE_NAME,
     description: SITE_DESCRIPTION,
     keywords: [
@@ -175,7 +173,7 @@ export function generateDefaultMetadata(): Metadata {
       'agentic systems',
       'machine learning patterns',
       'AI development',
-      'intelligent systems'
+      'intelligent systems',
     ],
     authors: [{ name: 'Agentic Design Team' }],
     creator: 'Agentic Design',
@@ -192,7 +190,7 @@ export function generateDefaultMetadata(): Metadata {
           width: 1200,
           height: 630,
           alt: SITE_NAME,
-        }
+        },
       ],
       locale: 'en_US',
     },
@@ -216,6 +214,23 @@ export function generateDefaultMetadata(): Metadata {
     },
     alternates: {
       canonical: SITE_URL,
+    },
+  };
+
+  return {
+    ...defaults,
+    ...config,
+    openGraph: {
+      ...defaults.openGraph,
+      ...config.openGraph,
+      title: config.title ?? defaults.openGraph?.title,
+      description: config.description ?? defaults.openGraph?.description,
+    },
+    twitter: {
+      ...defaults.twitter,
+      ...config.twitter,
+      title: config.title ?? defaults.twitter?.title,
+      description: config.description ?? defaults.twitter?.description,
     },
   };
 }

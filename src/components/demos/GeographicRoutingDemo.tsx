@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useCallback, useEffect } from 'react';
-import { Play, Pause, RotateCcw, Globe, MapPin, Shield, Clock, AlertTriangle, CheckCircle } from 'lucide-react';
+import { Play, Pause, RotateCcw, Globe, MapPin, Shield, Clock, CheckCircle } from 'lucide-react';
 
 interface DataCenter {
   id: string;
@@ -318,7 +318,7 @@ export const GeographicRoutingDemo: React.FC = () => {
     const optimalDC = selectOptimalDataCenter(selectedScenario);
     setSelectedDataCenter(optimalDC);
 
-    const analysis = {
+    const analysis: any = {
       selectedDC: optimalDC,
       latency: calculateLatency(selectedScenario.userLocation, optimalDC),
       compliance: checkCompliance(selectedScenario.userLocation.regulations, optimalDC.compliance),

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Play, Pause, RotateCcw, Zap, Clock, CheckCircle, AlertCircle, GitBranch, Merge, Cpu, Memory, TrendingUp, Activity, Hash, Layers } from 'lucide-react';
+import { Play, Pause, RotateCcw, Zap, Clock, CheckCircle, AlertCircle, GitBranch, Merge, Cpu, TrendingUp, Activity, Hash, Layers } from 'lucide-react';
 
 interface TaskNode {
   id: string;
@@ -139,9 +139,9 @@ const ForkJoinDemo: React.FC = () => {
         // Simplified matrix decomposition
         const blockSize = Math.floor(Math.sqrt(data.length));
         if (blockSize > 1) {
-          const blocks = [];
+          const blocks: any[] = [];
           for (let i = 0; i < blockSize; i++) {
-            const block = data.slice(i * blockSize, (i + 1) * blockSize);
+            const block: any = data.slice(i * blockSize, (i + 1) * blockSize);
             blocks.push(createTask(block, level + 1, id));
           }
           task.children = blocks;

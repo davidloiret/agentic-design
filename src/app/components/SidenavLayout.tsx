@@ -69,7 +69,7 @@ export const SidenavLayout = ({
   };
 
   // Clone sidebar content with extracted props
-  const enhancedSidebarContent = cloneElement(sidebarContent, {
+  const enhancedSidebarContent = cloneElement<any>(sidebarContent, {
     selectedCategory,
     selectedTechnique,
   });

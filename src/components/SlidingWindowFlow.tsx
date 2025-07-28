@@ -9,8 +9,6 @@ import ReactFlow, {
   useEdgesState,
   addEdge,
   Connection,
-  Edge,
-  Node,
   BackgroundVariant,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
@@ -44,8 +42,8 @@ const SlidingWindowFlow: React.FC = () => {
       const step = slidingWindowPattern.steps[currentStep];
       
       // Update node styles based on active nodes
-      setNodes((nodes) =>
-        nodes.map((node) => ({
+      setNodes((nodes: any) =>
+        nodes.map((node: any) => ({
           ...node,
           data: {
             ...node.data,
@@ -74,8 +72,8 @@ const SlidingWindowFlow: React.FC = () => {
       if (stepIndex < slidingWindowPattern.steps.length) {
         const step = slidingWindowPattern.steps[stepIndex];
         
-        setNodes((nodes) =>
-          nodes.map((node) => ({
+        setNodes((nodes: any) =>
+          nodes.map((node: any) => ({
             ...node,
             data: {
               ...node.data,
@@ -101,7 +99,7 @@ const SlidingWindowFlow: React.FC = () => {
     }, 2500);
   };
 
-  const currentStepData = currentStep > 0 ? slidingWindowPattern.steps[currentStep - 1] : null;
+  const currentStepData: any = currentStep > 0 ? slidingWindowPattern.steps[currentStep - 1] : null;
 
   return (
     <div className="w-full h-screen bg-gray-900">

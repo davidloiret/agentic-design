@@ -4,7 +4,6 @@ import "./globals.css";
 import { Analytics } from '@vercel/analytics/next';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { LearningHubProvider } from '@/contexts/LearningHubContext';
-import { AchievementManager } from '@/app/components/AchievementManager';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -98,7 +97,6 @@ export default function RootLayout({
       >
         <AuthProvider>
           <LearningHubProvider>
-            <AchievementManager />
             {children}
           </LearningHubProvider>
         </AuthProvider>

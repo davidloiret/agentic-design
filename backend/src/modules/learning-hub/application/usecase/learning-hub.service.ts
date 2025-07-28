@@ -4,6 +4,7 @@ import { UserAchievementRepository } from '../../infrastructure/persistence/user
 import { UserXpRepository, UserXpTransactionRepository } from '../../infrastructure/persistence/user-xp.repository';
 import { UserStreakRepository } from '../../infrastructure/persistence/user-streak.repository';
 import { UserRepository } from '../../../user/infrastructure/persistence/user.repository';
+import { NotificationService } from '../../../notification/application/usecase/notification.service';
 import { UserProgress } from '../../domain/entity/user-progress.entity';
 import { UserAchievement, AchievementType } from '../../domain/entity/user-achievement.entity';
 import { UserXp, UserXpTransaction, XpSource } from '../../domain/entity/user-xp.entity';
@@ -18,6 +19,7 @@ export class LearningHubService {
     private readonly xpRepository: UserXpRepository,
     private readonly xpTransactionRepository: UserXpTransactionRepository,
     private readonly streakRepository: UserStreakRepository,
+    private readonly notificationService: NotificationService,
   ) {}
 
   async updateProgress(
@@ -197,6 +199,14 @@ export class LearningHubService {
     }
 
     if (streak.currentStreak > previousStreak) {
+      // Create streak notification
+      const isNewRecord = streak.currentStreak > streak.longestStreak;
+      await this.notificationService.createStreakNotification(
+        user,
+        streak.currentStreak,
+        isNewRecord
+      );
+      
       await this.checkStreakAchievements(userId, streak.currentStreak);
     }
   }
@@ -285,6 +295,16 @@ export class LearningHubService {
     const achievement = new UserAchievement(user, type, title, description, xpReward, icon, metadata);
     await this.achievementRepository.save(achievement);
 
+    // Create notification for achievement
+    await this.notificationService.createAchievementNotification(
+      user,
+      title,
+      description,
+      xpReward,
+      icon,
+      metadata
+    );
+
     if (xpReward > 0) {
       await this.awardXp(user.id, xpReward, XpSource.ACHIEVEMENT_UNLOCK, achievement.id, `Achievement: ${title}`);
     }
@@ -314,6 +334,14 @@ export class LearningHubService {
     await this.xpTransactionRepository.save(transaction);
 
     if (userXp.level > previousLevel) {
+      // Create level up notification
+      await this.notificationService.createLevelUpNotification(
+        user,
+        userXp.level,
+        previousLevel,
+        userXp.totalXp
+      );
+      
       await this.checkXpMilestoneAchievements(userId, userXp.totalXp, userXp.level);
     }
   }

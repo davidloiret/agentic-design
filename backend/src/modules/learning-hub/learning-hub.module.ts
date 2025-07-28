@@ -13,6 +13,7 @@ import { UserXp, UserXpTransaction } from './domain/entity/user-xp.entity';
 import { UserStreak } from './domain/entity/user-streak.entity';
 import { User } from '../user/domain/entity/user.entity';
 import { AuthModule } from '../auth/auth.module';
+import { NotificationModule } from '../notification/notification.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { AuthModule } from '../auth/auth.module';
       User,
     ]),
     AuthModule,
+    NotificationModule,
   ],
   controllers: [LearningHubController],
   providers: [

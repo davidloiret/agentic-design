@@ -3,6 +3,7 @@
 import { Sparkles, Search } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { UserMenu } from './UserMenu';
+import { NotificationBell } from './NotificationBell';
 import Link from 'next/link';
 
 export const Header = () => {
@@ -63,7 +64,10 @@ export const Header = () => {
                 <div className="w-4 h-4 bg-gray-700 rounded animate-pulse"></div>
               </div>
             ) : user ? (
-              <UserMenu />
+              <div className="flex items-center space-x-3">
+                <NotificationBell />
+                <UserMenu />
+              </div>
             ) : (
               <div className="flex items-center space-x-2">
                 <Link
@@ -103,7 +107,10 @@ export const Header = () => {
                   <div className="w-3 h-3 bg-gray-700 rounded animate-pulse"></div>
                 </div>
               ) : user ? (
-                <UserMenu />
+                <div className="flex items-center space-x-2">
+                  <NotificationBell />
+                  <UserMenu />
+                </div>
               ) : (
                 <Link
                   href="/auth/login"

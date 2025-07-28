@@ -519,7 +519,7 @@ const AsyncAwaitDemo: React.FC = () => {
                 <div className="mt-2 p-2 bg-gray-900/50 rounded text-xs">
                   <div className="text-gray-400 mb-1">Response:</div>
                   <div className="text-green-300 font-mono">
-                    Size: {Object.values(operation.result)[0]?.size}KB
+                    Size: {Object.values((operation.result as any)[0]?.size || 0)}KB
                   </div>
                 </div>
               )}

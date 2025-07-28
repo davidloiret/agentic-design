@@ -13,7 +13,7 @@ export const SceneTransition: React.FC<{
   endFrame: number;
   transitionType?: 'fade' | 'slide' | 'morph' | 'zoom' | 'flip' | 'particle' | 'liquid';
   direction?: 'up' | 'down' | 'left' | 'right';
-  easing?: keyof typeof easingFunctions;
+  easing?: any;
 }> = ({ 
   children, 
   startFrame, 
@@ -295,7 +295,7 @@ export const AttentionHighlight: React.FC<{
   };
   
   return (
-    <div style={getHighlightStyle()}>
+    <div style={getHighlightStyle() as any}>
       {children}
     </div>
   );

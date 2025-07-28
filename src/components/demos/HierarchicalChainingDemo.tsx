@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, ReactElement } from 'react';
 import { ChevronRight, ChevronDown, Play, Pause, RotateCcw, CheckCircle, Clock, AlertCircle } from 'lucide-react';
 
 interface HierarchicalNode {
@@ -529,7 +529,7 @@ export const HierarchicalChainingDemo: React.FC = () => {
     }
   };
 
-  const renderNode = (nodeId: string, depth: number = 0): JSX.Element => {
+  const renderNode = (nodeId: string, depth: number = 0): ReactElement => {
     const node = nodes[nodeId];
     if (!node) return <></>;
 

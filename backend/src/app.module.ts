@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { LearningHubModule } from './modules/learning-hub/learning-hub.module';
+import { NotificationModule } from './modules/notification/notification.module';
 import mikroOrmConfig from './mikro-orm.config';
 
 @Module({
@@ -16,6 +17,7 @@ import mikroOrmConfig from './mikro-orm.config';
     AuthModule,
     UserModule,
     LearningHubModule,
+    NotificationModule,
   ],
   controllers: [AppController],
 })

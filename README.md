@@ -447,3 +447,7 @@ Comment rassembler
 suggest prompt etc / patterns
 
 create your own list
+
+https://www.open-source-ward.com/
+
+generate post for linkedin

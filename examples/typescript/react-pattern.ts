@@ -137,4 +137,5 @@ if (require.main === module) {
   main();
 }
 
-export { ReActAgent, Action, Observation };
+export { ReActAgent };
+export type { Action, Observation };

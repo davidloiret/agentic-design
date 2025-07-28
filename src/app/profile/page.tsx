@@ -34,9 +34,9 @@ function ProfilePageContent() {
   useEffect(() => {
     if (user) {
       setEditForm({
-        firstName: user.firstName || '',
-        lastName: user.lastName || '',
-        email: user.email || ''
+        firstName: user?.firstName || '',
+        lastName: user?.lastName || '',
+        email: user?.email || ''
       });
     }
   }, [user]);
@@ -53,9 +53,9 @@ function ProfilePageContent() {
     setSuccess('');
     if (user) {
       setEditForm({
-        firstName: user.firstName || '',
-        lastName: user.lastName || '',
-        email: user.email || ''
+        firstName: user?.firstName || '',
+        lastName: user?.lastName || '',
+        email: user?.email || ''
       });
     }
   };
@@ -84,7 +84,7 @@ function ProfilePageContent() {
 
   const getInitials = () => {
     if (!user) return 'U';
-    const firstInitial = user.firstName?.[0] || '';
+    const firstInitial = user?.firstName?.[0] || '';
     const lastInitial = user.lastName?.[0] || '';
     return (firstInitial + lastInitial).toUpperCase() || user.email[0].toUpperCase();
   };
@@ -92,9 +92,9 @@ function ProfilePageContent() {
   const getDisplayName = () => {
     if (!user) return 'User';
     if (user.firstName && user.lastName) {
-      return `${user.firstName} ${user.lastName}`;
+      return `${user?.firstName} ${user?.lastName}`;
     }
-    return user.email;
+    return user?.email;
   };
 
 
@@ -141,7 +141,7 @@ function ProfilePageContent() {
                 <h2 className="text-xl font-semibold text-gray-100 mb-1">
                   {getDisplayName()}
                 </h2>
-                <p className="text-gray-400 text-sm mb-4">{user.email}</p>
+                <p className="text-gray-400 text-sm mb-4">{user?.email}</p>
                 
                 <div className="space-y-3">
                   <div className="flex items-center justify-center space-x-2 text-sm text-gray-400">
@@ -230,7 +230,7 @@ function ProfilePageContent() {
                       </div>
                     ) : (
                       <div className="p-3 bg-gray-800/30 rounded-lg border border-gray-700/50">
-                        <p className="text-gray-100">{user.firstName || 'Not set'}</p>
+                        <p className="text-gray-100">{user?.firstName || 'Not set'}</p>
                       </div>
                     )}
                   </div>
@@ -254,7 +254,7 @@ function ProfilePageContent() {
                       </div>
                     ) : (
                       <div className="p-3 bg-gray-800/30 rounded-lg border border-gray-700/50">
-                        <p className="text-gray-100">{user.lastName || 'Not set'}</p>
+                        <p className="text-gray-100">{user?.lastName || 'Not set'}</p>
                       </div>
                     )}
                   </div>
@@ -279,7 +279,7 @@ function ProfilePageContent() {
                     </div>
                   ) : (
                     <div className="p-3 bg-gray-800/30 rounded-lg border border-gray-700/50">
-                      <p className="text-gray-100">{user.email}</p>
+                      <p className="text-gray-100">{user?.email}</p>
                     </div>
                   )}
                 </div>

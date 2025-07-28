@@ -4,7 +4,7 @@ export interface PatternScenario {
   id: string;
   title: string;
   description: string;
-  steps: ScenarioStep[];
+  steps: any[];
   initialNodes: Node[];
   initialEdges: Edge[];
 }

@@ -220,4 +220,5 @@ if (require.main === module) {
   main();
 }
 
-export { SequentialChain, ChainStep, ChainResult };
+export { SequentialChain };
+export type { ChainStep, ChainResult };

@@ -338,7 +338,7 @@ export const ChainOfDebatesVideoWithAudio: React.FC = () => {
         await timingService.loadTimingConfig('/audio/cod/');
         
         const segments = timingService.getNarrationSegments();
-        const visualElements = timingService.getVisualElementTiming('perspectiveComparison');
+        const visualElements: any = timingService.getVisualElementTiming('perspectiveComparison' as any);
         
         if (segments) {
           setNarrationSegments(segments.map(seg => ({

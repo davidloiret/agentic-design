@@ -326,56 +326,56 @@ export const constraintSatisfactionPattern: PatternScenario = {
   ],
   steps: [
     {
-      id: 1,
+      id: 'step1',
       title: 'Problem Analysis',
       description: 'Analyze the constraint satisfaction problem and identify all requirements',
       activeNodes: ['problem-input', 'constraint-analyzer'],
       explanation: 'The system receives a complex deployment problem with multiple agents, servers, and constraints that must be satisfied simultaneously.'
     },
     {
-      id: 2,
+      id: 'step2',
       title: 'Constraint Identification',
       description: 'Categorize constraints into hard requirements, soft preferences, and optimization criteria',
       activeNodes: ['hard-constraints', 'soft-constraints', 'optimization-criteria'],
       explanation: 'Hard constraints are mandatory (server capacity, dependencies), soft constraints are preferences (latency, load balancing), and optimization criteria define success metrics.'
     },
     {
-      id: 3,
+      id: 'step3',
       title: 'Domain Modeling',
       description: 'Create formal mathematical model of the constraint satisfaction problem',
       activeNodes: ['domain-modeling', 'variables', 'constraint-network', 'domain-restrictions'],
       explanation: 'Transform the real-world problem into a formal CSP with variables (agent assignments), domains (possible values), and constraints (relationships).'
     },
     {
-      id: 4,
+      id: 'step4',
       title: 'Solution Search',
       description: 'Apply constraint solving algorithms to find valid solutions',
       activeNodes: ['solution-engine', 'backtracking-search', 'arc-consistency', 'forward-checking', 'heuristics', 'local-search'],
       explanation: 'Multiple algorithms work together: backtracking for systematic search, arc consistency for preprocessing, forward checking for early constraint propagation, and heuristics for intelligent ordering.'
     },
     {
-      id: 5,
+      id: 'step5',
       title: 'Solution Validation',
       description: 'Verify that proposed solutions satisfy all constraints and evaluate quality',
       activeNodes: ['solution-validation', 'hard-constraint-check', 'soft-constraint-eval', 'optimization-score'],
       explanation: 'Each solution candidate is rigorously tested against all hard constraints (must pass), soft constraints (scored), and optimization objectives (measured).'
     },
     {
-      id: 6,
+      id: 'step6',
       title: 'Multi-objective Optimization',
       description: 'Balance competing objectives and analyze trade-offs between different solutions',
       activeNodes: ['solution-refinement', 'tradeoff-analysis', 'multi-objective', 'pareto-optimization'],
       explanation: 'When multiple valid solutions exist, the system analyzes trade-offs between cost, performance, and reliability to find the best compromise or Pareto-optimal solutions.'
     },
     {
-      id: 7,
+      id: 'step7',
       title: 'Solution Implementation',
       description: 'Generate detailed deployment plan with resource allocation and compliance verification',
       activeNodes: ['final-solution', 'deployment-plan', 'resource-allocation', 'compliance-verification'],
       explanation: 'The optimal solution is translated into actionable deployment instructions with specific agent-to-server assignments, resource allocations, and compliance confirmations.'
     },
     {
-      id: 8,
+      id: 'step8',
       title: 'Continuous Monitoring',
       description: 'Setup monitoring and adaptation mechanisms for dynamic constraint satisfaction',
       activeNodes: ['monitoring-setup'],
