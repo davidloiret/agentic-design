@@ -29,7 +29,7 @@ fi
 echo "✅ SSL certificates found for $DOMAIN"
 
 echo "🛑 Stopping existing containers..."
-docker compose -f docker-compose.prod.yml --env-file .env.prod down
+docker compose -f docker-compose.prod.yml --env-file .env.prod down --volumes --remove-orphans
 
 echo "🧹 Cleaning up old images (optional)..."
 read -p "Do you want to remove old images to save space? (y/N): " -n 1 -r

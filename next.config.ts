@@ -7,6 +7,16 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: process.env.NEXT_PUBLIC_BACKEND_URL 
+          ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/:path*`
+          : 'https://backend.agentic-design.ai/api/:path*',
+      },
+    ];
+  },
   webpack: (config, { isServer }) => {
     // Remotion compatibility
     config.module.rules.push({
