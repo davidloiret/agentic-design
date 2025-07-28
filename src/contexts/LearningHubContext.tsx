@@ -159,13 +159,7 @@ export function LearningHubProvider({ children }: { children: React.ReactNode })
       setLoading(false);
       setHasInitialized(true);
     }
-  }, [user, authLoading, hasInitialized, achievements]);
-
-  // Load data when user changes
-  useEffect(() => {
-    refreshData();
-  }, [refreshData]);
-
+  }, [user, authLoading, hasInitialized]);
   // Update progress
   const updateProgress = async (data: UpdateProgressRequest) => {
     if (!user) return;
