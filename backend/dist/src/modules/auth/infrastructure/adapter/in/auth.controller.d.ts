@@ -17,5 +17,17 @@ export declare class AuthController {
         lastName: any;
     }>;
     googleAuth(response: Response): Promise<void>;
-    googleCallback(code: string, response: Response): Promise<void>;
+    googleCallback(code: string, error: string, response: Response): Promise<void>;
+    completeOAuthCallback(body: {
+        access_token: string;
+        refresh_token?: string;
+    }, request: Request, response: Response): Promise<{
+        success: boolean;
+        user: {
+            id: string;
+            email: string;
+            firstName: any;
+            lastName: any;
+        };
+    }>;
 }

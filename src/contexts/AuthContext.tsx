@@ -27,11 +27,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   const refreshUser = async () => {
+    console.log('[AuthContext] Refreshing user...');
     try {
       const response = await api.get('/api/v1/auth/me');
+      console.log('[AuthContext] /me response status:', response.status);
+      
       const data = await response.json();
-      setUser(data);
+      console.log('[AuthContext] /me response data:', data);
+      
+      if (data && data.id) {
+        console.log('[AuthContext] User authenticated:', data.email);
+        setUser(data);
+      } else {
+        console.log('[AuthContext] No user data received');
+        setUser(null);
+      }
     } catch (error) {
+      console.error('[AuthContext] Error refreshing user:', error);
       setUser(null);
     } finally {
       setLoading(false);

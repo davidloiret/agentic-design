@@ -73,14 +73,20 @@ let AuthService = class AuthService {
         return await this.supabaseAuthService.signInWithGoogle();
     }
     async handleOAuthCallback(code) {
+        console.log('Processing OAuth callback with code:', code);
         const { user, session } = await this.supabaseAuthService.exchangeCodeForSession(code);
+        console.log('Supabase session obtained for user:', user.email);
         let localUser = await this.userRepository.findBySupabaseId(user.id);
         if (!localUser) {
+            console.log('Creating new user in database for:', user.email);
             const newUser = new user_entity_1.User(user.email, user.user_metadata?.full_name?.split(' ')[0] || user.user_metadata?.firstName || '', user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || user.user_metadata?.lastName || '', user.id);
             await this.userRepository.save(newUser);
             localUser = newUser;
         }
-        return {
+        else {
+            console.log('Found existing user in database:', localUser.email);
+        }
+        const result = {
             user: {
                 id: user.id,
                 email: user.email,
@@ -90,6 +96,8 @@ let AuthService = class AuthService {
             access_token: session.access_token,
             refresh_token: session.refresh_token,
         };
+        console.log('OAuth callback processed successfully for user:', user.email);
+        return result;
     }
 };
 exports.AuthService = AuthService;

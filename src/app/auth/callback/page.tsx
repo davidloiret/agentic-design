@@ -12,27 +12,71 @@ export default function CallbackPage() {
 
   useEffect(() => {
     const handleCallback = async () => {
+      console.log('[Frontend OAuth] Callback page loaded');
+      
       const error = searchParams.get('error');
-      const success = searchParams.get('success');
+      const accessToken = searchParams.get('access_token');
+      const refreshToken = searchParams.get('refresh_token');
+      
+      console.log('[Frontend OAuth] URL params:', {
+        error: error || 'none',
+        hasAccessToken: !!accessToken,
+        hasRefreshToken: !!refreshToken,
+        accessTokenLength: accessToken?.length,
+      });
       
       if (error) {
         // Handle OAuth errors
-        console.error('OAuth error:', error);
+        console.error('[Frontend OAuth] Error from backend:', error);
         router.push('/auth/login?error=oauth_failed');
         return;
       }
 
-      if (success === 'true') {
-        // Small delay to ensure cookies are set
-        setTimeout(async () => {
+      if (accessToken) {
+        try {
+          console.log('[Frontend OAuth] Sending tokens to backend to set cookies...');
+          
+          // Make a POST request to set cookies
+          const response = await fetch('/api/v1/auth/callback/complete', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+              access_token: accessToken,
+              refresh_token: refreshToken,
+            }),
+          });
+
+          console.log('[Frontend OAuth] Response status:', response.status);
+          
+          if (!response.ok) {
+            const errorText = await response.text();
+            console.error('[Frontend OAuth] Response error:', errorText);
+            throw new Error('Failed to complete authentication');
+          }
+
+          const data = await response.json();
+          console.log('[Frontend OAuth] Authentication completed:', data);
+          
+          // Check if cookies were set
+          console.log('[Frontend OAuth] Document cookies:', document.cookie);
+          
           // Refresh user data to get the newly authenticated user
+          console.log('[Frontend OAuth] Refreshing user data...');
           await refreshUser();
           
           // Redirect to learning hub on successful authentication
+          console.log('[Frontend OAuth] Redirecting to learning hub...');
           router.push('/learning-hub');
-        }, 100);
+        } catch (error) {
+          console.error('[Frontend OAuth] Failed to complete OAuth callback:', error);
+          router.push('/auth/login?error=oauth_failed');
+        }
       } else {
-        // No success parameter, redirect to login
+        // No tokens, redirect to login
+        console.log('[Frontend OAuth] No access token found, redirecting to login');
         router.push('/auth/login');
       }
     };

@@ -156,12 +156,18 @@ export class SupabaseAuthService {
   }
 
   async signInWithGoogle() {
+    // Get the backend URL for OAuth callback
+    const backendUrl = this.configService.get<string>('BACKEND_URL') || 
+                      `http://localhost:${this.configService.get<number>('PORT') || 3001}`;
+    
     const { data, error } = await this.supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3000'}/auth/callback`,
+        redirectTo: `${backendUrl}/api/v1/auth/callback`,
       },
     });
+
+    console.log('[Supabase] OAuth redirect URL:', `${backendUrl}/api/v1/auth/callback`);
 
     if (error) {
       this.handleAuthError(error);

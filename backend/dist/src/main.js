@@ -10,8 +10,13 @@ async function bootstrap() {
     const configService = app.get(config_1.ConfigService);
     app.setGlobalPrefix('api/v1');
     app.enableCors({
-        origin: configService.get('FRONTEND_URL') || 'http://localhost:3000',
+        origin: [
+            configService.get('FRONTEND_URL') || 'http://localhost:3000',
+            'http://localhost:3000',
+            'http://127.0.0.1:3000'
+        ],
         credentials: true,
+        optionsSuccessStatus: 200,
     });
     app.use(cookieParser());
     app.useGlobalPipes(new common_1.ValidationPipe({
