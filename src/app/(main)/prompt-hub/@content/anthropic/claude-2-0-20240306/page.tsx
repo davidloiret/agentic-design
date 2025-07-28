@@ -3,9 +3,7 @@
 import React, { useState } from 'react';
 import { 
   Brain,
-  Lock,
   Unlock,
-  AlertTriangle,
   FileText,
   Calendar,
   Database,

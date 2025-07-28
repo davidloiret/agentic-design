@@ -1,5 +1,5 @@
 import { Entity, Property, ManyToOne, Enum } from '@mikro-orm/core';
-import { BaseEntity } from '@/shared/domain/entity/base.entity';
+import { BaseEntity } from '../../../shared/domain/entity/base.entity';
 import { User } from '@/modules/user/domain/entity/user.entity';
 
 export enum NotificationType {

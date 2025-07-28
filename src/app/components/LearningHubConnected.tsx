@@ -15,14 +15,11 @@ import {
   Lock,
   CheckCircle,
   Clock,
-  Users,
-  TrendingUp,
   GraduationCap,
   Medal,
   Info,
   ArrowRight,
-  Menu,
-  X
+  XCircle,
 } from 'lucide-react';
 import { useLearningHub } from '@/contexts/LearningHubContext';
 import { QuizComponent } from './learning/QuizComponent';
@@ -67,21 +64,10 @@ const LEVELS = [
   { level: 7, title: 'Master', xpRequired: 4000, color: 'text-yellow-400' },
 ];
 
-const ACHIEVEMENTS = [
-  { id: 'first-quiz', title: 'First Steps', description: 'Complete your first quiz', icon: Play },
-  { id: 'week-streak', title: 'Consistent Learner', description: '7-day learning streak', icon: Flame },
-  { id: 'code-master', title: 'Code Master', description: 'Complete 10 coding challenges', icon: Code },
-  { id: 'pattern-expert', title: 'Pattern Expert', description: 'Master all design patterns', icon: Brain },
-  { id: 'system-architect', title: 'System Architect', description: 'Build 5 complete systems', icon: Award },
-];
-
 export const LearningHubConnected: React.FC<LearningHubProps> = ({ techniques = [], categories = [] }) => {
-  // Use the learning hub context for backend data
   const { 
     progress, 
     achievements, 
-    xp, 
-    streak, 
     loading, 
     error, 
     updateProgress, 
@@ -99,7 +85,6 @@ export const LearningHubConnected: React.FC<LearningHubProps> = ({ techniques = 
   const [saveError, setSaveError] = useState<string | null>(null);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
-  // Learning modules with comprehensive agentic design pattern content
   const learningModules: LearningModule[] = [
     {
       id: 'reasoning-techniques',
@@ -453,7 +438,6 @@ export const LearningHubConnected: React.FC<LearningHubProps> = ({ techniques = 
       }
     }
 
-    // All retries failed
     setSavingProgress(false);
     setSaveError(
       `Failed to save your progress after ${maxRetries} attempts. ` +
@@ -468,7 +452,6 @@ export const LearningHubConnected: React.FC<LearningHubProps> = ({ techniques = 
   };
 
   const handleChallengeExit = () => {
-    // Clear any pending save states when exiting
     setSavingProgress(false);
     setSaveError(null);
     setSaveSuccess(false);
@@ -507,7 +490,6 @@ export const LearningHubConnected: React.FC<LearningHubProps> = ({ techniques = 
     );
   }
 
-  // Show error state
   if (error) {
     return (
       <div className="min-h-screen bg-gray-950 flex items-center justify-center">

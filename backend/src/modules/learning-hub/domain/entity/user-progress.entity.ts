@@ -1,5 +1,5 @@
 import { Entity, Property, ManyToOne } from '@mikro-orm/core';
-import { BaseEntity } from '../../../shared/libs/base-entity';
+import { BaseEntity } from '../../../shared/domain/entity/base.entity';
 import { User } from '../../../user/domain/entity/user.entity';
 
 @Entity({ tableName: 'user_progress' })

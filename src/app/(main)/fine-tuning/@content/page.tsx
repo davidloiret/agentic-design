@@ -1,4 +1,4 @@
-import { BookOpen, CheckCircle } from 'lucide-react';
+import { CheckCircle } from 'lucide-react';
 
 export default function FineTuningPage() {
   return (

@@ -6,6 +6,7 @@ import { SupabaseAuthService } from '../adapter/out/supabase-auth.service';
 export const IS_PUBLIC_KEY = 'isPublic';
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
 
+
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(

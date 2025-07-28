@@ -2,7 +2,6 @@ import { SidenavLayout } from '../../components/SidenavLayout';
 import { RoutedTechniquesList } from '../../components/RoutedTechniquesList';
 
 export default function PatternsLayout({
-  children,
   content,
 }: {
   children: React.ReactNode;

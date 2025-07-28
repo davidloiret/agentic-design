@@ -1,11 +1,12 @@
 import { RedTeamingCategoryDetails } from '../../../../components/RedTeamingCategoryDetails';
 
 interface CategoryContentPageProps {
-  params: {
+  params: Promise<{
     categoryId: string;
-  };
+  }>;
 }
 
-export default function CategoryContentPage({ params }: CategoryContentPageProps) {
-  return <RedTeamingCategoryDetails categoryId={params.categoryId} />;
+export default async function CategoryContentPage({ params }: CategoryContentPageProps) {
+  const { categoryId } = await params;
+  return <RedTeamingCategoryDetails categoryId={categoryId} />;
 }

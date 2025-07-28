@@ -7,7 +7,7 @@ import { redirect } from 'next/navigation';
 import { Metadata } from 'next';
 
 interface ContentTechniquePageProps {
-  params: { categoryId: string; techniqueId: string };
+  params: Promise<{ categoryId: string; techniqueId: string }>;
 }
 
 export async function generateMetadata({ params }: ContentTechniquePageProps): Promise<Metadata> {

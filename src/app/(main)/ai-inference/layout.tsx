@@ -2,7 +2,6 @@ import { SidenavLayout } from '../../components/SidenavLayout';
 import { AiInferenceNavigation } from '../../components/AiInferenceNavigation';
 
 export default function AiInferenceLayout({
-  children,
   content,
 }: {
   children: React.ReactNode;

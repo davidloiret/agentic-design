@@ -3,8 +3,8 @@ import { Public } from './modules/auth/infrastructure/guard/auth.guard';
 
 @Controller()
 export class AppController {
-  @Public()
   @Get('health')
+  @Public()
   getHealth() {
     return {
       status: 'ok',
