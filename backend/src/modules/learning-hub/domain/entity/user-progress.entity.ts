@@ -43,7 +43,6 @@ export class UserProgress extends BaseEntity {
     this.timeSpent = timeSpent;
     this.lastAccessedAt = new Date();
     
-    // If progress is 100%, mark as completed
     if (this.progressPercentage === 100) {
       this.markCompleted();
     }

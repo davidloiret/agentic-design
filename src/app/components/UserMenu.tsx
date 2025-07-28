@@ -65,7 +65,7 @@ export const UserMenu = () => {
   const handleSignOut = async () => {
     try {
       await signOut();
-      router.push('/auth/login');
+      // router.push('/auth/login');
     } catch (error) {
       console.error('Failed to sign out:', error);
     }

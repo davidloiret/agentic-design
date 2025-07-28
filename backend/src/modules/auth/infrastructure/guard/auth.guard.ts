@@ -14,7 +14,6 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    // Check if the route is marked as public
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
@@ -26,7 +25,6 @@ export class AuthGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest<Request>();
     
-    // Get token from cookie first, then fallback to Authorization header
     let token = request.cookies?.['access_token'];
     
     if (!token) {
@@ -36,13 +34,11 @@ export class AuthGuard implements CanActivate {
       }
     }
     
-    // If no access token but a refresh token exists, attempt to refresh the session
     if (!token && request.cookies?.['refresh_token']) {
       const refreshToken = request.cookies['refresh_token'];
       const refreshResult = await this.supabaseAuthService.refreshSession(refreshToken);
       if (refreshResult?.session?.access_token) {
         token = refreshResult.session.access_token;
-        // Update cookies with new tokens
         const response = context.switchToHttp().getResponse();
         response.cookie('access_token', refreshResult.session.access_token, {
           httpOnly: true,
@@ -66,17 +62,14 @@ export class AuthGuard implements CanActivate {
     }
 
     try {
-      // Verify the token and get user data
       let user = await this.supabaseAuthService.getUserByToken(token);
       
-      // If token invalid/expired but refresh token exists, attempt refresh once more
       if (!user && request.cookies?.['refresh_token']) {
         const refreshToken = request.cookies['refresh_token'];
         const refreshResult = await this.supabaseAuthService.refreshSession(refreshToken);
         if (refreshResult?.session?.access_token) {
           token = refreshResult.session.access_token;
           user = refreshResult.user ?? refreshResult.session.user;
-          // Update cookies with new tokens
           const response = context.switchToHttp().getResponse();
           response.cookie('access_token', refreshResult.session.access_token, {
             httpOnly: true,
@@ -99,7 +92,6 @@ export class AuthGuard implements CanActivate {
         throw new UnauthorizedException('Invalid or expired authentication token');
       }
 
-      // Attach user to request object for use in controllers
       request['user'] = user;
       
       return true;

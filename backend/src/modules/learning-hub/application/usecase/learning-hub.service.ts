@@ -31,39 +31,29 @@ export class LearningHubService {
       userId, courseId, lessonId, progressPercentage, timeSpent
     });
 
-    // First try to find by internal ID, then by Supabase ID
     let user = await this.userRepository.findById(userId);
     if (!user) {
       user = await this.userRepository.findBySupabaseId(userId);
     }
-    console.log('[LearningHubService] User found:', user ? { id: user.id, email: user.email } : 'null');
     
     if (!user) {
       throw new Error('User not found');
     }
 
     let progress = await this.progressRepository.findByUserAndLesson(user.id, lessonId);
-    console.log('[LearningHubService] Existing progress:', progress ? { id: progress.id, isCompleted: progress.isCompleted } : 'null');
 
     if (!progress) {
-      console.log('[LearningHubService] Creating new progress...');
       progress = new UserProgress(user, courseId, lessonId, progressPercentage, timeSpent);
       await this.progressRepository.save(progress);
     } else {
-      console.log('[LearningHubService] Updating existing progress...');
       progress.updateProgress(progressPercentage, timeSpent);
       await this.progressRepository.update(progress);
     }
 
-    console.log('[LearningHubService] Progress saved, updating streak...');
-    // Update streak
     await this.updateUserStreak(user.id);
 
-    console.log('[LearningHubService] Checking achievements...');
-    // Check for achievements and XP rewards
     await this.checkAndAwardAchievements(user.id, courseId, lessonId, progress);
 
-    console.log('[LearningHubService] Update complete');
     return progress;
   }
 
@@ -76,7 +66,6 @@ export class LearningHubService {
       totalTimeSpent: number;
     };
   }> {
-    // Find user by internal ID or Supabase ID
     let user = await this.userRepository.findById(userId);
     if (!user) {
       user = await this.userRepository.findBySupabaseId(userId);
@@ -100,7 +89,6 @@ export class LearningHubService {
   }
 
   async getUserAchievements(userId: string): Promise<UserAchievement[]> {
-    // Find user by internal ID or Supabase ID
     let user = await this.userRepository.findById(userId);
     if (!user) {
       user = await this.userRepository.findBySupabaseId(userId);
@@ -118,7 +106,6 @@ export class LearningHubService {
     transactions: UserXpTransaction[];
     xpBySource: { source: XpSource; total: number }[];
   }> {
-    // Find user by internal ID or Supabase ID
     let user = await this.userRepository.findById(userId);
     if (!user) {
       user = await this.userRepository.findBySupabaseId(userId);
@@ -136,7 +123,6 @@ export class LearningHubService {
   }
 
   async getUserStreak(userId: string): Promise<UserStreak | null> {
-    // Find user by internal ID or Supabase ID
     let user = await this.userRepository.findById(userId);
     if (!user) {
       user = await this.userRepository.findBySupabaseId(userId);
@@ -166,7 +152,6 @@ export class LearningHubService {
     streak: UserStreak | null;
     recentTransactions: UserXpTransaction[];
   }> {
-    // Find user by internal ID or Supabase ID
     let user = await this.userRepository.findById(userId);
     if (!user) {
       user = await this.userRepository.findBySupabaseId(userId);
@@ -211,7 +196,6 @@ export class LearningHubService {
       await this.streakRepository.update(streak);
     }
 
-    // Award streak achievements
     if (streak.currentStreak > previousStreak) {
       await this.checkStreakAchievements(userId, streak.currentStreak);
     }
@@ -226,7 +210,6 @@ export class LearningHubService {
     const user = await this.userRepository.findById(userId);
     if (!user) return;
 
-    // First lesson completion
     const userProgress = await this.progressRepository.findByUser(userId);
     const completedLessons = userProgress.filter(p => p.isCompleted);
     
@@ -234,12 +217,10 @@ export class LearningHubService {
       await this.awardAchievement(user, AchievementType.FIRST_LESSON, 'First Steps', 'Completed your first lesson!', 50);
     }
 
-    // Lesson completion XP
     if (progress.isCompleted) {
       await this.awardXp(userId, 25, XpSource.LESSON_COMPLETION, lessonId, 'Lesson completed');
     }
 
-    // Course completion
     const courseProgress = await this.progressRepository.getUserCourseProgress(userId, courseId);
     if (courseProgress.progressPercentage === 100) {
       const hasAchievement = await this.achievementRepository.hasAchievement(
@@ -319,7 +300,6 @@ export class LearningHubService {
     const user = await this.userRepository.findById(userId);
     if (!user) return;
 
-    // Get or create user XP record
     let userXp = await this.xpRepository.findByUser(userId);
     if (!userXp) {
       userXp = new UserXp(user);
@@ -330,11 +310,9 @@ export class LearningHubService {
     userXp.addXp(amount);
     await this.xpRepository.update(userXp);
 
-    // Create transaction record
     const transaction = new UserXpTransaction(user, amount, source, sourceId, description);
     await this.xpTransactionRepository.save(transaction);
 
-    // Check for level-up achievements
     if (userXp.level > previousLevel) {
       await this.checkXpMilestoneAchievements(userId, userXp.totalXp, userXp.level);
     }
@@ -347,7 +325,6 @@ export class LearningHubService {
     const xpMilestones = [1000, 5000, 10000, 25000, 50000];
     const levelMilestones = [10, 25, 50, 100];
 
-    // XP milestones
     for (const milestone of xpMilestones) {
       if (totalXp >= milestone) {
         const hasAchievement = await this.achievementRepository.hasAchievement(
@@ -370,7 +347,6 @@ export class LearningHubService {
       }
     }
 
-    // Level milestones
     for (const milestone of levelMilestones) {
       if (level >= milestone) {
         const hasAchievement = await this.achievementRepository.hasAchievement(

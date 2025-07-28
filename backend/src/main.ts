@@ -8,10 +8,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
   
-  // Global prefix
   app.setGlobalPrefix('api/v1');
   
-  // Enable CORS
   app.enableCors({
     origin: [
       configService.get<string>('FRONTEND_URL') || 'http://localhost:3000',
@@ -22,10 +20,8 @@ async function bootstrap() {
     optionsSuccessStatus: 200,
   });
   
-  // Cookie parser
   app.use(cookieParser());
   
-  // Global validation pipe
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
     transform: true,

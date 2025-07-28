@@ -16,7 +16,6 @@ export class SupabaseAuthService {
       throw new Error('Missing Supabase environment variables');
     }
     
-    // Client for OAuth flows (uses anon key with PKCE)
     this.supabase = createClient(supabaseUrl, supabaseAnonKey, {
       auth: {
         flowType: 'pkce',
@@ -25,12 +24,10 @@ export class SupabaseAuthService {
       },
     });
 
-    // Admin client for server operations (uses service key)
     this.supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
   }
 
   private handleAuthError(error: AuthError): never {
-    // Handle specific Supabase error codes
     switch (error.message) {
       case 'User already registered':
       case 'User with this email already exists':
@@ -53,7 +50,6 @@ export class SupabaseAuthService {
         throw new UnauthorizedException('Token has expired or is invalid');
       
       default:
-        // For unknown errors, check the status code if available
         if (error.status === 422) {
           throw new BadRequestException(error.message || 'Invalid request data');
         }
@@ -64,7 +60,6 @@ export class SupabaseAuthService {
           throw new ConflictException(error.message || 'Resource conflict');
         }
         
-        // Log the original error for debugging
         console.error('Unhandled Supabase auth error:', error);
         throw new BadRequestException(error.message || 'Authentication error occurred');
     }
@@ -111,14 +106,11 @@ export class SupabaseAuthService {
 
   async getUserByToken(token: string) {
     try {
-      // Use admin client for getting user data
       const { data, error } = await this.supabaseAdmin.auth.getUser(token);
       
       if (error) {
-        // Log the error for debugging
         console.error('Token validation error:', error);
         
-        // For token validation errors, return null instead of throwing
         if (error.message?.includes('invalid') || 
             error.message?.includes('expired') || 
             error.message?.includes('malformed') ||
@@ -126,13 +118,11 @@ export class SupabaseAuthService {
           return null;
         }
         
-        // For other errors, still throw
         this.handleAuthError(error);
       }
       
       return data.user;
     } catch (error) {
-      // Log unexpected errors
       console.error('Unexpected error in getUserByToken:', error);
       return null;
     }
@@ -140,23 +130,20 @@ export class SupabaseAuthService {
 
   async refreshSession(refreshToken: string) {
     try {
-      // Attempt to refresh the session using the provided refresh token
       const { data, error } = await this.supabase.auth.refreshSession({ refresh_token: refreshToken });
 
       if (error) {
         this.handleAuthError(error);
       }
 
-      return data; // data contains { session, user }
+      return data;
     } catch (error) {
-      // Log unexpected errors
       console.error('Unexpected error in refreshSession:', error);
       throw new UnauthorizedException('Failed to refresh authentication session');
     }
   }
 
   async signInWithGoogle() {
-    // Get the backend URL for OAuth callback
     const backendUrl = this.configService.get<string>('BACKEND_URL') || 
                       `http://localhost:${this.configService.get<number>('PORT') || 3001}`;
     
@@ -166,8 +153,6 @@ export class SupabaseAuthService {
         redirectTo: `${backendUrl}/api/v1/auth/callback`,
       },
     });
-
-    console.log('[Supabase] OAuth redirect URL:', `${backendUrl}/api/v1/auth/callback`);
 
     if (error) {
       this.handleAuthError(error);
@@ -187,8 +172,6 @@ export class SupabaseAuthService {
         redirectTo: `${backendUrl}/api/v1/auth/callback`,
       },
     });
-
-    console.log('[Supabase] GitHub OAuth redirect URL:', `${backendUrl}/api/v1/auth/callback`);
 
     if (error) {
       this.handleAuthError(error);

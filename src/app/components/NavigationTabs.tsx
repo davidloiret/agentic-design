@@ -125,13 +125,13 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
       name: 'Main Navigation',
       tabs: [
         { id: 'patterns', label: 'Patterns', icon: BookOpen, description: 'Browse AI design patterns', route: '/patterns' },
-        { id: 'learning-hub', label: 'Learning Hub', icon: GraduationCap, description: 'Gamified learning & certification', route: '/learning-hub' },
         { id: 'ai-red-teaming', label: 'AI Red Teaming', icon: Shield, description: 'AI security & defensive techniques', route: '/ai-red-teaming' },
         { id: 'fine-tuning', label: 'Fine Tuning', icon: Settings, description: 'Model optimization', route: '/fine-tuning' },
         { id: 'ai-inference', label: 'AI Inference', icon: Cpu, description: 'Inference strategies', route: '/ai-inference' },
         { id: 'prompt-hub', label: 'Prompt Hub', icon: FileText, description: 'Leaked AI system prompts', route: '/prompt-hub' },
         { id: 'project-hub', label: 'Project Hub', icon: FolderOpen, description: 'Example projects', route: '/project-hub' },
         { id: 'news-hub', label: 'News Hub', icon: Newspaper, description: 'Latest updates', route: '/news-hub' },
+        { id: 'learning-hub', label: 'Learning Hub', icon: GraduationCap, description: 'Gamified learning & certification', route: '/learning-hub' },
       ]
     }
   ];

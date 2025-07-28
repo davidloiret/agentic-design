@@ -428,3 +428,18 @@ Business model
 
 
 Add forgot password
+
+
+add source to crap => news
+
+talk with sources etc talk with patterns etc
+
+I should have reminder of goals, user should be able to modify and set goals (default goal provided)
+
+ability for user to save or add note on project news etc
+
+used in project n etc
+
+checklist / methodology to test etc / task list
+
+Comment rassembler

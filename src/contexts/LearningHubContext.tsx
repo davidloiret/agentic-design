@@ -32,6 +32,10 @@ interface LearningHubContextType {
   totalXp: number;
   currentStreak: number;
   completedChallenges: string[];
+  
+  // New achievements tracking
+  newAchievements: UserAchievement[];
+  clearNewAchievements: () => void;
 }
 
 const LearningHubContext = createContext<LearningHubContextType | undefined>(undefined);
@@ -79,6 +83,7 @@ export function LearningHubProvider({ children }: { children: React.ReactNode })
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasInitialized, setHasInitialized] = useState(false);
+  const [newAchievements, setNewAchievements] = useState<UserAchievement[]>([]);
 
   // Load learning hub data
   const refreshData = useCallback(async () => {
@@ -87,12 +92,12 @@ export function LearningHubProvider({ children }: { children: React.ReactNode })
     
     if (!user) {
       // Clear data if no user
-      setProgress([]);
-      setAchievements([]);
-      setXp(null);
-      setStreak(null);
-      setLoading(false);
-      setHasInitialized(true);
+      // setProgress([]);
+      // setAchievements([]);
+      // setXp(null);
+      // setStreak(null);
+      // setLoading(false);
+      // setHasInitialized(true);
       return;
     }
 
@@ -121,6 +126,17 @@ export function LearningHubProvider({ children }: { children: React.ReactNode })
       const data = await learningHubApi.getStats();
       console.log('[LearningHub] Received data:', data);
       
+      // Check for new achievements
+      const previousAchievementIds = achievements.map(a => a.id);
+      const newAchievementsList = (data.achievements || []).filter(
+        achievement => !previousAchievementIds.includes(achievement.id)
+      );
+      
+      if (newAchievementsList.length > 0 && hasInitialized) {
+        console.log('[LearningHub] New achievements unlocked:', newAchievementsList);
+        setNewAchievements(prev => [...prev, ...newAchievementsList]);
+      }
+      
       setProgress(data.progress || []);
       setAchievements(data.achievements || []);
       setXp(data.xp);
@@ -143,7 +159,7 @@ export function LearningHubProvider({ children }: { children: React.ReactNode })
       setLoading(false);
       setHasInitialized(true);
     }
-  }, [user, authLoading, hasInitialized]);
+  }, [user, authLoading, hasInitialized, achievements]);
 
   // Load data when user changes
   useEffect(() => {
@@ -177,6 +193,10 @@ export function LearningHubProvider({ children }: { children: React.ReactNode })
   const completedChallenges = progress
     .filter(p => p.isCompleted)
     .map(p => p.lessonId);
+    
+  const clearNewAchievements = () => {
+    setNewAchievements([]);
+  };
 
   const value: LearningHubContextType = {
     // Data
@@ -198,6 +218,10 @@ export function LearningHubProvider({ children }: { children: React.ReactNode })
     totalXp,
     currentStreak,
     completedChallenges,
+    
+    // New achievements tracking
+    newAchievements,
+    clearNewAchievements,
   };
 
   return (
