@@ -134,13 +134,13 @@ export class AuthController {
     @Res() response: Response,
   ) {
     if (!code) {
-      return response.redirect(`${process.env.FRONTEND_URL || 'http://localhost:3000'}/auth/login?error=no_code`);
+      return response.redirect(`${process.env.FRONTEND_URL || 'https://agentic-design.ai'}/auth/login?error=no_code`);
     }
 
     try {
       const result = await this.authService.handleOAuthCallback(code);
       
-      const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+      const frontendUrl = process.env.FRONTEND_URL || 'https://agentic-design.ai';
       const callbackUrl = new URL('/auth/callback', frontendUrl);
       callbackUrl.searchParams.set('access_token', result.access_token);
       if (result.refresh_token) {

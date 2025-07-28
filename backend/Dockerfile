@@ -54,4 +54,4 @@ EXPOSE 3001
 ENTRYPOINT ["/sbin/tini", "--"]
 
 # Start the application directly with Node
-CMD ["node", "dist/main.js"]
+CMD ["node", "dist/src/main.js"]

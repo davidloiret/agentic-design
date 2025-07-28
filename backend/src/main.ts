@@ -12,9 +12,9 @@ async function bootstrap() {
   
   app.enableCors({
     origin: [
-      configService.get<string>('FRONTEND_URL') || 'http://localhost:3000',
-      'http://localhost:3000',
-      'http://127.0.0.1:3000'
+      configService.get<string>('FRONTEND_URL') || 'https://agentic-design.ai',
+      'https://agentic-design.ai',
+      'https://agentic-design.ai'
     ],
     credentials: true,
     optionsSuccessStatus: 200,
