@@ -58,20 +58,23 @@ export const Header = () => {
             
             {/* Auth section - Last item on the right */}
             {loading ? (
-              <div className="w-8 h-8 bg-gray-700 rounded-full animate-pulse"></div>
+              <div className="flex items-center space-x-2 p-1.5">
+                <div className="w-8 h-8 bg-gray-700 rounded-full animate-pulse"></div>
+                <div className="w-4 h-4 bg-gray-700 rounded animate-pulse"></div>
+              </div>
             ) : user ? (
               <UserMenu />
             ) : (
               <div className="flex items-center space-x-2">
                 <Link
                   href="/auth/login"
-                  className="px-3 py-1.5 text-sm font-medium text-gray-300 hover:text-white transition-colors duration-200"
+                  className="flex items-center h-[44px] px-3 text-sm font-medium text-gray-300 hover:text-white transition-colors duration-200"
                 >
                   Sign in
                 </Link>
                 <Link
                   href="/auth/register"
-                  className="px-3 py-1.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors duration-200"
+                  className="flex items-center h-[44px] px-3 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors duration-200"
                 >
                   Sign up
                 </Link>
@@ -95,13 +98,16 @@ export const Header = () => {
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
               {loading ? (
-                <div className="w-6 h-6 bg-gray-700 rounded-full animate-pulse"></div>
+                <div className="flex items-center space-x-2 p-1.5">
+                  <div className="w-6 h-6 bg-gray-700 rounded-full animate-pulse"></div>
+                  <div className="w-3 h-3 bg-gray-700 rounded animate-pulse"></div>
+                </div>
               ) : user ? (
                 <UserMenu />
               ) : (
                 <Link
                   href="/auth/login"
-                  className="text-xs font-medium text-blue-400 hover:text-blue-300"
+                  className="flex items-center h-[44px] px-2 text-xs font-medium text-blue-400 hover:text-blue-300"
                 >
                   Sign in
                 </Link>

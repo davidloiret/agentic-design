@@ -126,6 +126,10 @@ export const FlashcardComponent: React.FC<FlashcardComponentProps> = ({
   };
 
   const handleFinish = () => {
+    console.log('[FlashcardComponent] Calling onComplete with:', { 
+      scorePercentage: getScorePercentage(), 
+      xpEarned: getXpEarned() 
+    });
     onComplete(getScorePercentage(), getXpEarned());
   };
 

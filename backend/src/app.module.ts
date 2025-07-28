@@ -4,6 +4,7 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { AppController } from './app.controller';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
+import { LearningHubModule } from './modules/learning-hub/learning-hub.module';
 import mikroOrmConfig from './mikro-orm.config';
 
 @Module({
@@ -14,6 +15,7 @@ import mikroOrmConfig from './mikro-orm.config';
     MikroOrmModule.forRoot(mikroOrmConfig),
     AuthModule,
     UserModule,
+    LearningHubModule,
   ],
   controllers: [AppController],
 })

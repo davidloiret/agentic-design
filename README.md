@@ -422,4 +422,9 @@ Business model
 - call expert
 - special premium news
 - agentic RAG on content payant ?
-- payer pour trouver des experts pour entreprise (comme boite recrutement)
+- payer pour trouver des experts pour entreprise (comme boite recrutement
+- personal teacher expert
+- AI assistant
+
+
+Add forgot password

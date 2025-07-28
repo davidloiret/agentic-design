@@ -69,7 +69,31 @@ export class AuthService {
     }
 
     // Get user from our database
-    const localUser = await this.userRepository.findBySupabaseId(user.id);
+    let localUser = await this.userRepository.findBySupabaseId(user.id);
+    
+    // If user doesn't exist in our database, create them
+    if (!localUser) {
+      console.log('[Auth] User not found in local database, creating:', user.email);
+      
+      // Check if user exists by email first
+      localUser = await this.userRepository.findByEmail(user.email);
+      
+      if (localUser) {
+        // Update existing user with Supabase ID
+        localUser.supabaseId = user.id;
+        await this.userRepository.update(localUser);
+      } else {
+        // Create new user
+        const newUser = new User(
+          user.email,
+          user.user_metadata?.full_name?.split(' ')[0] || user.user_metadata?.firstName || user.email.split('@')[0],
+          user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || user.user_metadata?.lastName || '',
+          user.id
+        );
+        await this.userRepository.save(newUser);
+        localUser = newUser;
+      }
+    }
 
     return {
       id: user.id,

@@ -125,6 +125,10 @@ export const QuizComponent: React.FC<QuizComponentProps> = ({
   };
 
   const handleFinish = () => {
+    console.log('[QuizComponent] Calling onComplete with:', { 
+      scorePercentage: getScorePercentage(), 
+      xpEarned: getXpEarned() 
+    });
     onComplete(getScorePercentage(), getXpEarned());
   };
 

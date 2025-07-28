@@ -1,7 +1,7 @@
 'use client';
 
 import { useAuth } from '@/contexts/AuthContext';
-import { LearningHub } from '../../components/LearningHub';
+import { LearningHubConnected } from '../../components/LearningHubConnected';
 import { AuthPromptPage } from '../../components/AuthPromptPage';
 
 export default function LearningHubPage() {
@@ -30,7 +30,7 @@ export default function LearningHubPage() {
   return (
     <div className="min-h-screen bg-gray-950 text-white">
       <div className="w-full px-6 py-8">
-        <LearningHub />
+        <LearningHubConnected />
       </div>
     </div>
   );
