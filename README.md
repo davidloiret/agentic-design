@@ -443,3 +443,7 @@ used in project n etc
 checklist / methodology to test etc / task list
 
 Comment rassembler
+
+suggest prompt etc / patterns
+
+create your own list
