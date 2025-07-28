@@ -51,7 +51,7 @@ const ErrorFallback = () => (
 // Static poster component that matches our opening frame exactly
 const VideoPoster = ({ isLoading, compositionId }: { isLoading: boolean; compositionId: string }) => {
   const isChainOfDebates = compositionId === 'ChainOfDebatesWithAudio';
-  const isSequentialChaining = compositionId === 'SequentialChainingWithAudio';
+  const isSequentialChaining = compositionId === 'SequentialChainingWithAudio' || compositionId === 'ProfessionalSequentialChaining';
 
   return (
     <div style={{
