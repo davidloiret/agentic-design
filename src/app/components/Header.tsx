@@ -1,8 +1,15 @@
-import { Sparkles, Search, Settings } from 'lucide-react';
+'use client';
+
+import { Sparkles, Search } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { UserMenu } from './UserMenu';
+import Link from 'next/link';
 
 export const Header = () => {
+  const { user, loading } = useAuth();
+
   return (
-    <div className="z-50 relative bg-gradient-to-r from-gray-900 via-gray-900 to-gray-800 border-b border-gray-700/50 overflow-hidden">
+    <div className="z-50 relative bg-gradient-to-r from-gray-900 via-gray-900 to-gray-800 border-b border-gray-700/50">
       {/* Subtle background pattern */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/10 via-transparent to-purple-900/10"></div>
       
@@ -41,7 +48,7 @@ export const Header = () => {
             </div>
           </div>
 
-          {/* Right side - Settings and Status */}
+          {/* Right side - Status and User menu */}
           <div className="flex items-center space-x-3 flex-shrink-0">
             {/* Status indicator */}
             <div className="hidden lg:flex items-center space-x-2 px-2.5 py-1 bg-gray-800/50 rounded-full border border-gray-700/50">
@@ -49,10 +56,27 @@ export const Header = () => {
               <span className="text-xs font-medium text-gray-300">Live</span>
             </div>
             
-            {/* Settings icon */}
-            <button className="p-1.5 rounded-lg hover:bg-gray-800/50 transition-colors duration-200 group" aria-label="Settings">
-              <Settings className="w-5 h-5 text-gray-400 hover:text-gray-300 group-hover:rotate-90 transition-all duration-200" />
-            </button>
+            {/* Auth section - Last item on the right */}
+            {loading ? (
+              <div className="w-8 h-8 bg-gray-700 rounded-full animate-pulse"></div>
+            ) : user ? (
+              <UserMenu />
+            ) : (
+              <div className="flex items-center space-x-2">
+                <Link
+                  href="/auth/login"
+                  className="px-3 py-1.5 text-sm font-medium text-gray-300 hover:text-white transition-colors duration-200"
+                >
+                  Sign in
+                </Link>
+                <Link
+                  href="/auth/register"
+                  className="px-3 py-1.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors duration-200"
+                >
+                  Sign up
+                </Link>
+              </div>
+            )}
           </div>
         </div>
 
@@ -70,9 +94,18 @@ export const Header = () => {
             
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              <button className="p-1.5 rounded-lg hover:bg-gray-800/50 transition-colors duration-200" aria-label="Settings">
-                <Settings className="w-4 h-4 text-gray-400" />
-              </button>
+              {loading ? (
+                <div className="w-6 h-6 bg-gray-700 rounded-full animate-pulse"></div>
+              ) : user ? (
+                <UserMenu />
+              ) : (
+                <Link
+                  href="/auth/login"
+                  className="text-xs font-medium text-blue-400 hover:text-blue-300"
+                >
+                  Sign in
+                </Link>
+              )}
             </div>
           </div>
         </div>

@@ -377,3 +377,49 @@ coding agent, etc for the prompt
 
 Add supply chain attack through hallucination
 https://www.darktrace.com/fr/blog/when-hallucinations-become-reality-an-exploration-of-ai-package-hallucination-attacks
+
+
+Save => need connection
+
+sort by pattern or use case
+
+
+Apprendre
+Selectionner bon pattern / evaluer
+Reliable Secure
+Suivre actualité et projet
+
+--------------------------------------------
+
+News => summary article
+Summary key point / video
+
+payer pour faire passer entretien leetcode
+
+=> video linkedin => traffic.
+certif
+
+summary podcast => tagger article
+
+nbre publication par an
+
+dialogue avec le site
+
+cta => engager un expert
+podcast / tldr audio
+
+faire payer entreprise poiur entretien,
+
+------
+
+Business model
+- featured project / articles / news
+- entreprise paye pour faire passer entretien comme leetcode et co
+- payer certification
+- take note
+- system builder payant ?
+- eval payant
+- call expert
+- special premium news
+- agentic RAG on content payant ?
+- payer pour trouver des experts pour entreprise (comme boite recrutement)

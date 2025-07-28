@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { BookOpen, Lightbulb, Share2, FlaskConical, Brain, Boxes, Newspaper, FolderOpen, Cpu, Settings, ChevronDown, Menu, X, GraduationCap, Shield, FileText } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface Tab {
   id: string;
@@ -23,6 +24,7 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
   const navbarRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const pathname = usePathname();
+  const { user, loading } = useAuth();
 
   // Measure navbar height on mount
   useEffect(() => {
@@ -288,6 +290,7 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
           </div>
         </div>
       )}
+
     </>
   );
 };

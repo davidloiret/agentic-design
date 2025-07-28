@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: agentic-design-backend
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+    env_file:
+      - .env
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - agentic-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: Add Redis for session management
+  redis:
+    image: redis:7-alpine
+    container_name: agentic-design-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - agentic-network
+    command: redis-server --appendonly yes
+
+  # Optional: Add PostgreSQL if you need a database
+  postgres:
+    image: postgres:15-alpine
+    container_name: agentic-design-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=agentic
+      - POSTGRES_PASSWORD=your_secure_password
+      - POSTGRES_DB=agentic_design
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - agentic-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U agentic"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  agentic-network:
+    driver: bridge
+
+volumes:
+  redis-data:
+  postgres-data:

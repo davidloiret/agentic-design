@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: agentic-design-backend-dev
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+      - "9229:9229"  # Debug port
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+    env_file:
+      - .env
+    volumes:
+      - ./src:/app/src
+      - ./package.json:/app/package.json
+      - ./tsconfig.json:/app/tsconfig.json
+      - ./nest-cli.json:/app/nest-cli.json
+      - node_modules:/app/node_modules
+    networks:
+      - agentic-network
+    command: npm run start:dev
+
+  # Local Redis for development
+  redis:
+    image: redis:7-alpine
+    container_name: agentic-design-redis-dev
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - agentic-network
+
+  # Local PostgreSQL for development
+  postgres:
+    image: postgres:15-alpine
+    container_name: agentic-design-postgres-dev
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=agentic
+      - POSTGRES_PASSWORD=devpassword
+      - POSTGRES_DB=agentic_design_dev
+    volumes:
+      - postgres-dev-data:/var/lib/postgresql/data
+    networks:
+      - agentic-network
+
+networks:
+  agentic-network:
+    driver: bridge
+
+volumes:
+  node_modules:
+  postgres-dev-data:
