@@ -63,6 +63,9 @@ export default function CallbackPage() {
           // Check if cookies were set
           console.log('[Frontend OAuth] Document cookies:', document.cookie);
           
+          // Small delay to ensure cookies are properly set
+          await new Promise(resolve => setTimeout(resolve, 100));
+          
           // Refresh user data to get the newly authenticated user
           console.log('[Frontend OAuth] Refreshing user data...');
           await refreshUser();

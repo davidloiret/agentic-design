@@ -33,6 +33,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const response = await api.get('/api/v1/auth/me');
       console.log('[AuthContext] /me response status:', response.status);
       
+      // Handle 401 gracefully
+      if (response.status === 401) {
+        console.log('[AuthContext] User not authenticated (401)');
+        setUser(null);
+        setLoading(false);
+        return;
+      }
+      
       const data = await response.json();
       console.log('[AuthContext] /me response data:', data);
       

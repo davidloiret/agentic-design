@@ -18,6 +18,10 @@ export async function apiClient(
   const response = await fetch(url, config);
 
   if (!response.ok) {
+    // Don't throw for 401 on /me endpoint - just return the response
+    if (response.status === 401 && url.includes('/auth/me')) {
+      return response;
+    }
     throw new Error(`API Error: ${response.status} ${response.statusText}`);
   }
 

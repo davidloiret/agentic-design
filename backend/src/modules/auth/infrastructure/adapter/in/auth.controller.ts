@@ -226,6 +226,8 @@ export class AuthController {
 
       console.log('[OAuth Complete] All cookies set successfully');
       
+      // Return success response
+      response.status(HttpStatus.OK);
       return { success: true, user };
     } catch (error) {
       console.error('[OAuth Complete] Error:', error);
