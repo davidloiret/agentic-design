@@ -25,9 +25,6 @@ RUN apk add --no-cache curl tini
 
 WORKDIR /app
 
-# Install PM2 globally
-RUN npm install -g pm2
-
 # Copy package files
 COPY package*.json ./
 
@@ -36,7 +33,6 @@ RUN npm ci --only=production
 
 # Copy built application from builder stage
 COPY --from=builder /app/dist ./dist
-COPY ecosystem.config.js ./
 
 # Create logs directory
 RUN mkdir -p logs
@@ -57,5 +53,5 @@ EXPOSE 3001
 # Use tini for proper signal handling
 ENTRYPOINT ["/sbin/tini", "--"]
 
-# Start the application with PM2
-CMD ["pm2-runtime", "start", "ecosystem.config.js"]
+# Start the application directly with Node
+CMD ["node", "dist/main.js"]
