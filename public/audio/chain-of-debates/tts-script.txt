@@ -1,0 +1,63 @@
+# Chain of Debates
+# Multi-Perspective AI Reasoning
+
+Voice Configuration:
+- Provider: elevenlabs
+- Voice ID: professional-male
+- Settings: {
+  "stability": 0.7,
+  "clarity": 0.8,
+  "style": 0.2
+}
+
+Total Duration: 48s
+Video Length: 2400 frames
+
+## Segment 1: cod-intro
+Text: "Chain of Debates brings multiple AI perspectives together to solve complex problems through structured argumentation."
+Duration: 8s
+Emphasis: Chain of Debates, multiple perspectives, structured argumentation
+Timing: Frame 60 - 300
+Output: cod-intro.wav
+MP3 Output: cod-intro.mp3
+
+## Segment 2: cod-perspectives
+Text: "Different AI personas debate the problem from various angles, ensuring comprehensive analysis and reducing blind spots."
+Duration: 8s
+Emphasis: AI personas, various angles, comprehensive analysis, reducing blind spots
+Timing: Frame 400 - 640
+Output: cod-perspectives.wav
+MP3 Output: cod-perspectives.mp3
+
+## Segment 3: cod-debate
+Text: "Each perspective challenges the others, creating a rigorous examination of assumptions and potential solutions."
+Duration: 8s
+Emphasis: challenges, rigorous examination, assumptions, potential solutions
+Timing: Frame 700 - 940
+Output: cod-debate.wav
+MP3 Output: cod-debate.mp3
+
+## Segment 4: cod-collaboration
+Text: "Through collaborative reasoning, the AI agents build on each other's insights to reach more robust conclusions."
+Duration: 8s
+Emphasis: collaborative reasoning, build on insights, robust conclusions
+Timing: Frame 1000 - 1240
+Output: cod-collaboration.wav
+MP3 Output: cod-collaboration.mp3
+
+## Segment 5: cod-synthesis
+Text: "The final synthesis combines the best arguments from all perspectives into a well-reasoned, comprehensive solution."
+Duration: 8s
+Emphasis: synthesis, best arguments, well-reasoned, comprehensive solution
+Timing: Frame 1300 - 1540
+Output: cod-synthesis.wav
+MP3 Output: cod-synthesis.mp3
+
+## Segment 6: cod-conclusion
+Text: "Chain of Debates delivers higher-quality decisions by harnessing the power of diverse AI reasoning approaches."
+Duration: 8s
+Emphasis: higher-quality decisions, diverse AI reasoning, harnessing the power
+Timing: Frame 1600 - 1840
+Output: cod-conclusion.wav
+MP3 Output: cod-conclusion.mp3
+

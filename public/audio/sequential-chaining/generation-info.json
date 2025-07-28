@@ -1,0 +1,106 @@
+{
+  "pattern": "sequential-chaining",
+  "title": "Sequential Chaining Pattern",
+  "description": "Building Reliable AI Pipelines",
+  "voice": {
+    "provider": "elevenlabs",
+    "voice_id": "professional-male",
+    "settings": {
+      "stability": 0.7,
+      "clarity": 0.8,
+      "style": 0.2
+    }
+  },
+  "segments": [
+    {
+      "id": "seq-intro",
+      "text": "Sequential chaining breaks complex tasks into manageable steps - each building on the previous output for superior results.",
+      "duration": 8,
+      "emphasis": [
+        "sequential chaining",
+        "manageable steps",
+        "superior results"
+      ]
+    },
+    {
+      "id": "seq-concept",
+      "text": "Instead of one massive prompt, sequential chains create a pipeline where each AI call specializes in one specific task.",
+      "duration": 8,
+      "emphasis": [
+        "massive prompt",
+        "pipeline",
+        "specializes"
+      ]
+    },
+    {
+      "id": "seq-implementation",
+      "text": "Implementation is straightforward - pass the output of each chain as input to the next, creating a data pipeline.",
+      "duration": 8,
+      "emphasis": [
+        "straightforward",
+        "output",
+        "input",
+        "data pipeline"
+      ]
+    },
+    {
+      "id": "seq-comparison",
+      "text": "Compare this to traditional single prompts - sequential chaining gives you control, transparency, and higher quality.",
+      "duration": 8,
+      "emphasis": [
+        "traditional",
+        "control",
+        "transparency",
+        "higher quality"
+      ]
+    },
+    {
+      "id": "seq-benefits",
+      "text": "Each chain can be optimized independently, debugged easily, and replaced without affecting the entire pipeline.",
+      "duration": 8,
+      "emphasis": [
+        "optimized independently",
+        "debugged easily",
+        "entire pipeline"
+      ]
+    },
+    {
+      "id": "seq-conclusion",
+      "text": "Sequential chaining transforms complex AI tasks into manageable, transparent, and highly reliable workflows.",
+      "duration": 8,
+      "emphasis": [
+        "transforms",
+        "manageable",
+        "transparent",
+        "reliable workflows"
+      ]
+    }
+  ],
+  "files": {
+    "required": [
+      "seq-intro.wav",
+      "seq-intro.mp3",
+      "seq-concept.wav",
+      "seq-concept.mp3",
+      "seq-implementation.wav",
+      "seq-implementation.mp3",
+      "seq-comparison.wav",
+      "seq-comparison.mp3",
+      "seq-benefits.wav",
+      "seq-benefits.mp3",
+      "seq-conclusion.wav",
+      "seq-conclusion.mp3"
+    ],
+    "script": "tts-script.txt",
+    "timing": "timing-config.json"
+  },
+  "instructions": [
+    "Use consistent voice and tone across all segments",
+    "Maintain professional but engaging delivery",
+    "Emphasize key technical terms as specified",
+    "Keep pace moderate for technical content",
+    "Export as high-quality WAV (44.1kHz, 16-bit minimum)",
+    "Convert to MP3 for web optimization",
+    "Ensure audio levels are consistent across all files"
+  ]
+}

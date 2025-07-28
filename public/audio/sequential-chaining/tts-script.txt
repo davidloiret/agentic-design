@@ -1,0 +1,63 @@
+# Sequential Chaining Pattern
+# Building Reliable AI Pipelines
+
+Voice Configuration:
+- Provider: elevenlabs
+- Voice ID: professional-male
+- Settings: {
+  "stability": 0.7,
+  "clarity": 0.8,
+  "style": 0.2
+}
+
+Total Duration: 48s
+Video Length: 2000 frames
+
+## Segment 1: seq-intro
+Text: "Sequential chaining breaks complex tasks into manageable steps - each building on the previous output for superior results."
+Duration: 8s
+Emphasis: sequential chaining, manageable steps, superior results
+Timing: Frame 60 - 300
+Output: seq-intro.wav
+MP3 Output: seq-intro.mp3
+
+## Segment 2: seq-concept
+Text: "Instead of one massive prompt, sequential chains create a pipeline where each AI call specializes in one specific task."
+Duration: 8s
+Emphasis: massive prompt, pipeline, specializes
+Timing: Frame 400 - 640
+Output: seq-concept.wav
+MP3 Output: seq-concept.mp3
+
+## Segment 3: seq-implementation
+Text: "Implementation is straightforward - pass the output of each chain as input to the next, creating a data pipeline."
+Duration: 8s
+Emphasis: straightforward, output, input, data pipeline
+Timing: Frame 700 - 940
+Output: seq-implementation.wav
+MP3 Output: seq-implementation.mp3
+
+## Segment 4: seq-comparison
+Text: "Compare this to traditional single prompts - sequential chaining gives you control, transparency, and higher quality."
+Duration: 8s
+Emphasis: traditional, control, transparency, higher quality
+Timing: Frame 1000 - 1240
+Output: seq-comparison.wav
+MP3 Output: seq-comparison.mp3
+
+## Segment 5: seq-benefits
+Text: "Each chain can be optimized independently, debugged easily, and replaced without affecting the entire pipeline."
+Duration: 8s
+Emphasis: optimized independently, debugged easily, entire pipeline
+Timing: Frame 1300 - 1540
+Output: seq-benefits.wav
+MP3 Output: seq-benefits.mp3
+
+## Segment 6: seq-conclusion
+Text: "Sequential chaining transforms complex AI tasks into manageable, transparent, and highly reliable workflows."
+Duration: 8s
+Emphasis: transforms, manageable, transparent, reliable workflows
+Timing: Frame 1600 - 1840
+Output: seq-conclusion.wav
+MP3 Output: seq-conclusion.mp3
+

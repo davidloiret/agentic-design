@@ -1,0 +1,71 @@
+# Chain of Thought
+# Transparent AI Reasoning for Engineers
+
+Voice Configuration:
+- Provider: elevenlabs
+- Voice ID: professional-male
+- Settings: {
+  "stability": 0.7,
+  "clarity": 0.8,
+  "style": 0.2
+}
+
+Total Duration: 76.7s
+Video Length: 2301 frames
+
+## Segment 1: cot-intro
+Text: "Chain of Thought reasoning transforms how AI solves complex problems - and it's surprisingly simple to implement."
+Duration: 9.111328125s
+Emphasis: Chain of Thought, transforms, surprisingly simple
+Timing: Frame 60 - 334
+Output: cot-intro.wav
+MP3 Output: cot-intro.mp3
+
+## Segment 2: cot-implementation
+Text: "For engineers, implementing CoT is as easy as adding 'Let's think step by step' to your prompts."
+Duration: 7.6171875s
+Emphasis: engineers, implementing CoT, Let's think step by step
+Timing: Frame 394 - 623
+Output: cot-implementation.wav
+MP3 Output: cot-implementation.mp3
+
+## Segment 3: cot-comparison
+Text: "Let's see the dramatic difference between regular prompts and Chain of Thought prompts in action."
+Duration: 7.67578125s
+Emphasis: dramatic difference, regular prompts, Chain of Thought prompts
+Timing: Frame 683 - 914
+Output: cot-comparison.wav
+MP3 Output: cot-comparison.mp3
+
+## Segment 4: cot-regular
+Text: "Regular prompts give you direct answers with no reasoning - you can't verify or understand the process."
+Duration: 8.203125s
+Emphasis: Regular prompts, direct answers, no reasoning, verify, understand
+Timing: Frame 974 - 1221
+Output: cot-regular.wav
+MP3 Output: cot-regular.mp3
+
+## Segment 5: cot-magic
+Text: "Chain of Thought prompts unlock the model's reasoning ability - just add the magic phrase and watch it think."
+Duration: 8.349609375s
+Emphasis: unlock, reasoning ability, magic phrase, watch it think
+Timing: Frame 1281 - 1532
+Output: cot-magic.wav
+MP3 Output: cot-magic.mp3
+
+## Segment 6: cot-automatic
+Text: "The model automatically breaks down complex problems into clear, verifiable steps - no additional coding required."
+Duration: 8.759765625s
+Emphasis: automatically, breaks down, verifiable steps, no additional coding
+Timing: Frame 1592 - 1855
+Output: cot-automatic.wav
+MP3 Output: cot-automatic.mp3
+
+## Segment 7: cot-conclusion
+Text: "This simple technique delivers 40-70% accuracy improvements and complete transparency in AI decision-making."
+Duration: 8.84765625s
+Emphasis: simple technique, 40-70% accuracy improvements, complete transparency
+Timing: Frame 1915 - 2181
+Output: cot-conclusion.wav
+MP3 Output: cot-conclusion.mp3
+

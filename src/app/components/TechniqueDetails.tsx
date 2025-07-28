@@ -222,8 +222,8 @@ export const TechniqueDetails = ({
         <div className="p-6 lg:p-6">
           {detailsTab === 'overview' ? (
             <div className="space-y-8">
-              {/* Video Explanation - For Chain of Thought and Chain of Debates */}
-              {(selectedTechnique.id === 'cot' || selectedTechnique.id === 'cod') && (
+              {/* Video Explanation - For Chain of Thought, Chain of Debates, and Sequential Chaining */}
+              {(selectedTechnique.id === 'cot' || selectedTechnique.id === 'cod' || selectedTechnique.id === 'sequential-chaining') && (
                 <section>
                   <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
                     <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
@@ -231,9 +231,20 @@ export const TechniqueDetails = ({
                   </h2>
                   <div className="mb-8">
                     <RemotionPlayer 
-                      compositionId={selectedTechnique.id === 'cot' ? "ChainOfThoughtWithAudio" : "ChainOfDebatesWithAudio"} 
+                      key={selectedTechnique.id}
+                      compositionId={
+                        selectedTechnique.id === 'cot' ? "ChainOfThoughtWithAudio" : 
+                        selectedTechnique.id === 'cod' ? "ChainOfDebatesWithAudio" :
+                        selectedTechnique.id === 'sequential-chaining' ? "ProfessionalSequentialChaining" :
+                        "SequentialChainingWithAudio"
+                      } 
                       className="w-full"
-                      audioPath={selectedTechnique.id === 'cot' ? "/audio/cot/" : "/audio/cod/"}
+                      audioPath={
+                        selectedTechnique.id === 'cot' ? "/audio/cot/" : 
+                        selectedTechnique.id === 'cod' ? "/audio/cod/" :
+                        selectedTechnique.id === 'sequential-chaining' ? "/audio/sequential-chaining/" :
+                        "/audio/sequential-chaining/"
+                      }
                     />
                   </div>
                 </section>

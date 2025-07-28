@@ -1,0 +1,123 @@
+{
+  "version": "1.0.0",
+  "generated": "2025-07-27T14:55:32.938Z",
+  "fps": 30,
+  "totalFrames": 2301,
+  "totalDuration": 76.7,
+  "narrationSegments": [
+    {
+      "id": "cot-intro",
+      "text": "Chain of Thought reasoning transforms how AI solves complex problems - and it's surprisingly simple to implement.",
+      "filename": "cot-intro.wav",
+      "startFrame": 60,
+      "endFrame": 334,
+      "duration": 9.111328125,
+      "durationFrames": 274
+    },
+    {
+      "id": "cot-implementation",
+      "text": "For engineers, implementing CoT is as easy as adding 'Let's think step by step' to your prompts.",
+      "filename": "cot-implementation.wav",
+      "startFrame": 394,
+      "endFrame": 623,
+      "duration": 7.6171875,
+      "durationFrames": 229
+    },
+    {
+      "id": "cot-comparison",
+      "text": "Let's see the dramatic difference between regular prompts and Chain of Thought prompts in action.",
+      "filename": "cot-comparison.wav",
+      "startFrame": 683,
+      "endFrame": 914,
+      "duration": 7.67578125,
+      "durationFrames": 231
+    },
+    {
+      "id": "cot-regular",
+      "text": "Regular prompts give you direct answers with no reasoning - you can't verify or understand the process.",
+      "filename": "cot-regular.wav",
+      "startFrame": 974,
+      "endFrame": 1221,
+      "duration": 8.203125,
+      "durationFrames": 247
+    },
+    {
+      "id": "cot-magic",
+      "text": "Chain of Thought prompts unlock the model's reasoning ability - just add the magic phrase and watch it think.",
+      "filename": "cot-magic.wav",
+      "startFrame": 1281,
+      "endFrame": 1532,
+      "duration": 8.349609375,
+      "durationFrames": 251
+    },
+    {
+      "id": "cot-automatic",
+      "text": "The model automatically breaks down complex problems into clear, verifiable steps - no additional coding required.",
+      "filename": "cot-automatic.wav",
+      "startFrame": 1592,
+      "endFrame": 1855,
+      "duration": 8.759765625,
+      "durationFrames": 263
+    },
+    {
+      "id": "cot-conclusion",
+      "text": "This simple technique delivers 40-70% accuracy improvements and complete transparency in AI decision-making.",
+      "filename": "cot-conclusion.wav",
+      "startFrame": 1915,
+      "endFrame": 2181,
+      "duration": 8.84765625,
+      "durationFrames": 266
+    }
+  ],
+  "visualElements": {
+    "titleAnimation": {
+      "startFrame": 0,
+      "endFrame": 60
+    },
+    "steps": [
+      {
+        "id": "step1",
+        "startFrame": 60,
+        "duration": 240
+      },
+      {
+        "id": "step2",
+        "startFrame": 394,
+        "duration": 240
+      },
+      {
+        "id": "step3",
+        "startFrame": 683,
+        "duration": 240
+      },
+      {
+        "id": "step4",
+        "startFrame": 974,
+        "duration": 240
+      },
+      {
+        "id": "step5",
+        "startFrame": 1281,
+        "duration": 240
+      },
+      {
+        "id": "step6",
+        "startFrame": 1592,
+        "duration": 240
+      },
+      {
+        "id": "step7",
+        "startFrame": 1915,
+        "duration": 240
+      }
+    ],
+    "benefits": {
+      "startFrame": 2211,
+      "duration": 200
+    },
+    "callToAction": {
+      "startFrame": 2281,
+      "duration": 100
+    }
+  }
+}

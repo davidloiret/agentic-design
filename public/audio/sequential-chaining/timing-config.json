@@ -1,0 +1,109 @@
+{
+  "version": "1.0.0",
+  "generated": "2025-07-28T07:33:37.600Z",
+  "fps": 30,
+  "totalFrames": 1515,
+  "totalDuration": 51,
+  "narrationSegments": [
+    {
+      "id": "intro",
+      "text": "Sequential chaining breaks complex tasks into manageable steps - each building on the previous output for superior results.",
+      "filename": "seq-intro.wav",
+      "startFrame": 60,
+      "endFrame": 300,
+      "duration": 8,
+      "durationFrames": 240
+    },
+    {
+      "id": "concept",
+      "text": "Instead of one massive prompt, sequential chains create a pipeline where each AI call specializes in one specific task.",
+      "filename": "seq-concept.wav",
+      "startFrame": 300,
+      "endFrame": 540,
+      "duration": 8,
+      "durationFrames": 240
+    },
+    {
+      "id": "implementation",
+      "text": "Implementation is straightforward - pass the output of each chain as input to the next, creating a data pipeline.",
+      "filename": "seq-implementation.wav",
+      "startFrame": 540,
+      "endFrame": 780,
+      "duration": 8,
+      "durationFrames": 240
+    },
+    {
+      "id": "comparison",
+      "text": "Compare this to traditional single prompts - sequential chaining gives you control, transparency, and higher quality.",
+      "filename": "seq-comparison.wav",
+      "startFrame": 780,
+      "endFrame": 1020,
+      "duration": 8,
+      "durationFrames": 240
+    },
+    {
+      "id": "benefits",
+      "text": "Each chain can be optimized independently, debugged easily, and replaced without affecting the entire pipeline.",
+      "filename": "seq-benefits.wav",
+      "startFrame": 1020,
+      "endFrame": 1260,
+      "duration": 8,
+      "durationFrames": 240
+    },
+    {
+      "id": "conclusion",
+      "text": "Sequential chaining transforms complex AI tasks into manageable, transparent, and highly reliable workflows.",
+      "filename": "seq-conclusion.wav",
+      "startFrame": 1260,
+      "endFrame": 1500,
+      "duration": 8,
+      "durationFrames": 240
+    }
+  ],
+  "visualElements": {
+    "titleAnimation": {
+      "startFrame": 0,
+      "endFrame": 60
+    },
+    "steps": [
+      {
+        "id": "step1",
+        "startFrame": 60,
+        "duration": 240
+      },
+      {
+        "id": "step2",
+        "startFrame": 300,
+        "duration": 240
+      },
+      {
+        "id": "step3",
+        "startFrame": 540,
+        "duration": 240
+      },
+      {
+        "id": "step4",
+        "startFrame": 780,
+        "duration": 240
+      },
+      {
+        "id": "step5",
+        "startFrame": 1020,
+        "duration": 240
+      },
+      {
+        "id": "step6",
+        "startFrame": 1260,
+        "duration": 240
+      }
+    ],
+    "benefits": {
+      "startFrame": 1515,
+      "duration": 0
+    },
+    "callToAction": {
+      "startFrame": 1545,
+      "duration": -30
+    }
+  }
+}

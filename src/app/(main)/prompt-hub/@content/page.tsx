@@ -42,12 +42,12 @@ export default function PromptHubOverviewPage() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-gray-800 p-4 rounded-lg text-center">
           <Database className="w-8 h-8 text-blue-400 mx-auto mb-2" />
-          <div className="text-2xl font-bold text-white">16</div>
+          <div className="text-2xl font-bold text-white">17</div>
           <div className="text-sm text-gray-400">Total Prompts</div>
         </div>
         <div className="bg-gray-800 p-4 rounded-lg text-center">
           <Brain className="w-8 h-8 text-green-400 mx-auto mb-2" />
-          <div className="text-2xl font-bold text-white">7</div>
+          <div className="text-2xl font-bold text-white">8</div>
           <div className="text-sm text-gray-400">AI Providers</div>
         </div>
         <div className="bg-gray-800 p-4 rounded-lg text-center">
@@ -189,6 +189,24 @@ export default function PromptHubOverviewPage() {
             </p>
             <div className="flex items-center justify-between">
               <span className="text-cyan-400 font-medium">1 prompt</span>
+              <span className="text-xs text-gray-500">2025</span>
+            </div>
+          </div>
+
+          {/* Cognition */}
+          <div className="bg-gray-800 rounded-lg p-6 hover:bg-gray-700 transition-colors cursor-pointer">
+            <div className="flex items-center gap-3 mb-4">
+              <FileText className="w-8 h-8 text-orange-400" />
+              <div>
+                <h3 className="text-xl font-semibold text-white">Cognition</h3>
+                <p className="text-sm text-gray-400">Software Engineer AI</p>
+              </div>
+            </div>
+            <p className="text-gray-300 text-sm mb-4">
+              Revolutionary AI software engineer operating on real computer systems with full OS integration.
+            </p>
+            <div className="flex items-center justify-between">
+              <span className="text-orange-400 font-medium">1 prompt</span>
               <span className="text-xs text-gray-500">2025</span>
             </div>
           </div>

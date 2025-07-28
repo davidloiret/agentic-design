@@ -226,6 +226,19 @@ const promptItems: PromptItem[] = [
     href: '/prompt-hub/browser-company/dia-20250515',
     dateLeaked: '2025-05-15',
     promptCount: 1
+  },
+
+  // Cognition - Software Engineer AI
+  {
+    id: 'devin-20250515',
+    name: 'Devin AI (2025-05-15)',
+    provider: 'cognition',
+    category: 'cognition',
+    complexity: 'high',
+    icon: <Code className="w-4 h-4" />,
+    href: '/prompt-hub/cognition/devin-20250515',
+    dateLeaked: '2025-05-15',
+    promptCount: 1
   }
 ];
 
@@ -278,6 +291,13 @@ const categories: ProviderCategory[] = [
     icon: '🌐',
     description: 'Browser-native AI assistant',
     items: promptItems.filter(item => item.category === 'browser-company')
+  },
+  {
+    id: 'cognition',
+    name: 'Cognition',
+    icon: '💻',
+    description: 'Real OS software engineer AI',
+    items: promptItems.filter(item => item.category === 'cognition')
   }
 ];
 

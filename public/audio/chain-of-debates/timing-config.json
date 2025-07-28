@@ -1,0 +1,109 @@
+{
+  "version": "1.0.0",
+  "generated": "2025-07-27T14:56:04.855Z",
+  "fps": 30,
+  "totalFrames": 2400,
+  "totalDuration": 48,
+  "narrationSegments": [
+    {
+      "id": "cod-intro",
+      "text": "Chain of Debates brings multiple AI perspectives together to solve complex problems through structured argumentation.",
+      "filename": "cod-intro.wav",
+      "startFrame": 60,
+      "endFrame": 300,
+      "duration": 8,
+      "durationFrames": 240
+    },
+    {
+      "id": "cod-perspectives",
+      "text": "Different AI personas debate the problem from various angles, ensuring comprehensive analysis and reducing blind spots.",
+      "filename": "cod-perspectives.wav",
+      "startFrame": 400,
+      "endFrame": 640,
+      "duration": 8,
+      "durationFrames": 240
+    },
+    {
+      "id": "cod-debate",
+      "text": "Each perspective challenges the others, creating a rigorous examination of assumptions and potential solutions.",
+      "filename": "cod-debate.wav",
+      "startFrame": 700,
+      "endFrame": 940,
+      "duration": 8,
+      "durationFrames": 240
+    },
+    {
+      "id": "cod-collaboration",
+      "text": "Through collaborative reasoning, the AI agents build on each other's insights to reach more robust conclusions.",
+      "filename": "cod-collaboration.wav",
+      "startFrame": 1000,
+      "endFrame": 1240,
+      "duration": 8,
+      "durationFrames": 240
+    },
+    {
+      "id": "cod-synthesis",
+      "text": "The final synthesis combines the best arguments from all perspectives into a well-reasoned, comprehensive solution.",
+      "filename": "cod-synthesis.wav",
+      "startFrame": 1300,
+      "endFrame": 1540,
+      "duration": 8,
+      "durationFrames": 240
+    },
+    {
+      "id": "cod-conclusion",
+      "text": "Chain of Debates delivers higher-quality decisions by harnessing the power of diverse AI reasoning approaches.",
+      "filename": "cod-conclusion.wav",
+      "startFrame": 1600,
+      "endFrame": 1840,
+      "duration": 8,
+      "durationFrames": 240
+    }
+  ],
+  "visualElements": {
+    "titleAnimation": {
+      "startFrame": 0,
+      "endFrame": 60
+    },
+    "steps": [
+      {
+        "id": "step1",
+        "startFrame": 60,
+        "duration": 240
+      },
+      {
+        "id": "step2",
+        "startFrame": 400,
+        "duration": 240
+      },
+      {
+        "id": "step3",
+        "startFrame": 700,
+        "duration": 240
+      },
+      {
+        "id": "step4",
+        "startFrame": 1000,
+        "duration": 240
+      },
+      {
+        "id": "step5",
+        "startFrame": 1300,
+        "duration": 240
+      },
+      {
+        "id": "step6",
+        "startFrame": 1600,
+        "duration": 240
+      }
+    ],
+    "benefits": {
+      "startFrame": 1870,
+      "duration": 200
+    },
+    "callToAction": {
+      "startFrame": 1940,
+      "duration": 100
+    }
+  }
+}

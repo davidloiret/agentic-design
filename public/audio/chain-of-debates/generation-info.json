@@ -1,0 +1,106 @@
+{
+  "pattern": "chain-of-debates",
+  "title": "Chain of Debates",
+  "description": "Multi-Perspective AI Reasoning",
+  "voice": {
+    "provider": "elevenlabs",
+    "voice_id": "professional-male",
+    "settings": {
+      "stability": 0.7,
+      "clarity": 0.8,
+      "style": 0.2
+    }
+  },
+  "segments": [
+    {
+      "id": "cod-intro",
+      "text": "Chain of Debates brings multiple AI perspectives together to solve complex problems through structured argumentation.",
+      "duration": 8,
+      "emphasis": [
+        "Chain of Debates",
+        "multiple perspectives",
+        "structured argumentation"
+      ]
+    },
+    {
+      "id": "cod-perspectives",
+      "text": "Different AI personas debate the problem from various angles, ensuring comprehensive analysis and reducing blind spots.",
+      "duration": 8,
+      "emphasis": [
+        "AI personas",
+        "various angles",
+        "comprehensive analysis",
+        "reducing blind spots"
+      ]
+    },
+    {
+      "id": "cod-debate",
+      "text": "Each perspective challenges the others, creating a rigorous examination of assumptions and potential solutions.",
+      "duration": 8,
+      "emphasis": [
+        "challenges",
+        "rigorous examination",
+        "assumptions",
+        "potential solutions"
+      ]
+    },
+    {
+      "id": "cod-collaboration",
+      "text": "Through collaborative reasoning, the AI agents build on each other's insights to reach more robust conclusions.",
+      "duration": 8,
+      "emphasis": [
+        "collaborative reasoning",
+        "build on insights",
+        "robust conclusions"
+      ]
+    },
+    {
+      "id": "cod-synthesis",
+      "text": "The final synthesis combines the best arguments from all perspectives into a well-reasoned, comprehensive solution.",
+      "duration": 8,
+      "emphasis": [
+        "synthesis",
+        "best arguments",
+        "well-reasoned",
+        "comprehensive solution"
+      ]
+    },
+    {
+      "id": "cod-conclusion",
+      "text": "Chain of Debates delivers higher-quality decisions by harnessing the power of diverse AI reasoning approaches.",
+      "duration": 8,
+      "emphasis": [
+        "higher-quality decisions",
+        "diverse AI reasoning",
+        "harnessing the power"
+      ]
+    }
+  ],
+  "files": {
+    "required": [
+      "cod-intro.wav",
+      "cod-intro.mp3",
+      "cod-perspectives.wav",
+      "cod-perspectives.mp3",
+      "cod-debate.wav",
+      "cod-debate.mp3",
+      "cod-collaboration.wav",
+      "cod-collaboration.mp3",
+      "cod-synthesis.wav",
+      "cod-synthesis.mp3",
+      "cod-conclusion.wav",
+      "cod-conclusion.mp3"
+    ],
+    "script": "tts-script.txt",
+    "timing": "timing-config.json"
+  },
+  "instructions": [
+    "Use consistent voice and tone across all segments",
+    "Maintain professional but engaging delivery",
+    "Emphasize key technical terms as specified",
+    "Keep pace moderate for technical content",
+    "Export as high-quality WAV (44.1kHz, 16-bit minimum)",
+    "Convert to MP3 for web optimization",
+    "Ensure audio levels are consistent across all files"
+  ]
+}

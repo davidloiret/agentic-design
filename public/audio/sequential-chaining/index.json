@@ -1,0 +1,16 @@
+{
+  "pattern": "sequential-chaining",
+  "title": "Sequential Chaining Pattern",
+  "description": "Building Reliable AI Pipelines",
+  "audioFiles": [
+    "seq-intro.mp3",
+    "seq-concept.mp3", 
+    "seq-implementation.mp3",
+    "seq-comparison.mp3",
+    "seq-benefits.mp3",
+    "seq-conclusion.mp3"
+  ],
+  "totalDuration": 48.0,
+  "fps": 30,
+  "videoLength": 2000
+}

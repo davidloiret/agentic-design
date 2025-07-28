@@ -1,0 +1,65 @@
+{
+  "pattern": "sequential-chaining",
+  "title": "Sequential Chaining Pattern",
+  "description": "Building Reliable AI Pipelines",
+  "voice": {
+    "provider": "elevenlabs",
+    "voice_id": "professional-male",
+    "settings": {
+      "stability": 0.7,
+      "clarity": 0.8,
+      "style": 0.2
+    }
+  },
+  "segments": [
+    {
+      "id": "seq-intro",
+      "text": "Sequential chaining breaks complex tasks into manageable steps - each building on the previous output for superior results.",
+      "duration": 8.0,
+      "emphasis": ["sequential chaining", "manageable steps", "superior results"]
+    },
+    {
+      "id": "seq-concept", 
+      "text": "Instead of one massive prompt, sequential chains create a pipeline where each AI call specializes in one specific task.",
+      "duration": 8.0,
+      "emphasis": ["massive prompt", "pipeline", "specializes"]
+    },
+    {
+      "id": "seq-implementation",
+      "text": "Implementation is straightforward - pass the output of each chain as input to the next, creating a data pipeline.",
+      "duration": 8.0,
+      "emphasis": ["straightforward", "output", "input", "data pipeline"]
+    },
+    {
+      "id": "seq-comparison",
+      "text": "Compare this to traditional single prompts - sequential chaining gives you control, transparency, and higher quality.",
+      "duration": 8.0,
+      "emphasis": ["traditional", "control", "transparency", "higher quality"]
+    },
+    {
+      "id": "seq-benefits",
+      "text": "Each chain can be optimized independently, debugged easily, and replaced without affecting the entire pipeline.",
+      "duration": 8.0,
+      "emphasis": ["optimized independently", "debugged easily", "entire pipeline"]
+    },
+    {
+      "id": "seq-conclusion",
+      "text": "Sequential chaining transforms complex AI tasks into manageable, transparent, and highly reliable workflows.",
+      "duration": 8.0,
+      "emphasis": ["transforms", "manageable", "transparent", "reliable workflows"]
+    }
+  ],
+  "timing": {
+    "fps": 30,
+    "totalDuration": 48.0,
+    "videoLength": 2000,
+    "segments": [
+      {"id": "seq-intro", "startFrame": 60, "endFrame": 300},
+      {"id": "seq-concept", "startFrame": 400, "endFrame": 640},
+      {"id": "seq-implementation", "startFrame": 700, "endFrame": 940},
+      {"id": "seq-comparison", "startFrame": 1000, "endFrame": 1240},
+      {"id": "seq-benefits", "startFrame": 1300, "endFrame": 1540},
+      {"id": "seq-conclusion", "startFrame": 1600, "endFrame": 1840}
+    ]
+  }
+}

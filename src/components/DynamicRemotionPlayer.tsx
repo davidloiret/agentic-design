@@ -3,7 +3,10 @@ import { Player } from '@remotion/player';
 import { ChainOfThoughtVideo } from '../remotion/compositions/ChainOfThoughtVideo';
 import { ChainOfThoughtVideoWithAudio } from '../remotion/compositions/ChainOfThoughtVideoWithAudio';
 import { ChainOfDebatesVideoWithAudio } from '../remotion/compositions/ChainOfDebatesVideoWithAudio';
+import { SequentialChainingVideoWithAudio } from '../remotion/compositions/SequentialChainingVideoWithAudio';
+import { ProfessionalSequentialChainingVideo } from '../remotion/compositions/ProfessionalSequentialChainingVideo';
 import DynamicTimingService from '../remotion/services/DynamicTimingService';
+import { loadTimingConfig } from '../remotion/services/TimingConfigService';
 import { Brain, Zap, Code, Users } from 'lucide-react';
 
 // Add CSS animation for spinner
@@ -48,6 +51,7 @@ const ErrorFallback = () => (
 // Static poster component that matches our opening frame exactly
 const VideoPoster = ({ isLoading, compositionId }: { isLoading: boolean; compositionId: string }) => {
   const isChainOfDebates = compositionId === 'ChainOfDebatesWithAudio';
+  const isSequentialChaining = compositionId === 'SequentialChainingWithAudio';
 
   return (
     <div style={{
@@ -100,6 +104,8 @@ const VideoPoster = ({ isLoading, compositionId }: { isLoading: boolean; composi
             fontWeight: '800',
             backgroundImage: isChainOfDebates
               ? 'linear-gradient(135deg, #f59e0b, #ef4444, #7c3aed)'
+              : isSequentialChaining
+              ? 'linear-gradient(135deg, #3b82f6, #8b5cf6, #06b6d4)'
               : 'linear-gradient(135deg, #3b82f6, #8b5cf6, #06b6d4)',
             backgroundRepeat: 'no-repeat',
             backgroundSize: 'cover',
@@ -108,7 +114,7 @@ const VideoPoster = ({ isLoading, compositionId }: { isLoading: boolean; composi
             WebkitTextFillColor: 'transparent',
             letterSpacing: '-0.025em',
           }}>
-            {isChainOfDebates ? 'Chain of Debates' : 'Chain of Thought'}
+            {isChainOfDebates ? 'Chain of Debates' : isSequentialChaining ? 'Sequential Chaining' : 'Chain of Thought'}
           </h1>
           <p style={{
             fontSize: '24px',
@@ -117,7 +123,7 @@ const VideoPoster = ({ isLoading, compositionId }: { isLoading: boolean; composi
             fontWeight: '500',
             letterSpacing: '0.025em'
           }}>
-            {isChainOfDebates ? 'Collaborative AI Decision Making' : 'Transparent AI Reasoning for Engineers'}
+            {isChainOfDebates ? 'Collaborative AI Decision Making' : isSequentialChaining ? 'Building Reliable AI Pipelines' : 'Transparent AI Reasoning for Engineers'}
           </p>
         </div>
       </div>
@@ -146,6 +152,8 @@ const VideoPoster = ({ isLoading, compositionId }: { isLoading: boolean; composi
         }}>
           {isChainOfDebates ? (
             <Users size={32} color="#f59e0b" style={{ marginRight: '12px' }} />
+          ) : isSequentialChaining ? (
+            <div style={{ marginRight: '12px', fontSize: '32px' }}>🔗</div>
           ) : (
             <Zap size={32} color="#f59e0b" style={{ marginRight: '12px' }} />
           )}
@@ -155,7 +163,7 @@ const VideoPoster = ({ isLoading, compositionId }: { isLoading: boolean; composi
             fontWeight: '600',
             letterSpacing: '0.05em',
           }}>
-            {isChainOfDebates ? 'COLLABORATIVE AI REASONING' : 'ENGINEERING BREAKTHROUGH'}
+            {isChainOfDebates ? 'COLLABORATIVE AI REASONING' : isSequentialChaining ? 'PROMPT CHAINING PATTERN' : 'ENGINEERING BREAKTHROUGH'}
           </span>
         </div>
 
@@ -168,6 +176,8 @@ const VideoPoster = ({ isLoading, compositionId }: { isLoading: boolean; composi
         }}>
           {isChainOfDebates
             ? 'Multiple Perspectives, Better Decisions'
+            : isSequentialChaining
+            ? 'Break Complex Tasks Into Manageable Steps'
             : 'Transform AI Reasoning with One Simple Line'}
         </h2>
 
@@ -191,6 +201,8 @@ const VideoPoster = ({ isLoading, compositionId }: { isLoading: boolean; composi
           }}>
             {isChainOfDebates
               ? 'chainOfDebates(problem, ["advocate", "skeptic", "analyst"])'
+              : isSequentialChaining
+              ? 'output1 → input2 → output2 → input3 → final'
               : '"Let\'s think step by step."'}
           </code>
         </div>
@@ -214,6 +226,21 @@ const VideoPoster = ({ isLoading, compositionId }: { isLoading: boolean; composi
               <div style={{ textAlign: 'center', color: '#8b5cf6' }}>
                 <div style={{ fontSize: '28px', fontWeight: '700', marginBottom: '4px' }}>100%</div>
                 <div style={{ fontSize: '14px', color: '#6b7280' }}>Bias Reduction</div>
+              </div>
+            </>
+          ) : isSequentialChaining ? (
+            <>
+              <div style={{ textAlign: 'center', color: '#10b981' }}>
+                <div style={{ fontSize: '28px', fontWeight: '700', marginBottom: '4px' }}>∞</div>
+                <div style={{ fontSize: '14px', color: '#6b7280' }}>Scalable Steps</div>
+              </div>
+              <div style={{ textAlign: 'center', color: '#3b82f6' }}>
+                <div style={{ fontSize: '28px', fontWeight: '700', marginBottom: '4px' }}>100%</div>
+                <div style={{ fontSize: '14px', color: '#6b7280' }}>Transparency</div>
+              </div>
+              <div style={{ textAlign: 'center', color: '#8b5cf6' }}>
+                <div style={{ fontSize: '28px', fontWeight: '700', marginBottom: '4px' }}>0</div>
+                <div style={{ fontSize: '14px', color: '#6b7280' }}>Extra Complexity</div>
               </div>
             </>
           ) : (
@@ -351,13 +378,26 @@ const DynamicRemotionPlayer: React.FC<DynamicRemotionPlayerProps> = ({
   audioPath = '/audio/cot/'
 }) => {
   const [hasError, setHasError] = useState(false);
-  const [duration, setDuration] = useState(900); // Default fallback
+  const [duration, setDuration] = useState(900); // Default fallback, will be loaded dynamically
   const [isLoading, setIsLoading] = useState(true);
   const [showPlayer, setShowPlayer] = useState(false);
 
   useEffect(() => {
     const loadDynamicTiming = async () => {
       try {
+        // For ProfessionalSequentialChaining, use the new TimingConfigService
+        if (compositionId === 'ProfessionalSequentialChaining') {
+          const patternName = audioPath.split('/').filter(Boolean)[1] || 'sequential-chaining';
+          const timingConfig = await loadTimingConfig(patternName);
+          const totalFrames = timingConfig.totalFrames;
+          
+          setDuration(totalFrames);
+          setIsLoading(false);
+          console.log(`📐 Sequential Chaining video duration: ${totalFrames} frames (${(totalFrames / 30).toFixed(2)}s) - AUTO-LOADED`);
+          return;
+        }
+
+        // For other compositions, use DynamicTimingService
         const timingService = DynamicTimingService.getInstance();
         await timingService.loadTimingConfig(audioPath);
         const totalFrames = timingService.getTotalFrames();
@@ -374,7 +414,7 @@ const DynamicRemotionPlayer: React.FC<DynamicRemotionPlayerProps> = ({
     };
 
     loadDynamicTiming();
-  }, [audioPath]);
+  }, [audioPath, compositionId]);
 
   const handlePlayClick = () => {
     setShowPlayer(true);
@@ -407,6 +447,10 @@ const DynamicRemotionPlayer: React.FC<DynamicRemotionPlayerProps> = ({
         return ChainOfThoughtVideoWithAudio;
       case 'ChainOfDebatesWithAudio':
         return ChainOfDebatesVideoWithAudio;
+      case 'SequentialChainingWithAudio':
+        return SequentialChainingVideoWithAudio;
+      case 'ProfessionalSequentialChaining':
+        return ProfessionalSequentialChainingVideo;
       default:
         return ChainOfThoughtVideoWithAudio; // Default to audio version
     }

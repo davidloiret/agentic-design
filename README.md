@@ -365,7 +365,7 @@ And methodoloy to find vulnerability in AI systems with checklist etc.
 
 Add suggest new techniques / new patterns / categorie
 
-
+Add proper sources => for prompt leak
 bottom sheet should only be open by default if there is no category and technique selected
 
 When empty => I should have a call to action to open bottom sheet
@@ -374,3 +374,6 @@ create a waitlist
 
 add tag so we can search rapidly not by provider but by use case
 coding agent, etc for the prompt
+
+Add supply chain attack through hallucination
+https://www.darktrace.com/fr/blog/when-hallucinations-become-reality-an-exploration-of-ai-package-hallucination-attacks

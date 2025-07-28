@@ -1,0 +1,119 @@
+{
+  "pattern": "chain-of-thought",
+  "title": "Chain of Thought",
+  "description": "Transparent AI Reasoning for Engineers",
+  "voice": {
+    "provider": "elevenlabs",
+    "voice_id": "professional-male",
+    "settings": {
+      "stability": 0.7,
+      "clarity": 0.8,
+      "style": 0.2
+    }
+  },
+  "segments": [
+    {
+      "id": "cot-intro",
+      "text": "Chain of Thought reasoning transforms how AI solves complex problems - and it's surprisingly simple to implement.",
+      "duration": 9.111328125,
+      "emphasis": [
+        "Chain of Thought",
+        "transforms",
+        "surprisingly simple"
+      ]
+    },
+    {
+      "id": "cot-implementation",
+      "text": "For engineers, implementing CoT is as easy as adding 'Let's think step by step' to your prompts.",
+      "duration": 7.6171875,
+      "emphasis": [
+        "engineers",
+        "implementing CoT",
+        "Let's think step by step"
+      ]
+    },
+    {
+      "id": "cot-comparison",
+      "text": "Let's see the dramatic difference between regular prompts and Chain of Thought prompts in action.",
+      "duration": 7.67578125,
+      "emphasis": [
+        "dramatic difference",
+        "regular prompts",
+        "Chain of Thought prompts"
+      ]
+    },
+    {
+      "id": "cot-regular",
+      "text": "Regular prompts give you direct answers with no reasoning - you can't verify or understand the process.",
+      "duration": 8.203125,
+      "emphasis": [
+        "Regular prompts",
+        "direct answers",
+        "no reasoning",
+        "verify",
+        "understand"
+      ]
+    },
+    {
+      "id": "cot-magic",
+      "text": "Chain of Thought prompts unlock the model's reasoning ability - just add the magic phrase and watch it think.",
+      "duration": 8.349609375,
+      "emphasis": [
+        "unlock",
+        "reasoning ability",
+        "magic phrase",
+        "watch it think"
+      ]
+    },
+    {
+      "id": "cot-automatic",
+      "text": "The model automatically breaks down complex problems into clear, verifiable steps - no additional coding required.",
+      "duration": 8.759765625,
+      "emphasis": [
+        "automatically",
+        "breaks down",
+        "verifiable steps",
+        "no additional coding"
+      ]
+    },
+    {
+      "id": "cot-conclusion",
+      "text": "This simple technique delivers 40-70% accuracy improvements and complete transparency in AI decision-making.",
+      "duration": 8.84765625,
+      "emphasis": [
+        "simple technique",
+        "40-70% accuracy improvements",
+        "complete transparency"
+      ]
+    }
+  ],
+  "files": {
+    "required": [
+      "cot-intro.wav",
+      "cot-intro.mp3",
+      "cot-implementation.wav",
+      "cot-implementation.mp3",
+      "cot-comparison.wav",
+      "cot-comparison.mp3",
+      "cot-regular.wav",
+      "cot-regular.mp3",
+      "cot-magic.wav",
+      "cot-magic.mp3",
+      "cot-automatic.wav",
+      "cot-automatic.mp3",
+      "cot-conclusion.wav",
+      "cot-conclusion.mp3"
+    ],
+    "script": "tts-script.txt",
+    "timing": "timing-config.json"
+  },
+  "instructions": [
+    "Use consistent voice and tone across all segments",
+    "Maintain professional but engaging delivery",
+    "Emphasize key technical terms as specified",
+    "Keep pace moderate for technical content",
+    "Export as high-quality WAV (44.1kHz, 16-bit minimum)",
+    "Convert to MP3 for web optimization",
+    "Ensure audio levels are consistent across all files"
+  ]
+}

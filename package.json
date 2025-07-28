@@ -9,7 +9,7 @@
     "lint": "next lint",
     "remotion:studio": "remotion studio",
     "remotion:render": "remotion render",
-    "tts:generate": "node scripts/generate-tts-audio.js",
+    "tts:generate": "node scripts/generate-tts-audio-unified.js",
     "tts:setup": "echo 'Add OPENAI_API_KEY=your_key_here to your .env file'"
   },
   "dependencies": {
