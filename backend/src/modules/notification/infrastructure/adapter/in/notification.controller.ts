@@ -3,7 +3,7 @@ import { Request } from 'express';
 import { AuthGuard } from '../../../../auth/infrastructure/guard/auth.guard';
 import { NotificationService } from '../../../application/usecase/notification.service';
 
-@Controller('api/v1/notifications')
+@Controller('notifications')
 @UseGuards(AuthGuard)
 export class NotificationController {
   constructor(
