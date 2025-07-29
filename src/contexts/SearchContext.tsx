@@ -174,7 +174,9 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       // Keep cache size reasonable (max 50 entries)
       if (searchCache.current.size > 50) {
         const firstKey = searchCache.current.keys().next().value;
-        searchCache.current.delete(firstKey);
+        if (firstKey !== undefined) {
+          searchCache.current.delete(firstKey);
+        }
       }
       
       setSearchResults(results);
