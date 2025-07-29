@@ -455,3 +455,5 @@ generate post for linkedin
 regroupement à faire
 
 learn fondamentals, not framework
+
+interop avec des composants => guard etc

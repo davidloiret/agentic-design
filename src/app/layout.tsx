@@ -4,6 +4,8 @@ import "./globals.css";
 import { Analytics } from '@vercel/analytics/next';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { LearningHubProvider } from '@/contexts/LearningHubContext';
+import { SearchProvider } from '@/contexts/SearchContext';
+import { SearchModal } from '@/app/components/SearchModal';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -96,9 +98,12 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
-          <LearningHubProvider>
-            {children}
-          </LearningHubProvider>
+          <SearchProvider>
+            <LearningHubProvider>
+              {children}
+              <SearchModal />
+            </LearningHubProvider>
+          </SearchProvider>
         </AuthProvider>
         <Analytics />
       </body>
