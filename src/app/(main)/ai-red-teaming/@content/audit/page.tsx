@@ -269,12 +269,12 @@ export default function AuditWizardPage() {
         [category]: {
           ...prev[phase]?.[category],
           [item]: {
-            completed: false,
-            riskLevel: 'info',
+            ...prev[phase]?.[category]?.[item],
+            ...updates,
             notes: '',
             evidence: '',
-            ...prev[phase]?.[category]?.[item],
-            ...updates
+            riskLevel: 'info',
+            completed: false,
           }
         }
       }
