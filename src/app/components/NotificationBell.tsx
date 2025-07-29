@@ -131,11 +131,9 @@ export const NotificationBell: React.FC = () => {
     try {
       const response = await notificationApi.markAllAsRead();
       if (response.success) {
-        // Update local state
-        setNotifications(prev => 
-          prev.map(n => ({ ...n, isRead: true, readAt: new Date().toISOString() }))
-        );
-        setUnreadCount(0);
+        // Refetch notifications to update dropdown
+        await fetchNotifications();
+        await fetchUnreadCount();
       }
     } catch (error) {
       console.error('Failed to mark all notifications as read:', error);
