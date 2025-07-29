@@ -36,16 +36,31 @@ export const NotificationBell: React.FC = () => {
   const updateDropdownPosition = () => {
     if (buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
-      setDropdownPosition({
-        top: rect.bottom + 8,
-        right: window.innerWidth - rect.right
-      });
+      const isMobile = window.innerWidth < 640; // sm breakpoint
+      
+      if (isMobile) {
+        // On mobile, position from right edge with padding
+        setDropdownPosition({
+          top: rect.bottom + 8,
+          right: 16 // Fixed right padding on mobile
+        });
+      } else {
+        setDropdownPosition({
+          top: rect.bottom + 8,
+          right: window.innerWidth - rect.right
+        });
+      }
     }
   };
 
   useEffect(() => {
     if (isOpen) {
       updateDropdownPosition();
+      
+      // Update position on window resize
+      const handleResize = () => updateDropdownPosition();
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
     }
   }, [isOpen]);
 
@@ -217,7 +232,7 @@ export const NotificationBell: React.FC = () => {
       {mounted && isOpen && createPortal(
         <div 
           ref={dropdownRef}
-          className="fixed w-120 bg-gray-900 border border-gray-700/50 rounded-lg shadow-xl overflow-hidden z-[9999] max-h-96"
+          className="fixed w-80 sm:w-120 bg-gray-900 border border-gray-700/50 rounded-lg shadow-xl overflow-hidden z-[60] max-h-96"
           style={{ 
             top: `${dropdownPosition.top}px`, 
             right: `${dropdownPosition.right}px`,
@@ -320,19 +335,17 @@ export const NotificationBell: React.FC = () => {
           </div>
 
           {/* Footer */}
-          {notifications.length > 0 && (
-            <div className="px-4 py-3 border-t border-gray-700/50 bg-gray-800/50">
-              <button
-                onClick={() => {
-                  setIsOpen(false);
-                  router.push('/notifications');
-                }}
-                className="w-full text-center text-sm text-blue-400 hover:text-blue-300 transition-colors"
-              >
-                View all notifications
-              </button>
-            </div>
-          )}
+          <div className="px-4 py-3 border-t border-gray-700/50 bg-gray-800/50">
+            <button
+              onClick={() => {
+                setIsOpen(false);
+                router.push('/notifications');
+              }}
+              className="w-full text-center text-sm text-blue-400 hover:text-blue-300 transition-colors"
+            >
+              View all notifications
+            </button>
+          </div>
         </div>,
         document.body
       )}

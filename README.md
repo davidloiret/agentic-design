@@ -472,3 +472,5 @@ forget password / maol / confirmation / sso mais pas de pwd ?
 
 gem finder => proposer des ressources / suivre blogpost / personne / connecter son linkedin etc
 => auto post
+
+ajouter des notifs pour motiver

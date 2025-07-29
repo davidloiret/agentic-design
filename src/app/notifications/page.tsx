@@ -10,23 +10,18 @@ import {
   ArrowLeft,
   Check,
   CheckCheck,
-  X,
-  Filter,
   Search,
   Clock,
   AlertTriangle,
-  Info,
   CheckCircle,
   Star,
   Users,
-  CreditCard,
-  Shield,
   Settings,
   Trash2,
   Eye,
   EyeOff,
-  Calendar,
-  MessageSquare
+  MessageSquare,
+  Archive
 } from 'lucide-react';
 
 // Use the API notification type but extend it for backward compatibility
@@ -41,25 +36,25 @@ function NotificationsPageContent() {
   
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
-  const [filter, setFilter] = useState<'all' | 'unread' | 'read'>('all');
+  const [filter, setFilter] = useState<'all' | 'unread' | 'read' | 'archived'>('all');
   const [typeFilter, setTypeFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedNotifications, setSelectedNotifications] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // Fetch notifications on component mount
+  // Fetch notifications on component mount and when filter changes
   useEffect(() => {
     if (user) {
       fetchNotifications();
     }
-  }, [user]);
+  }, [user, filter]);
 
   const fetchNotifications = async () => {
     setLoading(true);
     try {
       const response = await notificationApi.getNotifications({ 
         includeRead: true, 
-        includeArchived: false,
+        includeArchived: filter === 'archived',
         limit: 100 
       });
       if (response.success && response.data) {
@@ -116,9 +111,10 @@ function NotificationsPageContent() {
   };
 
   const filteredNotifications = notifications.filter(notification => {
-    const matchesFilter = filter === 'all' || 
-      (filter === 'read' && notification.isRead) || 
-      (filter === 'unread' && !notification.isRead);
+    const matchesFilter = filter === 'all' ||
+      (filter === 'read' && notification.isRead && !notification.isArchived) ||
+      (filter === 'unread' && !notification.isRead && !notification.isArchived) ||
+      (filter === 'archived' && notification.isArchived);
     
     const matchesType = typeFilter === 'all' || notification.type === typeFilter;
     
@@ -305,9 +301,9 @@ function NotificationsPageContent() {
               </div>
             </div>
 
-            {/* Read/Unread Filter */}
+            {/* Read/Unread/Archived Filter */}
             <div className="flex bg-gray-800/50 rounded-lg p-1">
-              {['all', 'unread', 'read'].map((filterOption) => (
+              {['all', 'unread', 'read', 'archived'].map((filterOption) => (
                 <button
                   key={filterOption}
                   onClick={() => setFilter(filterOption as any)}
@@ -409,7 +405,9 @@ function NotificationsPageContent() {
                   <div
                     key={notification.id}
                     className={`bg-gray-900/50 backdrop-blur-xl rounded-2xl border shadow-2xl transition-all duration-200 ${
-                      notification.isRead
+                      notification.isArchived
+                        ? 'border-gray-700/50 bg-gray-800/20 opacity-75'
+                        : notification.isRead
                         ? 'border-gray-800'
                         : 'border-blue-500/30 bg-blue-500/5'
                     } ${isSelected ? 'ring-2 ring-blue-500' : ''}`}
@@ -434,15 +432,24 @@ function NotificationsPageContent() {
                           <div className="flex items-start justify-between">
                             <div>
                               <h3 className={`text-lg font-semibold ${
-                                notification.isRead ? 'text-gray-300' : 'text-gray-100'
+                                notification.isArchived 
+                                  ? 'text-gray-400' 
+                                  : notification.isRead ? 'text-gray-300' : 'text-gray-100'
                               }`}>
                                 {notification.title}
-                                {!notification.isRead && (
+                                {notification.isArchived && (
+                                  <span className="ml-2 inline-flex items-center">
+                                    <Archive className="w-3 h-3 text-gray-500" />
+                                  </span>
+                                )}
+                                {!notification.isRead && !notification.isArchived && (
                                   <span className="ml-2 w-2 h-2 bg-blue-500 rounded-full inline-block"></span>
                                 )}
                               </h3>
                               <p className={`mt-1 ${
-                                notification.isRead ? 'text-gray-500' : 'text-gray-400'
+                                notification.isArchived 
+                                  ? 'text-gray-600' 
+                                  : notification.isRead ? 'text-gray-500' : 'text-gray-400'
                               }`}>
                                 {notification.message}
                               </p>
