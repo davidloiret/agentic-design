@@ -425,7 +425,7 @@ Business model
 - payer pour trouver des experts pour entreprise (comme boite recrutement
 - personal teacher expert
 - AI assistant
-
+- workshop et expert dédié pour apprentissage et build
 
 Add forgot password
 
@@ -453,3 +453,5 @@ https://www.open-source-ward.com/
 generate post for linkedin
 
 regroupement à faire
+
+learn fondamentals, not framework

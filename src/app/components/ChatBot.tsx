@@ -2,6 +2,8 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageCircle, X, Send, Sparkles, Zap, Target, Code } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { AuthCTA } from './AuthCTA';
 
 interface ChatBotProps {
   onRecommendationSelect?: (useCase: string, complexity: string) => void;
@@ -19,6 +21,8 @@ interface Message {
 
 export const ChatBot = ({ onRecommendationSelect, getRecommendations, techniques = [] }: ChatBotProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [showAuthCTA, setShowAuthCTA] = useState(false);
+  const { user } = useAuth();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -174,7 +178,14 @@ export const ChatBot = ({ onRecommendationSelect, getRecommendations, techniques
   if (!isOpen) {
     return (
       <button
-        onClick={() => setIsOpen(true)}
+        onClick={() => {
+          if (!user) {
+            setShowAuthCTA(true);
+            setIsOpen(true);
+          } else {
+            setIsOpen(true);
+          }
+        }}
         className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition-all duration-200 z-50"
         aria-label="Open AI Assistant"
       >
@@ -202,6 +213,17 @@ export const ChatBot = ({ onRecommendationSelect, getRecommendations, techniques
           </button>
         </div>
 
+        {/* AuthCTA or Messages */}
+        {showAuthCTA && !user ? (
+          <AuthCTA 
+            onClose={() => {
+              setShowAuthCTA(false);
+              setIsOpen(false);
+            }} 
+            variant="replacement" 
+          />
+        ) : (
+          <>
         {/* Messages */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
           {messages.map((message) => (
@@ -282,10 +304,12 @@ export const ChatBot = ({ onRecommendationSelect, getRecommendations, techniques
             </button>
           </div>
         </div>
+          </>
+        )}
       </div>
 
       {/* Desktop popup */}
-      <div className="hidden md:block fixed bottom-6 right-6 w-96 h-[600px] bg-gray-900 border border-gray-700 rounded-lg shadow-2xl flex flex-col z-50">
+      <div className="hidden md:block fixed bottom-6 right-6 w-96 h-[600px] bg-gray-900 border border-gray-700 rounded-lg shadow-2xl flex flex-col z-50 relative">
         {/* Header */}
         <div className="bg-gradient-to-r from-purple-600 to-blue-600 p-4 rounded-t-lg flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -301,6 +325,17 @@ export const ChatBot = ({ onRecommendationSelect, getRecommendations, techniques
           </button>
         </div>
 
+        {/* AuthCTA or Messages */}
+        {showAuthCTA && !user ? (
+          <AuthCTA 
+            onClose={() => {
+              setShowAuthCTA(false);
+              setIsOpen(false);
+            }} 
+            variant="overlay" 
+          />
+        ) : null}
+        
         {/* Messages */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
           {messages.map((message) => (
