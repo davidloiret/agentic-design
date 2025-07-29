@@ -13,6 +13,7 @@ import {
 import { Request } from 'express';
 import { AuthGuard } from '../../../../auth/infrastructure/guard/auth.guard';
 import { LearningHubService } from '../../../application/usecase/learning-hub.service';
+import { AchievementService } from '../../../application/usecase/achievement.service';
 import { UpdateProgressDto } from '../../../application/dto/update-progress.dto';
 import {
   UserStatsResponseDto,
@@ -24,7 +25,10 @@ import {
 @Controller('learning-hub')
 @UseGuards(AuthGuard)
 export class LearningHubController {
-  constructor(private readonly learningHubService: LearningHubService) {}
+  constructor(
+    private readonly learningHubService: LearningHubService,
+    private readonly achievementService: AchievementService,
+  ) {}
 
   @Post('progress')
   @HttpCode(HttpStatus.OK)
@@ -74,11 +78,22 @@ export class LearningHubController {
   @Get('achievements')
   async getUserAchievements(@Req() request: Request) {
     const user = request['user'];
-    const achievements = await this.learningHubService.getUserAchievements(user.id);
+    const achievementData = await this.achievementService.getUserAchievements(user.id);
     
     return {
       success: true,
-      data: achievements,
+      data: achievementData,
+    };
+  }
+
+  @Get('achievements/progress')
+  async getUserAchievementProgress(@Req() request: Request) {
+    const user = request['user'];
+    const progress = await this.achievementService.getUserAchievementProgress(user.id);
+    
+    return {
+      success: true,
+      data: progress,
     };
   }
 

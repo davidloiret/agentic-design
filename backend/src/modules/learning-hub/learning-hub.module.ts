@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { LearningHubController } from './infrastructure/adapter/in/learning-hub.controller';
 import { LearningHubService } from './application/usecase/learning-hub.service';
+import { AchievementService } from './application/usecase/achievement.service';
 import { UserProgressRepository } from './infrastructure/persistence/user-progress.repository';
 import { UserAchievementRepository } from './infrastructure/persistence/user-achievement.repository';
 import { UserXpRepository, UserXpTransactionRepository } from './infrastructure/persistence/user-xp.repository';
@@ -31,6 +32,7 @@ import { NotificationModule } from '../notification/notification.module';
   controllers: [LearningHubController],
   providers: [
     LearningHubService,
+    AchievementService,
     UserProgressRepository,
     UserAchievementRepository,
     UserXpRepository,
@@ -38,6 +40,6 @@ import { NotificationModule } from '../notification/notification.module';
     UserStreakRepository,
     UserRepository,
   ],
-  exports: [LearningHubService],
+  exports: [LearningHubService, AchievementService],
 })
 export class LearningHubModule {}

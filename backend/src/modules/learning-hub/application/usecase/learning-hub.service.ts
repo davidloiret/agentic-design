@@ -5,6 +5,7 @@ import { UserXpRepository, UserXpTransactionRepository } from '../../infrastruct
 import { UserStreakRepository } from '../../infrastructure/persistence/user-streak.repository';
 import { UserRepository } from '../../../user/infrastructure/persistence/user.repository';
 import { NotificationService } from '../../../notification/application/usecase/notification.service';
+import { AchievementService } from './achievement.service';
 import { UserProgress } from '../../domain/entity/user-progress.entity';
 import { UserAchievement, AchievementType } from '../../domain/entity/user-achievement.entity';
 import { UserXp, UserXpTransaction, XpSource } from '../../domain/entity/user-xp.entity';
@@ -20,6 +21,7 @@ export class LearningHubService {
     private readonly xpTransactionRepository: UserXpTransactionRepository,
     private readonly streakRepository: UserStreakRepository,
     private readonly notificationService: NotificationService,
+    private readonly achievementService: AchievementService,
   ) {}
 
   async updateProgress(
@@ -78,7 +80,12 @@ export class LearningHubService {
     }
 
     let progress: UserProgress[];
-    let courseProgress;
+    let courseProgress: {
+      totalLessons: number;
+      completedLessons: number;
+      progressPercentage: number;
+      totalTimeSpent: number;
+    } | undefined;
 
     if (courseId) {
       progress = await this.progressRepository.findByUserAndCourse(user.id, courseId);
@@ -217,98 +224,67 @@ export class LearningHubService {
     lessonId: string,
     progress: UserProgress,
   ): Promise<void> {
-    const user = await this.userRepository.findById(userId);
-    if (!user) return;
-
+    console.log('[LearningHubService] Checking achievements for user:', userId);
+    
     const userProgress = await this.progressRepository.findByUser(userId);
     const completedLessons = userProgress.filter(p => p.isCompleted);
+    console.log('[LearningHubService] Completed lessons count:', completedLessons.length);
     
-    if (completedLessons.length === 1 && !await this.achievementRepository.hasAchievement(userId, AchievementType.FIRST_LESSON)) {
-      await this.awardAchievement(user, AchievementType.FIRST_LESSON, 'First Steps', 'Completed your first lesson!', 50);
+    // First lesson achievement
+    if (completedLessons.length === 1) {
+      await this.achievementService.checkAndUnlockAchievement(userId, AchievementType.FIRST_LESSON);
     }
 
+    // Award XP for lesson completion
     if (progress.isCompleted) {
       await this.awardXp(userId, 25, XpSource.LESSON_COMPLETION, lessonId, 'Lesson completed');
+      
+      // Check time-based achievements
+      await this.achievementService.checkTimeBasedAchievements(userId, new Date());
+      
+      // Check daily achievements
+      const today = new Date().toISOString().split('T')[0];
+      const lessonsCompletedToday = completedLessons.filter(
+        p => p.completedAt && p.completedAt.toISOString().split('T')[0] === today
+      ).length;
+      await this.achievementService.checkDailyAchievements(userId, lessonsCompletedToday);
     }
 
+    // Course completion achievement
     const courseProgress = await this.progressRepository.getUserCourseProgress(userId, courseId);
     if (courseProgress.progressPercentage === 100) {
-      const hasAchievement = await this.achievementRepository.hasAchievement(
-        userId, 
-        AchievementType.COURSE_COMPLETION, 
+      await this.achievementService.checkAndUnlockAchievement(
+        userId,
+        AchievementType.COURSE_COMPLETION,
         { courseId }
       );
+      await this.awardXp(userId, 100, XpSource.COURSE_COMPLETION, courseId, 'Course completed');
       
-      if (!hasAchievement) {
-        await this.awardAchievement(
-          user, 
-          AchievementType.COURSE_COMPLETION, 
-          'Course Master', 
-          'Completed an entire course!', 
-          200,
-          '🏆',
-          { courseId }
-        );
-        await this.awardXp(userId, 100, XpSource.COURSE_COMPLETION, courseId, 'Course completed');
-      }
+      // Check course-related achievements (e.g., speed demon)
+      const courseStartTime = Math.min(...userProgress
+        .filter(p => p.courseId === courseId)
+        .map(p => p.createdAt.getTime())
+      );
+      const completionTime = Date.now() - courseStartTime;
+      await this.achievementService.checkCourseAchievements(userId, courseId, completionTime);
     }
   }
 
   private async checkStreakAchievements(userId: string, currentStreak: number): Promise<void> {
-    const user = await this.userRepository.findById(userId);
-    if (!user) return;
-
     const milestones = [7, 30, 100, 365];
     
     for (const milestone of milestones) {
       if (currentStreak >= milestone) {
-        const hasAchievement = await this.achievementRepository.hasAchievement(
+        await this.achievementService.checkAndUnlockAchievement(
           userId,
           AchievementType.STREAK_MILESTONE,
-          { days: milestone }
+          { days: milestone },
+          1
         );
-
-        if (!hasAchievement) {
-          await this.awardAchievement(
-            user,
-            AchievementType.STREAK_MILESTONE,
-            `${milestone} Day Streak`,
-            `Maintained a ${milestone}-day learning streak!`,
-            milestone * 2,
-            '🔥',
-            { days: milestone }
-          );
-        }
       }
     }
   }
 
-  private async awardAchievement(
-    user: any,
-    type: AchievementType,
-    title: string,
-    description: string,
-    xpReward: number,
-    icon?: string,
-    metadata?: object,
-  ): Promise<void> {
-    const achievement = new UserAchievement(user, type, title, description, xpReward, icon, metadata);
-    await this.achievementRepository.save(achievement);
-
-    // Create notification for achievement
-    await this.notificationService.createAchievementNotification(
-      user,
-      title,
-      description,
-      xpReward,
-      icon,
-      metadata
-    );
-
-    if (xpReward > 0) {
-      await this.awardXp(user.id, xpReward, XpSource.ACHIEVEMENT_UNLOCK, achievement.id, `Achievement: ${title}`);
-    }
-  }
 
   private async awardXp(
     userId: string,
@@ -347,53 +323,26 @@ export class LearningHubService {
   }
 
   private async checkXpMilestoneAchievements(userId: string, totalXp: number, level: number): Promise<void> {
-    const user = await this.userRepository.findById(userId);
-    if (!user) return;
-
     const xpMilestones = [1000, 5000, 10000, 25000, 50000];
     const levelMilestones = [10, 25, 50, 100];
 
     for (const milestone of xpMilestones) {
       if (totalXp >= milestone) {
-        const hasAchievement = await this.achievementRepository.hasAchievement(
+        await this.achievementService.checkAndUnlockAchievement(
           userId,
           AchievementType.XP_MILESTONE,
           { xp: milestone }
         );
-
-        if (!hasAchievement) {
-          await this.awardAchievement(
-            user,
-            AchievementType.XP_MILESTONE,
-            `${milestone} XP Master`,
-            `Earned ${milestone} total experience points!`,
-            milestone / 10,
-            '⭐',
-            { xp: milestone }
-          );
-        }
       }
     }
 
     for (const milestone of levelMilestones) {
       if (level >= milestone) {
-        const hasAchievement = await this.achievementRepository.hasAchievement(
+        await this.achievementService.checkAndUnlockAchievement(
           userId,
           AchievementType.XP_MILESTONE,
           { level: milestone }
         );
-
-        if (!hasAchievement) {
-          await this.awardAchievement(
-            user,
-            AchievementType.XP_MILESTONE,
-            `Level ${milestone} Expert`,
-            `Reached level ${milestone}!`,
-            milestone * 10,
-            '🎯',
-            { level: milestone }
-          );
-        }
       }
     }
   }
