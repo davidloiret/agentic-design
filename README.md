@@ -485,3 +485,11 @@ veille techno
 podcast
 
 find sweet point
+
+
+methodologies / chjecklist
+
+
+organize by use case
+
+get recommendation

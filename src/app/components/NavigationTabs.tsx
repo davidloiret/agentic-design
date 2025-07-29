@@ -130,7 +130,7 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
       name: 'Main Navigation',
       tabs: [
         { id: 'patterns', label: 'Patterns', icon: BookOpen, description: 'Browse AI design patterns', route: '/patterns' },
-        { id: 'pattern-evaluation', label: 'Pattern Lab', icon: FlaskRound, description: 'Evaluate patterns with different models', route: '/pattern-evaluation' },
+        { id: 'pattern-evaluation', label: 'Eval Lab', icon: FlaskRound, description: 'Evaluate patterns with different models', route: '/pattern-evaluation' },
         { id: 'ai-red-teaming', label: 'AI Red Teaming', icon: Shield, description: 'AI security & defensive techniques', route: '/ai-red-teaming' },
         { id: 'fine-tuning', label: 'Fine Tuning', icon: Settings, description: 'Model optimization', route: '/fine-tuning' },
         { id: 'ai-inference', label: 'AI Inference', icon: Cpu, description: 'Inference strategies', route: '/ai-inference' },
