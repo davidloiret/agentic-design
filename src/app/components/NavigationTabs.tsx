@@ -46,6 +46,9 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
       }
     };
     
+    // Check initial scroll position on mount
+    handleScroll();
+    
     // Throttle scroll events for better performance
     let ticking = false;
     const throttledScroll = () => {
