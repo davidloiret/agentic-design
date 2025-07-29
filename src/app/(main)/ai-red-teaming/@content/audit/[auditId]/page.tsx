@@ -292,12 +292,12 @@ export default function AuditWizardPage({ params }: { params: { auditId: string 
         [category]: {
           ...prev[phase]?.[category],
           [item]: {
+            ...prev[phase]?.[category]?.[item],
+            ...updates,
             completed: false,
             riskLevel: 'info',
             notes: '',
             evidence: '',
-            ...prev[phase]?.[category]?.[item],
-            ...updates
           }
         }
       }
