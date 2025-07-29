@@ -2,7 +2,7 @@
 
 import React, { Suspense } from 'react';
 import { Search } from 'lucide-react';
-import { TechniquesListLayout, type Technique, type Category as TechniqueCategory } from './TechniquesListLayout';
+import { CategoryNavigationLayout, NavigationItem, NavigationCategory } from './CategoryNavigationLayout';
 import { redTeamingCategories, allRedTeamingTechniques } from '../red-teaming';
 
 interface RoutedRedTeamingTechniquesListProps {
@@ -11,59 +11,37 @@ interface RoutedRedTeamingTechniquesListProps {
 }
 
 const RoutedRedTeamingTechniquesListInner = ({ selectedCategory, selectedTechnique }: RoutedRedTeamingTechniquesListProps) => {
-  // Convert techniques to the generic component format
-  const convertedTechniques: Technique[] = allRedTeamingTechniques.map(tech => ({
+  // Convert techniques to NavigationItem format
+  const convertedTechniques: NavigationItem[] = allRedTeamingTechniques.map(tech => ({
     id: tech.id,
     name: tech.name,
     category: tech.category,
     complexity: tech.complexity,
-    abbr: tech.abbr
+    abbr: tech.abbr,
+    icon: '🛡️',
+    href: `/ai-red-teaming/${tech.category}/${tech.id}`
   }));
 
-  // Convert categories to the generic component format
-  const convertedCategories: TechniqueCategory[] = Object.entries(redTeamingCategories).map(([id, category]) => ({
+  // Convert categories to NavigationCategory format
+  const convertedCategories: NavigationCategory[] = Object.entries(redTeamingCategories).map(([id, category]) => ({
     id,
     name: category.name,
-    icon: category.icon,
-    techniques: category.techniques
+    icon: category.icon
   }));
 
-  // Custom filter function for red teaming techniques
-  const filterTechniques = (techniques: Technique[], searchQuery: string) => {
-    if (!searchQuery) return techniques;
-    return techniques.filter(technique =>
-      technique.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      technique.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (technique.abbr && technique.abbr.toLowerCase().includes(searchQuery.toLowerCase()))
-    );
-  };
-
-  // Custom techniques for category function
-  const getTechniquesForCategory = (categoryId: string, techniques: Technique[]) => {
-    if (categoryId === 'all') return techniques;
-    return techniques.filter(technique => technique.category === categoryId);
-  };
-
-  // Custom category count function
-  const getCategoryCount = (categoryId: string) => {
-    const category = redTeamingCategories[categoryId as keyof typeof redTeamingCategories];
-    return category ? category.techniques.length : 0;
-  };
+  // Get the currently selected category from URL
+  const currentCategory = selectedCategory || null;
 
   return (
-    <TechniquesListLayout
-      techniques={convertedTechniques}
+    <CategoryNavigationLayout
+      items={convertedTechniques}
       categories={convertedCategories}
-      selectedCategory={selectedCategory}
-      selectedTechnique={selectedTechnique}
       searchPlaceholder="Search techniques..."
       sectionTitle="AI Red Teaming Techniques"
       basePath="/ai-red-teaming"
       accentColor="red"
-      renderTechniqueIcon={() => '🛡️'}
-      filterTechniques={filterTechniques}
-      getTechniquesForCategory={getTechniquesForCategory}
-      getCategoryCount={getCategoryCount}
+      enableCategoryNavigation={false}
+      defaultExpandedCategories={currentCategory ? [currentCategory] : []}
     />
   );
 };

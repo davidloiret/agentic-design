@@ -1,9 +1,8 @@
 "use client"
 
+import React, { Suspense } from 'react';
 import { Search } from 'lucide-react';
-import { Suspense } from 'react';
-import { TechniquesListLayout, type Technique, type Category as TechniqueCategory } from './TechniquesListLayout';
-import { Category } from '../categories';
+import { CategoryNavigationLayout, NavigationItem, NavigationCategory } from './CategoryNavigationLayout';
 import { techniques } from '../techniques';
 import { categories } from '../categories';
 import Fuse from 'fuse.js';
@@ -19,61 +18,50 @@ const options = {
 };
 
 const RoutedTechniquesListInner = ({ selectedCategory, selectedTechnique }: RoutedTechniquesListProps) => {
-  // Convert techniques and categories to the generic component format
-  const convertedTechniques: Technique[] = techniques.map(tech => ({
+  // Convert techniques to NavigationItem format
+  const convertedTechniques: NavigationItem[] = techniques.map(tech => ({
     id: tech.id,
     name: tech.name,
     category: tech.category,
     complexity: tech.complexity,
     abbr: tech.abbr,
     icon: tech.icon,
-    color: tech.color
+    href: `/patterns/${tech.category}/${tech.id}`
   }));
 
-  const convertedCategories: TechniqueCategory[] = categories.map(cat => ({
+  // Convert categories to NavigationCategory format
+  const convertedCategories: NavigationCategory[] = categories.map(cat => ({
     id: cat.id,
     name: cat.name,
     icon: cat.icon
   }));
 
   // Custom filter function using Fuse.js
-  const filterTechniques = (techniques: Technique[], searchQuery: string) => {
+  const filterTechniques = (techniques: NavigationItem[], searchQuery: string) => {
     if (!searchQuery) return techniques;
     const fuse = new Fuse(techniques, options);
     return fuse.search(searchQuery).map(result => result.item);
   };
 
-  // Custom techniques for category function
-  const getTechniquesForCategory = (categoryId: string, techniques: Technique[]) => {
-    if (categoryId === 'all') return techniques;
-    return techniques.filter(technique => technique.category === categoryId);
-  };
-
-  // Custom category count function  
-  const getCategoryCount = (categoryId: string) => {
-    if (categoryId === 'all') return techniques.length;
-    return techniques.filter(technique => technique.category === categoryId).length;
-  };
+  // Get the currently selected category from URL
+  const currentCategory = selectedCategory || null;
 
   return (
-    <TechniquesListLayout
-      techniques={convertedTechniques}
+    <CategoryNavigationLayout
+      items={convertedTechniques}
       categories={convertedCategories}
-      selectedCategory={selectedCategory}
-      selectedTechnique={selectedTechnique}
       searchPlaceholder="Search patterns..."
       sectionTitle="Design Patterns & Techniques"
       basePath="/patterns"
       accentColor="blue"
-      renderTechniqueIcon={(technique) => technique.icon}
-      filterTechniques={filterTechniques}
-      getTechniquesForCategory={getTechniquesForCategory}
-      getCategoryCount={getCategoryCount}
+      enableCategoryNavigation={false}
+      defaultExpandedCategories={currentCategory ? [currentCategory] : []}
+      filterItems={filterTechniques}
     />
   );
 };
 
-export const RoutedTechniquesList = ({ selectedCategory, selectedTechnique }: RoutedTechniquesListProps) => {
+export const RoutedTechniquesList = ({ selectedCategory, selectedTechnique }: RoutedTechniquesListProps = {}) => {
   return (
     <Suspense fallback={<div className="lg:col-span-1 h-full flex flex-col min-h-0">
       <div className="relative flex-shrink-0 mb-4">
