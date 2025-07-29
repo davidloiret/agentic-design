@@ -1,8 +1,10 @@
 'use client';
 
-import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
+import React, { createContext, useContext, useState, useCallback, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { searchContent } from '@/lib/search';
+import { recentSearchAPI, type RecentSearchResponse } from '@/lib/recent-search-api';
+import { useAuth } from './AuthContext';
 
 export interface SearchResult {
   id: string;
@@ -34,6 +36,7 @@ interface SearchContextType {
   isSearching: boolean;
   filters: SearchFilters;
   recentSearches: string[];
+  recentSearchData: RecentSearchResponse[];
   toggleSearch: () => void;
   closeSearch: () => void;
   openSearch: () => void;
@@ -42,6 +45,8 @@ interface SearchContextType {
   clearSearch: () => void;
   setFilters: (filters: SearchFilters) => void;
   addToRecentSearches: (query: string) => void;
+  clearRecentSearches: () => Promise<void>;
+  loadRecentSearches: () => Promise<void>;
 }
 
 const SearchContext = createContext<SearchContextType | undefined>(undefined);
@@ -61,7 +66,51 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [isSearching, setIsSearching] = useState(false);
   const [filters, setFilters] = useState<SearchFilters>({});
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
+  const [recentSearchData, setRecentSearchData] = useState<RecentSearchResponse[]>([]);
   const router = useRouter();
+  const { user } = useAuth();
+
+  // Load recent searches when user changes or search opens
+  useEffect(() => {
+    if (user && isSearchOpen) {
+      loadRecentSearches();
+    }
+  }, [user, isSearchOpen]);
+
+  const loadRecentSearches = useCallback(async () => {
+    if (!user) return;
+    
+    try {
+      const data = await recentSearchAPI.getRecentSearches(10);
+      setRecentSearchData(data);
+      setRecentSearches(data.map(search => search.query));
+    } catch (error) {
+      console.error('Failed to load recent searches:', error);
+      // Fallback to local storage for offline functionality
+      const localRecentSearches = JSON.parse(
+        localStorage.getItem('recentSearches') || '[]'
+      );
+      setRecentSearches(localRecentSearches);
+    }
+  }, [user]);
+
+  const saveSearchToBackend = useCallback(async (query: string, category?: string) => {
+    if (!user) return;
+
+    try {
+      await recentSearchAPI.saveSearch({
+        query,
+        category,
+        filters: filters,
+        searchType: 'manual',
+      });
+      
+      // Refresh recent searches after saving
+      loadRecentSearches();
+    } catch (error) {
+      console.error('Failed to save search:', error);
+    }
+  }, [user, filters, loadRecentSearches]);
 
   const toggleSearch = useCallback(() => {
     setIsSearchOpen(prev => !prev);
@@ -94,6 +143,14 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       
       if (query.length > 2) {
         addToRecentSearches(query);
+        
+        // Save to backend if user is logged in
+        if (user) {
+          // Determine category from first result or filters
+          const category = results.length > 0 ? results[0].category : 
+                          (searchFilters?.categories?.[0] || filters.categories?.[0]);
+          await saveSearchToBackend(query, category);
+        }
       }
     } catch (error) {
       console.error('Search error:', error);
@@ -101,7 +158,7 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     } finally {
       setIsSearching(false);
     }
-  }, [filters]);
+  }, [filters, user, saveSearchToBackend, addToRecentSearches]);
 
   const clearSearch = useCallback(() => {
     setSearchQuery('');
@@ -111,9 +168,34 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const addToRecentSearches = useCallback((query: string) => {
     setRecentSearches(prev => {
       const filtered = prev.filter(q => q !== query);
-      return [query, ...filtered].slice(0, 5);
+      const newSearches = [query, ...filtered].slice(0, 5);
+      
+      // Store in localStorage as fallback
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('recentSearches', JSON.stringify(newSearches));
+      }
+      
+      return newSearches;
     });
   }, []);
+
+  const clearRecentSearches = useCallback(async () => {
+    try {
+      if (user) {
+        await recentSearchAPI.clearRecentSearches();
+      }
+      
+      setRecentSearches([]);
+      setRecentSearchData([]);
+      
+      // Clear localStorage as well
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('recentSearches');
+      }
+    } catch (error) {
+      console.error('Failed to clear recent searches:', error);
+    }
+  }, [user]);
 
   const value = useMemo(() => ({
     isSearchOpen,
@@ -122,6 +204,7 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     isSearching,
     filters,
     recentSearches,
+    recentSearchData,
     toggleSearch,
     closeSearch,
     openSearch,
@@ -129,7 +212,9 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     performSearch,
     clearSearch,
     setFilters,
-    addToRecentSearches
+    addToRecentSearches,
+    clearRecentSearches,
+    loadRecentSearches
   }), [
     isSearchOpen,
     searchQuery,
@@ -137,12 +222,15 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     isSearching,
     filters,
     recentSearches,
+    recentSearchData,
     toggleSearch,
     closeSearch,
     openSearch,
     performSearch,
     clearSearch,
-    addToRecentSearches
+    addToRecentSearches,
+    clearRecentSearches,
+    loadRecentSearches
   ]);
 
   return (

@@ -67,10 +67,12 @@ export const SearchModal: React.FC = () => {
     searchResults,
     isSearching,
     recentSearches,
+    recentSearchData,
     setSearchQuery,
     performSearch,
     closeSearch,
-    openSearch
+    openSearch,
+    clearRecentSearches
   } = useSearch();
 
   const router = useRouter();
@@ -288,20 +290,57 @@ export const SearchModal: React.FC = () => {
                 {/* Recent Searches */}
                 {recentSearches.length > 0 && (
                   <div className="mb-6">
-                    <h3 className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-3">
-                      Recent Searches
-                    </h3>
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="text-xs font-medium text-gray-400 uppercase tracking-wider">
+                        Recent Searches
+                      </h3>
+                      <button
+                        onClick={clearRecentSearches}
+                        className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
+                      >
+                        Clear All
+                      </button>
+                    </div>
                     <div className="space-y-2">
-                      {recentSearches.map((search, index) => (
-                        <button
-                          key={index}
-                          onClick={() => handleSearch(search)}
-                          className="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-800/50 transition-colors text-left"
-                        >
-                          <Clock className="w-4 h-4 text-gray-500" />
-                          <span className="text-gray-300">{search}</span>
-                        </button>
-                      ))}
+                      {recentSearchData.length > 0 ? (
+                        // Show enhanced recent searches when available
+                        recentSearchData.map((search, index) => (
+                          <button
+                            key={search.id}
+                            onClick={() => handleSearch(search.query)}
+                            className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-800/50 transition-colors text-left"
+                          >
+                            <div className="flex items-center space-x-3">
+                              <Clock className="w-4 h-4 text-gray-500" />
+                              <div>
+                                <div className="text-gray-300">{search.query}</div>
+                                {search.category && (
+                                  <div className={`text-xs mt-1 px-2 py-0.5 rounded-full inline-block ${categoryColors[search.category] || 'text-gray-400 bg-gray-400/10'}`}>
+                                    {categoryLabels[search.category] || search.category}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            {search.frequency > 1 && (
+                              <div className="text-xs text-gray-500 bg-gray-800 px-2 py-1 rounded">
+                                {search.frequency}x
+                              </div>
+                            )}
+                          </button>
+                        ))
+                      ) : (
+                        // Fallback to simple recent searches
+                        recentSearches.map((search, index) => (
+                          <button
+                            key={index}
+                            onClick={() => handleSearch(search)}
+                            className="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-800/50 transition-colors text-left"
+                          >
+                            <Clock className="w-4 h-4 text-gray-500" />
+                            <span className="text-gray-300">{search}</span>
+                          </button>
+                        ))
+                      )}
                     </div>
                   </div>
                 )}

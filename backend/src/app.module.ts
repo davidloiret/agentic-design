@@ -7,6 +7,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { LearningHubModule } from './modules/learning-hub/learning-hub.module';
 import { NotificationModule } from './modules/notification/notification.module';
+import { SearchModule } from './modules/search/search.module';
 import mikroOrmConfig from './mikro-orm.config';
 
 @Module({
@@ -19,6 +20,7 @@ import mikroOrmConfig from './mikro-orm.config';
     UserModule,
     LearningHubModule,
     NotificationModule,
+    SearchModule,
   ],
   controllers: [AppController, HealthController],
 })
