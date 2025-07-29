@@ -474,3 +474,14 @@ gem finder => proposer des ressources / suivre blogpost / personne / connecter s
 => auto post
 
 ajouter des notifs pour motiver
+
+vibe coding battle
+
+drivé par use case
+
+technique used
+
+veille techno
+podcast
+
+find sweet point

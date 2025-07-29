@@ -232,7 +232,7 @@ export const NotificationBell: React.FC = () => {
       {mounted && isOpen && createPortal(
         <div 
           ref={dropdownRef}
-          className="fixed w-80 sm:w-120 bg-gray-900 border border-gray-700/50 rounded-lg shadow-xl overflow-hidden z-[60] max-h-96"
+          className="fixed w-80 sm:w-120 bg-gray-900 border border-gray-700/50 rounded-lg shadow-xl overflow-hidden z-[60] max-h-[32rem]"
           style={{ 
             top: `${dropdownPosition.top}px`, 
             right: `${dropdownPosition.right}px`,
@@ -258,7 +258,7 @@ export const NotificationBell: React.FC = () => {
           </div>
 
           {/* Notifications List */}
-          <div className="max-h-80 overflow-y-auto">
+          <div className="max-h-[20rem] overflow-y-auto">
             {loading ? (
               <div className="p-4 text-center">
                 <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500 mx-auto"></div>

@@ -368,7 +368,7 @@ Process Quality: This meta-cognitive approach helped me produce a more thoughtfu
 
     // Check if using custom prompt
     const customPrompt = customPatternPrompts[patternId];
-    const usedCustomPrompt = customPrompt && customPrompt.trim() !== '';
+    const usedCustomPrompt = !!(customPrompt && customPrompt.trim() !== '');
     const effectiveInput = usedCustomPrompt ? customPrompt : testInput;
 
     // Simulate API call with realistic response times
