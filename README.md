@@ -493,3 +493,7 @@ methodologies / chjecklist
 organize by use case
 
 get recommendation
+
+fais micro interaction
+
+share achievemnt en social network

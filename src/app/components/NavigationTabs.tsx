@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { BookOpen, Lightbulb, Share2, FlaskConical, Brain, Boxes, Newspaper, FolderOpen, Cpu, Settings, ChevronDown, Menu, X, GraduationCap, Shield, FileText, FlaskRound } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface Tab {
   id: string;
@@ -127,17 +128,26 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
   // Main slot navigation routes
   const tabGroups = [
     {
-      name: 'Main Navigation',
+      name: 'Learn',
       tabs: [
         { id: 'patterns', label: 'Patterns', icon: BookOpen, description: 'Browse AI design patterns', route: '/patterns' },
-        { id: 'pattern-evaluation', label: 'Eval Lab', icon: FlaskRound, description: 'Evaluate patterns with different models', route: '/pattern-evaluation' },
-        { id: 'ai-red-teaming', label: 'AI Red Teaming', icon: Shield, description: 'AI security & defensive techniques', route: '/ai-red-teaming' },
         { id: 'fine-tuning', label: 'Fine Tuning', icon: Settings, description: 'Model optimization', route: '/fine-tuning' },
         { id: 'ai-inference', label: 'AI Inference', icon: Cpu, description: 'Inference strategies', route: '/ai-inference' },
+      ]
+    },
+    {
+      name: 'Lab',
+      tabs: [
+        { id: 'pattern-evaluation', label: 'Eval Lab', icon: FlaskRound, description: 'Evaluate patterns with different models', route: '/pattern-evaluation' },
+        { id: 'ai-red-teaming', label: 'AI Red Teaming', icon: Shield, description: 'AI security & defensive techniques', route: '/ai-red-teaming' },
+      ]
+    },
+    {
+      name: 'Resources',
+      tabs: [
         { id: 'prompt-hub', label: 'Prompt Hub', icon: FileText, description: 'Leaked AI system prompts', route: '/prompt-hub' },
         { id: 'project-hub', label: 'Project Hub', icon: FolderOpen, description: 'Example projects', route: '/project-hub' },
         { id: 'news-hub', label: 'News Hub', icon: Newspaper, description: 'Latest updates', route: '/news-hub' },
-        { id: 'learning-hub', label: 'Learning Hub', icon: GraduationCap, description: 'Gamified learning & certification', route: '/learning-hub' },
       ]
     }
   ];
@@ -180,31 +190,40 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
         <div className="mx-auto px-4 sm:px-6">
           {/* Desktop Tabs */}
           <div className="hidden lg:flex items-center justify-between">
-            <div className="flex items-center space-x-1">
-              {allTabs.map((tab) => {
-                const Icon = tab.icon;
-                const isActive = activeTab === tab.id;
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => handleTabClick(tab.id, tab.route)}
-                    onKeyDown={(e) => handleKeyDown(e, tab.id, tab.route)}
-                    className={`cursor-pointer px-4 py-4 rounded-lg transition-all duration-200 ${getTabClasses(tab.id, isActive)}`}
-                    role="tab"
-                    aria-selected={isActive}
-                    aria-controls={`${tab.id}-panel`}
-                    title={tab.description}
-                  >
-                    <Icon className={`w-4 h-4 inline mr-2 transition-transform duration-200 ${
-                      isActive ? 'scale-110' : 'group-hover:scale-105'
-                    }`} />
-                    <span className="text-sm font-medium">{tab.label}</span>
-                    {isActive && (
-                      <div className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 w-8 h-0.5 rounded-full ${getActiveIndicatorColor(tab.id)} transition-all duration-200`} />
-                    )}
-                  </button>
-                );
-              })}
+            <div className="flex items-center">
+              {tabGroups.map((group, groupIndex) => (
+                <div key={group.name} className="flex items-center">
+                  {groupIndex > 0 && (
+                    <div className="mx-6 h-8 w-px bg-gray-700/50" />
+                  )}
+                  <div className="flex items-center space-x-1">
+                    {group.tabs.map((tab) => {
+                      const Icon = tab.icon;
+                      const isActive = activeTab === tab.id;
+                      return (
+                        <button
+                          key={tab.id}
+                          onClick={() => handleTabClick(tab.id, tab.route)}
+                          onKeyDown={(e) => handleKeyDown(e, tab.id, tab.route)}
+                          className={`cursor-pointer px-4 py-4 rounded-lg transition-all duration-200 ${getTabClasses(tab.id, isActive)}`}
+                          role="tab"
+                          aria-selected={isActive}
+                          aria-controls={`${tab.id}-panel`}
+                          title={tab.description}
+                        >
+                          <Icon className={`w-4 h-4 inline mr-2 transition-transform duration-200 ${
+                            isActive ? 'scale-110' : 'group-hover:scale-105'
+                          }`} />
+                          <span className="text-sm font-medium">{tab.label}</span>
+                          {isActive && (
+                            <div className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 w-8 h-0.5 rounded-full ${getActiveIndicatorColor(tab.id)} transition-all duration-200`} />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 

@@ -29,6 +29,7 @@ export default function MainLayout({
       '/prompt-hub': 'prompt-hub',
       '/project-hub': 'project-hub',
       '/news-hub': 'news-hub',
+      '/pattern-evaluation': 'pattern-evaluation',
     };
 
     // Check for exact match first, then check if pathname starts with any route

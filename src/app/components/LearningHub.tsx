@@ -76,12 +76,146 @@ const LEVELS = [
   { level: 7, title: 'Master', xpRequired: 4000, color: 'text-yellow-400' },
 ];
 
-const ACHIEVEMENTS = [
-  { id: 'first-quiz', title: 'First Steps', description: 'Complete your first quiz', icon: Play },
-  { id: 'week-streak', title: 'Consistent Learner', description: '7-day learning streak', icon: Flame },
-  { id: 'code-master', title: 'Code Master', description: 'Complete 10 coding challenges', icon: Code },
-  { id: 'pattern-expert', title: 'Pattern Expert', description: 'Master all design patterns', icon: Brain },
-  { id: 'system-architect', title: 'System Architect', description: 'Build 5 complete systems', icon: Award },
+const getAchievements = (progress: UserProgress) => [
+  // Completion Achievements
+  { 
+    id: 'completionist', 
+    title: 'Completionist', 
+    description: 'Complete 5 courses with 100% completion', 
+    icon: Award, 
+    category: 'completion',
+    xpReward: 500,
+    progress: { current: 0, required: 5 },
+    rarity: 'legendary',
+    unlockDate: '7/29/2025'
+  },
+  // Speed Achievements
+  { 
+    id: 'speed-demon', 
+    title: 'Speed Demon', 
+    description: 'Complete a course in under 24 hours', 
+    icon: Zap, 
+    category: 'speed',
+    xpReward: 300,
+    progress: { current: 1, required: 1 },
+    rarity: 'epic',
+    unlockDate: '7/29/2025'
+  },
+  { 
+    id: 'speed-learner', 
+    title: 'Speed Learner', 
+    description: 'Complete 5 lessons in one day', 
+    icon: Flame, 
+    category: 'speed',
+    xpReward: 200,
+    progress: { current: 0, required: 5 },
+    rarity: 'rare'
+  },
+  // Course Achievements
+  { 
+    id: 'course-master', 
+    title: 'Course Master', 
+    description: 'Complete an entire course', 
+    icon: GraduationCap, 
+    category: 'courses',
+    xpReward: 200,
+    progress: { current: 1, required: 1 },
+    rarity: 'rare',
+    unlockDate: '7/29/2025'
+  },
+  { 
+    id: 'course-collector', 
+    title: 'Course Collector', 
+    description: 'Complete 10 different courses', 
+    icon: BookOpen, 
+    category: 'courses',
+    xpReward: 400,
+    progress: { current: 0, required: 10 },
+    rarity: 'epic'
+  },
+  // Experience Achievements
+  { 
+    id: 'experience-hunter', 
+    title: 'Experience Hunter', 
+    description: 'Reach XP milestones', 
+    icon: Star, 
+    category: 'experience',
+    xpReward: 0,
+    progress: { current: progress.xp, required: 1000 },
+    rarity: 'common'
+  },
+  { 
+    id: 'xp-master', 
+    title: 'XP Master', 
+    description: 'Earn 5000 total XP', 
+    icon: Trophy, 
+    category: 'experience',
+    xpReward: 500,
+    progress: { current: progress.xp, required: 5000 },
+    rarity: 'legendary'
+  },
+  // Streak Achievements
+  { 
+    id: 'week-streak', 
+    title: 'Consistent Learner', 
+    description: '7-day learning streak', 
+    icon: Flame, 
+    category: 'consistency',
+    xpReward: 150,
+    progress: { current: progress.streak, required: 7 },
+    rarity: 'rare'
+  },
+  { 
+    id: 'month-streak', 
+    title: 'Dedication Master', 
+    description: '30-day learning streak', 
+    icon: Medal, 
+    category: 'consistency',
+    xpReward: 500,
+    progress: { current: progress.streak, required: 30 },
+    rarity: 'legendary'
+  },
+  // Challenge Achievements
+  { 
+    id: 'first-steps', 
+    title: 'First Steps', 
+    description: 'Complete your first challenge', 
+    icon: Play, 
+    category: 'milestones',
+    xpReward: 50,
+    progress: { current: progress.completedChallenges.length > 0 ? 1 : 0, required: 1 },
+    rarity: 'common'
+  },
+  { 
+    id: 'code-master', 
+    title: 'Code Master', 
+    description: 'Complete 10 coding challenges', 
+    icon: Code, 
+    category: 'challenges',
+    xpReward: 300,
+    progress: { current: 0, required: 10 },
+    rarity: 'epic'
+  },
+  { 
+    id: 'pattern-expert', 
+    title: 'Pattern Expert', 
+    description: 'Master all design patterns', 
+    icon: Brain, 
+    category: 'mastery',
+    xpReward: 600,
+    progress: { current: 0, required: 20 },
+    rarity: 'legendary'
+  },
+  { 
+    id: 'system-architect', 
+    title: 'System Architect', 
+    description: 'Build 5 complete systems', 
+    icon: Target, 
+    category: 'mastery',
+    xpReward: 800,
+    progress: { current: 0, required: 5 },
+    rarity: 'mythic'
+  },
 ];
 
 export const LearningHub: React.FC<LearningHubProps> = ({ techniques = [], categories = [] }) => {
@@ -388,6 +522,237 @@ export const LearningHub: React.FC<LearningHubProps> = ({ techniques = [], categ
   const handleChallengeExit = () => {
     setActiveView('learning');
     setSelectedChallenge(null);
+  };
+
+  const renderAchievements = () => {
+    const ACHIEVEMENTS = getAchievements(userProgress);
+    const achievementsByCategory = ACHIEVEMENTS.reduce((acc, achievement) => {
+      if (!acc[achievement.category]) {
+        acc[achievement.category] = [];
+      }
+      acc[achievement.category].push(achievement);
+      return acc;
+    }, {} as Record<string, typeof ACHIEVEMENTS>);
+
+    const categoryNames: Record<string, string> = {
+      completion: 'Completion Mastery',
+      speed: 'Speed & Efficiency',
+      courses: 'Course Progress',
+      experience: 'Experience Points',
+      consistency: 'Learning Consistency',
+      milestones: 'Milestones',
+      challenges: 'Challenge Completion',
+      mastery: 'True Mastery'
+    };
+
+    const rarityColors = {
+      common: 'from-gray-600 to-gray-500',
+      rare: 'from-blue-600 to-blue-500',
+      epic: 'from-purple-600 to-purple-500',
+      legendary: 'from-yellow-600 to-yellow-500',
+      mythic: 'from-rose-600 to-rose-500'
+    };
+
+    const rarityGlow = {
+      common: '',
+      rare: 'shadow-blue-500/20',
+      epic: 'shadow-purple-500/30',
+      legendary: 'shadow-yellow-500/40',
+      mythic: 'shadow-rose-500/50'
+    };
+
+    const getProgressPercentage = (achievement: typeof ACHIEVEMENTS[0]) => {
+      if (achievement.progress.required === 0) return 100;
+      return Math.min((achievement.progress.current / achievement.progress.required) * 100, 100);
+    };
+
+    const isUnlocked = (achievement: typeof ACHIEVEMENTS[0]) => {
+      return achievement.progress.current >= achievement.progress.required;
+    };
+
+    const totalAchievements = ACHIEVEMENTS.length;
+    const unlockedAchievements = ACHIEVEMENTS.filter(a => isUnlocked(a)).length;
+    const overallProgress = (unlockedAchievements / totalAchievements) * 100;
+
+    return (
+      <div className="space-y-8">
+        {/* Header with Trophy */}
+        <div className="text-center mb-8">
+          <div className="relative inline-block">
+            <Trophy className="w-20 h-20 text-yellow-400 mx-auto mb-4" />
+            <div className="absolute -top-2 -right-2 bg-rose-500 text-white text-xs font-bold rounded-full w-8 h-8 flex items-center justify-center">
+              {unlockedAchievements}
+            </div>
+          </div>
+          <h2 className="text-3xl font-bold text-white mb-2">Your Achievements</h2>
+          <p className="text-gray-400 mb-4">Unlock achievements by completing challenges and reaching milestones</p>
+          
+          {/* Overall Progress */}
+          <div className="max-w-md mx-auto">
+            <div className="flex justify-between text-sm mb-2">
+              <span className="text-gray-400">Overall Progress</span>
+              <span className="text-white font-medium">{unlockedAchievements}/{totalAchievements} Unlocked</span>
+            </div>
+            <div className="w-full bg-gray-700 rounded-full h-3">
+              <div 
+                className="bg-gradient-to-r from-yellow-400 to-yellow-500 h-3 rounded-full transition-all duration-1000 ease-out"
+                style={{ width: `${overallProgress}%` }}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Achievement Categories */}
+        <div className="space-y-8">
+          {Object.entries(achievementsByCategory).map(([category, achievements]) => (
+            <div key={category}>
+              <h3 className="text-xl font-semibold text-white mb-4 flex items-center">
+                <div className="w-2 h-6 bg-rose-400 rounded-full mr-3" />
+                {categoryNames[category]}
+              </h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {achievements.map((achievement) => {
+                  const progress = getProgressPercentage(achievement);
+                  const unlocked = isUnlocked(achievement);
+                  const Icon = achievement.icon;
+                  
+                  return (
+                    <div
+                      key={achievement.id}
+                      className={`relative bg-gray-800/50 rounded-xl overflow-hidden border transition-all duration-300 hover:-translate-y-1 hover:scale-105 ${
+                        unlocked 
+                          ? `border-transparent bg-gradient-to-br ${rarityColors[achievement.rarity]} p-[1px]` 
+                          : 'border-gray-700 hover:border-gray-600'
+                      } ${unlocked ? `shadow-lg ${rarityGlow[achievement.rarity]}` : ''}`}
+                    >
+                      <div className={`bg-gray-900 rounded-xl p-6 h-full relative ${
+                        unlocked ? 'bg-opacity-95' : 'bg-opacity-50'
+                      }`}>
+                        {/* Glow effect for unlocked achievements */}
+                        {unlocked && (
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-30 pointer-events-none rounded-xl" />
+                        )}
+                        {/* Unlock Badge */}
+                        {unlocked && (
+                          <div className="absolute top-2 right-2">
+                            <div className="bg-green-500 rounded-full p-1">
+                              <CheckCircle className="w-4 h-4 text-white" />
+                            </div>
+                          </div>
+                        )}
+                        
+                        {/* Icon */}
+                        <div className={`relative mb-4 ${
+                          unlocked ? '' : 'opacity-50 grayscale'
+                        }`}>
+                          <div className={`p-4 rounded-full inline-block relative ${
+                            unlocked
+                              ? `bg-gradient-to-br ${rarityColors[achievement.rarity]} ${achievement.rarity === 'legendary' || achievement.rarity === 'mythic' ? 'animate-pulse' : ''}`
+                              : 'bg-gray-700'
+                          }`}>
+                            <Icon className="w-8 h-8 text-white" />
+                            {unlocked && (achievement.rarity === 'legendary' || achievement.rarity === 'mythic') && (
+                              <div className={`absolute inset-0 rounded-full bg-gradient-to-br ${rarityColors[achievement.rarity]} blur-xl opacity-50`} />
+                            )}
+                          </div>
+                          {!unlocked && (
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <Lock className="w-6 h-6 text-gray-500" />
+                            </div>
+                          )}
+                        </div>
+                        
+                        {/* Content */}
+                        <h4 className={`font-semibold mb-2 ${
+                          unlocked ? 'text-white' : 'text-gray-400'
+                        }`}>
+                          {achievement.title}
+                        </h4>
+                        <p className="text-gray-400 text-sm mb-4">
+                          {achievement.description}
+                        </p>
+                        
+                        {/* Progress Bar */}
+                        <div className="space-y-2">
+                          <div className="flex justify-between text-xs">
+                            <span className="text-gray-500">Progress</span>
+                            <span className={unlocked ? 'text-green-400' : 'text-gray-400'}>
+                              {achievement.progress.current}/{achievement.progress.required}
+                            </span>
+                          </div>
+                          <div className="w-full bg-gray-700 rounded-full h-2">
+                            <div 
+                              className={`h-2 rounded-full transition-all duration-500 ${
+                                unlocked 
+                                  ? 'bg-gradient-to-r from-green-400 to-green-500' 
+                                  : 'bg-gradient-to-r from-blue-400 to-blue-500'
+                              }`}
+                              style={{ width: `${progress}%` }}
+                            />
+                          </div>
+                        </div>
+                        
+                        {/* Rewards */}
+                        <div className="mt-4 flex items-center justify-between">
+                          <span className={`text-xs px-2 py-1 rounded-full ${
+                            achievement.rarity === 'common' ? 'bg-gray-700 text-gray-300' :
+                            achievement.rarity === 'rare' ? 'bg-blue-500/20 text-blue-400' :
+                            achievement.rarity === 'epic' ? 'bg-purple-500/20 text-purple-400' :
+                            achievement.rarity === 'legendary' ? 'bg-yellow-500/20 text-yellow-400' :
+                            'bg-rose-500/20 text-rose-400'
+                          }`}>
+                            {achievement.rarity.charAt(0).toUpperCase() + achievement.rarity.slice(1)}
+                          </span>
+                          {achievement.xpReward > 0 && (
+                            <span className="text-xs text-gray-400 flex items-center">
+                              <Zap className="w-3 h-3 mr-1" />
+                              +{achievement.xpReward} XP
+                            </span>
+                          )}
+                        </div>
+                        
+                        {/* Unlock Date */}
+                        {unlocked && achievement.unlockDate && (
+                          <div className="mt-2 text-xs text-gray-500 text-center">
+                            Unlocked {achievement.unlockDate}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        {/* Stats Summary */}
+        <div className="mt-12 bg-gray-800/50 rounded-xl p-6 border border-gray-700">
+          <h3 className="text-xl font-semibold text-white mb-4">Achievement Stats</h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-yellow-400">{unlockedAchievements}</div>
+              <div className="text-sm text-gray-400">Unlocked</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-blue-400">{totalAchievements - unlockedAchievements}</div>
+              <div className="text-sm text-gray-400">Locked</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-purple-400">
+                {ACHIEVEMENTS.filter(a => isUnlocked(a) && a.xpReward > 0).reduce((sum, a) => sum + a.xpReward, 0)}
+              </div>
+              <div className="text-sm text-gray-400">XP Earned</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-green-400">{Math.round(overallProgress)}%</div>
+              <div className="text-sm text-gray-400">Complete</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   const getQuizContent = (challengeId: string) => {
@@ -1073,13 +1438,7 @@ export const LearningHub: React.FC<LearningHubProps> = ({ techniques = [], categ
           )}
         </>
       )}
-      {activeView === 'achievements' && (
-        <div className="text-center py-20">
-          <Trophy className="w-16 h-16 text-yellow-400 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-white mb-2">Achievements</h2>
-          <p className="text-gray-400">Achievement system coming soon!</p>
-        </div>
-      )}
+      {activeView === 'achievements' && renderAchievements()}
       {activeView === 'certification' && (
         <div className="text-center py-20">
           <Medal className="w-16 h-16 text-rose-400 mx-auto mb-4" />

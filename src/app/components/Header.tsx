@@ -1,16 +1,21 @@
 'use client';
 
-import { Sparkles, Search, Command } from 'lucide-react';
+import { Sparkles, Search, Command, GraduationCap, Star, Flame } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { UserMenu } from './UserMenu';
 import { NotificationBell } from './NotificationBell';
 import Link from 'next/link';
 import { useSearch } from '@/contexts/SearchContext';
 import { useEffect } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export const Header = () => {
   const { user, loading } = useAuth();
   const { openSearch } = useSearch();
+  const router = useRouter();
+  const pathname = usePathname();
+  const isLearningHubActive = pathname === '/learning-hub' || pathname.startsWith('/learning-hub/');
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -72,14 +77,121 @@ export const Header = () => {
             </button>
           </div>
 
-          {/* Right side - Status and User menu */}
+          {/* Right side - Learning Hub, Status and User menu */}
           <div className="flex items-center space-x-3 flex-shrink-0">
-            {/* Status indicator */}
-            <div className="hidden lg:flex items-center space-x-2 px-2.5 py-1 bg-gray-800/50 rounded-full border border-gray-700/50">
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              <span className="text-xs font-medium text-gray-300">Live</span>
-            </div>
-            
+            {/* Learning Hub - Gamified button with animations */}
+            <motion.button
+              onClick={() => router.push('/learning-hub')}
+              className={`relative flex items-center space-x-2 px-4 py-2 font-medium rounded-lg shadow-lg overflow-hidden ${
+                isLearningHubActive 
+                  ? 'bg-gradient-to-r from-rose-600 to-pink-700 text-white shadow-xl ring-2 ring-rose-400/50' 
+                  : 'bg-gradient-to-r from-rose-500 to-pink-600 text-white'
+              }`}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              animate={isLearningHubActive ? {
+                boxShadow: [
+                  '0 0 20px rgba(244, 63, 94, 0.3)',
+                  '0 0 40px rgba(244, 63, 94, 0.5)',
+                  '0 0 20px rgba(244, 63, 94, 0.3)',
+                ],
+              } : {}}
+              transition={{
+                boxShadow: {
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }
+              }}
+            >
+              {/* Animated background particles */}
+              <AnimatePresence>
+                {isLearningHubActive && (
+                  <>
+                    {[...Array(3)].map((_, i) => (
+                      <motion.div
+                        key={i}
+                        className="absolute w-1 h-1 bg-white rounded-full"
+                        initial={{ 
+                          x: (i - 1) * 30, 
+                          y: 20,
+                          opacity: 0 
+                        }}
+                        animate={{ 
+                          x: (i - 1) * 30, 
+                          y: -20,
+                          opacity: [0, 1, 0]
+                        }}
+                        transition={{
+                          duration: 2,
+                          delay: i * 0.3,
+                          repeat: Infinity,
+                          ease: "easeOut"
+                        }}
+                      />
+                    ))}
+                  </>
+                )}
+              </AnimatePresence>
+
+              {/* Shimmer effect */}
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                animate={{
+                  x: ['-100%', '100%'],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  repeatDelay: 2,
+                  ease: "easeInOut"
+                }}
+              />
+
+              {/* Icon with rotation animation */}
+              <motion.div
+                animate={isLearningHubActive ? {
+                  rotate: [0, -10, 10, -10, 0],
+                } : {}}
+                transition={{
+                  duration: 0.5,
+                  repeat: Infinity,
+                  repeatDelay: 2,
+                }}
+              >
+                <GraduationCap className="w-4 h-4 relative z-10" />
+              </motion.div>
+              
+              {/* Text with level indicator */}
+              <span className="text-sm relative z-10">Learning Hub</span>
+              
+              {/* Streak indicator */}
+              <AnimatePresence>
+                {isLearningHubActive && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    className="flex items-center space-x-1 ml-2"
+                  >
+                    <motion.div
+                      animate={{
+                        scale: [1, 1.2, 1],
+                      }}
+                      transition={{
+                        duration: 1.5,
+                        repeat: Infinity,
+                        repeatDelay: 1
+                      }}
+                    >
+                      <Flame className="w-3.5 h-3.5 text-orange-400" />
+                    </motion.div>
+                    <span className="text-xs font-bold text-orange-400">7</span>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.button>
+                    
             {/* Auth section - Last item on the right */}
             {loading ? (
               <div className="flex items-center space-x-2 p-1.5">
@@ -129,7 +241,74 @@ export const Header = () => {
               >
                 <Search className="w-5 h-5" />
               </button>
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+              <motion.button
+                onClick={() => router.push('/learning-hub')}
+                className={`relative flex items-center space-x-1 px-3 py-1.5 font-medium rounded-lg shadow-lg overflow-hidden ${
+                  isLearningHubActive 
+                    ? 'bg-gradient-to-r from-rose-600 to-pink-700 text-white shadow-xl ring-2 ring-rose-400/50' 
+                    : 'bg-gradient-to-r from-rose-500 to-pink-600 text-white'
+                }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                animate={isLearningHubActive ? {
+                  boxShadow: [
+                    '0 0 15px rgba(244, 63, 94, 0.3)',
+                    '0 0 25px rgba(244, 63, 94, 0.5)',
+                    '0 0 15px rgba(244, 63, 94, 0.3)',
+                  ],
+                } : {}}
+                transition={{
+                  boxShadow: {
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }
+                }}
+              >
+                {/* Shimmer effect for mobile */}
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                  animate={{
+                    x: ['-100%', '100%'],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    repeatDelay: 2,
+                    ease: "easeInOut"
+                  }}
+                />
+
+                {/* Icon with rotation */}
+                <motion.div
+                  animate={isLearningHubActive ? {
+                    rotate: [0, -10, 10, -10, 0],
+                  } : {}}
+                  transition={{
+                    duration: 0.5,
+                    repeat: Infinity,
+                    repeatDelay: 2,
+                  }}
+                >
+                  <GraduationCap className="w-3.5 h-3.5 relative z-10" />
+                </motion.div>
+                <span className="text-xs relative z-10">Learning</span>
+                
+                {/* Mobile streak indicator */}
+                <AnimatePresence>
+                  {isLearningHubActive && (
+                    <motion.div
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -10 }}
+                      className="flex items-center ml-1"
+                    >
+                      <Flame className="w-3 h-3 text-orange-400" />
+                      <span className="text-[10px] font-bold text-orange-400">7</span>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.button>
               {loading ? (
                 <div className="flex items-center space-x-2 p-1.5">
                   <div className="w-6 h-6 bg-gray-700 rounded-full animate-pulse"></div>

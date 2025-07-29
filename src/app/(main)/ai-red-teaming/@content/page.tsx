@@ -1,4 +1,4 @@
-import { Shield, TrendingUp, Activity, Star, Code, BookOpen, Users, Target, AlertTriangle, ChartBar, Lock, Zap } from 'lucide-react';
+import { Shield, TrendingUp, Activity, Star, Code, BookOpen, Users, Target, AlertTriangle, ChartBar, Lock, Zap, FileText, ArrowRight, CheckSquare } from 'lucide-react';
 import { allRedTeamingTechniques, redTeamingCategories } from '../../../red-teaming';
 import Link from 'next/link';
 
@@ -202,6 +202,46 @@ export default function ContentPage() {
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Audit Methodology CTA */}
+      <div className="bg-gradient-to-r from-red-500/10 via-orange-500/10 to-red-500/10 backdrop-blur-sm border border-red-500/20 rounded-xl p-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <div className="p-3 bg-gradient-to-r from-red-500 to-orange-500 rounded-xl">
+              <FileText className="w-8 h-8 text-white" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold bg-gradient-to-r from-red-400 to-orange-400 bg-clip-text text-transparent mb-1">
+                AI Security Audit Methodology
+              </h3>
+              <p className="text-gray-300 text-sm mb-2">
+                Comprehensive framework for conducting systematic security audits of AI systems
+              </p>
+              <div className="flex items-center space-x-4 text-xs text-gray-400">
+                <span className="flex items-center space-x-1">
+                  <Target className="w-3 h-3" />
+                  <span>5 Audit Phases</span>
+                </span>
+                <span className="flex items-center space-x-1">
+                  <CheckSquare className="w-3 h-3" />
+                  <span>Interactive Checklists</span>
+                </span>
+                <span className="flex items-center space-x-1">
+                  <TrendingUp className="w-3 h-3" />
+                  <span>Progress Tracking</span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <Link 
+            href="/ai-red-teaming/audit" 
+            className="group bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-xl px-6 py-3 transition-all flex items-center space-x-2"
+          >
+            <span className="text-red-300 font-medium">Start Audit</span>
+            <ArrowRight className="w-4 h-4 text-red-400 group-hover:translate-x-1 transition-transform" />
+          </Link>
         </div>
       </div>
 

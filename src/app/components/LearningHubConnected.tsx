@@ -26,6 +26,7 @@ import { QuizComponent } from './learning/QuizComponent';
 import { FlashcardComponent } from './learning/FlashcardComponent';
 import { CodeChallengeComponent } from './learning/CodeChallengeComponent';
 import { learningContent } from '../data/learning-content';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface LearningHubProps {
   // We'll pass in techniques and categories for learning content
@@ -63,6 +64,18 @@ const LEVELS = [
   { level: 6, title: 'Architect', xpRequired: 2000, color: 'text-red-400' },
   { level: 7, title: 'Master', xpRequired: 4000, color: 'text-yellow-400' },
 ];
+
+interface Achievement {
+  id: string;
+  title: string;
+  description: string;
+  icon: any;
+  category: string;
+  xpReward: number;
+  progress: { current: number; required: number };
+  rarity: 'common' | 'rare' | 'epic' | 'legendary' | 'mythic';
+  unlockDate?: string;
+}
 
 export const LearningHubConnected: React.FC<LearningHubProps> = ({ techniques = [], categories = [] }) => {
   const { 
@@ -564,6 +577,384 @@ export const LearningHubConnected: React.FC<LearningHubProps> = ({ techniques = 
     return learningContent.patternSelectionChallenges;
   };
 
+  const getAchievementDefinitions = (): Achievement[] => [
+    // Completion Achievements
+    { 
+      id: 'completionist', 
+      title: 'Completionist', 
+      description: 'Complete 5 courses with 100% completion', 
+      icon: Award, 
+      category: 'completion',
+      xpReward: 500,
+      progress: { current: 0, required: 5 },
+      rarity: 'legendary',
+      unlockDate: '7/29/2025'
+    },
+    // Speed Achievements
+    { 
+      id: 'speed-demon', 
+      title: 'Speed Demon', 
+      description: 'Complete a course in under 24 hours', 
+      icon: Zap, 
+      category: 'speed',
+      xpReward: 300,
+      progress: { current: achievements.some(a => a.id === 'speed-demon') ? 1 : 0, required: 1 },
+      rarity: 'epic',
+      unlockDate: achievements.find(a => a.id === 'speed-demon')?.unlockedAt
+    },
+    { 
+      id: 'speed-learner', 
+      title: 'Speed Learner', 
+      description: 'Complete 5 lessons in one day', 
+      icon: Flame, 
+      category: 'speed',
+      xpReward: 200,
+      progress: { current: 0, required: 5 },
+      rarity: 'rare'
+    },
+    // Course Achievements
+    { 
+      id: 'course-master', 
+      title: 'Course Master', 
+      description: 'Complete an entire course', 
+      icon: GraduationCap, 
+      category: 'courses',
+      xpReward: 200,
+      progress: { current: achievements.some(a => a.id === 'course-master') ? 1 : 0, required: 1 },
+      rarity: 'rare',
+      unlockDate: achievements.find(a => a.id === 'course-master')?.unlockedAt
+    },
+    { 
+      id: 'course-collector', 
+      title: 'Course Collector', 
+      description: 'Complete 10 different courses', 
+      icon: BookOpen, 
+      category: 'courses',
+      xpReward: 400,
+      progress: { current: 0, required: 10 },
+      rarity: 'epic'
+    },
+    // Experience Achievements
+    { 
+      id: 'experience-hunter', 
+      title: 'Experience Hunter', 
+      description: 'Reach XP milestones', 
+      icon: Star, 
+      category: 'experience',
+      xpReward: 0,
+      progress: { current: totalXp, required: 1000 },
+      rarity: 'common'
+    },
+    { 
+      id: 'xp-master', 
+      title: 'XP Master', 
+      description: 'Earn 5000 total XP', 
+      icon: Trophy, 
+      category: 'experience',
+      xpReward: 500,
+      progress: { current: totalXp, required: 5000 },
+      rarity: 'legendary'
+    },
+    // Streak Achievements
+    { 
+      id: 'week-streak', 
+      title: 'Consistent Learner', 
+      description: '7-day learning streak', 
+      icon: Flame, 
+      category: 'consistency',
+      xpReward: 150,
+      progress: { current: currentStreak, required: 7 },
+      rarity: 'rare'
+    },
+    { 
+      id: 'month-streak', 
+      title: 'Dedication Master', 
+      description: '30-day learning streak', 
+      icon: Medal, 
+      category: 'consistency',
+      xpReward: 500,
+      progress: { current: currentStreak, required: 30 },
+      rarity: 'legendary'
+    },
+    // Challenge Achievements
+    { 
+      id: 'first-steps', 
+      title: 'First Steps', 
+      description: 'Complete your first challenge', 
+      icon: Play, 
+      category: 'milestones',
+      xpReward: 50,
+      progress: { current: completedChallenges.length > 0 ? 1 : 0, required: 1 },
+      rarity: 'common'
+    },
+    { 
+      id: 'code-master', 
+      title: 'Code Master', 
+      description: 'Complete 10 coding challenges', 
+      icon: Code, 
+      category: 'challenges',
+      xpReward: 300,
+      progress: { current: completedChallenges.filter(id => id.includes('build') || id.includes('implement')).length, required: 10 },
+      rarity: 'epic'
+    },
+    { 
+      id: 'pattern-expert', 
+      title: 'Pattern Expert', 
+      description: 'Master all design patterns', 
+      icon: Brain, 
+      category: 'mastery',
+      xpReward: 600,
+      progress: { current: 0, required: 20 },
+      rarity: 'legendary'
+    },
+    { 
+      id: 'system-architect', 
+      title: 'System Architect', 
+      description: 'Build 5 complete systems', 
+      icon: Target, 
+      category: 'mastery',
+      xpReward: 800,
+      progress: { current: 0, required: 5 },
+      rarity: 'mythic'
+    },
+  ];
+
+  const renderAchievements = () => {
+    const allAchievements = getAchievementDefinitions();
+    const achievementsByCategory = allAchievements.reduce((acc, achievement) => {
+      if (!acc[achievement.category]) {
+        acc[achievement.category] = [];
+      }
+      acc[achievement.category].push(achievement);
+      return acc;
+    }, {} as Record<string, Achievement[]>);
+
+    const categoryNames: Record<string, string> = {
+      completion: 'Completion Mastery',
+      speed: 'Speed & Efficiency',
+      courses: 'Course Progress',
+      experience: 'Experience Points',
+      consistency: 'Learning Consistency',
+      milestones: 'Milestones',
+      challenges: 'Challenge Completion',
+      mastery: 'True Mastery'
+    };
+
+    const rarityColors = {
+      common: 'from-gray-600 to-gray-500',
+      rare: 'from-blue-600 to-blue-500',
+      epic: 'from-purple-600 to-purple-500',
+      legendary: 'from-yellow-600 to-yellow-500',
+      mythic: 'from-rose-600 to-rose-500'
+    };
+
+    const rarityGlow = {
+      common: '',
+      rare: 'shadow-blue-500/20',
+      epic: 'shadow-purple-500/30',
+      legendary: 'shadow-yellow-500/40',
+      mythic: 'shadow-rose-500/50'
+    };
+
+    const getProgressPercentage = (achievement: Achievement) => {
+      if (achievement.progress.required === 0) return 100;
+      return Math.min((achievement.progress.current / achievement.progress.required) * 100, 100);
+    };
+
+    const isUnlocked = (achievement: Achievement) => {
+      return achievement.progress.current >= achievement.progress.required;
+    };
+
+    const totalAchievements = allAchievements.length;
+    const unlockedAchievements = allAchievements.filter(a => isUnlocked(a)).length;
+    const overallProgress = (unlockedAchievements / totalAchievements) * 100;
+
+    return (
+      <div className="space-y-8">
+        {/* Header with Trophy */}
+        <div className="text-center mb-8">
+          <div className="relative inline-block">
+            <Trophy className="w-20 h-20 text-yellow-400 mx-auto mb-4" />
+            <div className="absolute -top-2 -right-2 bg-rose-500 text-white text-xs font-bold rounded-full w-8 h-8 flex items-center justify-center">
+              {unlockedAchievements}
+            </div>
+          </div>
+          <h2 className="text-3xl font-bold text-white mb-2">Your Achievements</h2>
+          <p className="text-gray-400 mb-4">Unlock achievements by completing challenges and reaching milestones</p>
+          
+          {/* Overall Progress */}
+          <div className="max-w-md mx-auto">
+            <div className="flex justify-between text-sm mb-2">
+              <span className="text-gray-400">Overall Progress</span>
+              <span className="text-white font-medium">{unlockedAchievements}/{totalAchievements} Unlocked</span>
+            </div>
+            <div className="w-full bg-gray-700 rounded-full h-3">
+              <motion.div 
+                className="bg-gradient-to-r from-yellow-400 to-yellow-500 h-3 rounded-full transition-all duration-1000 ease-out"
+                initial={{ width: 0 }}
+                animate={{ width: `${overallProgress}%` }}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Achievement Categories */}
+        <div className="space-y-8">
+          {Object.entries(achievementsByCategory).map(([category, categoryAchievements]) => (
+            <div key={category}>
+              <h3 className="text-xl font-semibold text-white mb-4 flex items-center">
+                <div className="w-2 h-6 bg-rose-400 rounded-full mr-3" />
+                {categoryNames[category]}
+              </h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {categoryAchievements.map((achievement) => {
+                  const progress = getProgressPercentage(achievement);
+                  const unlocked = isUnlocked(achievement);
+                  const Icon = achievement.icon;
+                  
+                  return (
+                    <motion.div
+                      key={achievement.id}
+                      className={`relative bg-gray-800/50 rounded-xl overflow-hidden border transition-all duration-300 hover:-translate-y-1 hover:scale-105 ${
+                        unlocked 
+                          ? `border-transparent bg-gradient-to-br ${rarityColors[achievement.rarity]} p-[1px]` 
+                          : 'border-gray-700 hover:border-gray-600'
+                      } ${unlocked ? `shadow-lg ${rarityGlow[achievement.rarity]}` : ''}`}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      whileHover={{ scale: 1.05 }}
+                    >
+                      <div className={`bg-gray-900 rounded-xl p-6 h-full relative ${
+                        unlocked ? 'bg-opacity-95' : 'bg-opacity-50'
+                      }`}>
+                        {/* Glow effect for unlocked achievements */}
+                        {unlocked && (
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-30 pointer-events-none rounded-xl" />
+                        )}
+                        {/* Unlock Badge */}
+                        {unlocked && (
+                          <div className="absolute top-2 right-2">
+                            <div className="bg-green-500 rounded-full p-1">
+                              <CheckCircle className="w-4 h-4 text-white" />
+                            </div>
+                          </div>
+                        )}
+                        
+                        {/* Icon */}
+                        <div className={`relative mb-4 ${
+                          unlocked ? '' : 'opacity-50 grayscale'
+                        }`}>
+                          <div className={`p-4 rounded-full inline-block relative ${
+                            unlocked
+                              ? `bg-gradient-to-br ${rarityColors[achievement.rarity]} ${achievement.rarity === 'legendary' || achievement.rarity === 'mythic' ? 'animate-pulse' : ''}`
+                              : 'bg-gray-700'
+                          }`}>
+                            <Icon className="w-8 h-8 text-white" />
+                            {unlocked && (achievement.rarity === 'legendary' || achievement.rarity === 'mythic') && (
+                              <div className={`absolute inset-0 rounded-full bg-gradient-to-br ${rarityColors[achievement.rarity]} blur-xl opacity-50`} />
+                            )}
+                          </div>
+                          {!unlocked && (
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <Lock className="w-6 h-6 text-gray-500" />
+                            </div>
+                          )}
+                        </div>
+                        
+                        {/* Content */}
+                        <h4 className={`font-semibold mb-2 ${
+                          unlocked ? 'text-white' : 'text-gray-400'
+                        }`}>
+                          {achievement.title}
+                        </h4>
+                        <p className="text-gray-400 text-sm mb-4">
+                          {achievement.description}
+                        </p>
+                        
+                        {/* Progress Bar */}
+                        <div className="space-y-2">
+                          <div className="flex justify-between text-xs">
+                            <span className="text-gray-500">Progress</span>
+                            <span className={unlocked ? 'text-green-400' : 'text-gray-400'}>
+                              {achievement.progress.current}/{achievement.progress.required}
+                            </span>
+                          </div>
+                          <div className="w-full bg-gray-700 rounded-full h-2">
+                            <motion.div 
+                              className={`h-2 rounded-full transition-all duration-500 ${
+                                unlocked 
+                                  ? 'bg-gradient-to-r from-green-400 to-green-500' 
+                                  : 'bg-gradient-to-r from-blue-400 to-blue-500'
+                              }`}
+                              initial={{ width: 0 }}
+                              animate={{ width: `${progress}%` }}
+                            />
+                          </div>
+                        </div>
+                        
+                        {/* Rewards */}
+                        <div className="mt-4 flex items-center justify-between">
+                          <span className={`text-xs px-2 py-1 rounded-full ${
+                            achievement.rarity === 'common' ? 'bg-gray-700 text-gray-300' :
+                            achievement.rarity === 'rare' ? 'bg-blue-500/20 text-blue-400' :
+                            achievement.rarity === 'epic' ? 'bg-purple-500/20 text-purple-400' :
+                            achievement.rarity === 'legendary' ? 'bg-yellow-500/20 text-yellow-400' :
+                            'bg-rose-500/20 text-rose-400'
+                          }`}>
+                            {achievement.rarity.charAt(0).toUpperCase() + achievement.rarity.slice(1)}
+                          </span>
+                          {achievement.xpReward > 0 && (
+                            <span className="text-xs text-gray-400 flex items-center">
+                              <Zap className="w-3 h-3 mr-1" />
+                              +{achievement.xpReward} XP
+                            </span>
+                          )}
+                        </div>
+                        
+                        {/* Unlock Date */}
+                        {unlocked && achievement.unlockDate && (
+                          <div className="mt-2 text-xs text-gray-500 text-center">
+                            Unlocked {new Date(achievement.unlockDate).toLocaleDateString()}
+                          </div>
+                        )}
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        {/* Stats Summary */}
+        <div className="mt-12 bg-gray-800/50 rounded-xl p-6 border border-gray-700">
+          <h3 className="text-xl font-semibold text-white mb-4">Achievement Stats</h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-yellow-400">{unlockedAchievements}</div>
+              <div className="text-sm text-gray-400">Unlocked</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-blue-400">{totalAchievements - unlockedAchievements}</div>
+              <div className="text-sm text-gray-400">Locked</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-purple-400">
+                {allAchievements.filter(a => isUnlocked(a) && a.xpReward > 0).reduce((sum, a) => sum + a.xpReward, 0)}
+              </div>
+              <div className="text-sm text-gray-400">XP Earned</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-green-400">{Math.round(overallProgress)}%</div>
+              <div className="text-sm text-gray-400">Complete</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const renderDashboard = () => {
     const currentLevel = getCurrentLevel();
     const nextLevel = getNextLevel();
@@ -572,53 +963,189 @@ export const LearningHubConnected: React.FC<LearningHubProps> = ({ techniques = 
       <div className="space-y-8">
         {/* Progress Overview */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-          <div className="bg-gray-800/50 rounded-xl p-4 md:p-6 border border-gray-700">
-            <div className="flex items-center justify-between mb-3 md:mb-4">
-              <h3 className="text-base md:text-lg font-semibold text-white">Your Level</h3>
-              <Star className="w-5 h-5 md:w-6 md:h-6 text-yellow-400" />
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            whileHover={{ scale: 1.02 }}
+            className="bg-gray-800/50 rounded-xl p-4 md:p-6 border border-gray-700 relative overflow-hidden"
+          >
+            {/* Animated background glow */}
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 to-transparent"
+              animate={{
+                opacity: [0.3, 0.6, 0.3],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            />
+            <div className="relative z-10">
+              <div className="flex items-center justify-between mb-3 md:mb-4">
+                <h3 className="text-base md:text-lg font-semibold text-white">Your Level</h3>
+                <motion.div
+                  animate={{
+                    rotate: [0, 10, -10, 0],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatDelay: 3
+                  }}
+                >
+                  <Star className="w-5 h-5 md:w-6 md:h-6 text-yellow-400" />
+                </motion.div>
+              </div>
+              <motion.div 
+                className="text-xl md:text-2xl font-bold text-white mb-2"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 200, damping: 10 }}
+              >
+                Level {level}
+              </motion.div>
+              <div className="text-sm text-gray-400 mb-3">
+                {currentLevel.title}
+              </div>
+              <div className="w-full bg-gray-700 rounded-full h-2 md:h-3 overflow-hidden">
+                <motion.div 
+                  className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 md:h-3 rounded-full relative"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${Math.min((totalXp / nextLevel.xpRequired) * 100, 100)}%` }}
+                  transition={{ duration: 1, ease: "easeOut" }}
+                >
+                  {/* Shimmer effect */}
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                    animate={{
+                      x: ['-100%', '100%'],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      repeatDelay: 1,
+                    }}
+                  />
+                </motion.div>
+              </div>
+              <div className="text-xs md:text-sm text-gray-400 mt-2">
+                {totalXp} / {nextLevel.xpRequired} XP to next level
+              </div>
             </div>
-            <div className="text-xl md:text-2xl font-bold text-white mb-2">
-              Level {level}
-            </div>
-            <div className="text-sm text-gray-400 mb-3">
-              {currentLevel.title}
-            </div>
-            <div className="w-full bg-gray-700 rounded-full h-2 md:h-3">
-              <div 
-                className="bg-blue-500 h-2 md:h-3 rounded-full transition-all duration-300"
-                style={{ width: `${Math.min((totalXp / nextLevel.xpRequired) * 100, 100)}%` }}
-              />
-            </div>
-            <div className="text-xs md:text-sm text-gray-400 mt-2">
-              {totalXp} / {nextLevel.xpRequired} XP to next level
-            </div>
-          </div>
+          </motion.div>
 
-          <div className="bg-gray-800/50 rounded-xl p-4 md:p-6 border border-gray-700">
-            <div className="flex items-center justify-between mb-3 md:mb-4">
-              <h3 className="text-base md:text-lg font-semibold text-white">Experience Points</h3>
-              <Zap className="w-5 h-5 md:w-6 md:h-6 text-blue-400" />
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            whileHover={{ scale: 1.02 }}
+            className="bg-gray-800/50 rounded-xl p-4 md:p-6 border border-gray-700 relative overflow-hidden"
+          >
+            {/* Animated particles */}
+            <AnimatePresence>
+              {[...Array(3)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="absolute w-1 h-1 bg-blue-400 rounded-full"
+                  initial={{ 
+                    x: Math.random() * 100, 
+                    y: 100,
+                    opacity: 0 
+                  }}
+                  animate={{ 
+                    x: Math.random() * 100, 
+                    y: -20,
+                    opacity: [0, 1, 0]
+                  }}
+                  transition={{
+                    duration: 3,
+                    delay: i * 0.5,
+                    repeat: Infinity,
+                    ease: "easeOut"
+                  }}
+                />
+              ))}
+            </AnimatePresence>
+            <div className="relative z-10">
+              <div className="flex items-center justify-between mb-3 md:mb-4">
+                <h3 className="text-base md:text-lg font-semibold text-white">Experience Points</h3>
+                <motion.div
+                  animate={{
+                    scale: [1, 1.2, 1],
+                  }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Infinity,
+                    repeatDelay: 2
+                  }}
+                >
+                  <Zap className="w-5 h-5 md:w-6 md:h-6 text-blue-400" />
+                </motion.div>
+              </div>
+              <motion.div 
+                className="text-xl md:text-2xl font-bold text-blue-400 mb-2"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 200, damping: 10 }}
+              >
+                {totalXp} XP
+              </motion.div>
+              <div className="text-sm text-gray-400">
+                Total earned
+              </div>
             </div>
-            <div className="text-xl md:text-2xl font-bold text-blue-400 mb-2">
-              {totalXp} XP
-            </div>
-            <div className="text-sm text-gray-400">
-              Total earned
-            </div>
-          </div>
+          </motion.div>
 
-          <div className="bg-gray-800/50 rounded-xl p-4 md:p-6 border border-gray-700">
-            <div className="flex items-center justify-between mb-3 md:mb-4">
-              <h3 className="text-base md:text-lg font-semibold text-white">Learning Streak</h3>
-              <Flame className="w-5 h-5 md:w-6 md:h-6 text-orange-400" />
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            whileHover={{ scale: 1.02 }}
+            className="bg-gray-800/50 rounded-xl p-4 md:p-6 border border-gray-700 relative overflow-hidden"
+          >
+            {/* Animated flame glow */}
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-transparent"
+              animate={{
+                opacity: [0.2, 0.5, 0.2],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            />
+            <div className="relative z-10">
+              <div className="flex items-center justify-between mb-3 md:mb-4">
+                <h3 className="text-base md:text-lg font-semibold text-white">Learning Streak</h3>
+                <motion.div
+                  animate={{
+                    y: [0, -3, 0],
+                  }}
+                  transition={{
+                    duration: 1,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                >
+                  <Flame className="w-5 h-5 md:w-6 md:h-6 text-orange-400" />
+                </motion.div>
+              </div>
+              <motion.div 
+                className="text-xl md:text-2xl font-bold text-orange-400 mb-2"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 200, damping: 10 }}
+              >
+                {currentStreak} days
+              </motion.div>
+              <div className="text-sm text-gray-400">
+                Keep it up!
+              </div>
             </div>
-            <div className="text-xl md:text-2xl font-bold text-orange-400 mb-2">
-              {currentStreak} days
-            </div>
-            <div className="text-sm text-gray-400">
-              Keep it up!
-            </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Achievements Section */}
@@ -997,7 +1524,7 @@ export const LearningHubConnected: React.FC<LearningHubProps> = ({ techniques = 
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {learningModules.map((module) => {
+            {learningModules.map((module, index) => {
               const completedChallenges = module.challenges.filter(c => c.completed).length;
               const totalChallenges = module.challenges.length;
               const progress = totalChallenges > 0 ? (completedChallenges / totalChallenges) * 100 : 0;
@@ -1018,8 +1545,12 @@ export const LearningHubConnected: React.FC<LearningHubProps> = ({ techniques = 
               const isUnlockable = module.isLocked && totalXp >= unlockRequirement;
               
               return (
-                <div
+                <motion.div
                   key={module.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  whileHover={!module.isLocked ? { scale: 1.03, borderColor: '#4B5563' } : {}}
                   className={`relative bg-gray-800/50 rounded-xl p-6 border transition-all ${
                     module.isLocked 
                       ? 'border-gray-600 opacity-75' 
@@ -1029,11 +1560,47 @@ export const LearningHubConnected: React.FC<LearningHubProps> = ({ techniques = 
                 >
                   {/* Lock Overlay */}
                   {module.isLocked && (
-                    <div className="absolute top-4 right-4">
-                      <div className="p-2 bg-gray-700/80 rounded-lg">
-                        <Lock className="w-4 h-4 text-gray-400" />
+                    <motion.div 
+                      className="absolute top-4 right-4"
+                      animate={isUnlockable ? {
+                        scale: [1, 1.1, 1],
+                      } : {}}
+                      transition={{
+                        duration: 1.5,
+                        repeat: Infinity,
+                      }}
+                    >
+                      <div className={`p-2 rounded-lg ${isUnlockable ? 'bg-yellow-500/20' : 'bg-gray-700/80'}`}>
+                        <Lock className={`w-4 h-4 ${isUnlockable ? 'text-yellow-400' : 'text-gray-400'}`} />
                       </div>
-                    </div>
+                    </motion.div>
+                  )}
+
+                  {/* Sparkle effect for unlocked modules */}
+                  {!module.isLocked && progress < 100 && (
+                    <AnimatePresence>
+                      {[...Array(2)].map((_, i) => (
+                        <motion.div
+                          key={i}
+                          className="absolute w-1 h-1 bg-blue-400 rounded-full"
+                          initial={{ 
+                            x: Math.random() * 200, 
+                            y: Math.random() * 100,
+                            opacity: 0 
+                          }}
+                          animate={{ 
+                            opacity: [0, 1, 0],
+                            scale: [0, 1.5, 0]
+                          }}
+                          transition={{
+                            duration: 2,
+                            delay: i * 1,
+                            repeat: Infinity,
+                            repeatDelay: 3
+                          }}
+                        />
+                      ))}
+                    </AnimatePresence>
                   )}
 
                   {/* Module Header */}
@@ -1108,13 +1675,43 @@ export const LearningHubConnected: React.FC<LearningHubProps> = ({ techniques = 
                     <div className="mb-4">
                       <div className="flex justify-between text-sm mb-2">
                         <span className="text-gray-400">Progress</span>
-                        <span className="text-gray-400">{completedChallenges}/{totalChallenges}</span>
+                        <div className="flex items-center space-x-2">
+                          <span className="text-gray-400">{completedChallenges}/{totalChallenges}</span>
+                          {progress === 100 && (
+                            <motion.div
+                              initial={{ scale: 0, rotate: -180 }}
+                              animate={{ scale: 1, rotate: 0 }}
+                              transition={{ type: "spring", stiffness: 200, damping: 10 }}
+                            >
+                              <CheckCircle className="w-4 h-4 text-green-400" />
+                            </motion.div>
+                          )}
+                        </div>
                       </div>
-                      <div className="w-full bg-gray-700 rounded-full h-2">
-                        <div 
-                          className="bg-blue-500 h-2 rounded-full transition-all duration-300"
-                          style={{ width: `${progress}%` }}
-                        />
+                      <div className="w-full bg-gray-700 rounded-full h-2 overflow-hidden">
+                        <motion.div 
+                          className={`h-2 rounded-full relative ${
+                            progress === 100 
+                              ? 'bg-gradient-to-r from-green-500 to-emerald-500' 
+                              : 'bg-gradient-to-r from-blue-500 to-purple-500'
+                          }`}
+                          initial={{ width: 0 }}
+                          animate={{ width: `${progress}%` }}
+                          transition={{ duration: 0.5, ease: "easeOut" }}
+                        >
+                          {/* Shimmer effect */}
+                          <motion.div
+                            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                            animate={{
+                              x: ['-100%', '100%'],
+                            }}
+                            transition={{
+                              duration: 2,
+                              repeat: Infinity,
+                              repeatDelay: 1,
+                            }}
+                          />
+                        </motion.div>
                       </div>
                     </div>
                   )}
@@ -1129,7 +1726,7 @@ export const LearningHubConnected: React.FC<LearningHubProps> = ({ techniques = 
                       <ArrowRight className="w-4 h-4" />
                     </button>
                   )}
-                </div>
+                </motion.div>
               );
             })}
           </div>
@@ -1276,52 +1873,7 @@ export const LearningHubConnected: React.FC<LearningHubProps> = ({ techniques = 
           )}
         </>
       )}
-      {activeView === 'achievements' && (
-        <div className="space-y-6">
-          <div className="text-center">
-            <Trophy className="w-16 h-16 text-yellow-400 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-white mb-2">Your Achievements</h2>
-            <p className="text-gray-400 mb-8">Unlock achievements by completing challenges and reaching milestones</p>
-          </div>
-
-          {achievements.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {achievements.map((achievement) => (
-                <div key={achievement.id} className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
-                  <div className="text-center">
-                    <div className="p-4 bg-yellow-400/20 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
-                      {achievement.icon ? (
-                        <span className="text-2xl">{achievement.icon}</span>
-                      ) : (
-                        <Trophy className="w-8 h-8 text-yellow-400" />
-                      )}
-                    </div>
-                    <h3 className="text-lg font-bold text-white mb-2">{achievement.title}</h3>
-                    <p className="text-gray-400 text-sm mb-4">{achievement.description}</p>
-                    <div className="flex items-center justify-center space-x-4 text-sm">
-                      <span className="text-blue-400">+{achievement.xpReward} XP</span>
-                      <span className="text-gray-500">
-                        {new Date(achievement.unlockedAt).toLocaleDateString()}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <Trophy className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-              <p className="text-gray-400 mb-4">No achievements unlocked yet</p>
-              <button
-                onClick={() => setActiveView('learning')}
-                className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-              >
-                Start Learning to Unlock Achievements
-              </button>
-            </div>
-          )}
-        </div>
-      )}
+      {activeView === 'achievements' && renderAchievements()}
       {activeView === 'certification' && (
         <div className="text-center py-20">
           <Medal className="w-16 h-16 text-rose-400 mx-auto mb-4" />
