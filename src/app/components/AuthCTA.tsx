@@ -17,10 +17,10 @@ export const AuthCTA = ({ onClose, variant = 'overlay' }: AuthCTAProps) => {
           <Sparkles className="w-10 h-10 text-white" />
         </div>
         <h2 className="text-2xl font-bold text-white mb-2">
-          Débloquez l'Assistant AI
+          Unlock AI Assistant
         </h2>
         <p className="text-gray-300 text-lg">
-          Connectez-vous pour profiter de l'expérience complète avec notre assistant intelligent
+          Sign in to enjoy the complete experience with our intelligent assistant
         </p>
       </div>
 
@@ -30,7 +30,7 @@ export const AuthCTA = ({ onClose, variant = 'overlay' }: AuthCTAProps) => {
           className="flex items-center justify-center gap-3 w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold rounded-lg transition-all transform hover:scale-105 shadow-lg"
         >
           <LogIn className="w-5 h-5" />
-          Se connecter
+          Sign In
         </Link>
 
         <Link
@@ -38,17 +38,17 @@ export const AuthCTA = ({ onClose, variant = 'overlay' }: AuthCTAProps) => {
           className="flex items-center justify-center gap-3 w-full px-6 py-3 bg-gray-800 hover:bg-gray-700 text-white font-semibold rounded-lg border border-gray-600 transition-all transform hover:scale-105"
         >
           <UserPlus className="w-5 h-5" />
-          Créer un compte
+          Create Account
         </Link>
       </div>
 
       <div className="mt-6 text-sm text-gray-400">
-        <p>Rejoignez notre communauté et découvrez</p>
+        <p>Join our community and discover</p>
         <ul className="mt-2 space-y-1">
-          <li>✨ Recommandations personnalisées</li>
-          <li>🚀 Accès illimité à l'assistant</li>
-          <li>📚 Suivi de votre progression</li>
-          <li>🏆 Achievements et récompenses</li>
+          <li>✨ Personalized recommendations</li>
+          <li>🚀 Unlimited assistant access</li>
+          <li>📚 Progress tracking</li>
+          <li>🏆 Achievements and rewards</li>
         </ul>
       </div>
     </div>
@@ -60,7 +60,7 @@ export const AuthCTA = ({ onClose, variant = 'overlay' }: AuthCTAProps) => {
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
-          aria-label="Fermer"
+          aria-label="Close"
         >
           <X className="w-6 h-6" />
         </button>
@@ -75,7 +75,7 @@ export const AuthCTA = ({ onClose, variant = 'overlay' }: AuthCTAProps) => {
         <button
           onClick={onClose}
           className="absolute -top-2 -right-2 bg-gray-800 rounded-full p-2 text-gray-400 hover:text-white transition-colors"
-          aria-label="Fermer"
+          aria-label="Close"
         >
           <X className="w-5 h-5" />
         </button>

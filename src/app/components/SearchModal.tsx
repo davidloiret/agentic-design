@@ -70,7 +70,7 @@ export const SearchModal: React.FC = () => {
     setSearchQuery,
     performSearch,
     closeSearch,
-    clearSearch
+    openSearch
   } = useSearch();
 
   const router = useRouter();
