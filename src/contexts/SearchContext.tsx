@@ -130,6 +130,20 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setIsSearchOpen(true);
   }, []);
 
+  const addToRecentSearches = useCallback((query: string) => {
+    setRecentSearches(prev => {
+      const filtered = prev.filter(q => q !== query);
+      const newSearches = [query, ...filtered].slice(0, 5);
+      
+      // Store in localStorage as fallback
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('recentSearches', JSON.stringify(newSearches));
+      }
+      
+      return newSearches;
+    });
+  }, []);
+
   const performSearch = useCallback(async (query: string, searchFilters?: SearchFilters) => {
     if (!query.trim()) {
       setSearchResults([]);
@@ -163,20 +177,6 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const clearSearch = useCallback(() => {
     setSearchQuery('');
     setSearchResults([]);
-  }, []);
-
-  const addToRecentSearches = useCallback((query: string) => {
-    setRecentSearches(prev => {
-      const filtered = prev.filter(q => q !== query);
-      const newSearches = [query, ...filtered].slice(0, 5);
-      
-      // Store in localStorage as fallback
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('recentSearches', JSON.stringify(newSearches));
-      }
-      
-      return newSearches;
-    });
   }, []);
 
   const clearRecentSearches = useCallback(async () => {
