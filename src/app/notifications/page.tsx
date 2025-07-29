@@ -20,7 +20,6 @@ import {
   Trash2,
   Eye,
   EyeOff,
-  MessageSquare,
   Archive
 } from 'lucide-react';
 

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useCallback, useMemo, useEffect } from 'react';
+import React, { createContext, useContext, useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { searchContent } from '@/lib/search';
 import { recentSearchAPI, type RecentSearchResponse } from '@/lib/recent-search-api';
@@ -33,7 +33,7 @@ interface SearchContextType {
   isSearchOpen: boolean;
   searchQuery: string;
   searchResults: SearchResult[];
-  isSearching: boolean;
+  previousResults: SearchResult[];
   filters: SearchFilters;
   recentSearches: string[];
   recentSearchData: RecentSearchResponse[];
@@ -64,12 +64,15 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
   const [filters, setFilters] = useState<SearchFilters>({});
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [recentSearchData, setRecentSearchData] = useState<RecentSearchResponse[]>([]);
+  const [previousResults, setPreviousResults] = useState<SearchResult[]>([]);
   const router = useRouter();
   const { user } = useAuth();
+  
+  // Search cache
+  const searchCache = useRef<Map<string, SearchResult[]>>(new Map());
 
   // Load recent searches when user changes or search opens
   useEffect(() => {
@@ -125,6 +128,7 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setIsSearchOpen(false);
     setSearchQuery('');
     setSearchResults([]);
+    setPreviousResults([]);
   }, []);
 
   const openSearch = useCallback(() => {
@@ -148,24 +152,42 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const performSearch = useCallback(async (query: string, searchFilters?: SearchFilters) => {
     if (!query.trim()) {
       setSearchResults([]);
+      setPreviousResults([]);
       return;
     }
 
-    setIsSearching(true);
+    // Check cache first
+    const cacheKey = `${query}-${JSON.stringify(searchFilters || filters)}`;
+    const cachedResults = searchCache.current.get(cacheKey);
+    
+    if (cachedResults) {
+      setSearchResults(cachedResults);
+      return;
+    }
+
     try {
       const results = await searchContent(query, searchFilters || filters);
+      
+      // Cache results
+      searchCache.current.set(cacheKey, results);
+      
+      // Keep cache size reasonable (max 50 entries)
+      if (searchCache.current.size > 50) {
+        const firstKey = searchCache.current.keys().next().value;
+        searchCache.current.delete(firstKey);
+      }
+      
       setSearchResults(results);
     } catch (error) {
       console.error('Search error:', error);
       setSearchResults([]);
-    } finally {
-      setIsSearching(false);
     }
   }, [filters]);
 
   const clearSearch = useCallback(() => {
     setSearchQuery('');
     setSearchResults([]);
+    setPreviousResults([]);
   }, []);
 
   const clearRecentSearches = useCallback(async () => {
@@ -202,7 +224,7 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     isSearchOpen,
     searchQuery,
     searchResults,
-    isSearching,
+    previousResults,
     filters,
     recentSearches,
     recentSearchData,
@@ -221,7 +243,7 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     isSearchOpen,
     searchQuery,
     searchResults,
-    isSearching,
+    previousResults,
     filters,
     recentSearches,
     recentSearchData,

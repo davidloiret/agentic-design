@@ -82,9 +82,6 @@ export async function searchContent(
   query: string,
   filters?: SearchFilters
 ): Promise<SearchResult[]> {
-  // Simulate async operation
-  await new Promise(resolve => setTimeout(resolve, 100));
-
   if (!query.trim()) {
     return [];
   }

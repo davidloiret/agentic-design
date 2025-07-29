@@ -192,4 +192,80 @@ export class AuthController {
       throw error;
     }
   }
+
+  @Public()
+  @Post('forgot-password')
+  @HttpCode(HttpStatus.OK)
+  async forgotPassword(@Body() body: { email: string }) {
+    if (!body.email) {
+      throw new BadRequestException('Email is required');
+    }
+
+    await this.authService.resetPasswordForEmail(body.email);
+    
+    return { 
+      message: 'If an account exists with this email, a password reset link has been sent.' 
+    };
+  }
+
+  @Public()
+  @Post('reset-password')
+  @HttpCode(HttpStatus.OK)
+  async resetPassword(
+    @Body() body: { password: string; access_token?: string },
+    @Req() request: Request,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const accessToken = body.access_token || 
+                       request.cookies?.['access_token'] || 
+                       request.headers.authorization?.replace('Bearer ', '');
+    
+    if (!accessToken) {
+      throw new BadRequestException('Access token is required');
+    }
+
+    if (!body.password) {
+      throw new BadRequestException('New password is required');
+    }
+
+    const result = await this.authService.updatePassword(accessToken, body.password);
+    
+    // Clear cookies after password reset for security
+    response.clearCookie('access_token');
+    response.clearCookie('refresh_token');
+    
+    return { 
+      message: 'Password has been reset successfully. Please login with your new password.' 
+    };
+  }
+
+  @Public()
+  @Post('verify-otp')
+  @HttpCode(HttpStatus.OK)
+  async verifyOtp(
+    @Body() body: { email: string; token: string },
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    if (!body.email || !body.token) {
+      throw new BadRequestException('Email and token are required');
+    }
+
+    const result = await this.authService.verifyOtp(body.email, body.token);
+    
+    const cookieOptions = getCookieOptions();
+
+    response.cookie('access_token', result.access_token, {
+      ...cookieOptions,
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
+    });
+    
+    if (result.refresh_token) {
+      response.cookie('refresh_token', result.refresh_token, {
+        ...cookieOptions,
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      });
+    }
+    
+    return result;
+  }
 }

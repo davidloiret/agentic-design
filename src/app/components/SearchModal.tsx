@@ -65,7 +65,7 @@ export const SearchModal: React.FC = () => {
     isSearchOpen,
     searchQuery,
     searchResults,
-    isSearching,
+    previousResults,
     recentSearches,
     recentSearchData,
     setSearchQuery,
@@ -293,13 +293,8 @@ export const SearchModal: React.FC = () => {
 
           {/* Search Results */}
           <div className="max-h-[60vh] overflow-y-auto">
-            {isSearching && (
-              <div className="flex items-center justify-center py-12">
-                <Loader2 className="w-6 h-6 text-gray-400 animate-spin" />
-              </div>
-            )}
 
-            {!isSearching && searchQuery.length === 0 && (
+            {searchQuery.length === 0 && (
               <div className="p-6">
                 {/* Recent Searches */}
                 {recentSearches.length > 0 && (
@@ -385,7 +380,7 @@ export const SearchModal: React.FC = () => {
               </div>
             )}
 
-            {!isSearching && searchQuery.length > 0 && suggestions.length > 0 && searchQuery.length < 2 && (
+            {searchQuery.length > 0 && suggestions.length > 0 && searchQuery.length < 2 && (
               <div className="p-6">
                 <h3 className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-3">
                   Suggestions
@@ -405,21 +400,18 @@ export const SearchModal: React.FC = () => {
               </div>
             )}
 
-            {!isSearching && searchResults.length > 0 && (
+            {searchResults.length > 0 && (
               <div className="p-6">
                 <h3 className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-3">
                   Results ({searchResults.length})
                 </h3>
                 <div className="space-y-2">
                   {searchResults.map((result, index) => (
-                    <motion.button
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.03, duration: 0.2 }}
-                      key={result.id}
+                    <button
+                      key={`${result.id}-${index}`}
                       onClick={() => handleResultClick(result.url, result.category)}
                       onMouseEnter={() => setSelectedIndex(index)}
-                      className={`w-full p-4 rounded-lg transition-all duration-200 text-left ${
+                      className={`w-full p-4 rounded-lg transition-colors duration-150 text-left ${
                         selectedIndex === index
                           ? 'bg-gray-800/70 border-l-2 border-blue-400'
                           : 'hover:bg-gray-800/50'
@@ -446,13 +438,13 @@ export const SearchModal: React.FC = () => {
                         </div>
                         <ChevronRight className="w-4 h-4 text-gray-500 mt-1 ml-4" />
                       </div>
-                    </motion.button>
+                    </button>
                   ))}
                 </div>
               </div>
             )}
 
-            {!isSearching && searchQuery.length >= 2 && searchResults.length === 0 && (
+            {searchQuery.length >= 2 && searchResults.length === 0 && (
               <div className="p-12 text-center">
                 <Search className="w-12 h-12 text-gray-600 mx-auto mb-4" />
                 <p className="text-gray-400">No results found for "{searchQuery}"</p>

@@ -189,4 +189,53 @@ export class SupabaseAuthService {
 
     return data;
   }
+
+  async resetPasswordForEmail(email: string) {
+    const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3000';
+    
+    const { data, error } = await this.supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${frontendUrl}/auth/reset-password`,
+    });
+
+    if (error) {
+      this.handleAuthError(error);
+    }
+
+    return data;
+  }
+
+  async updatePassword(accessToken: string, newPassword: string) {
+    // First get the user from the access token
+    const { data: userData, error: userError } = await this.supabaseAdmin.auth.getUser(accessToken);
+    
+    if (userError || !userData.user) {
+      throw new UnauthorizedException('Invalid or expired access token');
+    }
+
+    // Update the user's password using their ID
+    const { data, error } = await this.supabaseAdmin.auth.admin.updateUserById(
+      userData.user.id,
+      { password: newPassword }
+    );
+
+    if (error) {
+      this.handleAuthError(error);
+    }
+
+    return data;
+  }
+
+  async verifyOtp(email: string, token: string, type: 'recovery') {
+    const { data, error } = await this.supabase.auth.verifyOtp({
+      email,
+      token,
+      type,
+    });
+
+    if (error) {
+      this.handleAuthError(error);
+    }
+
+    return data;
+  }
 }

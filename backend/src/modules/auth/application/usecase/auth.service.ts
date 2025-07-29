@@ -152,4 +152,29 @@ export class AuthService {
     console.log('OAuth callback processed successfully for user:', user.email);
     return result;
   }
+
+  async resetPasswordForEmail(email: string): Promise<void> {
+    await this.supabaseAuthService.resetPasswordForEmail(email);
+  }
+
+  async updatePassword(accessToken: string, newPassword: string): Promise<any> {
+    return await this.supabaseAuthService.updatePassword(accessToken, newPassword);
+  }
+
+  async verifyOtp(email: string, token: string): Promise<AuthResponseDto> {
+    const { user, session } = await this.supabaseAuthService.verifyOtp(email, token, 'recovery');
+    
+    const localUser = await this.userRepository.findBySupabaseId(user.id);
+
+    return {
+      user: {
+        id: user.id,
+        email: user.email,
+        firstName: localUser?.firstName || user.user_metadata?.firstName,
+        lastName: localUser?.lastName || user.user_metadata?.lastName,
+      },
+      access_token: session.access_token,
+      refresh_token: session.refresh_token,
+    };
+  }
 }

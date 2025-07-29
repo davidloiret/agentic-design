@@ -268,7 +268,16 @@ export const NotificationBell: React.FC = () => {
               <div className="p-8 text-center">
                 <Bell className="w-12 h-12 text-gray-600 mx-auto mb-4" />
                 <p className="text-gray-400 mb-2">No notifications yet</p>
-                <p className="text-gray-500 text-sm">You'll see updates about achievements, level ups, and more here.</p>
+                <p className="text-gray-500 text-sm mb-4">You'll see updates about achievements, level ups, and more here.</p>
+                <button
+                  onClick={() => {
+                    setIsOpen(false);
+                    router.push('/notifications');
+                  }}
+                  className="px-4 py-2 text-sm text-blue-400 hover:text-blue-300 border border-blue-400/30 hover:border-blue-300/50 rounded-lg transition-colors"
+                >
+                  View all notifications
+                </button>
               </div>
             ) : (
               notifications.map((notification) => (
@@ -335,17 +344,19 @@ export const NotificationBell: React.FC = () => {
           </div>
 
           {/* Footer */}
-          <div className="px-4 py-3 border-t border-gray-700/50 bg-gray-800/50">
-            <button
-              onClick={() => {
-                setIsOpen(false);
-                router.push('/notifications');
-              }}
-              className="w-full text-center text-sm text-blue-400 hover:text-blue-300 transition-colors"
-            >
-              View all notifications
-            </button>
-          </div>
+          {notifications.length > 0 && (
+            <div className="px-4 py-3 border-t border-gray-700/50 bg-gray-800/50">
+              <button
+                onClick={() => {
+                  setIsOpen(false);
+                  router.push('/notifications');
+                }}
+                className="w-full text-center text-sm text-blue-400 hover:text-blue-300 transition-colors"
+              >
+                View all notifications
+              </button>
+            </div>
+          )}
         </div>,
         document.body
       )}

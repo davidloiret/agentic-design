@@ -19,6 +19,7 @@ interface AuthContextType {
   signInWithGitHub: () => void;
   signOut: () => Promise<void>;
   refreshUser: () => Promise<void>;
+  resetPassword: (email: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -91,8 +92,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
   };
 
+  const resetPassword = async (email: string) => {
+    const response = await api.post('/api/v1/auth/forgot-password', { email });
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.message || 'Failed to send reset email');
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, signIn, signUp, signInWithGoogle, signInWithGitHub, signOut, refreshUser }}>
+    <AuthContext.Provider value={{ user, loading, signIn, signUp, signInWithGoogle, signInWithGitHub, signOut, refreshUser, resetPassword }}>
       {children}
     </AuthContext.Provider>
   );
