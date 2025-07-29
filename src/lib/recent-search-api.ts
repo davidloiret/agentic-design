@@ -31,7 +31,7 @@ class RecentSearchAPI {
   private baseUrl: string;
 
   constructor() {
-    this.baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+    this.baseUrl = '/api/v1/';
   }
 
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {

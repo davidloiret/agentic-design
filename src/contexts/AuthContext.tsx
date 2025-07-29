@@ -78,7 +78,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signInWithGoogle = () => {
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001';
-    window.location.href = `https://backend.agentic-design.ai/api/v1/auth/google`;
+    window.location.href = `${backendUrl}/api/v1/auth/google`;
   };
 
   const signInWithGitHub = () => {
