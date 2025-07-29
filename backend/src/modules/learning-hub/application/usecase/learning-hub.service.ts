@@ -35,11 +35,7 @@ export class LearningHubService {
       userId, courseId, lessonId, progressPercentage, timeSpent
     });
 
-    let user = await this.userRepository.findById(userId);
-    if (!user) {
-      user = await this.userRepository.findBySupabaseId(userId);
-    }
-    
+    const user = await this.userRepository.findById(userId);
     if (!user) {
       throw new Error('User not found');
     }
@@ -70,11 +66,7 @@ export class LearningHubService {
       totalTimeSpent: number;
     };
   }> {
-    let user = await this.userRepository.findById(userId);
-    if (!user) {
-      user = await this.userRepository.findBySupabaseId(userId);
-    }
-    
+    const user = await this.userRepository.findById(userId);
     if (!user) {
       throw new Error('User not found');
     }
@@ -98,11 +90,7 @@ export class LearningHubService {
   }
 
   async getUserAchievements(userId: string): Promise<UserAchievement[]> {
-    let user = await this.userRepository.findById(userId);
-    if (!user) {
-      user = await this.userRepository.findBySupabaseId(userId);
-    }
-    
+    const user = await this.userRepository.findById(userId);
     if (!user) {
       throw new Error('User not found');
     }
@@ -115,11 +103,7 @@ export class LearningHubService {
     transactions: UserXpTransaction[];
     xpBySource: { source: XpSource; total: number }[];
   }> {
-    let user = await this.userRepository.findById(userId);
-    if (!user) {
-      user = await this.userRepository.findBySupabaseId(userId);
-    }
-    
+    const user = await this.userRepository.findById(userId);
     if (!user) {
       throw new Error('User not found');
     }
@@ -132,11 +116,7 @@ export class LearningHubService {
   }
 
   async getUserStreak(userId: string): Promise<UserStreak | null> {
-    let user = await this.userRepository.findById(userId);
-    if (!user) {
-      user = await this.userRepository.findBySupabaseId(userId);
-    }
-    
+    const user = await this.userRepository.findById(userId);
     if (!user) {
       throw new Error('User not found');
     }
@@ -161,11 +141,7 @@ export class LearningHubService {
     streak: UserStreak | null;
     recentTransactions: UserXpTransaction[];
   }> {
-    let user = await this.userRepository.findById(userId);
-    if (!user) {
-      user = await this.userRepository.findBySupabaseId(userId);
-    }
-    
+    const user = await this.userRepository.findById(userId);
     if (!user) {
       throw new Error('User not found');
     }

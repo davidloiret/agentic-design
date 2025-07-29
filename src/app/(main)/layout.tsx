@@ -5,6 +5,7 @@ import { Header } from '../components/Header';
 import { ChatBot } from '../components/ChatBot';
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
+import { useScrollToTop } from '@/hooks/useScrollToTop';
 
 export default function MainLayout({
   children,
@@ -13,6 +14,9 @@ export default function MainLayout({
 }) {
   const pathname = usePathname();
   const [activeTab, setActiveTab] = useState('patterns');
+  
+  // Handle scroll restoration based on navbar state
+  useScrollToTop();
 
   // Update active tab based on current route
   useEffect(() => {

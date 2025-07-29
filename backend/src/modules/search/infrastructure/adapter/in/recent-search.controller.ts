@@ -32,7 +32,7 @@ export class RecentSearchController {
     @Body() saveSearchDto: SaveSearchDto,
   ): Promise<RecentSearchResponseDto> {
     try {
-      const userId = req.user?.id;
+      const userId = req.user.id; // This is now the database ID from the auth guard
       
       const recentSearch = await this.recentSearchService.saveSearch({
         query: saveSearchDto.query,
@@ -67,7 +67,8 @@ export class RecentSearchController {
     @Query('limit') limit?: string,
   ): Promise<RecentSearchResponseDto[]> {
     try {
-      const userId = req.user?.id;
+      const userId = req.user.id; // This is now the database ID from the auth guard
+      
       const parsedLimit = limit ? parseInt(limit, 10) : 10;
       
       if (parsedLimit < 1 || parsedLimit > 50) {
@@ -104,7 +105,8 @@ export class RecentSearchController {
     @Query('limit') limit?: string,
   ): Promise<RecentSearchResponseDto[]> {
     try {
-      const userId = req.user?.id;
+      const userId = req.user.id; // This is now the database ID from the auth guard
+      
       const parsedLimit = limit ? parseInt(limit, 10) : 5;
       
       if (parsedLimit < 1 || parsedLimit > 20) {
@@ -140,7 +142,7 @@ export class RecentSearchController {
     @Request() req: any,
   ): Promise<SearchAnalyticsResponseDto> {
     try {
-      const userId = req.user?.id;
+      const userId = req.user.id; // This is now the database ID from the auth guard
       
       const analytics = await this.recentSearchService.getSearchAnalytics({
         userId,
@@ -164,7 +166,8 @@ export class RecentSearchController {
         return new SearchSuggestionsResponseDto([]);
       }
 
-      const userId = req.user?.id;
+      const userId = req.user.id; // This is now the database ID from the auth guard
+      
       const parsedLimit = limit ? parseInt(limit, 10) : 5;
       
       if (parsedLimit < 1 || parsedLimit > 10) {
@@ -190,7 +193,7 @@ export class RecentSearchController {
   @UseGuards(AuthGuard)
   async clearRecentSearches(@Request() req: any): Promise<{ message: string }> {
     try {
-      const userId = req.user?.id;
+      const userId = req.user.id; // This is now the database ID from the auth guard
       
       await this.recentSearchService.clearRecentSearches(userId);
       

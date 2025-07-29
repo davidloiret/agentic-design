@@ -47,6 +47,7 @@ interface SearchContextType {
   addToRecentSearches: (query: string) => void;
   clearRecentSearches: () => Promise<void>;
   loadRecentSearches: () => Promise<void>;
+  saveSearchOnClick: (query: string, category?: string) => Promise<void>;
 }
 
 const SearchContext = createContext<SearchContextType | undefined>(undefined);
@@ -154,25 +155,13 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     try {
       const results = await searchContent(query, searchFilters || filters);
       setSearchResults(results);
-      
-      if (query.length > 2) {
-        addToRecentSearches(query);
-        
-        // Save to backend if user is logged in
-        if (user) {
-          // Determine category from first result or filters
-          const category = results.length > 0 ? results[0].category : 
-                          (searchFilters?.categories?.[0] || filters.categories?.[0]);
-          await saveSearchToBackend(query, category);
-        }
-      }
     } catch (error) {
       console.error('Search error:', error);
       setSearchResults([]);
     } finally {
       setIsSearching(false);
     }
-  }, [filters, user, saveSearchToBackend, addToRecentSearches]);
+  }, [filters]);
 
   const clearSearch = useCallback(() => {
     setSearchQuery('');
@@ -197,6 +186,18 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
   }, [user]);
 
+  const saveSearchOnClick = useCallback(async (query: string, category?: string) => {
+    if (!query || query.length < 2) return;
+    
+    // Add to local recent searches
+    addToRecentSearches(query);
+    
+    // Save to backend if user is logged in
+    if (user) {
+      await saveSearchToBackend(query, category);
+    }
+  }, [user, addToRecentSearches, saveSearchToBackend]);
+
   const value = useMemo(() => ({
     isSearchOpen,
     searchQuery,
@@ -214,7 +215,8 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setFilters,
     addToRecentSearches,
     clearRecentSearches,
-    loadRecentSearches
+    loadRecentSearches,
+    saveSearchOnClick
   }), [
     isSearchOpen,
     searchQuery,
@@ -230,7 +232,8 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     clearSearch,
     addToRecentSearches,
     clearRecentSearches,
-    loadRecentSearches
+    loadRecentSearches,
+    saveSearchOnClick
   ]);
 
   return (

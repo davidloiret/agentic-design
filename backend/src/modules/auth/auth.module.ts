@@ -21,11 +21,12 @@ import { UserModule } from '../user/user.module';
   providers: [
     AuthService,
     SupabaseAuthService,
+    AuthGuard,
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
     },
   ],
-  exports: [AuthService, SupabaseAuthService],
+  exports: [AuthService, SupabaseAuthService, AuthGuard],
 })
 export class AuthModule {}

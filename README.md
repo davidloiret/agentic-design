@@ -459,3 +459,16 @@ learn fondamentals, not framework
 interop avec des composants => guard etc
 
 backup recent search
+
+assistant d'apprentissage
+
+
+adapt prompt according to user => translate etc
+
+
+video pour expliquer le principe du site
+
+forget password / maol / confirmation / sso mais pas de pwd ?
+
+gem finder => proposer des ressources / suivre blogpost / personne / connecter son linkedin etc
+=> auto post

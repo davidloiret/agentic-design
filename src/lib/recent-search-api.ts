@@ -31,7 +31,7 @@ class RecentSearchAPI {
   private baseUrl: string;
 
   constructor() {
-    this.baseUrl = '/api/v1/';
+    this.baseUrl = '/api/v1';
   }
 
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {

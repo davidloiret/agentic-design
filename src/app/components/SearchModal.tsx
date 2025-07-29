@@ -72,7 +72,8 @@ export const SearchModal: React.FC = () => {
     performSearch,
     closeSearch,
     openSearch,
-    clearRecentSearches
+    clearRecentSearches,
+    saveSearchOnClick
   } = useSearch();
 
   const router = useRouter();
@@ -119,8 +120,12 @@ export const SearchModal: React.FC = () => {
         } else if (e.key === 'Enter') {
           e.preventDefault();
           if (searchResults[selectedIndex]) {
-            router.push(searchResults[selectedIndex].url);
-            closeSearch();
+            const result = searchResults[selectedIndex];
+            // Save the search when pressing Enter on a result
+            saveSearchOnClick(searchQuery, result.category).then(() => {
+              router.push(result.url);
+              closeSearch();
+            });
           }
         }
       }
@@ -128,7 +133,7 @@ export const SearchModal: React.FC = () => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isSearchOpen, searchResults, selectedIndex, closeSearch, openSearch, router]);
+  }, [isSearchOpen, searchResults, selectedIndex, closeSearch, openSearch, router, searchQuery, saveSearchOnClick]);
 
   const handleSearch = useCallback(async (query: string) => {
     setSearchQuery(query);
@@ -148,7 +153,9 @@ export const SearchModal: React.FC = () => {
     }
   }, [setSearchQuery, performSearch, selectedCategories]);
 
-  const handleResultClick = (url: string) => {
+  const handleResultClick = async (url: string, category?: string) => {
+    // Save the search when a result is clicked
+    await saveSearchOnClick(searchQuery, category);
     router.push(url);
     closeSearch();
   };
@@ -157,13 +164,20 @@ export const SearchModal: React.FC = () => {
     handleSearch(suggestion);
   };
 
-  const toggleCategory = (category: string) => {
-    setSelectedCategories(prev => 
-      prev.includes(category)
-        ? prev.filter(c => c !== category)
-        : [...prev, category]
-    );
-  };
+  const toggleCategory = useCallback(async (category: string) => {
+    const newCategories = selectedCategories.includes(category)
+      ? selectedCategories.filter(c => c !== category)
+      : [...selectedCategories, category];
+    
+    setSelectedCategories(newCategories);
+    
+    // Immediately perform search with new category filters if there's a search query
+    if (searchQuery.length >= 2) {
+      await performSearch(searchQuery, {
+        categories: newCategories.length > 0 ? newCategories : undefined
+      });
+    }
+  }, [selectedCategories, searchQuery, performSearch]);
 
   const highlightMatch = (text: string, query: string) => {
     if (!query) return text;
@@ -359,7 +373,7 @@ export const SearchModal: React.FC = () => {
                     ].map((link) => (
                       <button
                         key={link.url}
-                        onClick={() => handleResultClick(link.url)}
+                        onClick={() => handleResultClick(link.url, 'main')}
                         className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-800/50 transition-colors text-left"
                       >
                         <div className="text-gray-400">{link.icon}</div>
@@ -403,7 +417,7 @@ export const SearchModal: React.FC = () => {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.03, duration: 0.2 }}
                       key={result.id}
-                      onClick={() => handleResultClick(result.url)}
+                      onClick={() => handleResultClick(result.url, result.category)}
                       onMouseEnter={() => setSelectedIndex(index)}
                       className={`w-full p-4 rounded-lg transition-all duration-200 text-left ${
                         selectedIndex === index

@@ -56,7 +56,7 @@ export class NotificationService {
   ): Promise<Notification> {
     return this.createNotification(user, {
       type: NotificationType.ACHIEVEMENT_UNLOCKED,
-      title: `🏆 Achievement Unlocked: ${achievementTitle}`,
+      title: `Achievement Unlocked: ${achievementTitle}`,
       message: `${achievementDescription} (+${xpReward} XP)`,
       icon: achievementIcon || '🏆',
       actionUrl: '/learning-hub?view=achievements',
@@ -78,7 +78,7 @@ export class NotificationService {
   ): Promise<Notification> {
     return this.createNotification(user, {
       type: NotificationType.LEVEL_UP,
-      title: `🌟 Level Up! You're now Level ${newLevel}`,
+      title: `Level Up! You're now Level ${newLevel}`,
       message: `Congratulations! You've advanced from Level ${previousLevel} to Level ${newLevel} with ${totalXp} total XP!`,
       icon: '🌟',
       actionUrl: '/learning-hub?view=dashboard',
@@ -98,8 +98,8 @@ export class NotificationService {
     isNewRecord: boolean = false
   ): Promise<Notification> {
     const title = isNewRecord 
-      ? `🔥 New Record! ${streakDays} Day Streak!`
-      : `🔥 ${streakDays} Day Learning Streak!`;
+      ? `New Record! ${streakDays} Day Streak!`
+      : `${streakDays} Day Learning Streak!`;
     
     const message = isNewRecord
       ? `Amazing! You've set a new personal record with a ${streakDays}-day learning streak!`
@@ -128,7 +128,7 @@ export class NotificationService {
   ): Promise<Notification> {
     return this.createNotification(user, {
       type: NotificationType.COURSE_COMPLETED,
-      title: `🎓 Course Completed: ${courseName}`,
+      title: `Course Completed: ${courseName}`,
       message: `Congratulations! You've successfully completed the ${courseName} course and earned ${xpEarned} XP!`,
       icon: '🎓',
       actionUrl: `/learning-hub?course=${courseId}`,
@@ -150,7 +150,7 @@ export class NotificationService {
   ): Promise<Notification> {
     return this.createNotification(user, {
       type: NotificationType.XP_GAINED,
-      title: `⚡ +${xpAmount} XP Earned!`,
+      title: `+${xpAmount} XP Earned!`,
       message: `You earned ${xpAmount} XP from ${source}. Total XP: ${totalXp}`,
       icon: '⚡',
       priority: NotificationPriority.LOW,

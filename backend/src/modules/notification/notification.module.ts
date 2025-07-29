@@ -5,11 +5,13 @@ import { NotificationRepository } from './infrastructure/persistence/notificatio
 import { NotificationService } from './application/usecase/notification.service';
 import { NotificationController } from './infrastructure/adapter/in/notification.controller';
 import { AuthModule } from '../auth/auth.module';
+import { UserModule } from '../user/user.module';
 
 @Module({
   imports: [
     MikroOrmModule.forFeature([Notification]),
     AuthModule,
+    UserModule,
   ],
   controllers: [NotificationController],
   providers: [

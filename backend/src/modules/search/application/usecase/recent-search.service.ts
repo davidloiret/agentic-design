@@ -8,20 +8,20 @@ import { EntityManager } from "@mikro-orm/core";
 
 export interface SaveSearchCommand {
   query: string;
-  userId?: string;
+  userId?: string; // Now expects database ID, not supabaseId
   category?: string;
   filters?: Record<string, any>;
   searchType?: string;
 }
 
 export interface GetRecentSearchesQuery {
-  userId?: string;
+  userId?: string; // Now expects database ID, not supabaseId
   sessionId?: string;
   limit?: number;
 }
 
 export interface SearchAnalyticsQuery {
-  userId: string;
+  userId: string; // Now expects database ID, not supabaseId
 }
 
 @Injectable()
@@ -31,6 +31,13 @@ export class RecentSearchService {
     private readonly recentSearchRepository: RecentSearchRepositoryInterface,
     private readonly entityManager: EntityManager,
   ) {}
+
+  /**
+   * Helper method to get user entity by database ID
+   */
+  private async getUserById(userId: string): Promise<User | null> {
+    return await this.entityManager.findOne(User, { id: userId });
+  }
 
   /**
    * Save a search query to recent searches
@@ -48,15 +55,16 @@ export class RecentSearchService {
     
     // Get user entity if userId is provided
     if (command.userId) {
-      user = await this.entityManager.findOne(User, { id: command.userId });
+      user = await this.getUserById(command.userId);
       
       if (!user) {
+        console.error('[RecentSearchService] User not found with ID:', command.userId);
         throw new Error(`User with ID ${command.userId} not found`);
       }
       
       if (user) {
         const existingSearch = await this.recentSearchRepository.findByUserIdAndQuery(
-          command.userId,
+          user.id,
           searchQuery.getValue()
         );
 
@@ -90,7 +98,12 @@ export class RecentSearchService {
     const limit = Math.min(query.limit || 10, 50); // Cap at 50 results
 
     if (query.userId) {
-      return await this.recentSearchRepository.findByUserId(query.userId, limit);
+      const user = await this.getUserById(query.userId);
+      if (!user) {
+        console.error('[RecentSearchService] User not found with ID:', query.userId);
+        return [];
+      }
+      return await this.recentSearchRepository.findByUserId(user.id, limit);
     }
 
     if (query.sessionId) {
@@ -104,8 +117,13 @@ export class RecentSearchService {
    * Get most frequently searched queries for a user
    */
   async getMostFrequentSearches(userId: string, limit: number = 5): Promise<RecentSearch[]> {
+    const user = await this.getUserById(userId);
+    if (!user) {
+      console.error('[RecentSearchService] User not found with ID:', userId);
+      return [];
+    }
     return await this.recentSearchRepository.findMostFrequentByUserId(
-      userId, 
+      user.id, 
       Math.min(limit, 20)  // Cap at 20 results
     );
   }
@@ -114,21 +132,41 @@ export class RecentSearchService {
    * Get search analytics for a user
    */
   async getSearchAnalytics(query: SearchAnalyticsQuery) {
-    return await this.recentSearchRepository.getSearchAnalytics(query.userId);
+    const user = await this.getUserById(query.userId);
+    if (!user) {
+      console.error('[RecentSearchService] User not found with ID:', query.userId);
+      return {
+        totalSearches: 0,
+        uniqueQueries: 0,
+        mostSearchedCategories: [],
+        recentActivity: []
+      };
+    }
+    return await this.recentSearchRepository.getSearchAnalytics(user.id);
   }
 
   /**
    * Clear all recent searches for a user
    */
   async clearRecentSearches(userId: string): Promise<void> {
-    await this.recentSearchRepository.deleteByUserId(userId);
+    const user = await this.getUserById(userId);
+    if (!user) {
+      console.error('[RecentSearchService] User not found with ID:', userId);
+      return;
+    }
+    await this.recentSearchRepository.deleteByUserId(user.id);
   }
 
   /**
    * Get search suggestions based on user's search history
    */
   async getSearchSuggestions(userId: string, partialQuery: string, limit: number = 5): Promise<string[]> {
-    const recentSearches = await this.recentSearchRepository.findByUserId(userId, 50);
+    const user = await this.getUserById(userId);
+    if (!user) {
+      console.error('[RecentSearchService] User not found with ID:', userId);
+      return [];
+    }
+    const recentSearches = await this.recentSearchRepository.findByUserId(user.id, 50);
     
     const suggestions = recentSearches
       .filter(search => 

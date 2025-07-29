@@ -2,6 +2,7 @@ import { Injectable, CanActivate, ExecutionContext, UnauthorizedException, SetMe
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 import { SupabaseAuthService } from '../adapter/out/supabase-auth.service';
+import { UserRepository } from '../../../user/infrastructure/persistence/user.repository';
 
 export const IS_PUBLIC_KEY = 'isPublic';
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
@@ -12,6 +13,7 @@ export class AuthGuard implements CanActivate {
   constructor(
     private readonly supabaseAuthService: SupabaseAuthService,
     private readonly reflector: Reflector,
+    private readonly userRepository: UserRepository,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -93,7 +95,20 @@ export class AuthGuard implements CanActivate {
         throw new UnauthorizedException('Invalid or expired authentication token');
       }
 
-      request['user'] = user;
+      if (!user.id) {
+        console.error('[AuthGuard] User object missing ID:', JSON.stringify(user, null, 2));
+        throw new UnauthorizedException('Invalid user data: missing user ID');
+      }
+
+      // Get the local User entity using the Supabase user ID
+      const localUser = await this.userRepository.findBySupabaseId(user.id);
+      if (!localUser) {
+        console.error('[AuthGuard] Local user not found for supabaseId:', user.id);
+        throw new UnauthorizedException('User not found in local database');
+      }
+
+      request['user'] = localUser;
+      request['supabaseUser'] = user;
       
       return true;
     } catch (error) {

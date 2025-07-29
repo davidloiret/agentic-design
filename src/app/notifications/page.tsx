@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import { notificationApi, Notification as ApiNotification } from '@/lib/notification-api';
 import { 
   Bell, 
   ArrowLeft,
@@ -28,97 +29,17 @@ import {
   MessageSquare
 } from 'lucide-react';
 
-interface Notification {
-  id: string;
-  type: 'info' | 'success' | 'warning' | 'error' | 'system' | 'billing' | 'security';
-  title: string;
-  message: string;
-  timestamp: string;
-  isRead: boolean;
-  priority: 'low' | 'medium' | 'high';
-  actionUrl?: string;
-  actionLabel?: string;
+// Use the API notification type but extend it for backward compatibility
+interface Notification extends ApiNotification {
+  timestamp?: string; // For backward compatibility
+  actionLabel?: string; // For backward compatibility
 }
 
 function NotificationsPageContent() {
   const { user } = useAuth();
   const router = useRouter();
   
-  const [notifications, setNotifications] = useState<Notification[]>([
-    {
-      id: '1',
-      type: 'billing',
-      title: 'Payment Successful',
-      message: 'Your Pro plan subscription has been renewed for $29.99.',
-      timestamp: '2024-01-28T10:30:00Z',
-      isRead: false,
-      priority: 'medium',
-      actionUrl: '/billing',
-      actionLabel: 'View Billing'
-    },
-    {
-      id: '2',
-      type: 'security',
-      title: 'New Login Detected',
-      message: 'We detected a new login from Chrome on macOS in San Francisco, CA.',
-      timestamp: '2024-01-27T15:45:00Z',
-      isRead: false,
-      priority: 'high',
-      actionUrl: '/settings',
-      actionLabel: 'Review Security'
-    },
-    {
-      id: '3',
-      type: 'info',
-      title: 'New Feature Available',
-      message: 'Advanced prompt chaining is now available in your Pro plan. Try it out!',
-      timestamp: '2024-01-26T09:15:00Z',
-      isRead: true,
-      priority: 'low',
-      actionUrl: '/patterns/prompt-chaining',
-      actionLabel: 'Learn More'
-    },
-    {
-      id: '4',
-      type: 'system',
-      title: 'Scheduled Maintenance',
-      message: 'We will be performing scheduled maintenance on January 30th from 2-4 AM UTC.',
-      timestamp: '2024-01-25T12:00:00Z',
-      isRead: true,
-      priority: 'medium'
-    },
-    {
-      id: '5',
-      type: 'success',
-      title: 'Profile Updated',
-      message: 'Your profile information has been successfully updated.',
-      timestamp: '2024-01-24T14:20:00Z',
-      isRead: true,
-      priority: 'low'
-    },
-    {
-      id: '6',
-      type: 'warning',
-      title: 'Usage Limit Warning',
-      message: 'You have used 80% of your monthly API quota. Consider upgrading your plan.',
-      timestamp: '2024-01-23T11:30:00Z',
-      isRead: false,
-      priority: 'high',
-      actionUrl: '/billing',
-      actionLabel: 'Upgrade Plan'
-    },
-    {
-      id: '7',
-      type: 'error',
-      title: 'Payment Failed',
-      message: 'Your payment method was declined. Please update your billing information.',
-      timestamp: '2024-01-22T16:45:00Z',
-      isRead: true,
-      priority: 'high',
-      actionUrl: '/billing',
-      actionLabel: 'Update Payment'
-    }
-  ]);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
 
   const [filter, setFilter] = useState<'all' | 'unread' | 'read'>('all');
   const [typeFilter, setTypeFilter] = useState<string>('all');
@@ -126,39 +47,61 @@ function NotificationsPageContent() {
   const [selectedNotifications, setSelectedNotifications] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
 
+  // Fetch notifications on component mount
+  useEffect(() => {
+    if (user) {
+      fetchNotifications();
+    }
+  }, [user]);
+
+  const fetchNotifications = async () => {
+    setLoading(true);
+    try {
+      const response = await notificationApi.getNotifications({ 
+        includeRead: true, 
+        includeArchived: false,
+        limit: 100 
+      });
+      if (response.success && response.data) {
+        setNotifications(response.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch notifications:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const notificationTypes = [
     { value: 'all', label: 'All Types', icon: Bell },
-    { value: 'billing', label: 'Billing', icon: CreditCard },
-    { value: 'security', label: 'Security', icon: Shield },
-    { value: 'system', label: 'System', icon: Settings },
-    { value: 'info', label: 'Information', icon: Info },
-    { value: 'success', label: 'Success', icon: CheckCircle },
-    { value: 'warning', label: 'Warnings', icon: AlertTriangle },
-    { value: 'error', label: 'Errors', icon: X }
+    { value: 'achievement_unlocked', label: 'Achievements', icon: Star },
+    { value: 'level_up', label: 'Level Up', icon: Star },
+    { value: 'streak_milestone', label: 'Streaks', icon: Users },
+    { value: 'course_completed', label: 'Courses', icon: CheckCircle },
+    { value: 'xp_gained', label: 'XP Gained', icon: Star },
+    { value: 'system', label: 'System', icon: Settings }
   ];
 
   const getNotificationIcon = (type: string) => {
     const iconMap = {
-      info: Info,
-      success: CheckCircle,
-      warning: AlertTriangle,
-      error: X,
-      system: Settings,
-      billing: CreditCard,
-      security: Shield
+      achievement_unlocked: Star,
+      level_up: Star,
+      streak_milestone: Users,
+      course_completed: CheckCircle,
+      xp_gained: Star,
+      system: Settings
     };
-    return iconMap[type as keyof typeof iconMap] || Info;
+    return iconMap[type as keyof typeof iconMap] || Bell;
   };
 
   const getNotificationColor = (type: string) => {
     const colorMap = {
-      info: 'text-blue-400 bg-blue-500/10 border-blue-500/20',
-      success: 'text-green-400 bg-green-500/10 border-green-500/20',
-      warning: 'text-yellow-400 bg-yellow-500/10 border-yellow-500/20',
-      error: 'text-red-400 bg-red-500/10 border-red-500/20',
-      system: 'text-purple-400 bg-purple-500/10 border-purple-500/20',
-      billing: 'text-blue-400 bg-blue-500/10 border-blue-500/20',
-      security: 'text-orange-400 bg-orange-500/10 border-orange-500/20'
+      achievement_unlocked: 'text-yellow-400 bg-yellow-500/10 border-yellow-500/20',
+      level_up: 'text-green-400 bg-green-500/10 border-green-500/20',
+      streak_milestone: 'text-orange-400 bg-orange-500/10 border-orange-500/20',
+      course_completed: 'text-blue-400 bg-blue-500/10 border-blue-500/20',
+      xp_gained: 'text-purple-400 bg-purple-500/10 border-purple-500/20',
+      system: 'text-gray-400 bg-gray-500/10 border-gray-500/20'
     };
     return colorMap[type as keyof typeof colorMap] || 'text-gray-400 bg-gray-500/10 border-gray-500/20';
   };
@@ -188,7 +131,8 @@ function NotificationsPageContent() {
 
   const unreadCount = notifications.filter(n => !n.isRead).length;
 
-  const formatTimestamp = (timestamp: string) => {
+  const formatTimestamp = (notification: Notification) => {
+    const timestamp = notification.timestamp || notification.createdAt;
     const date = new Date(timestamp);
     const now = new Date();
     const diff = now.getTime() - date.getTime();
@@ -210,16 +154,20 @@ function NotificationsPageContent() {
   const handleMarkAsRead = async (notificationIds: string[]) => {
     setLoading(true);
     try {
-      // TODO: Implement API call
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Mark each notification as read
+      await Promise.all(
+        notificationIds.map(id => notificationApi.markAsRead(id))
+      );
       
       setNotifications(prev => 
         prev.map(notification => 
           notificationIds.includes(notification.id) 
-            ? { ...notification, isRead: true }
+            ? { ...notification, isRead: true, readAt: new Date().toISOString() }
             : notification
         )
       );
+    } catch (error) {
+      console.error('Failed to mark notifications as read:', error);
     } finally {
       setLoading(false);
     }
@@ -228,13 +176,14 @@ function NotificationsPageContent() {
   const handleMarkAsUnread = async (notificationIds: string[]) => {
     setLoading(true);
     try {
-      // TODO: Implement API call
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Note: API doesn't support mark as unread, so just update local state
+      // This could be extended in the future if the API supports it
+      console.log('Mark as unread not supported by API yet');
       
       setNotifications(prev => 
         prev.map(notification => 
           notificationIds.includes(notification.id) 
-            ? { ...notification, isRead: false }
+            ? { ...notification, isRead: false, readAt: undefined }
             : notification
         )
       );
@@ -244,20 +193,39 @@ function NotificationsPageContent() {
   };
 
   const handleMarkAllAsRead = async () => {
-    const unreadIds = notifications.filter(n => !n.isRead).map(n => n.id);
-    await handleMarkAsRead(unreadIds);
+    setLoading(true);
+    try {
+      const response = await notificationApi.markAllAsRead();
+      if (response.success) {
+        setNotifications(prev => 
+          prev.map(notification => ({ 
+            ...notification, 
+            isRead: true, 
+            readAt: new Date().toISOString() 
+          }))
+        );
+      }
+    } catch (error) {
+      console.error('Failed to mark all notifications as read:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDeleteNotifications = async (notificationIds: string[]) => {
     setLoading(true);
     try {
-      // TODO: Implement API call
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Use archive API since there's no delete API
+      await Promise.all(
+        notificationIds.map(id => notificationApi.archiveNotification(id))
+      );
       
       setNotifications(prev => 
         prev.filter(notification => !notificationIds.includes(notification.id))
       );
       setSelectedNotifications([]);
+    } catch (error) {
+      console.error('Failed to archive notifications:', error);
     } finally {
       setLoading(false);
     }
@@ -496,18 +464,18 @@ function NotificationsPageContent() {
                             <div className="flex items-center space-x-4 text-sm text-gray-500">
                               <div className="flex items-center space-x-1">
                                 <Clock className="w-3 h-3" />
-                                <span>{formatTimestamp(notification.timestamp)}</span>
+                                <span>{formatTimestamp(notification)}</span>
                               </div>
                               <span className="capitalize">{notification.type}</span>
                             </div>
 
                             <div className="flex items-center space-x-2">
-                              {notification.actionUrl && notification.actionLabel && (
+                              {notification.actionUrl && (notification.actionLabel || notification.actionText) && (
                                 <button
                                   onClick={() => router.push(notification.actionUrl!)}
                                   className="px-3 py-1.5 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200"
                                 >
-                                  {notification.actionLabel}
+                                  {notification.actionLabel || notification.actionText}
                                 </button>
                               )}
                               

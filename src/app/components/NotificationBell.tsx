@@ -3,11 +3,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Bell, Check, Archive, X } from 'lucide-react';
 import { createPortal } from 'react-dom';
+import { useRouter } from 'next/navigation';
 import { notificationApi, Notification } from '@/lib/notification-api';
 import { useAuth } from '@/contexts/AuthContext';
 
 export const NotificationBell: React.FC = () => {
   const { user } = useAuth();
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -215,7 +217,7 @@ export const NotificationBell: React.FC = () => {
       {mounted && isOpen && createPortal(
         <div 
           ref={dropdownRef}
-          className="fixed w-80 bg-gray-900 border border-gray-700/50 rounded-lg shadow-xl overflow-hidden z-[9999] max-h-96"
+          className="fixed w-120 bg-gray-900 border border-gray-700/50 rounded-lg shadow-xl overflow-hidden z-[9999] max-h-96"
           style={{ 
             top: `${dropdownPosition.top}px`, 
             right: `${dropdownPosition.right}px`,
@@ -236,12 +238,6 @@ export const NotificationBell: React.FC = () => {
                     Mark all read
                   </button>
                 )}
-                <button
-                  onClick={() => setIsOpen(false)}
-                  className="p-1 hover:bg-gray-700/50 rounded transition-colors"
-                >
-                  <X className="w-4 h-4 text-gray-400" />
-                </button>
               </div>
             </div>
           </div>
@@ -329,7 +325,7 @@ export const NotificationBell: React.FC = () => {
               <button
                 onClick={() => {
                   setIsOpen(false);
-                  // Navigate to notifications page when implemented
+                  router.push('/notifications');
                 }}
                 className="w-full text-center text-sm text-blue-400 hover:text-blue-300 transition-colors"
               >
