@@ -68,7 +68,7 @@ export const PatternEvaluationTab = () => {
   const [currentRunNumber, setCurrentRunNumber] = useState(1);
   const [showPatternInfo, setShowPatternInfo] = useState<string | null>(null);
   const [customPatternPrompts, setCustomPatternPrompts] = useState<Record<string, string>>({});
-  const [showPatternConfig, setShowPatternConfig] = useState(false);
+  const [showPatternConfig, setShowPatternConfig] = useState(true);
   const [showPromptPreview, setShowPromptPreview] = useState(false);
 
   const patterns = getAllPatternIds();
