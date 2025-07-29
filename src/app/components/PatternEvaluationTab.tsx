@@ -30,6 +30,8 @@ interface EvaluationRun {
   cost: number;
   runNumber: number;
   iterationId: string;
+  usedCustomPrompt: boolean;
+  originalInput?: string; // Store the original input for reference
 }
 
 interface Comparison {
@@ -65,6 +67,9 @@ export const PatternEvaluationTab = () => {
   const [showConfig, setShowConfig] = useState(true);
   const [currentRunNumber, setCurrentRunNumber] = useState(1);
   const [showPatternInfo, setShowPatternInfo] = useState<string | null>(null);
+  const [customPatternPrompts, setCustomPatternPrompts] = useState<Record<string, string>>({});
+  const [showPatternConfig, setShowPatternConfig] = useState(false);
+  const [showPromptPreview, setShowPromptPreview] = useState(false);
 
   const patterns = getAllPatternIds();
 
@@ -73,34 +78,37 @@ export const PatternEvaluationTab = () => {
       return `Error: Pattern configuration not found`;
     }
 
+    // Use custom prompt if available, otherwise use default
+    const effectiveInput = customPatternPrompts[patternConfig.id] || input;
+    
     // Use the actual pattern configuration to generate more realistic outputs
     const systemPrompt = patternConfig.systemPrompt;
-    const userPrompt = patternConfig.userPromptTemplate.replace('{input}', input);
+    const userPrompt = patternConfig.userPromptTemplate.replace('{input}', effectiveInput);
     
     // Generate pattern-specific response based on the actual configuration
     let response = '';
     
     switch (patternConfig.id) {
       case 'cot':
-        response = generateChainOfThoughtResponse(input, model);
+        response = generateChainOfThoughtResponse(effectiveInput, model);
         break;
       case 'tot':
-        response = generateTreeOfThoughtResponse(input, model);
+        response = generateTreeOfThoughtResponse(effectiveInput, model);
         break;
       case 'react':
-        response = generateReActResponse(input, model);
+        response = generateReActResponse(effectiveInput, model);
         break;
       case 'self-critique':
-        response = generateSelfCritiqueResponse(input, model);
+        response = generateSelfCritiqueResponse(effectiveInput, model);
         break;
       case 'analogical':
-        response = generateAnalogicalResponse(input, model);
+        response = generateAnalogicalResponse(effectiveInput, model);
         break;
       case 'meta-cognitive':
-        response = generateMetaCognitiveResponse(input, model);
+        response = generateMetaCognitiveResponse(effectiveInput, model);
         break;
       default:
-        response = `Using ${patternConfig.name} approach:\n\n${patternConfig.expectedBehavior}\n\nFor the input: "${input}"\n\nThis pattern follows the structure:\n${patternConfig.outputStructure.join('\n')}\n\n[Simulated ${patternConfig.name} response]`;
+        response = `Using ${patternConfig.name} approach:\n\n${patternConfig.expectedBehavior}\n\nFor the input: "${effectiveInput}"\n\nThis pattern follows the structure:\n${patternConfig.outputStructure.join('\n')}\n\n[Simulated ${patternConfig.name} response]`;
     }
     
     // Add model-specific variations
@@ -358,12 +366,17 @@ Process Quality: This meta-cognitive approach helped me produce a more thoughtfu
     const patternConfig = getPatternConfig(patternId);
     if (!model || !patternConfig) return;
 
+    // Check if using custom prompt
+    const customPrompt = customPatternPrompts[patternId];
+    const usedCustomPrompt = customPrompt && customPrompt.trim() !== '';
+    const effectiveInput = usedCustomPrompt ? customPrompt : testInput;
+
     // Simulate API call with realistic response times
     const baseResponseTime = 5000 / model.speedRating;
     const responseTime = baseResponseTime + Math.random() * 1000;
     
     // Generate output based on pattern configuration and model characteristics
-    const output = generatePatternOutput(patternConfig, model, testInput);
+    const output = generatePatternOutput(patternConfig, model, effectiveInput);
     
     const tokensUsed = Math.floor(100 + Math.random() * 200);
     const cost = (tokensUsed / 1000) * model.costPer1kTokens;
@@ -372,7 +385,7 @@ Process Quality: This meta-cognitive approach helped me produce a more thoughtfu
       id: Date.now().toString() + Math.random(),
       patternId,
       modelId,
-      input: testInput,
+      input: effectiveInput,
       output,
       timestamp: Date.now(),
       tokensUsed,
@@ -380,6 +393,8 @@ Process Quality: This meta-cognitive approach helped me produce a more thoughtfu
       cost,
       runNumber,
       iterationId,
+      usedCustomPrompt,
+      originalInput: usedCustomPrompt ? testInput : undefined,
     };
 
     return newRun;
@@ -547,14 +562,71 @@ Process Quality: This meta-cognitive approach helped me produce a more thoughtfu
     return colors[modelId] || 'bg-gray-500/20 text-gray-300 border-gray-400';
   };
 
+  const generatePatternSpecificPrompt = (basePrompt: string, patternId: string): string => {
+    const config = getPatternConfig(patternId);
+    if (!config || !basePrompt.trim()) return basePrompt;
+
+    // Analyze the base prompt to understand the task type
+    const isCalculation = basePrompt.toLowerCase().includes('calculate') || basePrompt.toLowerCase().includes('compute') || /\d/.test(basePrompt);
+    const isProblemSolving = basePrompt.toLowerCase().includes('how') || basePrompt.toLowerCase().includes('solve') || basePrompt.toLowerCase().includes('find');
+    const isAnalysis = basePrompt.toLowerCase().includes('analyze') || basePrompt.toLowerCase().includes('evaluate') || basePrompt.toLowerCase().includes('assess');
+    const isCreative = basePrompt.toLowerCase().includes('create') || basePrompt.toLowerCase().includes('design') || basePrompt.toLowerCase().includes('brainstorm');
+
+    switch (patternId) {
+      case 'cot':
+        if (isCalculation) {
+          return `${basePrompt}\n\nPlease solve this step by step, showing your mathematical reasoning at each stage. Break down the calculation into clear, logical steps and verify your work.`;
+        } else if (isProblemSolving) {
+          return `${basePrompt}\n\nApproach this systematically by breaking it down into logical steps. Show your reasoning process clearly as you work through each stage of the solution.`;
+        } else {
+          return `${basePrompt}\n\nPlease think through this step by step, showing your reasoning process clearly. Break down your analysis into logical stages and build upon each step.`;
+        }
+
+      case 'tot':
+        if (isCreative) {
+          return `${basePrompt}\n\nExplore multiple creative approaches to this challenge. Generate several different solution paths, evaluate each one, and then select or combine the best elements for an optimal solution.`;
+        } else if (isProblemSolving) {
+          return `${basePrompt}\n\nConsider multiple solution strategies for this problem. Explore different approaches, evaluate their pros and cons, then select the most promising path forward.`;
+        } else {
+          return `${basePrompt}\n\nApproach this by exploring multiple perspectives and solution paths. Generate several different approaches, evaluate each one, and determine the optimal strategy.`;
+        }
+
+      case 'react':
+        return `${basePrompt}\n\nUse a systematic thinking and action approach. For each step, explain your reasoning (Thought), describe what you would do (Action), note what you observe or learn (Observation), then continue this cycle until reaching a conclusion.`;
+
+      case 'self-critique':
+        if (isAnalysis) {
+          return `${basePrompt}\n\nProvide your initial analysis, then critically evaluate your own response. Identify potential weaknesses, gaps, or alternative perspectives. Refine your analysis based on this self-critique.`;
+        } else {
+          return `${basePrompt}\n\nFirst provide your initial response, then step back and critically evaluate it. What might you have missed? How could it be improved? Provide a refined answer based on your self-assessment.`;
+        }
+
+      case 'analogical':
+        if (isProblemSolving) {
+          return `${basePrompt}\n\nFind a relevant analogy or similar situation that can help solve this problem. Map the key elements between your analogy and the current challenge, then apply insights from the analogical domain to develop a solution.`;
+        } else {
+          return `${basePrompt}\n\nUse analogical reasoning to approach this question. Find a relevant comparison or similar situation, map the key relationships, and apply insights from that domain to provide your answer.`;
+        }
+
+      case 'meta-cognitive':
+        return `${basePrompt}\n\nBefore solving this, plan your thinking strategy. Monitor your reasoning process as you work through it, adjust your approach if needed, and reflect on the quality of your thinking throughout. Be explicit about how you're thinking about thinking.`;
+
+      default:
+        return basePrompt;
+    }
+  };
+
   const getRunDisplayInfo = (run: EvaluationRun) => {
     const model = availableModels.find(m => m.id === run.modelId);
     const config = getPatternConfig(run.patternId);
+    const hasCustomPrompt = customPatternPrompts[run.patternId] && customPatternPrompts[run.patternId].trim() !== '';
+    
     return {
       patternName: config?.name || getPatternName(run.patternId),
       modelName: model?.name || run.modelId,
       patternColor: getPatternColor(run.patternId),
-      modelColor: getModelColor(run.modelId)
+      modelColor: getModelColor(run.modelId),
+      hasCustomPrompt
     };
   };
 
@@ -665,6 +737,12 @@ Process Quality: This meta-cognitive approach helped me produce a more thoughtfu
               <span>{selectedPatterns.length} pattern{selectedPatterns.length !== 1 ? 's' : ''}</span>
               <span>•</span>
               <span>{selectedModels.length} model{selectedModels.length !== 1 ? 's' : ''}</span>
+              {Object.keys(customPatternPrompts).length > 0 && (
+                <>
+                  <span>•</span>
+                  <span className="text-green-400">{Object.keys(customPatternPrompts).length} custom prompt{Object.keys(customPatternPrompts).length !== 1 ? 's' : ''}</span>
+                </>
+              )}
               {testInput.trim() && (
                 <>
                   <span>•</span>
@@ -922,7 +1000,10 @@ Process Quality: This meta-cognitive approach helped me produce a more thoughtfu
 
             {/* Test Input */}
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Test Input</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Default Test Input
+                <span className="text-xs text-gray-500 ml-2">(used when no pattern-specific prompt is set)</span>
+              </label>
               <textarea
                 value={testInput}
                 onChange={(e) => setTestInput(e.target.value)}
@@ -931,6 +1012,193 @@ Process Quality: This meta-cognitive approach helped me produce a more thoughtfu
                 rows={4}
               />
             </div>
+
+            {/* Pattern-Specific Prompts */}
+            {(viewMode === 'matrix' || viewMode === 'comparison' || viewMode === 'diff') && selectedPatterns.length > 1 && (
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <label className="text-sm font-medium text-gray-300">
+                    Pattern-Specific Prompts
+                    <span className="text-xs text-gray-500 ml-2">(customize input for each pattern)</span>
+                  </label>
+                  <button
+                    onClick={() => setShowPatternConfig(!showPatternConfig)}
+                    className="text-xs text-purple-400 hover:text-purple-300"
+                  >
+                    {showPatternConfig ? 'Hide' : 'Configure'}
+                  </button>
+                </div>
+
+                {showPatternConfig && (
+                  <div className="space-y-4 bg-gray-900 rounded-lg p-4 border border-gray-700">
+                    <div className="text-xs text-gray-400 mb-3">
+                      Customize the input prompt for each pattern. Leave empty to use the default test input above.
+                    </div>
+                    
+                    {selectedPatterns.map(patternId => {
+                      const config = getPatternConfig(patternId);
+                      const displayInfo = getRunDisplayInfo({patternId} as EvaluationRun);
+                      
+                      return (
+                        <div key={patternId} className="space-y-2">
+                          <div className="flex items-center gap-2">
+                            <span className={`text-xs px-2 py-1 rounded border ${displayInfo.patternColor}`}>
+                              {config?.name || getPatternName(patternId)}
+                            </span>
+                            <span className="text-xs text-gray-500">
+                              {config?.description}
+                            </span>
+                          </div>
+                          
+                          <textarea
+                            value={customPatternPrompts[patternId] || ''}
+                            onChange={(e) => {
+                              setCustomPatternPrompts(prev => ({
+                                ...prev,
+                                [patternId]: e.target.value
+                              }));
+                            }}
+                            placeholder={`Custom prompt for ${config?.name || getPatternName(patternId)}... (leave empty to use default)`}
+                            className="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white placeholder-gray-500 focus:border-purple-400 focus:outline-none resize-none text-sm"
+                            rows={3}
+                          />
+                          
+                          {customPatternPrompts[patternId] && (
+                            <div className="flex justify-between items-center">
+                              <span className="text-xs text-green-400">
+                                ✓ Custom prompt configured
+                              </span>
+                              <button
+                                onClick={() => {
+                                  setCustomPatternPrompts(prev => {
+                                    const updated = {...prev};
+                                    delete updated[patternId];
+                                    return updated;
+                                  });
+                                }}
+                                className="text-xs text-red-400 hover:text-red-300"
+                              >
+                                Reset to default
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+
+                    <div className="pt-3 border-t border-gray-700">
+                      <div className="flex flex-wrap gap-2">
+                        <button
+                          onClick={() => {
+                            // Auto-generate pattern-specific prompts
+                            const newPrompts: Record<string, string> = {};
+                            selectedPatterns.forEach(patternId => {
+                              newPrompts[patternId] = generatePatternSpecificPrompt(testInput, patternId);
+                            });
+                            setCustomPatternPrompts(prev => ({...prev, ...newPrompts}));
+                          }}
+                          disabled={!testInput.trim()}
+                          className="text-xs px-3 py-1.5 bg-purple-500 hover:bg-purple-600 disabled:bg-gray-600 text-white rounded transition-colors font-medium"
+                        >
+                          ✨ Auto-generate Pattern Prompts
+                        </button>
+                        <button
+                          onClick={() => setShowPromptPreview(!showPromptPreview)}
+                          disabled={!testInput.trim()}
+                          className="text-xs px-3 py-1.5 bg-indigo-500 hover:bg-indigo-600 disabled:bg-gray-600 text-white rounded transition-colors"
+                        >
+                          👁️ Preview Auto-generated
+                        </button>
+                        <button
+                          onClick={() => {
+                            // Copy default input to all patterns
+                            const newPrompts: Record<string, string> = {};
+                            selectedPatterns.forEach(patternId => {
+                              newPrompts[patternId] = testInput;
+                            });
+                            setCustomPatternPrompts(prev => ({...prev, ...newPrompts}));
+                          }}
+                          disabled={!testInput.trim()}
+                          className="text-xs px-3 py-1.5 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-600 text-white rounded transition-colors"
+                        >
+                          Copy default to all
+                        </button>
+                        <button
+                          onClick={() => {
+                            setCustomPatternPrompts({});
+                          }}
+                          className="text-xs px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded transition-colors"
+                        >
+                          Clear all custom prompts
+                        </button>
+                      </div>
+                      
+                      {/* Auto-generation info */}
+                      <div className="mt-2 text-xs text-gray-500">
+                        <span className="inline-flex items-center gap-1">
+                          ✨ <strong>Auto-generate</strong> creates pattern-specific prompts that leverage each reasoning approach's strengths
+                        </span>
+                      </div>
+
+                      {/* Preview of auto-generated prompts */}
+                      {showPromptPreview && testInput.trim() && (
+                        <div className="mt-4 space-y-3 bg-gray-800 border border-gray-600 rounded-lg p-4">
+                          <div className="flex items-center justify-between">
+                            <h4 className="text-sm font-medium text-white">Preview: Auto-generated Prompts</h4>
+                            <button
+                              onClick={() => {
+                                // Apply all previewed prompts
+                                const newPrompts: Record<string, string> = {};
+                                selectedPatterns.forEach(patternId => {
+                                  newPrompts[patternId] = generatePatternSpecificPrompt(testInput, patternId);
+                                });
+                                setCustomPatternPrompts(prev => ({...prev, ...newPrompts}));
+                                setShowPromptPreview(false);
+                              }}
+                              className="text-xs px-2 py-1 bg-purple-500 hover:bg-purple-600 text-white rounded transition-colors"
+                            >
+                              Apply All
+                            </button>
+                          </div>
+                          
+                          <div className="space-y-2 max-h-64 overflow-y-auto">
+                            {selectedPatterns.map(patternId => {
+                              const config = getPatternConfig(patternId);
+                              const displayInfo = getRunDisplayInfo({patternId} as EvaluationRun);
+                              const generatedPrompt = generatePatternSpecificPrompt(testInput, patternId);
+                              
+                              return (
+                                <div key={patternId} className="bg-gray-900 rounded p-3 border border-gray-700">
+                                  <div className="flex items-center gap-2 mb-2">
+                                    <span className={`text-xs px-2 py-1 rounded border ${displayInfo.patternColor}`}>
+                                      {config?.name || getPatternName(patternId)}
+                                    </span>
+                                    <button
+                                      onClick={() => {
+                                        setCustomPatternPrompts(prev => ({
+                                          ...prev,
+                                          [patternId]: generatedPrompt
+                                        }));
+                                      }}
+                                      className="text-xs px-1.5 py-0.5 bg-green-500 hover:bg-green-600 text-white rounded transition-colors"
+                                    >
+                                      Apply This
+                                    </button>
+                                  </div>
+                                  <div className="text-xs text-gray-300 whitespace-pre-wrap font-mono leading-relaxed">
+                                    {generatedPrompt}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Iterations Control */}
             <div>
@@ -1065,9 +1333,16 @@ Process Quality: This meta-cognitive approach helped me produce a more thoughtfu
             return (
               <div key={patternId} className={`bg-gray-800 rounded-lg p-4 border-l-4`} style={{borderLeftColor: displayInfo.patternColor.includes('blue') ? '#3b82f6' : displayInfo.patternColor.includes('green') ? '#10b981' : displayInfo.patternColor.includes('yellow') ? '#f59e0b' : displayInfo.patternColor.includes('red') ? '#ef4444' : displayInfo.patternColor.includes('purple') ? '#8b5cf6' : '#6366f1'}}>
                 <div className="flex items-center gap-3 mb-3">
-                  <h4 className={`font-semibold px-3 py-1 rounded border ${displayInfo.patternColor}`}>
-                    {displayInfo.patternName}
-                  </h4>
+                  <div className="flex items-center gap-2">
+                    <h4 className={`font-semibold px-3 py-1 rounded border ${displayInfo.patternColor}`}>
+                      {displayInfo.patternName}
+                    </h4>
+                    {customPatternPrompts[patternId] && customPatternPrompts[patternId].trim() !== '' && (
+                      <span className="text-xs bg-green-500/20 text-green-300 px-2 py-1 rounded border border-green-400" title="Using custom prompt">
+                        Custom
+                      </span>
+                    )}
+                  </div>
                   <span className="text-sm text-gray-400">
                     {getPatternConfig(patternId)?.description}
                   </span>
