@@ -40,11 +40,19 @@ export class RecentSearchService {
     const searchQuery = new SearchQuery(command.query);
     const searchFilters = new SearchFilters(command.filters || {});
 
+    if (!command.userId) {
+      throw new Error('User ID is required to save search');
+    }
+
     let user: User | undefined;
     
     // Get user entity if userId is provided
     if (command.userId) {
       user = await this.entityManager.findOne(User, { id: command.userId });
+      
+      if (!user) {
+        throw new Error(`User with ID ${command.userId} not found`);
+      }
       
       if (user) {
         const existingSearch = await this.recentSearchRepository.findByUserIdAndQuery(
