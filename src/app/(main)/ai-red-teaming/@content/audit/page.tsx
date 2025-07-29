@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Shield, 
   ArrowRight,
@@ -20,7 +20,9 @@ import {
   AlertTriangle,
   Target,
   Activity,
-  CheckSquare
+  CheckSquare,
+  Construction,
+  X
 } from 'lucide-react';
 
 // Step definitions for the audit wizard
@@ -29,49 +31,49 @@ const auditSteps = [
     id: 'setup',
     title: 'Audit Setup',
     description: 'Basic audit information and configuration',
-    icon: <Settings className="w-5 h-5" />,
+    icon: (size = "w-5 h-5") => <Settings className={size} />,
     color: 'from-blue-500 to-cyan-500'
   },
   {
     id: 'reconnaissance',
     title: 'Reconnaissance',
     description: 'System discovery and planning',
-    icon: <Eye className="w-5 h-5" />,
+    icon: (size = "w-5 h-5") => <Eye className={size} />,
     color: 'from-purple-500 to-blue-500'
   },
   {
     id: 'technical',
     title: 'Technical Testing',
     description: 'Security vulnerability assessment',
-    icon: <Zap className="w-5 h-5" />,
+    icon: (size = "w-5 h-5") => <Zap className={size} />,
     color: 'from-red-500 to-orange-500'
   },
   {
     id: 'privacy',
     title: 'Data Privacy',
     description: 'Privacy and data protection review',
-    icon: <Database className="w-5 h-5" />,
+    icon: (size = "w-5 h-5") => <Database className={size} />,
     color: 'from-green-500 to-teal-500'
   },
   {
     id: 'supply-chain',
     title: 'Supply Chain',
     description: 'Third-party dependencies audit',
-    icon: <Lock className="w-5 h-5" />,
+    icon: (size = "w-5 h-5") => <Lock className={size} />,
     color: 'from-yellow-500 to-orange-500'
   },
   {
     id: 'governance',
     title: 'AI Governance',
     description: 'Ethics and compliance review',
-    icon: <Brain className="w-5 h-5" />,
+    icon: (size = "w-5 h-5") => <Brain className={size} />,
     color: 'from-indigo-500 to-purple-500'
   },
   {
     id: 'report',
     title: 'Report & Export',
     description: 'Generate final audit report',
-    icon: <FileText className="w-5 h-5" />,
+    icon: (size = "w-5 h-5") => <FileText className={size} />,
     color: 'from-gray-500 to-gray-700'
   }
 ];
@@ -209,10 +211,30 @@ export default function AuditWizardPage() {
   const [checklistState, setChecklistState] = useState<ChecklistState>({});
   const [auditId, setAuditId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showDisclaimer, setShowDisclaimer] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+    // Check if user has seen the disclaimer before
+    const hasSeenDisclaimer = localStorage.getItem('audit-lab-disclaimer-seen');
+    if (!hasSeenDisclaimer) {
+      setShowDisclaimer(true);
+    }
+  }, []);
 
   const currentStepData = auditSteps[currentStep];
   const isFirstStep = currentStep === 0;
   const isLastStep = currentStep === auditSteps.length - 1;
+
+  const handleDismissDisclaimer = () => {
+    localStorage.setItem('audit-lab-disclaimer-seen', 'true');
+    setShowDisclaimer(false);
+  };
+
+  const handleTryAnyway = () => {
+    handleDismissDisclaimer();
+  };
 
   // Create audit when moving from setup step
   const createAudit = async () => {
@@ -271,10 +293,10 @@ export default function AuditWizardPage() {
           [item]: {
             ...prev[phase]?.[category]?.[item],
             ...updates,
+            completed: false,
+            riskLevel: 'info',
             notes: '',
             evidence: '',
-            riskLevel: 'info',
-            completed: false,
           }
         }
       }
@@ -562,41 +584,85 @@ export default function AuditWizardPage() {
         </p>
       </div>
 
-      {/* Progress Steps */}
-      <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-xl p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-white">Audit Progress</h3>
-          <span className="text-sm text-gray-400">
-            Step {currentStep + 1} of {auditSteps.length}
-          </span>
-        </div>
-        
-        <div className="flex items-center space-x-2 overflow-x-auto pb-2">
-          {auditSteps.map((step, index) => (
-            <div key={step.id} className="flex items-center flex-shrink-0">
-              <div
-                className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all ${
-                  index === currentStep
-                    ? 'bg-red-600/20 border border-red-500/30 text-red-300'
-                    : index < currentStep
-                    ? 'bg-green-600/20 border border-green-500/30 text-green-300'
-                    : 'bg-gray-700/30 border border-gray-600/30 text-gray-400'
-                }`}
-              >
-                {index < currentStep ? (
-                  <CheckCircle className="w-4 h-4" />
-                ) : (
-                  <div className={`text-red-400 ${index === currentStep ? 'scale-110' : ''} transition-transform`}>
-                    {step.icon}
-                  </div>
-                )}
-                <span className="text-sm font-medium whitespace-nowrap">{step.title}</span>
-              </div>
-              {index < auditSteps.length - 1 && (
-                <ArrowRight className="w-4 h-4 text-gray-500 mx-2 flex-shrink-0" />
-              )}
+      {/* Visual Stepper */}
+      <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-xl p-8">
+        <div className="max-w-5xl mx-auto">
+          <div className="relative">
+            {/* Progress Line */}
+            <div className="absolute top-12 left-12 right-12 h-0.5 bg-gray-700">
+              <div 
+                className="h-full bg-gradient-to-r from-green-500 to-red-500 transition-all duration-500"
+                style={{ width: `${(currentStep / (auditSteps.length - 1)) * 100}%` }}
+              />
             </div>
-          ))}
+            
+            {/* Steps */}
+            <div className="relative flex justify-between">
+              {auditSteps.map((step, index) => (
+                <button
+                  key={step.id}
+                  onClick={() => index <= currentStep && setCurrentStep(index)}
+                  disabled={index > currentStep}
+                  className={`group flex flex-col items-center transition-all ${
+                    index <= currentStep ? 'cursor-pointer' : 'cursor-not-allowed'
+                  }`}
+                >
+                  {/* Step Circle */}
+                  <div className={`relative flex items-center justify-center w-24 h-24 rounded-full transition-all duration-300 ${
+                    index === currentStep
+                      ? 'bg-gradient-to-br from-red-500 to-orange-500 shadow-lg shadow-red-500/30 scale-110'
+                      : index < currentStep
+                      ? 'bg-gradient-to-br from-green-500 to-emerald-500'
+                      : 'bg-gray-700 border-2 border-gray-600'
+                  }`}>
+                    {index < currentStep ? (
+                      <CheckCircle className="w-10 h-10 text-white" />
+                    ) : (
+                      <div className={`${index === currentStep ? 'text-white' : 'text-gray-400'}`}>
+                        {step.icon("w-10 h-10")}
+                      </div>
+                    )}
+                    
+                    {/* Step Number */}
+                    <div className={`absolute -top-2 -right-2 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
+                      index === currentStep
+                        ? 'bg-red-600 text-white'
+                        : index < currentStep
+                        ? 'bg-green-600 text-white'
+                        : 'bg-gray-600 text-gray-300'
+                    }`}>
+                      {index + 1}
+                    </div>
+                  </div>
+                  
+                  {/* Step Label */}
+                  <div className="mt-4 text-center max-w-[120px]">
+                    <h4 className={`text-sm font-semibold transition-colors ${
+                      index === currentStep
+                        ? 'text-red-300'
+                        : index < currentStep
+                        ? 'text-green-300'
+                        : 'text-gray-400'
+                    }`}>
+                      {step.title}
+                    </h4>
+                    <p className="text-xs text-gray-500 mt-1 hidden md:block">
+                      {step.description}
+                    </p>
+                  </div>
+                  
+                  {/* Progress Percentage for Current Step */}
+                  {index === currentStep && index > 0 && index < auditSteps.length - 1 && (
+                    <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2">
+                      <div className="bg-gray-700 px-3 py-1 rounded-full text-xs text-gray-300">
+                        {calculatePhaseProgress(step.id)}% Complete
+                      </div>
+                    </div>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -604,7 +670,7 @@ export default function AuditWizardPage() {
       <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-xl p-6">
         <div className="mb-6">
           <div className={`inline-flex items-center space-x-2 px-3 py-1 rounded-lg bg-gradient-to-r ${currentStepData.color} mb-4`}>
-            {currentStepData.icon}
+            {currentStepData.icon()}
             <span className="text-sm font-medium text-white">{currentStepData.title}</span>
           </div>
           <p className="text-gray-400 text-sm">{currentStepData.description}</p>
@@ -655,6 +721,89 @@ export default function AuditWizardPage() {
           </button>
         </div>
       </div>
+
+      {/* Disclaimer Overlay */}
+      {isClient && showDisclaimer && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="relative bg-gray-900 border border-gray-700 rounded-2xl p-8 max-w-2xl w-full mx-4 shadow-2xl">
+            {/* Close button */}
+            <button
+              onClick={handleDismissDisclaimer}
+              className="absolute top-4 right-4 p-2 hover:bg-gray-800 rounded-lg transition-colors"
+            >
+              <X className="w-5 h-5 text-gray-400" />
+            </button>
+
+            {/* Header */}
+            <div className="flex items-center gap-4 mb-6">
+              <div className="flex items-center justify-center w-16 h-16 bg-yellow-500/20 rounded-full">
+                <Construction className="w-8 h-8 text-yellow-400" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-white mb-1">AI Security Audit</h2>
+                <p className="text-yellow-400 font-medium">🚧 Under Construction</p>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="space-y-4 mb-8 text-gray-300">
+              <div className="flex items-start gap-3">
+                <AlertTriangle className="w-5 h-5 text-orange-400 mt-0.5 flex-shrink-0" />
+                <div>
+                  <h3 className="font-semibold text-white mb-1">Early Preview Version</h3>
+                  <p className="text-sm">
+                    This audit feature is currently in active development. Some functionality may be incomplete, 
+                    and the interface is subject to change.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <Shield className="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0" />
+                <div>
+                  <h3 className="font-semibold text-white mb-1">What's Working</h3>
+                  <ul className="text-sm space-y-1">
+                    <li>• Step-by-step audit wizard interface</li>
+                    <li>• Security assessment checklists and templates</li>
+                    <li>• Risk categorization and note-taking</li>
+                    <li>• Progress tracking across audit phases</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
+                <h3 className="font-semibold text-blue-300 mb-2">Coming Soon</h3>
+                <ul className="text-sm text-blue-200 space-y-1">
+                  <li>• Backend API integration for data persistence</li>
+                  <li>• Automated vulnerability scanning tools</li>
+                  <li>• Comprehensive report generation and export</li>
+                  <li>• Team collaboration and audit sharing features</li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className="flex gap-3">
+              <button
+                onClick={handleTryAnyway}
+                className="flex-1 bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+              >
+                Try it Anyway
+              </button>
+              <button
+                onClick={handleDismissDisclaimer}
+                className="px-6 py-3 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg font-medium transition-colors"
+              >
+                Maybe Later
+              </button>
+            </div>
+
+            <p className="text-xs text-gray-500 mt-4 text-center">
+              This disclaimer won't show again once dismissed. Your feedback helps us improve!
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

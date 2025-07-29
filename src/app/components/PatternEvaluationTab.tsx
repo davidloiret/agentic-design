@@ -2,7 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { Play, Plus, X, Copy, TrendingUp, DollarSign, Zap, RotateCcw, Save, Download, Upload, BarChart3, RefreshCw, Grid3X3, Layers, GitCompare, FileText, ChevronDown, ChevronUp, Settings, Info } from 'lucide-react';
 import { patternExamples } from '../pattern-examples';
 import { DiffViewer, SideBySideDiffViewer } from './DiffViewer';
-import { patternConfigurations, getPatternConfig, getAllPatternIds, getPatternPrompt } from './PatternConfigurations';
+import { 
+  patternConfigurations, 
+  getPatternConfig, 
+  getAllPatternIds, 
+  getPatternPrompt,
+  getWorkflowPattern,
+  isWorkflowPattern,
+  getAnyPatternConfig,
+  WorkflowExecution,
+  StepExecution
+} from './PatternConfigurations';
+import { workflowExecutor } from './WorkflowExecutor';
 
 interface ModelConfig {
   id: string;
@@ -32,6 +43,8 @@ interface EvaluationRun {
   iterationId: string;
   usedCustomPrompt: boolean;
   originalInput?: string; // Store the original input for reference
+  isWorkflow?: boolean; // Indicates if this is a workflow pattern
+  workflowExecution?: WorkflowExecution; // Complete workflow execution data
 }
 
 interface Comparison {
@@ -70,6 +83,8 @@ export const PatternEvaluationTab = () => {
   const [customPatternPrompts, setCustomPatternPrompts] = useState<Record<string, string>>({});
   const [showPatternConfig, setShowPatternConfig] = useState(true);
   const [showPromptPreview, setShowPromptPreview] = useState(false);
+  const [showWorkflowSteps, setShowWorkflowSteps] = useState<Record<string, boolean>>({});
+  const [workflowExecutions, setWorkflowExecutions] = useState<WorkflowExecution[]>([]);
 
   const patterns = getAllPatternIds();
 
@@ -363,41 +378,84 @@ Process Quality: This meta-cognitive approach helped me produce a more thoughtfu
 
   const runEvaluation = async (modelId: string, patternId: string, runNumber: number, iterationId: string) => {
     const model = availableModels.find(m => m.id === modelId);
-    const patternConfig = getPatternConfig(patternId);
-    if (!model || !patternConfig) return;
+    if (!model) return;
 
     // Check if using custom prompt
     const customPrompt = customPatternPrompts[patternId];
     const usedCustomPrompt = !!(customPrompt && customPrompt.trim() !== '');
     const effectiveInput = usedCustomPrompt ? customPrompt : testInput;
 
-    // Simulate API call with realistic response times
-    const baseResponseTime = 5000 / model.speedRating;
-    const responseTime = baseResponseTime + Math.random() * 1000;
-    
-    // Generate output based on pattern configuration and model characteristics
-    const output = generatePatternOutput(patternConfig, model, effectiveInput);
-    
-    const tokensUsed = Math.floor(100 + Math.random() * 200);
-    const cost = (tokensUsed / 1000) * model.costPer1kTokens;
+    // Check if this is a workflow pattern or simple pattern
+    if (isWorkflowPattern(patternId)) {
+      // Execute workflow pattern
+      try {
+        const workflowExecution = await workflowExecutor.executeWorkflow(
+          patternId,
+          modelId,
+          effectiveInput,
+          model
+        );
 
-    const newRun: EvaluationRun = {
-      id: Date.now().toString() + Math.random(),
-      patternId,
-      modelId,
-      input: effectiveInput,
-      output,
-      timestamp: Date.now(),
-      tokensUsed,
-      responseTime,
-      cost,
-      runNumber,
-      iterationId,
-      usedCustomPrompt,
-      originalInput: usedCustomPrompt ? testInput : undefined,
-    };
+        const newRun: EvaluationRun = {
+          id: Date.now().toString() + Math.random(),
+          patternId,
+          modelId,
+          input: effectiveInput,
+          output: workflowExecution.finalOutput,
+          timestamp: Date.now(),
+          tokensUsed: workflowExecution.totalTokens,
+          responseTime: workflowExecution.totalTime,
+          cost: workflowExecution.totalCost,
+          runNumber,
+          iterationId,
+          usedCustomPrompt,
+          originalInput: usedCustomPrompt ? testInput : undefined,
+          isWorkflow: true,
+          workflowExecution
+        };
 
-    return newRun;
+        // Also store the workflow execution separately for detailed view
+        setWorkflowExecutions(prev => [...prev, workflowExecution]);
+
+        return newRun;
+      } catch (error) {
+        console.error('Workflow execution failed:', error);
+        return undefined;
+      }
+    } else {
+      // Execute simple pattern
+      const patternConfig = getPatternConfig(patternId);
+      if (!patternConfig) return;
+
+      // Simulate API call with realistic response times
+      const baseResponseTime = 5000 / model.speedRating;
+      const responseTime = baseResponseTime + Math.random() * 1000;
+      
+      // Generate output based on pattern configuration and model characteristics
+      const output = generatePatternOutput(patternConfig, model, effectiveInput);
+      
+      const tokensUsed = Math.floor(100 + Math.random() * 200);
+      const cost = (tokensUsed / 1000) * model.costPer1kTokens;
+
+      const newRun: EvaluationRun = {
+        id: Date.now().toString() + Math.random(),
+        patternId,
+        modelId,
+        input: effectiveInput,
+        output,
+        timestamp: Date.now(),
+        tokensUsed,
+        responseTime,
+        cost,
+        runNumber,
+        iterationId,
+        usedCustomPrompt,
+        originalInput: usedCustomPrompt ? testInput : undefined,
+        isWorkflow: false
+      };
+
+      return newRun;
+    }
   };
 
   const handleRunEvaluation = async () => {
@@ -870,7 +928,8 @@ Process Quality: This meta-cognitive approach helped me produce a more thoughtfu
               ) : (
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   {patterns.map(pattern => {
-                    const config = getPatternConfig(pattern);
+                    const config = getAnyPatternConfig(pattern);
+                    const isWorkflow = isWorkflowPattern(pattern);
                     return (
                       <div key={pattern} className="relative">
                         <label
@@ -893,7 +952,14 @@ Process Quality: This meta-cognitive approach helped me produce a more thoughtfu
                             className="mr-3"
                           />
                           <div className="flex-1">
-                            <span className="text-sm font-medium">{config?.name || getPatternName(pattern)}</span>
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm font-medium">{config?.name || getPatternName(pattern)}</span>
+                              {isWorkflow && (
+                                <span className="text-xs bg-orange-500/20 text-orange-300 px-1.5 py-0.5 rounded border border-orange-400" title="Multi-step workflow pattern">
+                                  Workflow
+                                </span>
+                              )}
+                            </div>
                             {config && (
                               <div className="text-xs text-gray-400 mt-1">{config.description}</div>
                             )}
@@ -1449,7 +1515,96 @@ Process Quality: This meta-cognitive approach helped me produce a more thoughtfu
                     </div>
                   </div>
 
+                  {/* Workflow Steps Display */}
+                  {run.isWorkflow && run.workflowExecution && (
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <h5 className="text-sm font-medium text-gray-300">Workflow Steps</h5>
+                        <button
+                          onClick={() => setShowWorkflowSteps(prev => ({
+                            ...prev,
+                            [run.id]: !prev[run.id]
+                          }))}
+                          className="text-xs text-purple-400 hover:text-purple-300 flex items-center gap-1"
+                        >
+                          {showWorkflowSteps[run.id] ? (
+                            <>
+                              <ChevronUp className="w-3 h-3" />
+                              Hide Steps
+                            </>
+                          ) : (
+                            <>
+                              <ChevronDown className="w-3 h-3" />
+                              Show Steps ({run.workflowExecution.steps.length})
+                            </>
+                          )}
+                        </button>
+                      </div>
+
+                      {showWorkflowSteps[run.id] && (
+                        <div className="space-y-2 bg-gray-900 rounded p-3">
+                          {run.workflowExecution.steps.map((step, idx) => {
+                            const workflow = getWorkflowPattern(run.patternId);
+                            const stepConfig = workflow?.steps.find(s => s.id === step.stepId);
+                            
+                            return (
+                              <div key={step.stepId} className="border border-gray-700 rounded p-3">
+                                <div className="flex items-center justify-between mb-2">
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-xs bg-blue-500/20 text-blue-300 px-2 py-1 rounded border border-blue-400">
+                                      Step {idx + 1}
+                                    </span>
+                                    <span className="text-sm font-medium text-white">
+                                      {stepConfig?.name || step.stepId}
+                                    </span>
+                                  </div>
+                                  <div className="flex items-center gap-2 text-xs text-gray-400">
+                                    <span>{step.tokensUsed} tokens</span>
+                                    <span>{(step.responseTime / 1000).toFixed(1)}s</span>
+                                  </div>
+                                </div>
+                                
+                                {stepConfig && (
+                                  <div className="text-xs text-gray-500 mb-2">
+                                    {stepConfig.description}
+                                  </div>
+                                )}
+                                
+                                <div className="bg-gray-800 rounded p-2">
+                                  <div className="text-xs text-gray-300 whitespace-pre-wrap">
+                                    {step.output.length > 300 
+                                      ? `${step.output.substring(0, 300)}...` 
+                                      : step.output
+                                    }
+                                  </div>
+                                </div>
+                                
+                                <button
+                                  onClick={() => navigator.clipboard.writeText(step.output)}
+                                  className="mt-2 text-xs text-gray-400 hover:text-gray-300 flex items-center gap-1"
+                                >
+                                  <Copy className="w-3 h-3" />
+                                  Copy step output
+                                </button>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
                   <div className="bg-gray-900 rounded p-3 border-l-4" style={{borderLeftColor: displayInfo.modelColor.includes('emerald') ? '#10b981' : displayInfo.modelColor.includes('teal') ? '#14b8a6' : displayInfo.modelColor.includes('orange') ? '#f97316' : displayInfo.modelColor.includes('amber') ? '#f59e0b' : displayInfo.modelColor.includes('lime') ? '#84cc16' : '#ec4899'}}>
+                    <div className="flex items-center justify-between mb-2">
+                      <h5 className="text-sm font-medium text-gray-300">
+                        {run.isWorkflow ? 'Final Synthesized Output' : 'Output'}
+                      </h5>
+                      {run.isWorkflow && (
+                        <span className="text-xs bg-orange-500/20 text-orange-300 px-2 py-1 rounded border border-orange-400">
+                          Workflow Result
+                        </span>
+                      )}
+                    </div>
                     <div className="text-sm text-gray-300 whitespace-pre-wrap">{run.output}</div>
                   </div>
                 </div>

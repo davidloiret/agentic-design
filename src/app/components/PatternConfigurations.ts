@@ -12,6 +12,47 @@ export interface PatternConfig {
   }[];
 }
 
+// Extended interface for multi-step patterns
+export interface WorkflowStep {
+  id: string;
+  name: string;
+  description: string;
+  promptTemplate: string;
+  inputMapping: string[]; // Which previous steps to use as input
+  outputFormat: 'text' | 'json' | 'structured';
+  position?: { x: number; y: number }; // For visual editor
+}
+
+export interface WorkflowPattern extends Omit<PatternConfig, 'systemPrompt' | 'userPromptTemplate'> {
+  type: 'workflow';
+  steps: WorkflowStep[];
+  connections: Array<{ from: string; to: string }>;
+  finalOutputStep: string;
+  systemPrompt?: string; // Optional fallback
+  userPromptTemplate?: string; // Optional fallback
+}
+
+export interface StepExecution {
+  stepId: string;
+  input: string;
+  output: string;
+  timestamp: number;
+  tokensUsed: number;
+  responseTime: number;
+}
+
+export interface WorkflowExecution {
+  id: string;
+  patternId: string;
+  modelId: string;
+  originalInput: string;
+  steps: StepExecution[];
+  finalOutput: string;
+  totalTime: number;
+  totalTokens: number;
+  totalCost: number;
+}
+
 export const patternConfigurations: Record<string, PatternConfig> = {
   'cot': {
     id: 'cot',
@@ -323,8 +364,263 @@ export const getPatternConfig = (patternId: string): PatternConfig | null => {
   return patternConfigurations[patternId] || null;
 };
 
+// Multi-step workflow patterns
+export const workflowPatterns: Record<string, WorkflowPattern> = {
+  'graph-of-thought': {
+    id: 'graph-of-thought',
+    name: 'Graph of Thought',
+    description: 'Multi-dimensional reasoning with exploration, evaluation, and synthesis phases',
+    type: 'workflow',
+    outputStructure: [
+      'Initial problem decomposition',
+      'Multi-path exploration',
+      'Cross-path evaluation and connection',
+      'Synthesis and integration',
+      'Final comprehensive solution'
+    ],
+    expectedBehavior: 'Non-linear reasoning that explores multiple dimensions and synthesizes insights',
+    steps: [
+      {
+        id: 'decompose',
+        name: 'Problem Decomposition',
+        description: 'Break down the problem into multiple aspects and dimensions',
+        promptTemplate: `Analyze the following problem and decompose it into key aspects, dimensions, and sub-problems that need to be explored:
+
+Problem: {input}
+
+Identify:
+1. Core components of the problem
+2. Different perspectives or angles to consider
+3. Potential sub-problems or related questions
+4. Key constraints and requirements
+5. Success criteria
+
+Format your response as a structured breakdown that will guide further exploration.`,
+        inputMapping: ['input'],
+        outputFormat: 'structured'
+      },
+      {
+        id: 'explore_paths',
+        name: 'Multi-Path Exploration',
+        description: 'Explore different solution paths for each aspect identified',
+        promptTemplate: `Based on the problem decomposition below, explore multiple solution paths for each aspect. Generate diverse approaches and reasoning chains:
+
+Problem Decomposition:
+{decompose}
+
+For each aspect identified, explore 2-3 different solution approaches. Be creative and consider:
+- Traditional/conventional approaches
+- Innovative/unconventional approaches  
+- Hybrid approaches combining different methods
+- Edge cases and alternative perspectives
+
+Format as: "Aspect X: [aspect name]" followed by "Path A:", "Path B:", etc.`,
+        inputMapping: ['decompose'],
+        outputFormat: 'structured'
+      },
+      {
+        id: 'evaluate_connections',
+        name: 'Cross-Path Evaluation',
+        description: 'Evaluate paths and identify connections between different approaches',
+        promptTemplate: `Analyze the exploration paths below and evaluate their effectiveness. Also identify connections, synergies, and conflicts between different paths:
+
+Multi-Path Exploration:
+{explore_paths}
+
+Provide:
+1. Evaluation of each path (strengths, weaknesses, feasibility)
+2. Connections between paths (which ones complement each other?)
+3. Conflicts or contradictions between approaches
+4. Emerging patterns or themes across paths
+5. Most promising combinations or integrations
+
+Rate each path's potential (1-10) and explain your reasoning.`,
+        inputMapping: ['explore_paths'],
+        outputFormat: 'structured'
+      },
+      {
+        id: 'synthesize',
+        name: 'Synthesis & Integration',
+        description: 'Synthesize insights from all paths into a comprehensive solution',
+        promptTemplate: `Using all the analysis above, synthesize a comprehensive solution that integrates the best elements from different paths:
+
+Original Problem: {input}
+
+Problem Decomposition: {decompose}
+
+Path Exploration: {explore_paths}
+
+Path Evaluation: {evaluate_connections}
+
+Create a final integrated solution that:
+1. Addresses all key aspects of the original problem
+2. Combines the strongest elements from different paths
+3. Resolves or acknowledges any conflicts identified
+4. Provides concrete, actionable recommendations
+5. Includes implementation considerations and potential challenges
+
+Present this as a cohesive, comprehensive solution strategy.`,
+        inputMapping: ['input', 'decompose', 'explore_paths', 'evaluate_connections'],
+        outputFormat: 'text'
+      }
+    ],
+    connections: [
+      { from: 'input', to: 'decompose' },
+      { from: 'decompose', to: 'explore_paths' },
+      { from: 'explore_paths', to: 'evaluate_connections' },
+      { from: 'input', to: 'synthesize' },
+      { from: 'decompose', to: 'synthesize' },
+      { from: 'explore_paths', to: 'synthesize' },
+      { from: 'evaluate_connections', to: 'synthesize' }
+    ],
+    finalOutputStep: 'synthesize',
+    examples: [
+      {
+        input: 'How can we design a sustainable urban transportation system for a city of 2 million people?',
+        expectedOutput: `[This would show the complete multi-step workflow output with each step's results leading to a comprehensive integrated solution]`
+      }
+    ]
+  },
+
+  'multi-agent-debate': {
+    id: 'multi-agent-debate',
+    name: 'Multi-Agent Debate',
+    description: 'Multiple AI agents with different perspectives debate a problem to reach consensus',
+    type: 'workflow',
+    outputStructure: [
+      'Problem framing and agent role assignment',
+      'Initial position statements from each agent',
+      'Debate rounds with rebuttals and counterarguments',
+      'Consensus building and compromise identification',
+      'Final synthesized solution'
+    ],
+    expectedBehavior: 'Adversarial reasoning leading to robust, well-tested solutions',
+    steps: [
+      {
+        id: 'assign_roles',
+        name: 'Agent Role Assignment',
+        description: 'Define different agent perspectives and roles for the debate',
+        promptTemplate: `For the following problem, define 3-4 different agent roles that would bring diverse perspectives to the debate:
+
+Problem: {input}
+
+Create agents with different:
+- Professional backgrounds/expertise
+- Philosophical approaches
+- Stakeholder interests
+- Risk tolerances
+- Time horizons
+
+For each agent, provide:
+1. Role name and title
+2. Background and expertise
+3. Key concerns and priorities
+4. Likely stance on the problem
+5. Potential biases or blind spots
+
+Format as "Agent X: [Role Name]" with detailed descriptions.`,
+        inputMapping: ['input'],
+        outputFormat: 'structured'
+      },
+      {
+        id: 'initial_positions',
+        name: 'Initial Position Statements',
+        description: 'Each agent presents their initial position on the problem',
+        promptTemplate: `Based on the agent roles defined below, present each agent's initial position on the problem:
+
+Problem: {input}
+Agent Roles: {assign_roles}
+
+For each agent, provide their initial position including:
+1. Problem analysis from their perspective
+2. Proposed solution approach
+3. Key priorities and concerns
+4. Anticipated challenges or objections
+5. Success metrics from their viewpoint
+
+Each position should be substantive (2-3 paragraphs) and reflect their unique perspective.`,
+        inputMapping: ['input', 'assign_roles'],
+        outputFormat: 'structured'
+      },
+      {
+        id: 'debate_rounds',
+        name: 'Debate Rounds',
+        description: 'Agents debate, challenge each other, and refine their positions',
+        promptTemplate: `Conduct 2-3 rounds of debate between the agents based on their initial positions:
+
+Problem: {input}
+Initial Positions: {initial_positions}
+
+Round 1: Each agent critiques others' positions and defends their own
+Round 2: Agents address criticisms and identify areas of potential agreement
+Round 3: Agents work toward compromise and integration of ideas
+
+For each round, show:
+- Agent responses and rebuttals  
+- Evolution of positions
+- Emerging points of agreement
+- Remaining disagreements
+- New insights or considerations raised
+
+Maintain each agent's unique voice and perspective throughout.`,
+        inputMapping: ['input', 'initial_positions'],
+        outputFormat: 'structured'
+      },
+      {
+        id: 'consensus_solution',
+        name: 'Consensus Solution',
+        description: 'Synthesize the debate into a final consensus solution',
+        promptTemplate: `Based on the full debate process, synthesize a consensus solution:
+
+Original Problem: {input}
+Agent Roles: {assign_roles}
+Initial Positions: {initial_positions}
+Debate Process: {debate_rounds}
+
+Create a final solution that:
+1. Incorporates the strongest arguments from each agent
+2. Addresses the main concerns raised by all parties
+3. Provides compromises where positions conflicted
+4. Acknowledges remaining uncertainties or trade-offs
+5. Includes implementation recommendations that consider all perspectives
+
+Present this as a well-reasoned, balanced solution that reflects the collective wisdom of the debate process.`,
+        inputMapping: ['input', 'assign_roles', 'initial_positions', 'debate_rounds'],
+        outputFormat: 'text'
+      }
+    ],
+    connections: [
+      { from: 'input', to: 'assign_roles' },
+      { from: 'input', to: 'initial_positions' },
+      { from: 'assign_roles', to: 'initial_positions' },
+      { from: 'input', to: 'debate_rounds' },
+      { from: 'initial_positions', to: 'debate_rounds' },
+      { from: 'input', to: 'consensus_solution' },
+      { from: 'assign_roles', to: 'consensus_solution' },
+      { from: 'initial_positions', to: 'consensus_solution' },
+      { from: 'debate_rounds', to: 'consensus_solution' }
+    ],
+    finalOutputStep: 'consensus_solution',
+    examples: [
+      {
+        input: 'Should AI systems be required to explain their decision-making processes?',
+        expectedOutput: `[Multi-step debate process with different agents arguing from technical, ethical, regulatory, and user perspectives]`
+      }
+    ]
+  }
+};
+
 export const getAllPatternIds = (): string[] => {
-  return Object.keys(patternConfigurations);
+  return [...Object.keys(patternConfigurations), ...Object.keys(workflowPatterns)];
+};
+
+// Utility functions for workflow patterns
+export const getWorkflowPattern = (patternId: string): WorkflowPattern | null => {
+  return workflowPatterns[patternId] || null;
+};
+
+export const isWorkflowPattern = (patternId: string): boolean => {
+  return patternId in workflowPatterns;
 };
 
 export const getPatternPrompt = (patternId: string, userInput: string): string => {
@@ -335,4 +631,32 @@ export const getPatternPrompt = (patternId: string, userInput: string): string =
   const userPrompt = config.userPromptTemplate.replace('{input}', userInput);
   
   return `${systemPrompt}\n\n${userPrompt}`;
+};
+
+// Get step-specific prompt for workflow patterns
+export const getWorkflowStepPrompt = (
+  patternId: string, 
+  stepId: string, 
+  inputs: Record<string, string>
+): string => {
+  const workflow = getWorkflowPattern(patternId);
+  if (!workflow) return '';
+  
+  const step = workflow.steps.find(s => s.id === stepId);
+  if (!step) return '';
+  
+  let prompt = step.promptTemplate;
+  
+  // Replace all input placeholders
+  step.inputMapping.forEach(inputKey => {
+    const inputValue = inputs[inputKey] || '';
+    prompt = prompt.replace(new RegExp(`{${inputKey}}`, 'g'), inputValue);
+  });
+  
+  return prompt;
+};
+
+// Get pattern configuration (handles both simple and workflow patterns)
+export const getAnyPatternConfig = (patternId: string): PatternConfig | WorkflowPattern | null => {
+  return getPatternConfig(patternId) || getWorkflowPattern(patternId);
 };

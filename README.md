@@ -497,3 +497,7 @@ get recommendation
 fais micro interaction
 
 share achievemnt en social network
+
+find best price
+
+plug pocket reborn to agentic design backend => source for news
