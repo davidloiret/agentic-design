@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { BookOpen, Lightbulb, Share2, FlaskConical, Brain, Boxes, Newspaper, FolderOpen, Cpu, Settings, ChevronDown, Menu, X, GraduationCap, Shield, FileText } from 'lucide-react';
+import { BookOpen, Lightbulb, Share2, FlaskConical, Brain, Boxes, Newspaper, FolderOpen, Cpu, Settings, ChevronDown, Menu, X, GraduationCap, Shield, FileText, FlaskRound } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -103,6 +103,7 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
       'project-hub': 'text-yellow-400',
       'news-hub': 'text-emerald-400',
       'ai-red-teaming': 'text-red-400',
+      'pattern-evaluation': 'text-purple-400',
     };
 
     return `${baseClasses} ${colorMap[tabId as keyof typeof colorMap]}`;
@@ -118,6 +119,7 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
       'project-hub': 'bg-yellow-400',
       'news-hub': 'bg-emerald-400',
       'ai-red-teaming': 'bg-red-400',
+      'pattern-evaluation': 'bg-purple-400',
     };
     return colorMap[tabId as keyof typeof colorMap] || 'bg-blue-400';
   };
@@ -128,6 +130,7 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
       name: 'Main Navigation',
       tabs: [
         { id: 'patterns', label: 'Patterns', icon: BookOpen, description: 'Browse AI design patterns', route: '/patterns' },
+        { id: 'pattern-evaluation', label: 'Pattern Lab', icon: FlaskRound, description: 'Evaluate patterns with different models', route: '/pattern-evaluation' },
         { id: 'ai-red-teaming', label: 'AI Red Teaming', icon: Shield, description: 'AI security & defensive techniques', route: '/ai-red-teaming' },
         { id: 'fine-tuning', label: 'Fine Tuning', icon: Settings, description: 'Model optimization', route: '/fine-tuning' },
         { id: 'ai-inference', label: 'AI Inference', icon: Cpu, description: 'Inference strategies', route: '/ai-inference' },

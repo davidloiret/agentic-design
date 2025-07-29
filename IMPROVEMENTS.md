@@ -84,3 +84,19 @@
   Your website has excellent foundations with comprehensive pattern documentation and a gamified learning system. By addressing these improvements, it
    will become the definitive resource for anyone building agentic AI systems.
    
+
+   Find the optimal patterns
+
+
+   - Eval patterns
+   - Eval Lab
+
+   Vibe eval
+
+
+   We should support multi modality
+
+   BRing your own token
+
+
+   cheatsheet des prompts
