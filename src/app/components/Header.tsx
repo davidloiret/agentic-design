@@ -2,6 +2,7 @@
 
 import { Sparkles, Search, Command, GraduationCap, Star, Flame } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLearningHub } from '@/contexts/LearningHubContext';
 import { UserMenu } from './UserMenu';
 import { NotificationBell } from './NotificationBell';
 import Link from 'next/link';
@@ -12,6 +13,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export const Header = () => {
   const { user, loading } = useAuth();
+  const { currentStreak } = useLearningHub();
   const { openSearch } = useSearch();
   const router = useRouter();
   const pathname = usePathname();
@@ -58,7 +60,20 @@ export const Header = () => {
           </div>
 
           {/* Middle - Search Bar */}
-          <div className="flex-1 max-w-md mx-4 lg:mx-8">
+          <motion.div 
+            className="flex-1 max-w-md mx-4 lg:mx-8"
+            layout
+            transition={isLearningHubActive ? {
+              type: "spring",
+              stiffness: 500,
+              damping: 40,
+              duration: 0.3
+            } : {
+              type: "tween",
+              duration: 0.25,
+              ease: [0.4, 0, 0.2, 1]
+            }}
+          >
             <button
               onClick={openSearch}
               className="w-full relative group"
@@ -75,7 +90,7 @@ export const Header = () => {
                 </div>
               </div>
             </button>
-          </div>
+          </motion.div>
 
           {/* Right side - Learning Hub, Status and User menu */}
           <div className="flex items-center space-x-3 flex-shrink-0">
@@ -87,6 +102,7 @@ export const Header = () => {
                   ? 'bg-gradient-to-r from-rose-600 to-pink-700 text-white shadow-xl ring-2 ring-rose-400/50' 
                   : 'bg-gradient-to-r from-rose-500 to-pink-600 text-white'
               }`}
+              layout
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               animate={isLearningHubActive ? {
@@ -97,6 +113,16 @@ export const Header = () => {
                 ],
               } : {}}
               transition={{
+                layout: isLearningHubActive ? {
+                  type: "spring",
+                  stiffness: 500,
+                  damping: 40,
+                  duration: 0.3
+                } : {
+                  type: "tween",
+                  duration: 0.25,
+                  ease: [0.4, 0, 0.2, 1]
+                },
                 boxShadow: {
                   duration: 2,
                   repeat: Infinity,
@@ -169,9 +195,14 @@ export const Header = () => {
               <AnimatePresence>
                 {isLearningHubActive && (
                   <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.8 }}
+                    initial={{ opacity: 0, scale: 0.8, x: -10 }}
+                    animate={{ opacity: 1, scale: 1, x: 0 }}
+                    exit={{ opacity: 0, scale: 0.8, x: -10 }}
+                    transition={{
+                      type: "tween",
+                      duration: 0.25,
+                      ease: [0.4, 0, 0.2, 1]
+                    }}
                     className="flex items-center space-x-1 ml-2"
                   >
                     <motion.div
@@ -186,7 +217,7 @@ export const Header = () => {
                     >
                       <Flame className="w-3.5 h-3.5 text-orange-400" />
                     </motion.div>
-                    <span className="text-xs font-bold text-orange-400">7</span>
+                    <span className="text-xs font-bold text-orange-400">{currentStreak}</span>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -248,6 +279,7 @@ export const Header = () => {
                     ? 'bg-gradient-to-r from-rose-600 to-pink-700 text-white shadow-xl ring-2 ring-rose-400/50' 
                     : 'bg-gradient-to-r from-rose-500 to-pink-600 text-white'
                 }`}
+                layout
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 animate={isLearningHubActive ? {
@@ -258,6 +290,16 @@ export const Header = () => {
                   ],
                 } : {}}
                 transition={{
+                  layout: isLearningHubActive ? {
+                    type: "spring",
+                    stiffness: 500,
+                    damping: 40,
+                    duration: 0.3
+                  } : {
+                    type: "tween",
+                    duration: 0.25,
+                    ease: [0.4, 0, 0.2, 1]
+                  },
                   boxShadow: {
                     duration: 2,
                     repeat: Infinity,
@@ -298,9 +340,14 @@ export const Header = () => {
                 <AnimatePresence>
                   {isLearningHubActive && (
                     <motion.div
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -10 }}
+                      initial={{ opacity: 0, x: -10, scale: 0.8 }}
+                      animate={{ opacity: 1, x: 0, scale: 1 }}
+                      exit={{ opacity: 0, x: -10, scale: 0.8 }}
+                      transition={{
+                        type: "tween",
+                        duration: 0.25,
+                        ease: [0.4, 0, 0.2, 1]
+                      }}
                       className="flex items-center ml-1"
                     >
                       <Flame className="w-3 h-3 text-orange-400" />
