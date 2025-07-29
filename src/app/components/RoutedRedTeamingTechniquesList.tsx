@@ -40,7 +40,7 @@ const RoutedRedTeamingTechniquesListInner = ({ selectedCategory, selectedTechniq
       sectionTitle="AI Red Teaming Techniques"
       basePath="/ai-red-teaming"
       accentColor="red"
-      enableCategoryNavigation={false}
+      enableCategoryNavigation={true}
       defaultExpandedCategories={currentCategory ? [currentCategory] : []}
     />
   );

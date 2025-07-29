@@ -54,7 +54,7 @@ const RoutedTechniquesListInner = ({ selectedCategory, selectedTechnique }: Rout
       sectionTitle="Design Patterns & Techniques"
       basePath="/patterns"
       accentColor="blue"
-      enableCategoryNavigation={false}
+      enableCategoryNavigation={true}
       defaultExpandedCategories={currentCategory ? [currentCategory] : []}
       filterItems={filterTechniques}
     />
