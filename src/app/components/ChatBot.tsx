@@ -309,7 +309,7 @@ export const ChatBot = ({ onRecommendationSelect, getRecommendations, techniques
       </div>
 
       {/* Desktop popup */}
-      <div className="hidden md:block fixed bottom-6 right-6 w-96 h-[600px] bg-gray-900 border border-gray-700 rounded-lg shadow-2xl flex flex-col z-50 relative">
+      <div className="hidden md:block fixed bottom-6 right-6 w-96 h-[600px] bg-gray-900 border border-gray-700 rounded-lg shadow-2xl flex flex-col z-50">
         {/* Header */}
         <div className="bg-gradient-to-r from-purple-600 to-blue-600 p-4 rounded-t-lg flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -377,26 +377,29 @@ export const ChatBot = ({ onRecommendationSelect, getRecommendations, techniques
           <div ref={messagesEndRef} />
         </div>
 
-        <div className="p-3 border-t border-gray-700">
-          <div className="grid grid-cols-2 gap-2 mb-3">
-            {quickSuggestions.map((suggestion, idx) => {
-              const Icon = suggestion.icon;
-              return (
-                <button
-                  key={idx}
-                  onClick={() => handleQuickAction(suggestion.action)}
-                  className="flex items-center gap-2 p-2 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors text-xs text-gray-300"
-                >
-                  <Icon className="w-3 h-3" />
-                  <span className="truncate">{suggestion.text}</span>
-                </button>
-              );
-            })}
+        {/* Quick suggestions - only show when no messages yet */}
+        {messages.length <= 1 && (
+          <div className="p-3 border-t border-gray-700">
+            <div className="grid grid-cols-2 gap-2 mb-3">
+              {quickSuggestions.map((suggestion, idx) => {
+                const Icon = suggestion.icon;
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => handleQuickAction(suggestion.action)}
+                    className="flex items-center gap-2 p-2 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors text-xs text-gray-300"
+                  >
+                    <Icon className="w-3 h-3" />
+                    <span className="truncate">{suggestion.text}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        </div>
+        )}
 
-        {/* Input */}
-        <div className="p-4 border-t border-gray-700">
+        {/* Input - always at bottom */}
+        <div className="mt-auto p-4 border-t border-gray-700 bg-gray-900">
           <div className="flex gap-2">
             <input
               value={inputValue}
