@@ -4,11 +4,17 @@ import React, { Suspense } from 'react';
 import { Search } from 'lucide-react';
 import { CategoryNavigationLayout, NavigationItem, NavigationCategory } from './CategoryNavigationLayout';
 import { redTeamingCategories, allRedTeamingTechniques } from '../red-teaming';
+import Fuse from 'fuse.js';
 
 interface RoutedRedTeamingTechniquesListProps {
   selectedCategory?: string;
   selectedTechnique?: string;
 }
+
+const options = {
+  keys: ['name', 'abbr', 'description', 'category'],
+  threshold: 0.3
+};
 
 const RoutedRedTeamingTechniquesListInner = ({ selectedCategory, selectedTechnique }: RoutedRedTeamingTechniquesListProps) => {
   // Convert techniques to NavigationItem format
@@ -29,6 +35,13 @@ const RoutedRedTeamingTechniquesListInner = ({ selectedCategory, selectedTechniq
     icon: category.icon
   }));
 
+  // Custom filter function using Fuse.js
+  const filterTechniques = (techniques: NavigationItem[], searchQuery: string) => {
+    if (!searchQuery) return techniques;
+    const fuse = new Fuse(techniques, options);
+    return fuse.search(searchQuery).map(result => result.item);
+  };
+
   // Get the currently selected category from URL
   const currentCategory = selectedCategory || null;
 
@@ -42,6 +55,7 @@ const RoutedRedTeamingTechniquesListInner = ({ selectedCategory, selectedTechniq
       accentColor="red"
       enableCategoryNavigation={true}
       defaultExpandedCategories={currentCategory ? [currentCategory] : []}
+      filterItems={filterTechniques}
     />
   );
 };

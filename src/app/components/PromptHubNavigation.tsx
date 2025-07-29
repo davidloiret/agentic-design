@@ -13,6 +13,7 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { CategoryNavigationLayout, NavigationItem, NavigationCategory } from './CategoryNavigationLayout';
+import Fuse from 'fuse.js';
 
 const promptItems: NavigationItem[] = [
   // Anthropic Claude - Only existing pages
@@ -253,7 +254,19 @@ const categories: NavigationCategory[] = [
   }
 ];
 
+const options = {
+  keys: ['name', 'category', 'description'],
+  threshold: 0.3
+};
+
 export const PromptHubNavigation = () => {
+  // Custom filter function using Fuse.js
+  const filterPrompts = (items: NavigationItem[], searchQuery: string) => {
+    if (!searchQuery) return items;
+    const fuse = new Fuse(items, options);
+    return fuse.search(searchQuery).map(result => result.item);
+  };
+
   // Custom render function to show additional info
   const renderPromptItemContent = (item: NavigationItem, isSelected: boolean) => {
     return (
@@ -302,6 +315,7 @@ export const PromptHubNavigation = () => {
       basePath="/prompt-hub"
       defaultExpandedCategories={['anthropic']}
       renderItemContent={renderPromptItemContent}
+      filterItems={filterPrompts}
     />
   );
 };

@@ -11,6 +11,7 @@ import {
   Settings 
 } from 'lucide-react';
 import { CategoryNavigationLayout, NavigationItem, NavigationCategory } from './CategoryNavigationLayout';
+import Fuse from 'fuse.js';
 
 const sections: NavigationItem[] = [
   {
@@ -94,7 +95,19 @@ const categories: NavigationCategory[] = [
   }
 ];
 
+const options = {
+  keys: ['name', 'category'],
+  threshold: 0.3
+};
+
 export const FineTuningNavigation = () => {
+  // Custom filter function using Fuse.js
+  const filterSections = (items: NavigationItem[], searchQuery: string) => {
+    if (!searchQuery) return items;
+    const fuse = new Fuse(items, options);
+    return fuse.search(searchQuery).map(result => result.item);
+  };
+
   return (
     <CategoryNavigationLayout
       items={sections}
@@ -103,6 +116,7 @@ export const FineTuningNavigation = () => {
       sectionTitle="Fine-Tuning Guide"
       basePath="/fine-tuning"
       defaultExpandedCategories={['getting-started']}
+      filterItems={filterSections}
     />
   );
 };

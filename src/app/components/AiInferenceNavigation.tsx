@@ -9,6 +9,7 @@ import {
   BarChart3
 } from 'lucide-react';
 import { CategoryNavigationLayout, NavigationItem, NavigationCategory } from './CategoryNavigationLayout';
+import Fuse from 'fuse.js';
 
 const sections: NavigationItem[] = [
   {
@@ -116,7 +117,19 @@ const categories: NavigationCategory[] = [
   }
 ];
 
+const options = {
+  keys: ['name', 'category'],
+  threshold: 0.3
+};
+
 export const AiInferenceNavigation = () => {
+  // Custom filter function using Fuse.js
+  const filterSections = (items: NavigationItem[], searchQuery: string) => {
+    if (!searchQuery) return items;
+    const fuse = new Fuse(items, options);
+    return fuse.search(searchQuery).map(result => result.item);
+  };
+
   return (
     <CategoryNavigationLayout
       items={sections}
@@ -125,6 +138,7 @@ export const AiInferenceNavigation = () => {
       sectionTitle="AI Inference Guide"
       basePath="/ai-inference"
       defaultExpandedCategories={['core']}
+      filterItems={filterSections}
     />
   );
 };

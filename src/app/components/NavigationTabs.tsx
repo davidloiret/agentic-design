@@ -146,6 +146,8 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
     setIsMobileMenuOpen(false);
     if (route) {
       router.push(route);
+      // Scroll to top after navigation
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
