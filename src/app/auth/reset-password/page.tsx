@@ -11,21 +11,32 @@ function ResetPasswordForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [codeExchanged, setCodeExchanged] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   
-  // Extract tokens from URL hash fragment
+  // Exchange reset code for access token (stored in cookies)
   useEffect(() => {
-    const hash = window.location.hash;
-    if (hash) {
-      const params = new URLSearchParams(hash.substring(1));
-      const accessToken = params.get('access_token');
-      if (accessToken) {
-        // Store the access token temporarily
-        sessionStorage.setItem('reset_access_token', accessToken);
+    const exchangeCode = async () => {
+      const code = searchParams.get('code');
+      if (code && !codeExchanged) {
+        try {
+          const response = await api.post('/api/v1/auth/exchange-reset-code', { code });
+          if (response.ok) {
+            setCodeExchanged(true);
+            // Access token is now stored in cookies by the backend
+          } else {
+            setError('Invalid or expired reset link. Please request a new one.');
+          }
+        } catch (err) {
+          console.error('Failed to exchange code:', err);
+          setError('Invalid or expired reset link. Please request a new one.');
+        }
       }
-    }
-  }, []);
+    };
+    
+    exchangeCode();
+  }, [searchParams, codeExchanged]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,25 +55,15 @@ function ResetPasswordForm() {
     setLoading(true);
 
     try {
-      // Get the access token from sessionStorage
-      const accessToken = sessionStorage.getItem('reset_access_token');
-      
-      if (!accessToken) {
-        throw new Error('Invalid or expired reset link. Please request a new one.');
-      }
-
+      // Access token is already in cookies, no need to send it in body
       const response = await api.post('/api/v1/auth/reset-password', {
-        password,
-        access_token: accessToken
+        password
       });
 
       if (!response.ok) {
         const data = await response.json();
         throw new Error(data.message || 'Failed to reset password');
       }
-
-      // Clear the stored token
-      sessionStorage.removeItem('reset_access_token');
       
       setSuccess(true);
       setTimeout(() => {

@@ -268,4 +268,38 @@ export class AuthController {
     
     return result;
   }
+
+  @Public()
+  @Post('exchange-reset-code')
+  @HttpCode(HttpStatus.OK)
+  async exchangeResetCode(
+    @Body() body: { code: string },
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    if (!body.code) {
+      throw new BadRequestException('Reset code is required');
+    }
+
+    const result = await this.authService.handleOAuthCallback(body.code);
+    
+    const cookieOptions = getCookieOptions();
+
+    // Set cookies for password reset flow
+    response.cookie('access_token', result.access_token, {
+      ...cookieOptions,
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
+    });
+    
+    if (result.refresh_token) {
+      response.cookie('refresh_token', result.refresh_token, {
+        ...cookieOptions,
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      });
+    }
+    
+    return { 
+      success: true,
+      message: 'Code exchanged successfully' 
+    };
+  }
 }
