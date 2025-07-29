@@ -41,12 +41,6 @@ class RecentSearchAPI {
       'Content-Type': 'application/json',
     };
 
-    // Add authorization header if user is logged in
-    const token = this.getAuthToken();
-    if (token) {
-      defaultHeaders.Authorization = `Bearer ${token}`;
-    }
-
     const response = await fetch(url, {
       ...options,
       headers: {
@@ -61,18 +55,6 @@ class RecentSearchAPI {
 
     return response.json();
   }
-
-  private getAuthToken(): string | null {
-    // This should match your authentication implementation
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
-    }
-    return null;
-  }
-
-  /**
-   * Save a search query to recent searches
-   */
   async saveSearch(data: SaveSearchRequest): Promise<RecentSearchResponse> {
     return this.request<RecentSearchResponse>('/search/recent', {
       method: 'POST',
@@ -80,9 +62,6 @@ class RecentSearchAPI {
     });
   }
 
-  /**
-   * Get recent searches for the current user
-   */
   async getRecentSearches(limit?: number): Promise<RecentSearchResponse[]> {
     const params = new URLSearchParams();
     if (limit) {
@@ -93,9 +72,6 @@ class RecentSearchAPI {
     return this.request<RecentSearchResponse[]>(endpoint);
   }
 
-  /**
-   * Get most frequently searched queries
-   */
   async getMostFrequentSearches(limit?: number): Promise<RecentSearchResponse[]> {
     const params = new URLSearchParams();
     if (limit) {
@@ -106,16 +82,10 @@ class RecentSearchAPI {
     return this.request<RecentSearchResponse[]>(endpoint);
   }
 
-  /**
-   * Get search analytics for the current user
-   */
   async getSearchAnalytics(): Promise<SearchAnalyticsResponse> {
     return this.request<SearchAnalyticsResponse>('/search/recent/analytics');
   }
 
-  /**
-   * Get search suggestions based on user's search history
-   */
   async getSearchSuggestions(query: string, limit?: number): Promise<SearchSuggestionsResponse> {
     const params = new URLSearchParams();
     params.append('q', query);
@@ -127,9 +97,6 @@ class RecentSearchAPI {
     return this.request<SearchSuggestionsResponse>(endpoint);
   }
 
-  /**
-   * Clear all recent searches for the current user
-   */
   async clearRecentSearches(): Promise<{ message: string }> {
     return this.request<{ message: string }>('/search/recent', {
       method: 'DELETE',
