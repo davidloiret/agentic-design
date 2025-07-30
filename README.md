@@ -561,5 +561,39 @@ video de gen par l'IA
 
 Une facon aussi de mettre en lumiere toute mon expérience dans la conception de produit abv
 avec un focus sur les utilisateur et l'UI/UX
+we lost pocket reborn
+
+Faire un post de ce que j'ai appris en codant avec l'IA
+- En devient vite dépendant
+- Architect vs pissuer de code
+- Tendance à faire du code non maintenable si il n'est pas guidé
+Coder avec l'IA oui mais ne pas vibe coder
+Galère sur les niches => local first / yjs compliqué. 
+- Compliqué parfois de lui donner le bon context quand on est sur des systemes multi context, backend, frontend, mobile.
+- Tendance à tout mettre dans un fichier
+- Faire tests avant !
+- Les hallucinations donne des idées !
+- J'avance plus vite mais j'accumule aussi bcp plus vite de la dette technique
+- Je fais plus de proto jetable pour tester mes idées et me les sortir de la tete
+- Niveau sécurité il fait vite des choses non sécure (oubli de protéger des endpoints etc)
+- 
+=> c'est un peu comme designer avant sur figma sauf que la je demande, j'obtiens j'itére, si ça me va je garde
+si ça me va pas je jette
+En résumé je pense que l'IA et les outils de codegen sont l'age d'or des builders mais attention à la dette technique.
+Concernant les systemes basés sur l'IA je pense que ça va augmenter la complexité et que pour avoir des systemes, le fait d'avoir des "cerveaux" dans ces systemes rend le debug, l'évaluation, observabilité et gestion d'erreur crucial.
+
+Pour créer systems fiables et robuste il est impératif de connaitres les bases, les patterns c'est pour ca que je lance agentic-design.ai
+Agentic design propose d'apprendre ou réviser les patterns des systemes IA sous formes ludique pour que chacun y trouve sont format qui convient (video, flow, demo, code) qui sont au final des patterns d'enginery logiciel. Agentic Design fait un focus sur les patterns de base, la sécurité des systemes IA (AI red teaming), programme d'apprentissage gamifié et un volé inspiration pour aider à concevoir les systemes IA en selectionner les bons patterns / prompts, un volet evaluatin. Avec analyses des prompts de certains projet, selection de projet et comme c'est compliqué de suivre l'IA, ça avance plus vite que les frameworks JS :D y'a un onglet news qui résume les différentes news
+
+Non l'IA ne m'a pas remplacé, elle m'a augmenté et je suis passé de la procrastination avec ma listes d'idée en markdown a des produits disponibles !
+
+
+
+
 
 coder en faisant tests avant
+
+
+gamifier l'expérience red teaming
+
+

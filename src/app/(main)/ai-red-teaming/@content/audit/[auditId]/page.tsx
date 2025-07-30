@@ -323,8 +323,8 @@ export default function AuditWizardPage({ params }: { params: { auditId: string 
   };
 
   const renderSetupStep = () => (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-2">System Name *</label>
           <input
@@ -464,7 +464,7 @@ export default function AuditWizardPage({ params }: { params: { auditId: string 
                           </select>
                         </div>
                         
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
                           <div>
                             <label className="block text-xs text-gray-400 mb-1">Findings & Notes</label>
                             <textarea
@@ -511,7 +511,7 @@ export default function AuditWizardPage({ params }: { params: { auditId: string 
         <p className="text-gray-400">Your AI security audit has been completed successfully.</p>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <div className="bg-gray-800/30 border border-gray-700/50 rounded-xl p-4 text-center">
           <Target className="w-8 h-8 mx-auto mb-2 text-blue-400" />
           <div className="text-2xl font-bold text-white">85%</div>
@@ -533,7 +533,7 @@ export default function AuditWizardPage({ params }: { params: { auditId: string 
       
       <div className="bg-gray-800/30 border border-gray-700/50 rounded-xl p-6">
         <h4 className="text-lg font-semibold text-white mb-4">Export Options</h4>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4">
           <button className="flex items-center space-x-3 p-4 bg-blue-600/20 border border-blue-500/30 rounded-lg hover:bg-blue-600/30 transition-all">
             <FileText className="w-5 h-5 text-blue-400" />
             <div className="text-left">
@@ -573,91 +573,165 @@ export default function AuditWizardPage({ params }: { params: { auditId: string 
   };
 
   return (
-    <div className="w-full max-w-none space-y-6">
+    <div className="w-full max-w-none space-y-4 sm:space-y-6">
       {/* Visual Stepper */}
-      <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-xl p-8">
+      <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-xl p-3 sm:p-6 lg:p-8">
         <div className="max-w-5xl mx-auto">
           <div className="relative">
-            {/* Progress Line */}
-            <div className="absolute top-12 left-12 right-12 h-0.5 bg-gray-700">
+            {/* Progress Line - Hidden on mobile, visible on larger screens */}
+            <div className="hidden sm:block absolute top-8 left-8 right-8 h-0.5 bg-gray-700">
               <div 
                 className="h-full bg-gradient-to-r from-green-500 to-red-500 transition-all duration-500"
                 style={{ width: `${(currentStep / (auditSteps.length - 1)) * 100}%` }}
               />
             </div>
             
-            {/* Steps */}
-            <div className="relative flex justify-between">
-              {auditSteps.map((step, index) => (
-                <button
-                  key={step.id}
-                  onClick={() => index <= currentStep && setCurrentStep(index)}
-                  disabled={index > currentStep}
-                  className={`group flex flex-col items-center transition-all ${
-                    index <= currentStep ? 'cursor-pointer' : 'cursor-not-allowed'
-                  }`}
-                >
-                  {/* Step Circle */}
-                  <div className={`relative flex items-center justify-center w-24 h-24 rounded-full transition-all duration-300 ${
-                    index === currentStep
-                      ? 'bg-gradient-to-br from-red-500 to-orange-500 shadow-lg shadow-red-500/30 scale-110'
-                      : index < currentStep
-                      ? 'bg-gradient-to-br from-green-500 to-emerald-500'
-                      : 'bg-gray-700 border-2 border-gray-600'
-                  }`}>
-                    {index < currentStep ? (
-                      <CheckCircle className="w-10 h-10 text-white" />
-                    ) : (
-                      <div className={`${index === currentStep ? 'text-white' : 'text-gray-400'}`}>
-                        {step.icon("w-10 h-10")}
+            {/* Steps - Mobile: Horizontal scroll, Desktop: Full layout */}
+            <div className="relative">
+              {/* Mobile Progress Bar */}
+              <div className="sm:hidden mb-4">
+                <div className="flex items-center justify-between text-xs text-gray-400 mb-2">
+                  <span>Step {currentStep + 1} of {auditSteps.length}</span>
+                  <span>{Math.round(((currentStep + 1) / auditSteps.length) * 100)}%</span>
+                </div>
+                <div className="w-full bg-gray-700 rounded-full h-2">
+                  <div 
+                    className="bg-gradient-to-r from-green-500 to-red-500 h-full rounded-full transition-all duration-500"
+                    style={{ width: `${((currentStep + 1) / auditSteps.length) * 100}%` }}
+                  />
+                </div>
+              </div>
+
+              {/* Mobile: Horizontal scrollable steps */}
+              <div className="sm:hidden overflow-x-auto pb-4">
+                <div className="flex space-x-4 min-w-max px-1">
+                  {auditSteps.map((step, index) => (
+                    <button
+                      key={step.id}
+                      onClick={() => index <= currentStep && setCurrentStep(index)}
+                      disabled={index > currentStep}
+                      className={`group flex flex-col items-center flex-shrink-0 transition-all ${
+                        index <= currentStep ? 'cursor-pointer' : 'cursor-not-allowed'
+                      }`}
+                    >
+                      {/* Mobile Step Circle - Smaller */}
+                      <div className={`relative flex items-center justify-center w-14 h-14 rounded-full transition-all duration-300 ${
+                        index === currentStep
+                          ? 'bg-gradient-to-br from-red-500 to-orange-500 shadow-lg shadow-red-500/30'
+                          : index < currentStep
+                          ? 'bg-gradient-to-br from-green-500 to-emerald-500'
+                          : 'bg-gray-700 border-2 border-gray-600'
+                      }`}>
+                        {index < currentStep ? (
+                          <CheckCircle className="w-6 h-6 text-white" />
+                        ) : (
+                          <div className={`${index === currentStep ? 'text-white' : 'text-gray-400'}`}>
+                            {step.icon("w-6 h-6")}
+                          </div>
+                        )}
+                        
+                        {/* Mobile Step Number */}
+                        <div className={`absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${
+                          index === currentStep
+                            ? 'bg-red-600 text-white'
+                            : index < currentStep
+                            ? 'bg-green-600 text-white'
+                            : 'bg-gray-600 text-gray-300'
+                        }`}>
+                          {index + 1}
+                        </div>
+                      </div>
+                      
+                      {/* Mobile Step Label - More compact */}
+                      <div className="mt-2 text-center max-w-[80px]">
+                        <h4 className={`text-xs font-semibold transition-colors ${
+                          index === currentStep
+                            ? 'text-red-300'
+                            : index < currentStep
+                            ? 'text-green-300'
+                            : 'text-gray-400'
+                        }`}>
+                          {step.title}
+                        </h4>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Desktop: Full layout */}
+              <div className="hidden sm:flex justify-between">
+                {auditSteps.map((step, index) => (
+                  <button
+                    key={step.id}
+                    onClick={() => index <= currentStep && setCurrentStep(index)}
+                    disabled={index > currentStep}
+                    className={`group flex flex-col items-center transition-all ${
+                      index <= currentStep ? 'cursor-pointer' : 'cursor-not-allowed'
+                    }`}
+                  >
+                    {/* Desktop Step Circle */}
+                    <div className={`relative flex items-center justify-center w-16 h-16 lg:w-20 lg:h-20 rounded-full transition-all duration-300 ${
+                      index === currentStep
+                        ? 'bg-gradient-to-br from-red-500 to-orange-500 shadow-lg shadow-red-500/30 scale-110'
+                        : index < currentStep
+                        ? 'bg-gradient-to-br from-green-500 to-emerald-500'
+                        : 'bg-gray-700 border-2 border-gray-600'
+                    }`}>
+                      {index < currentStep ? (
+                        <CheckCircle className="w-8 h-8 lg:w-10 lg:h-10 text-white" />
+                      ) : (
+                        <div className={`${index === currentStep ? 'text-white' : 'text-gray-400'}`}>
+                          {step.icon("w-8 h-8 lg:w-10 lg:h-10")}
+                        </div>
+                      )}
+                      
+                      {/* Desktop Step Number */}
+                      <div className={`absolute -top-2 -right-2 w-6 h-6 lg:w-7 lg:h-7 rounded-full flex items-center justify-center text-xs font-bold ${
+                        index === currentStep
+                          ? 'bg-red-600 text-white'
+                          : index < currentStep
+                          ? 'bg-green-600 text-white'
+                          : 'bg-gray-600 text-gray-300'
+                      }`}>
+                        {index + 1}
+                      </div>
+                    </div>
+                    
+                    {/* Desktop Step Label */}
+                    <div className="mt-3 lg:mt-4 text-center max-w-[100px] lg:max-w-[120px]">
+                      <h4 className={`text-sm font-semibold transition-colors ${
+                        index === currentStep
+                          ? 'text-red-300'
+                          : index < currentStep
+                          ? 'text-green-300'
+                          : 'text-gray-400'
+                      }`}>
+                        {step.title}
+                      </h4>
+                      <p className="text-xs text-gray-500 mt-1 hidden lg:block">
+                        {step.description}
+                      </p>
+                    </div>
+                    
+                    {/* Progress Percentage for Current Step */}
+                    {index === currentStep && index > 0 && index < auditSteps.length - 1 && (
+                      <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2">
+                        <div className="bg-gray-700 px-3 py-1 rounded-full text-xs text-gray-300">
+                          {calculatePhaseProgress(step.id)}% Complete
+                        </div>
                       </div>
                     )}
-                    
-                    {/* Step Number */}
-                    <div className={`absolute -top-2 -right-2 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
-                      index === currentStep
-                        ? 'bg-red-600 text-white'
-                        : index < currentStep
-                        ? 'bg-green-600 text-white'
-                        : 'bg-gray-600 text-gray-300'
-                    }`}>
-                      {index + 1}
-                    </div>
-                  </div>
-                  
-                  {/* Step Label */}
-                  <div className="mt-4 text-center max-w-[120px]">
-                    <h4 className={`text-sm font-semibold transition-colors ${
-                      index === currentStep
-                        ? 'text-red-300'
-                        : index < currentStep
-                        ? 'text-green-300'
-                        : 'text-gray-400'
-                    }`}>
-                      {step.title}
-                    </h4>
-                    <p className="text-xs text-gray-500 mt-1 hidden md:block">
-                      {step.description}
-                    </p>
-                  </div>
-                  
-                  {/* Progress Percentage for Current Step */}
-                  {index === currentStep && index > 0 && index < auditSteps.length - 1 && (
-                    <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2">
-                      <div className="bg-gray-700 px-3 py-1 rounded-full text-xs text-gray-300">
-                        {calculatePhaseProgress(step.id)}% Complete
-                      </div>
-                    </div>
-                  )}
-                </button>
-              ))}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Current Step Content */}
-      <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-xl p-6">
+      <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-xl p-4 sm:p-6">
         <div className="mb-6">
           <div className={`inline-flex items-center space-x-2 px-3 py-1 rounded-lg bg-gradient-to-r ${currentStepData.color} mb-4`}>
             {currentStepData.icon()}
@@ -670,11 +744,11 @@ export default function AuditWizardPage({ params }: { params: { auditId: string 
       </div>
 
       {/* Navigation */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-0">
         <button
           onClick={handlePrevious}
           disabled={isFirstStep}
-          className={`flex items-center space-x-2 px-6 py-3 rounded-xl transition-all ${
+          className={`flex items-center justify-center space-x-2 px-4 sm:px-6 py-3 rounded-xl transition-all ${
             isFirstStep
               ? 'bg-gray-700/30 text-gray-500 cursor-not-allowed'
               : 'bg-gray-700/50 text-gray-300 hover:bg-gray-700/70 border border-gray-600/50'
@@ -684,11 +758,11 @@ export default function AuditWizardPage({ params }: { params: { auditId: string 
           <span>Previous</span>
         </button>
 
-        <div className="flex items-center space-x-3">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:space-x-3">
           {!isLastStep && (
             <button
               onClick={() => {/* Save draft */}}
-              className="flex items-center space-x-2 px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-gray-300 hover:bg-gray-700/70 transition-all"
+              className="flex items-center justify-center space-x-2 px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-xl text-gray-300 hover:bg-gray-700/70 transition-all"
             >
               <Save className="w-4 h-4" />
               <span>Save Draft</span>
@@ -698,7 +772,7 @@ export default function AuditWizardPage({ params }: { params: { auditId: string 
           <button
             onClick={handleNext}
             disabled={!canProceed() || isLoading}
-            className={`flex items-center space-x-2 px-6 py-3 rounded-xl transition-all ${
+            className={`flex items-center justify-center space-x-2 px-4 sm:px-6 py-3 rounded-xl transition-all ${
               !canProceed() || isLoading
                 ? 'bg-gray-700/30 text-gray-500 cursor-not-allowed'
                 : isLastStep
@@ -706,7 +780,7 @@ export default function AuditWizardPage({ params }: { params: { auditId: string 
                 : 'bg-red-600/20 border border-red-500/30 text-red-300 hover:bg-red-600/30'
             }`}
           >
-            <span>{isLoading ? 'Creating...' : isLastStep ? 'Generate Report' : 'Continue'}</span>
+            <span className="whitespace-nowrap">{isLoading ? 'Creating...' : isLastStep ? 'Generate Report' : 'Continue'}</span>
             {!isLastStep && <ArrowRight className="w-4 h-4" />}
           </button>
         </div>
