@@ -70,8 +70,8 @@ export class KnowledgeBaseItem extends BaseEntity {
   @Property({ type: 'json', nullable: true })
   metadata?: Record<string, any>;
 
-  @Property({ type: 'simple-array', nullable: true })
-  tags?: string[];
+  @Property({ type: 'text[]', default: '{}' })
+  tags: string[] = [];
 
   @Property({ default: false })
   isFavorite: boolean;
@@ -97,7 +97,7 @@ export class KnowledgeBaseItem extends BaseEntity {
     rawContent?: string,
     markdownContent?: string,
     metadata?: Record<string, any>,
-    tags?: string[],
+    tags: string[] = [],
     shouldFollow?: boolean,
   ) {
     super();
@@ -112,7 +112,7 @@ export class KnowledgeBaseItem extends BaseEntity {
     this.url = url;
     this.filePath = filePath;
     this.metadata = metadata;
-    this.tags = tags;
+    this.tags = tags || [];
     this.shouldFollow = shouldFollow || false;
     this.isFavorite = false;
     this.isRead = false;

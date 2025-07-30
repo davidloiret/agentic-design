@@ -10,7 +10,8 @@ import {
 import { PatternCard } from '@/types/pattern-cards';
 import { 
   Heart, Shield, Zap, Swords, Sparkles, Clock,
-  ChevronRight, X, Flame, Snowflake, Star, Trophy
+  ChevronRight, X, Flame, Snowflake, Star, Trophy,
+  ShieldCheck, Wind, Eye, Skull
 } from 'lucide-react';
 
 interface HearthstoneBattleProps {
@@ -41,6 +42,7 @@ export const HearthstoneBattle: React.FC<HearthstoneBattleProps> = ({
   const [animations, setAnimations] = useState<Animation[]>([]);
   const [hoveredCard, setHoveredCard] = useState<BattleCard | null>(null);
   const [draggedCard, setDraggedCard] = useState<BattleCard | null>(null);
+  const [previewCard, setPreviewCard] = useState<BattleCard | null>(null);
   const [hoveredSlot, setHoveredSlot] = useState<number | null>(null);
   const [targetingArrow, setTargetingArrow] = useState<{ start: { x: number, y: number }, end: { x: number, y: number } } | null>(null);
   const animationQueue = useRef<Animation[]>([]);
@@ -399,6 +401,7 @@ export const HearthstoneBattle: React.FC<HearthstoneBattleProps> = ({
             onCardClick={() => {}}
             onHeroClick={() => handleTargetClick('enemy-hero')}
             validTargets={validTargets}
+            onCardPreview={setPreviewCard}
           />
         </div>
 
@@ -415,6 +418,7 @@ export const HearthstoneBattle: React.FC<HearthstoneBattleProps> = ({
             handleSlotDrop={handleSlotDrop}
             setHoveredSlot={setHoveredSlot}
             hoveredSlot={hoveredSlot}
+            onCardPreview={setPreviewCard}
           />
           
           {/* Turn indicator */}
@@ -441,6 +445,7 @@ export const HearthstoneBattle: React.FC<HearthstoneBattleProps> = ({
             validTargets={validTargets}
             handleCardDragStart={handleCardDragStart}
             handleCardDragEnd={handleCardDragEnd}
+            onCardPreview={setPreviewCard}
           />
         </div>
       </div>
@@ -480,6 +485,16 @@ export const HearthstoneBattle: React.FC<HearthstoneBattleProps> = ({
       )}
 
       {/* Victory/Defeat screen */}
+      {/* Card Preview Modal */}
+      <AnimatePresence>
+        {previewCard && (
+          <CardPreview 
+            card={previewCard}
+            onClose={() => setPreviewCard(null)}
+          />
+        )}
+      </AnimatePresence>
+
       {battleState.phase === 'ended' && battleState.winner && (
         <VictoryScreen 
           winner={battleState.winner} 
@@ -501,7 +516,8 @@ const PlayerArea: React.FC<{
   validTargets: string[];
   handleCardDragStart?: (card: BattleCard) => void;
   handleCardDragEnd?: () => void;
-}> = ({ player, hero, isOpponent, isCurrentTurn, onCardClick, onHeroClick, onHeroPower, validTargets, handleCardDragStart, handleCardDragEnd }) => {
+  onCardPreview: (card: BattleCard) => void;
+}> = ({ player, hero, isOpponent, isCurrentTurn, onCardClick, onHeroClick, onHeroPower, validTargets, handleCardDragStart, handleCardDragEnd, onCardPreview }) => {
   return (
     <div className={`p-4 h-full flex flex-col overflow-visible ${isCurrentTurn ? 'bg-yellow-500/10' : ''}`}>
       <div className="flex items-center justify-between flex-shrink-0">
@@ -570,6 +586,7 @@ const PlayerArea: React.FC<{
                 canPlay={player.mana >= card.cost && isCurrentTurn}
                 onDragStart={() => handleCardDragStart?.(card)}
                 onDragEnd={() => handleCardDragEnd?.()}
+                onPreview={onCardPreview}
               />
             ))}
           </div>
@@ -590,6 +607,7 @@ const Battlefield: React.FC<{
   handleSlotDrop?: (position: number) => void;
   setHoveredSlot?: (slot: number | null) => void;
   hoveredSlot?: number | null;
+  onCardPreview: (card: BattleCard) => void;
 }> = ({ 
   playerBoard, 
   opponentBoard, 
@@ -600,7 +618,8 @@ const Battlefield: React.FC<{
   selectedCard,
   handleSlotDrop,
   setHoveredSlot,
-  hoveredSlot
+  hoveredSlot,
+  onCardPreview
 }) => {
   return (
     <div className="h-full relative">
@@ -618,6 +637,7 @@ const Battlefield: React.FC<{
               onClick={() => card && onOpponentCardClick(card)}
               isValidTarget={card ? validTargets.includes(card.id) : false}
               isEnemy={true}
+              onCardPreview={onCardPreview}
             />
           ))}
         </div>
@@ -639,6 +659,7 @@ const Battlefield: React.FC<{
               onDragEnter={() => setHoveredSlot?.(idx)}
               onDragLeave={() => setHoveredSlot?.(null)}
               isHovered={hoveredSlot === idx}
+              onCardPreview={onCardPreview}
             />
           ))}
         </div>
@@ -658,7 +679,8 @@ const BoardSlot: React.FC<{
   onDragEnter?: () => void;
   onDragLeave?: () => void;
   isHovered?: boolean;
-}> = ({ card, position, onClick, isValidTarget, isEnemy, canAttack, onDrop, onDragEnter, onDragLeave, isHovered }) => {
+  onCardPreview: (card: BattleCard) => void;
+}> = ({ card, position, onClick, isValidTarget, isEnemy, canAttack, onDrop, onDragEnter, onDragLeave, isHovered, onCardPreview }) => {
   if (!card) {
     return (
       <div
@@ -686,6 +708,10 @@ const BoardSlot: React.FC<{
     <motion.div
       whileHover={{ scale: 1.05 }}
       onClick={onClick}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        onCardPreview(card);
+      }}
       className={`
         relative cursor-pointer
         ${isValidTarget ? 'ring-2 ring-red-400 ring-offset-2 ring-offset-transparent animate-pulse' : ''}
@@ -791,10 +817,6 @@ const MinionCard: React.FC<{
       
       {/* Keyword badges above stats */}
       <div className="absolute bottom-12 left-0 right-0 flex flex-wrap gap-0.5 justify-center px-1 z-10">
-        {/* Test badge */}
-        <div className="bg-blue-500/90 rounded px-1 text-[10px] text-white font-bold">
-          T
-        </div>
         {card.hasCharge && (
           <div className="bg-red-500/90 rounded px-1 text-[10px] text-white font-bold">
             ⚡
@@ -846,7 +868,8 @@ const HandCard: React.FC<{
   canPlay: boolean;
   onDragStart?: () => void;
   onDragEnd?: () => void;
-}> = ({ card, index, totalCards, onClick, canPlay, onDragStart, onDragEnd }) => {
+  onPreview: (card: BattleCard) => void;
+}> = ({ card, index, totalCards, onClick, canPlay, onDragStart, onDragEnd, onPreview }) => {
   const rotation = (index - (totalCards - 1) / 2) * 5;
   const yOffset = Math.abs(index - (totalCards - 1) / 2) * 5;
   const dragControls = useDragControls();
@@ -859,6 +882,10 @@ const HandCard: React.FC<{
       dragElastic={0.2}
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        onPreview(card);
+      }}
       initial={false}
       style={{
         transform: `rotate(${rotation}deg) translateY(${yOffset}px)`,
@@ -1146,22 +1173,181 @@ const TurnIndicator: React.FC<{
   );
 };
 
-const CardPreview: React.FC<{ card: BattleCard }> = ({ card }) => {
+const CardPreview: React.FC<{ card: BattleCard; onClose: () => void }> = ({ card, onClose }) => {
+  const totalAttack = card.attack + card.attackBuff + card.tempAttackBuff;
+  const isDamaged = card.health < card.maxHealth;
+  const isBuffed = card.attackBuff > 0 || card.healthBuff > 0;
+
   return (
-    <div className="fixed top-4 right-4 w-64 bg-gray-900/95 border border-gray-700 rounded-lg p-4 z-50">
-      <h3 className="font-bold text-white mb-2">{card.name}</h3>
-      <p className="text-sm text-gray-300 mb-3">{card.description}</p>
-      <div className="space-y-1 text-xs text-gray-400">
-        <div>Cost: {card.cost}</div>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.8 }}
+      className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ y: 50 }}
+        animate={{ y: 0 }}
+        className="bg-gradient-to-b from-gray-800 to-gray-900 border-2 border-gray-600 rounded-2xl p-6 w-80 mx-4"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="flex items-start justify-between mb-4">
+          <div className="flex-1">
+            <h3 className="text-2xl font-bold text-white mb-1">{card.name}</h3>
+            <div className="flex items-center gap-2 text-sm">
+              <span className={`px-2 py-1 rounded text-xs font-semibold ${getRarityColor(card.rarity)}`}>
+                {card.rarity.toUpperCase()}
+              </span>
+              <span className="text-gray-400">{card.type} • {card.element}</span>
+            </div>
+            <div className="text-sm text-gray-400 mt-1">Level {card.level}</div>
+          </div>
+          <div className="text-right">
+            <div className="flex items-center gap-2">
+              <div className={`
+                w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg
+                ${card.cardType === 'minion' ? 'bg-blue-600' : 'bg-purple-600'}
+              `}>
+                {card.cost}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Card Art Area */}
+        <div className="h-32 bg-gray-700/50 rounded-lg flex items-center justify-center mb-4">
+          <span className="text-6xl">{getCardIcon(card)}</span>
+        </div>
+
+        {/* Description */}
+        <p className="text-gray-300 text-sm mb-4 leading-relaxed">{card.description}</p>
+
+        {/* Stats for minions */}
         {card.cardType === 'minion' && (
-          <>
-            <div>Attack: {card.attack}</div>
-            <div>Health: {card.health}/{card.maxHealth}</div>
-          </>
+          <div className="flex items-center justify-center gap-4 mb-4">
+            <div className={`
+              w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl
+              ${isBuffed ? 'bg-green-600' : 'bg-yellow-600'}
+            `}>
+              {totalAttack}
+            </div>
+            <span className="text-gray-400 text-2xl">⚔️</span>
+            <div className={`
+              w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl
+              ${isDamaged ? 'bg-red-600' : 'bg-red-500'}
+            `}>
+              {card.health}
+            </div>
+          </div>
         )}
-        <div>Rarity: {card.rarity}</div>
-      </div>
-    </div>
+
+        {/* Keywords */}
+        {card.keywords && Object.keys(card.keywords).filter(key => card.keywords![key as keyof typeof card.keywords]).length > 0 && (
+          <div className="mb-4">
+            <h4 className="text-sm font-semibold text-gray-300 mb-2">Keywords</h4>
+            <div className="flex flex-wrap gap-2">
+              {card.keywords.taunt && (
+                <div className="flex items-center gap-1 px-2 py-1 bg-yellow-600/30 border border-yellow-600/50 rounded">
+                  <Shield className="w-3 h-3 text-yellow-400" />
+                  <span className="text-xs text-yellow-400 font-semibold">Taunt</span>
+                </div>
+              )}
+              {card.keywords.divineShield && (
+                <div className="flex items-center gap-1 px-2 py-1 bg-yellow-400/30 border border-yellow-400/50 rounded">
+                  <ShieldCheck className="w-3 h-3 text-yellow-300" />
+                  <span className="text-xs text-yellow-300 font-semibold">Divine Shield</span>
+                </div>
+              )}
+              {card.keywords.charge && (
+                <div className="flex items-center gap-1 px-2 py-1 bg-red-600/30 border border-red-600/50 rounded">
+                  <Zap className="w-3 h-3 text-red-400" />
+                  <span className="text-xs text-red-400 font-semibold">Charge</span>
+                </div>
+              )}
+              {card.keywords.windfury && (
+                <div className="flex items-center gap-1 px-2 py-1 bg-cyan-600/30 border border-cyan-600/50 rounded">
+                  <Wind className="w-3 h-3 text-cyan-400" />
+                  <span className="text-xs text-cyan-400 font-semibold">Windfury</span>
+                </div>
+              )}
+              {card.keywords.lifesteal && (
+                <div className="flex items-center gap-1 px-2 py-1 bg-purple-600/30 border border-purple-600/50 rounded">
+                  <Heart className="w-3 h-3 text-purple-400" />
+                  <span className="text-xs text-purple-400 font-semibold">Lifesteal</span>
+                </div>
+              )}
+              {card.keywords.stealth && (
+                <div className="flex items-center gap-1 px-2 py-1 bg-gray-700/50 border border-gray-600/50 rounded">
+                  <Eye className="w-3 h-3 text-gray-400" />
+                  <span className="text-xs text-gray-400 font-semibold">Stealth</span>
+                </div>
+              )}
+              {card.keywords.rush && (
+                <div className="flex items-center gap-1 px-2 py-1 bg-orange-600/30 border border-orange-600/50 rounded">
+                  <Zap className="w-3 h-3 text-orange-400" />
+                  <span className="text-xs text-orange-400 font-semibold">Rush</span>
+                </div>
+              )}
+              {card.keywords.poisonous && (
+                <div className="flex items-center gap-1 px-2 py-1 bg-green-600/30 border border-green-600/50 rounded">
+                  <Skull className="w-3 h-3 text-green-400" />
+                  <span className="text-xs text-green-400 font-semibold">Poisonous</span>
+                </div>
+              )}
+              {card.keywords.battlecry && (
+                <div className="flex items-center gap-1 px-2 py-1 bg-amber-600/30 border border-amber-600/50 rounded">
+                  <Sparkles className="w-3 h-3 text-amber-400" />
+                  <span className="text-xs text-amber-400 font-semibold">Battlecry</span>
+                </div>
+              )}
+              {card.keywords.deathrattle && (
+                <div className="flex items-center gap-1 px-2 py-1 bg-gray-600/30 border border-gray-600/50 rounded">
+                  <Skull className="w-3 h-3 text-gray-300" />
+                  <span className="text-xs text-gray-300 font-semibold">Deathrattle</span>
+                </div>
+              )}
+              {card.keywords.spell_damage && card.keywords.spell_damage > 0 && (
+                <div className="flex items-center gap-1 px-2 py-1 bg-purple-700/30 border border-purple-700/50 rounded">
+                  <Zap className="w-3 h-3 text-purple-500" />
+                  <span className="text-xs text-purple-500 font-semibold">Spell Power +{card.keywords.spell_damage}</span>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Abilities */}
+        {card.abilities && card.abilities.length > 0 && (
+          <div className="mb-4">
+            <h4 className="text-sm font-semibold text-gray-300 mb-2">Abilities</h4>
+            <div className="space-y-2">
+              {card.abilities.slice(0, 3).map((ability, idx) => (
+                <div key={idx} className="bg-gray-700/30 rounded-lg p-2">
+                  <div className="flex items-start gap-2">
+                    <Zap className="w-3 h-3 text-blue-400 mt-0.5 flex-shrink-0" />
+                    <div className="flex-1">
+                      <h5 className="text-xs font-medium text-blue-400 mb-0.5">
+                        {ability.name}
+                      </h5>
+                      <p className="text-xs text-gray-400 leading-relaxed">
+                        {ability.description}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Close instruction */}
+        <div className="text-center text-xs text-gray-500 mt-4">
+          Click anywhere to close
+        </div>
+      </motion.div>
+    </motion.div>
   );
 };
 
@@ -2164,6 +2350,17 @@ const getRarityGradient = (rarity: string) => {
     legendary: 'from-amber-600 to-amber-800'
   };
   return gradients[rarity as keyof typeof gradients] || gradients.common;
+};
+
+const getRarityColor = (rarity: string) => {
+  const colors = {
+    common: 'bg-gray-600 text-gray-100',
+    uncommon: 'bg-green-600 text-green-100',
+    rare: 'bg-blue-600 text-blue-100',
+    epic: 'bg-purple-600 text-purple-100',
+    legendary: 'bg-amber-600 text-amber-100'
+  };
+  return colors[rarity as keyof typeof colors] || colors.common;
 };
 
 const getCardIcon = (card: BattleCard) => {
