@@ -34,7 +34,11 @@ export const patternCardsData: PatternCard[] = [
     owned: true,
     level: 15,
     experience: 450,
-    maxExperience: 1000
+    maxExperience: 1000,
+    keywords: {
+      battlecry: true,
+      spell_damage: 1
+    }
   },
   {
     id: 'tree-of-thought',
@@ -74,7 +78,12 @@ export const patternCardsData: PatternCard[] = [
     owned: false,
     level: 1,
     experience: 0,
-    maxExperience: 1500
+    maxExperience: 1500,
+    keywords: {
+      battlecry: true,
+      discover: true,
+      spell_damage: 1
+    }
   },
   {
     id: 'working-memory',
@@ -106,7 +115,11 @@ export const patternCardsData: PatternCard[] = [
     owned: true,
     level: 8,
     experience: 320,
-    maxExperience: 500
+    maxExperience: 500,
+    keywords: {
+      taunt: true,
+      divineShield: true
+    }
   },
   {
     id: 'reflection-pattern',
@@ -140,7 +153,11 @@ export const patternCardsData: PatternCard[] = [
     owned: true,
     level: 12,
     experience: 800,
-    maxExperience: 1000
+    maxExperience: 1000,
+    keywords: {
+      lifesteal: true,
+      battlecry: true
+    }
   },
   {
     id: 'react-pattern',
@@ -176,7 +193,11 @@ export const patternCardsData: PatternCard[] = [
     owned: false,
     level: 1,
     experience: 0,
-    maxExperience: 1200
+    maxExperience: 1200,
+    keywords: {
+      charge: true,
+      windfury: true
+    }
   },
   {
     id: 'multiagent-debate',
@@ -212,7 +233,12 @@ export const patternCardsData: PatternCard[] = [
     owned: false,
     level: 1,
     experience: 0,
-    maxExperience: 2000
+    maxExperience: 2000,
+    keywords: {
+      taunt: true,
+      battlecry: true,
+      deathrattle: true
+    }
   },
   {
     id: 'memory-palace',
@@ -254,7 +280,13 @@ export const patternCardsData: PatternCard[] = [
     owned: false,
     level: 1,
     experience: 0,
-    maxExperience: 3000
+    maxExperience: 3000,
+    keywords: {
+      divineShield: true,
+      lifesteal: true,
+      taunt: true,
+      battlecry: true
+    }
   },
   {
     id: 'monte-carlo',
@@ -289,7 +321,11 @@ export const patternCardsData: PatternCard[] = [
     owned: false,
     level: 1,
     experience: 0,
-    maxExperience: 1300
+    maxExperience: 1300,
+    keywords: {
+      discover: true,
+      spell_damage: 2
+    }
   },
   {
     id: 'attention-mechanism',
@@ -323,7 +359,11 @@ export const patternCardsData: PatternCard[] = [
     owned: true,
     level: 20,
     experience: 1800,
-    maxExperience: 2000
+    maxExperience: 2000,
+    keywords: {
+      stealth: true,
+      windfury: true
+    }
   },
   {
     id: 'scratch-pad',
@@ -354,6 +394,9 @@ export const patternCardsData: PatternCard[] = [
     owned: true,
     level: 5,
     experience: 200,
-    maxExperience: 400
+    maxExperience: 400,
+    keywords: {
+      rush: true
+    }
   }
 ];

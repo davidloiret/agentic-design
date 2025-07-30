@@ -683,3 +683,7 @@ http://localhost:3000/pattern-cards
 http://localhost:3000/pattern-card-game
 
 Add taunt in collection
+
+----
+
+Jeux ou l'idée c'est de choisir la bonne carte pour le bon challenge au lieu de faire un hearthstone, l'idée c'est d'utiliser les bonnes carte

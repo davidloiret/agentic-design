@@ -3,7 +3,7 @@
 import React from 'react';
 import { PatternCard as PatternCardType, PatternRarity } from '@/types/pattern-cards';
 import { motion } from 'framer-motion';
-import { Brain, Zap, Shield, Star, Lock, HelpCircle } from 'lucide-react';
+import { Brain, Zap, Shield, Star, Lock, HelpCircle, ShieldCheck, Sparkles, Wind, Heart, Skull, Eye, RefreshCw } from 'lucide-react';
 
 interface PatternCardProps {
   pattern: PatternCardType;
@@ -141,7 +141,70 @@ export const PatternCard: React.FC<PatternCardProps> = ({
               </div>
             ))}
           </div>
+
+          {/* Keywords Section - More prominent */}
+          {pattern.keywords && Object.keys(pattern.keywords).length > 0 && (
+            <div className="mb-3">
+              <div className="flex flex-wrap gap-1">
+                {pattern.keywords.taunt && (
+                  <div className="flex items-center gap-0.5 px-1.5 py-0.5 bg-yellow-500/20 border border-yellow-500/50 rounded">
+                    <Shield className="w-3 h-3 text-yellow-400" />
+                    <span className="text-xs text-yellow-400 font-semibold">Taunt</span>
+                  </div>
+                )}
+                {pattern.keywords.divineShield && (
+                  <div className="flex items-center gap-0.5 px-1.5 py-0.5 bg-yellow-400/20 border border-yellow-400/50 rounded">
+                    <ShieldCheck className="w-3 h-3 text-yellow-300" />
+                    <span className="text-xs text-yellow-300 font-semibold">Divine Shield</span>
+                  </div>
+                )}
+                {pattern.keywords.charge && (
+                  <div className="flex items-center gap-0.5 px-1.5 py-0.5 bg-red-500/20 border border-red-500/50 rounded">
+                    <Zap className="w-3 h-3 text-red-400" />
+                    <span className="text-xs text-red-400 font-semibold">Charge</span>
+                  </div>
+                )}
+                {pattern.keywords.windfury && (
+                  <div className="flex items-center gap-0.5 px-1.5 py-0.5 bg-cyan-500/20 border border-cyan-500/50 rounded">
+                    <Wind className="w-3 h-3 text-cyan-400" />
+                    <span className="text-xs text-cyan-400 font-semibold">Windfury</span>
+                  </div>
+                )}
+                {pattern.keywords.lifesteal && (
+                  <div className="flex items-center gap-0.5 px-1.5 py-0.5 bg-purple-500/20 border border-purple-500/50 rounded">
+                    <Heart className="w-3 h-3 text-purple-400" />
+                    <span className="text-xs text-purple-400 font-semibold">Lifesteal</span>
+                  </div>
+                )}
+                {pattern.keywords.rush && (
+                  <div className="flex items-center gap-0.5 px-1.5 py-0.5 bg-orange-500/20 border border-orange-500/50 rounded">
+                    <Zap className="w-3 h-3 text-orange-400" />
+                    <span className="text-xs text-orange-400 font-semibold">Rush</span>
+                  </div>
+                )}
+                {pattern.keywords.battlecry && (
+                  <div className="flex items-center gap-0.5 px-1.5 py-0.5 bg-amber-500/20 border border-amber-500/50 rounded">
+                    <Sparkles className="w-3 h-3 text-amber-400" />
+                    <span className="text-xs text-amber-400 font-semibold">Battlecry</span>
+                  </div>
+                )}
+                {pattern.keywords.discover && (
+                  <div className="flex items-center gap-0.5 px-1.5 py-0.5 bg-blue-500/20 border border-blue-500/50 rounded">
+                    <Sparkles className="w-3 h-3 text-blue-400" />
+                    <span className="text-xs text-blue-400 font-semibold">Discover</span>
+                  </div>
+                )}
+                {pattern.keywords.spell_damage && pattern.keywords.spell_damage > 0 && (
+                  <div className="flex items-center gap-0.5 px-1.5 py-0.5 bg-purple-600/20 border border-purple-600/50 rounded">
+                    <Zap className="w-3 h-3 text-purple-500" />
+                    <span className="text-xs text-purple-500 font-semibold">+{pattern.keywords.spell_damage} Spell</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
+
 
         {/* Abilities Section */}
         <div className="px-5 pb-5">

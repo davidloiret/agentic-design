@@ -39,6 +39,23 @@ export interface PatternCard {
   level: number;
   experience: number;
   maxExperience: number;
+  
+  // Hearthstone-style mechanics
+  keywords?: {
+    taunt?: boolean;
+    divineShield?: boolean;
+    charge?: boolean;
+    windfury?: boolean;
+    stealth?: boolean;
+    lifesteal?: boolean;
+    poisonous?: boolean;
+    rush?: boolean;
+    reborn?: boolean;
+    deathrattle?: boolean;
+    battlecry?: boolean;
+    discover?: boolean;
+    spell_damage?: number;
+  };
 }
 
 export interface PatternDeck {

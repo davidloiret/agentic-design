@@ -788,6 +788,49 @@ const MinionCard: React.FC<{
       {card.isFrozen && (
         <Snowflake className="absolute top-1 right-1 w-4 h-4 text-blue-300" />
       )}
+      
+      {/* Keyword badges above stats */}
+      <div className="absolute bottom-12 left-0 right-0 flex flex-wrap gap-0.5 justify-center px-1 z-10">
+        {/* Test badge */}
+        <div className="bg-blue-500/90 rounded px-1 text-[10px] text-white font-bold">
+          T
+        </div>
+        {card.hasCharge && (
+          <div className="bg-red-500/90 rounded px-1 text-[10px] text-white font-bold">
+            ⚡
+          </div>
+        )}
+        {card.hasWindfury && (
+          <div className="bg-cyan-500/90 rounded px-1 text-[10px] text-white font-bold">
+            🌪️
+          </div>
+        )}
+        {card.hasLifesteal && (
+          <div className="bg-purple-500/90 rounded px-1 text-[10px] text-white font-bold">
+            💜
+          </div>
+        )}
+        {card.isPoisonous && (
+          <div className="bg-green-500/90 rounded px-1 text-[10px] text-white font-bold">
+            ☠️
+          </div>
+        )}
+        {card.keywords?.battlecry && (
+          <div className="bg-amber-500/90 rounded px-1 text-[10px] text-white font-bold">
+            ✨
+          </div>
+        )}
+        {card.keywords?.deathrattle && (
+          <div className="bg-gray-600/90 rounded px-1 text-[10px] text-white font-bold">
+            💀
+          </div>
+        )}
+        {card.keywords?.spell_damage && card.keywords.spell_damage > 0 && (
+          <div className="bg-purple-600/90 rounded px-1 text-[10px] text-white font-bold">
+            +{card.keywords.spell_damage}
+          </div>
+        )}
+      </div>
       {card.isPoisonous && (
         <div className="absolute top-1 left-1 w-4 h-4 bg-green-600 rounded-full" />
       )}

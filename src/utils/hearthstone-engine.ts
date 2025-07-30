@@ -94,13 +94,13 @@ export class HearthstoneEngine {
         canAttack: false,
         hasAttacked: false,
         isFrozen: false,
-        hasTaunt: pattern.type === 'structural',
-        hasCharge: pattern.element === 'flow',
-        hasDivineShield: pattern.rarity === 'legendary',
-        hasWindfury: false,
-        hasStealth: false,
-        hasLifesteal: pattern.element === 'memory',
-        isPoisonous: false,
+        hasTaunt: pattern.keywords?.taunt || pattern.type === 'structural',
+        hasCharge: pattern.keywords?.charge || false,
+        hasDivineShield: pattern.keywords?.divineShield || false,
+        hasWindfury: pattern.keywords?.windfury || false,
+        hasStealth: pattern.keywords?.stealth || false,
+        hasLifesteal: pattern.keywords?.lifesteal || false,
+        isPoisonous: pattern.keywords?.poisonous || false,
         attackBuff: 0,
         healthBuff: 0,
         tempAttackBuff: 0
@@ -228,6 +228,11 @@ export class HearthstoneEngine {
         card.canAttack = true;
       }
       
+      // Apply spell damage
+      if (card.keywords?.spell_damage) {
+        player.spellDamage += card.keywords.spell_damage;
+      }
+      
       // Trigger battlecry
       if (card.battlecry) {
         this.applyEffect(card.battlecry, action.playerId, card.id);
@@ -317,8 +322,12 @@ export class HearthstoneEngine {
       });
     }
     
-    attacker.hasAttacked = true;
-    if (!attacker.hasWindfury || attacker.hasAttacked) {
+    // Handle windfury - allows two attacks per turn
+    if (attacker.hasWindfury && !attacker.hasAttacked) {
+      attacker.hasAttacked = true;
+      // Still can attack once more
+    } else {
+      attacker.hasAttacked = true;
       attacker.canAttack = false;
     }
     
@@ -481,6 +490,11 @@ export class HearthstoneEngine {
     [this.state.player1, this.state.player2].forEach((player, index) => {
       player.board = player.board.map(card => {
         if (card && card.health <= 0) {
+          // Remove spell damage if this minion had it
+          if (card.keywords?.spell_damage) {
+            player.spellDamage -= card.keywords.spell_damage;
+          }
+          
           // Trigger deathrattle
           if (card.deathrattle) {
             this.applyEffect(
