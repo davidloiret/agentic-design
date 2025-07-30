@@ -8,16 +8,18 @@ export const promptChainingTechniques: Technique[] = [
     icon: '🔗',
     color: 'from-blue-400 to-indigo-500',
     category: 'prompt-chaining',
-    description: 'Links prompts in linear sequence where each output feeds the next input',
+    description: 'A fundamental prompt engineering technique that breaks complex tasks into smaller, interconnected prompts where each output serves as input for the next step, creating a structured reasoning pipeline that significantly improves LLM performance on multi-step problems',
     features: [
-      'Linear workflow execution',
-      'Context preservation across steps',
-      'Error propagation handling',
-      'State management between prompts'
+      'Linear workflow execution with step-by-step processing',
+      'Context preservation and state management across prompts',
+      'Error isolation and recovery at each step',
+      'Transparent reasoning process for debugging',
+      'Reduced hallucination through focused prompts',
+      'Improved accuracy on complex tasks vs monolithic prompts'
     ],
-    useCases: ['content-creation', 'data-processing', 'workflow-automation', 'multi-step-analysis'],
+    useCases: ['content-creation', 'data-processing', 'workflow-automation', 'multi-step-analysis', 'document-qa', 'code-generation', 'research-synthesis'],
     complexity: 'low',
-    example: 'Task: Write a product review\n\nChain:\n1. Research prompt: "Analyze product features of [product]"\n2. Analysis prompt: "Compare [features] with competitors"\n3. Writing prompt: "Write review based on [analysis]"\n4. Editing prompt: "Improve clarity and tone of [review]"\n\nOutput: Polished, well-researched product review'
+    example: 'Task: Generate comprehensive market analysis report\n\nSequential Chain Implementation:\n1. Data Extraction: "Extract key metrics from Q4 2024 sales data"\n   → Output: Revenue: $2.4M, Growth: 15%, Top products...\n\n2. Trend Analysis: "Analyze trends from [extracted metrics]"\n   → Output: Upward trajectory in mobile segment, seasonal patterns...\n\n3. Competitor Research: "Compare [our metrics] with industry benchmarks"\n   → Output: Above industry average growth, pricing opportunities...\n\n4. Synthesis: "Create executive summary from [trends] and [comparison]"\n   → Output: Strategic recommendations based on data-driven insights\n\n5. Polish: "Enhance clarity and add visualizations to [summary]"\n   → Final Output: Publication-ready market analysis with actionable insights\n\nResearch shows this approach achieves 15.6% better accuracy than single prompts (2024 studies)'
   },
   {
     id: 'parallel-chaining',
@@ -26,7 +28,7 @@ export const promptChainingTechniques: Technique[] = [
     icon: '⚡',
     color: 'from-indigo-500 to-purple-500',
     category: 'prompt-chaining',
-    description: 'Executes multiple prompts simultaneously and combines results',
+    description: 'Executes multiple independent prompts concurrently and intelligently combines their outputs, enabling faster processing and multi-perspective analysis that leverages parallel computation for complex tasks requiring diverse viewpoints or data sources',
     features: [
       'Concurrent prompt execution',
       'Result aggregation strategies',
@@ -44,7 +46,7 @@ export const promptChainingTechniques: Technique[] = [
     icon: '🔀',
     color: 'from-purple-500 to-pink-500',
     category: 'prompt-chaining',
-    description: 'Routes execution through different prompt paths based on conditions',
+    description: 'Implements dynamic branching logic where prompt execution paths are determined by intermediate outputs, enabling adaptive workflows that respond intelligently to varying inputs and contexts - essential for personalization and decision trees',
     features: [
       'Dynamic path selection',
       'Condition evaluation logic',
@@ -62,7 +64,7 @@ export const promptChainingTechniques: Technique[] = [
     icon: '🔄',
     color: 'from-pink-500 to-rose-500',
     category: 'prompt-chaining',
-    description: 'Creates loops where outputs are fed back as inputs for refinement',
+    description: 'Implements iterative improvement cycles where outputs are evaluated and fed back as inputs until quality criteria are met, proven to enhance output quality through convergence-based refinement - particularly effective for creative and optimization tasks',
     features: [
       'Iterative improvement cycles',
       'Convergence detection',
@@ -80,7 +82,7 @@ export const promptChainingTechniques: Technique[] = [
     icon: '🏗️',
     color: 'from-rose-500 to-red-500',
     category: 'prompt-chaining',
-    description: 'Organizes prompts in hierarchical structure with parent-child relationships',
+    description: 'Structures prompts in multi-level parent-child relationships enabling complex task decomposition, where high-level goals are systematically broken down into manageable subtasks with context inheritance - ideal for project planning and system design',
     features: [
       'Multi-level task decomposition',
       'Parent-child dependencies',
@@ -98,7 +100,7 @@ export const promptChainingTechniques: Technique[] = [
     icon: '🔄',
     color: 'from-cyan-500 to-blue-500',
     category: 'prompt-chaining',
-    description: 'Continuously improves outputs through multiple refinement cycles',
+    description: 'Employs systematic multi-pass refinement where each iteration focuses on specific quality improvements, with research showing 3-5 cycles typically achieve optimal results before diminishing returns - essential for content polish and code optimization',
     features: [
       'Multi-cycle improvement process',
       'Quality assessment between iterations',
@@ -116,7 +118,7 @@ export const promptChainingTechniques: Technique[] = [
     icon: '🧩',
     color: 'from-violet-500 to-purple-500',
     category: 'prompt-chaining',
-    description: 'Combines multiple parallel processing streams into unified outputs',
+    description: 'Advanced technique that orchestrates multiple parallel processing streams with intelligent conflict resolution and quality-weighted aggregation, enabling synthesis of diverse perspectives into coherent, comprehensive outputs - crucial for research and consensus-building',
     features: [
       'Multi-stream processing',
       'Intelligent result merging',

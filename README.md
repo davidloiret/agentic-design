@@ -587,6 +587,10 @@ Agentic design propose d'apprendre ou réviser les patterns des systemes IA sous
 
 Non l'IA ne m'a pas remplacé, elle m'a augmenté et je suis passé de la procrastination avec ma listes d'idée en markdown a des produits disponibles !
 
+Y'a un gap entre des systeme demo et production ready et du LLM à la magie et c vai les patterns qu'on peut vraiment faire des systemes reliable
+Ia galere sur des refacto de gros fichier, finalement l'impression de faire le taff le moins intéressant
+
+Beaucoup plus simple de faire du code backend que frontend => probablement du au contexte
 
 
 
@@ -597,3 +601,28 @@ coder en faisant tests avant
 gamifier l'expérience red teaming
 
 
+
+token cost / prompt à cpier etc
+
+------------
+different programme de learning
+
+- patterns
+- learn to prompt
+- learn to vibe code
+- learn ai security
+
+Learning lesson
+
+Plug agent on your knowledge base
+
+
+social network c'est que du repost de comtenu, tres peu de createur de compte nu
+
+
+
+token usage / pros and cons
+
+I want prompt example that I can copy paste
+
+clasifficy by token usage instead of complexicty
