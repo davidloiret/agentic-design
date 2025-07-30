@@ -626,3 +626,12 @@ token usage / pros and cons
 I want prompt example that I can copy paste
 
 clasifficy by token usage instead of complexicty
+
+news preference
+
+find a coach / find an expert
+
+
+challenge battle
+
+faire un jeux ou tu fais une battle de pattern

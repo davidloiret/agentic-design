@@ -1,7 +1,7 @@
 'use client';
 
 import { useAuth } from '@/contexts/AuthContext';
-import { LearningHubConnected } from '../../components/LearningHubConnected';
+import { LearningHubJourney } from '../../components/LearningHubJourney';
 import { AuthPromptPage } from '../../components/AuthPromptPage';
 
 export default function LearningHubPage() {
@@ -21,7 +21,7 @@ export default function LearningHubPage() {
     return (
       <AuthPromptPage
         feature="Learning Hub"
-        description="Gamified learning experience with progress tracking and certifications"
+        description="Master AI engineering through three comprehensive learning journeys"
       />
     );
   }
@@ -29,9 +29,7 @@ export default function LearningHubPage() {
   // Show the actual Learning Hub content for authenticated users
   return (
     <div className="min-h-screen bg-gray-950 text-white">
-      <div className="w-full px-6 py-8">
-        <LearningHubConnected />
-      </div>
+      <LearningHubJourney />
     </div>
   );
 }
