@@ -561,3 +561,5 @@ video de gen par l'IA
 
 Une facon aussi de mettre en lumiere toute mon expérience dans la conception de produit abv
 avec un focus sur les utilisateur et l'UI/UX
+
+coder en faisant tests avant

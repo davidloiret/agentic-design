@@ -225,9 +225,12 @@ export const Header = () => {
                     
             {/* Auth section - Last item on the right */}
             {loading ? (
-              <div className="flex items-center space-x-2 p-1.5">
-                <div className="w-8 h-8 bg-gray-700 rounded-full animate-pulse"></div>
-                <div className="w-4 h-4 bg-gray-700 rounded animate-pulse"></div>
+              <div className="flex items-center space-x-3">
+                <div className="w-9 h-9 bg-gray-700 rounded-lg animate-pulse"></div>
+                <div className="flex items-center space-x-2 p-1.5">
+                  <div className="w-8 h-8 bg-gray-700 rounded-full animate-pulse"></div>
+                  <div className="w-4 h-4 bg-gray-700 rounded animate-pulse"></div>
+                </div>
               </div>
             ) : user ? (
               <div className="flex items-center space-x-3">
@@ -351,15 +354,18 @@ export const Header = () => {
                       className="flex items-center ml-1"
                     >
                       <Flame className="w-3 h-3 text-orange-400" />
-                      <span className="text-[10px] font-bold text-orange-400">7</span>
+                      <span className="text-[10px] font-bold text-orange-400">{currentStreak}</span>
                     </motion.div>
                   )}
                 </AnimatePresence>
               </motion.button>
               {loading ? (
-                <div className="flex items-center space-x-2 p-1.5">
-                  <div className="w-6 h-6 bg-gray-700 rounded-full animate-pulse"></div>
-                  <div className="w-3 h-3 bg-gray-700 rounded animate-pulse"></div>
+                <div className="flex items-center space-x-2">
+                  <div className="w-9 h-9 bg-gray-700 rounded-lg animate-pulse"></div>
+                  <div className="flex items-center space-x-2 p-1.5">
+                    <div className="w-8 h-8 bg-gray-700 rounded-full animate-pulse"></div>
+                    <div className="w-4 h-4 bg-gray-700 rounded animate-pulse"></div>
+                  </div>
                 </div>
               ) : user ? (
                 <div className="flex items-center space-x-2">
