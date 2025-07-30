@@ -501,3 +501,63 @@ share achievemnt en social network
 find best price
 
 plug pocket reborn to agentic design backend => source for news
+
+mes findings et mes commentaires / ou j'utilise mes techniques / gérer mes projets et technique / utilisés / note
+
+Trouver un moyen pour ne pas avoir à passer par https://agentic-design.ai/api/v1/auth/me
+
+mais https://backend.agentic-design.ai/api/v1/auth/me
+=> voir pour dépot de cookie
+
+
+---------------
+
+endpoint 
+
+News hub => knowledge base hub ?
+
+knowledge-base/sources => should be transformed to markdown using markdownit (maybe in a python microservice)
+knowledge-base/notes => user note
+knowledge-base/pdf => user book or article
+
+
+Add sources
+
+Your knowledge compagnion / assistant
+
+scribe reborn
+
+news / ambient agent ?
+
+news => data to knowledge base.
+
+
+follow => for links
+
+tracker les changements et sauvegarder le contenu
+
+
+---
+
+Add a prompt cheatsheet and video
+
+see promptguide
+
+bottom sheet ne devrait pas s'ouvrir par defaut sur mobile
+
+Long time I was procrastinating, AI made we go out.
+Since chatGPT when I have spend two nuit blanche à maintenant ou je consttuis
+agentic-design.ai => un peu comme un accomplissement, une facon de figer ce que j'ai apprusn
+mais également en faire bénéficier la communauté.
+Longtemps que je cherche à structuer ma connaissance mais que je ne trouve pas le bon outil de veille
+La veille techno, comme une passion pour ma part, mais si chronophage.
+Une facon aussi de tester les outils de code gen pour en noter leur force
+et leur faiblesse, pour en faire des meilleurs :D
+
+Bref apres pas mal de nuit sans sommeil, je suis fier de vous présenter mon tout nouveau side project
+Celui qui va me torturer un peu, switchant d'idée en idée, mais vu le prix des domaiens .ai
+et des abo code claude :D Fallait pas remettre à demain.
+video de gen par l'IA
+
+Une facon aussi de mettre en lumiere toute mon expérience dans la conception de produit abv
+avec un focus sur les utilisateur et l'UI/UX

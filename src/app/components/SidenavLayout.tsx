@@ -50,8 +50,6 @@ export const SidenavLayout = ({
   pathSegmentIndex = 1,
   className = ""
 }: SidenavLayoutProps) => {
-  const [bottomSheetState, setBottomSheetState] = useState<BottomSheetState>('expanded');
-  const params = useParams();
   const pathname = usePathname();
   
   // Extract category and technique from URL based on pathSegmentIndex
@@ -118,8 +116,7 @@ export const SidenavLayout = ({
             isOpen={isBottomSheetOpen}
             onClose={handleClose}
             onReopen={handleReopen}
-            initialState="expanded"
-            onStateChange={setBottomSheetState}
+            initialState="closed"
             title={sidebarTitle}
             showReopenButton={true}
           >
