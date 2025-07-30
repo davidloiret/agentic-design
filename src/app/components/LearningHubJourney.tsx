@@ -778,57 +778,138 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
     );
   };
 
+  const getQuizContent = (challengeId: string) => {
+    switch (challengeId) {
+      case 'reasoning-quiz':
+        return learningContent.quizzes.reasoningTechniques;
+      case 'chaining-quiz':
+        return learningContent.quizzes.promptChaining;
+      case 'routing-quiz':
+        return learningContent.quizzes.routingTechniques;
+      case 'tool-use-quiz':
+        return learningContent.quizzes.toolUse;
+      case 'orchestration-quiz':
+        return learningContent.quizzes.workflowOrchestration;
+      case 'planning-quiz':
+        return learningContent.quizzes.planningExecution;
+      case 'agent-fundamentals-quiz':
+        return learningContent.quizzes.agentFundamentals;
+      case 'agent-architectures-quiz':
+        return learningContent.quizzes.agentArchitectures;
+      default:
+        return [];
+    }
+  };
+
+  const getFlashcardContent = (challengeId: string) => {
+    switch (challengeId) {
+      case 'reasoning-flashcards':
+        return learningContent.flashcards.reasoningTechniques;
+      case 'chaining-flashcards':
+        return learningContent.flashcards.promptChaining;
+      case 'routing-flashcards':
+        return learningContent.flashcards.routingTechniques;
+      case 'tool-use-flashcards':
+        return learningContent.flashcards.toolUse;
+      case 'orchestration-flashcards':
+        return learningContent.flashcards.workflowOrchestration;
+      case 'planning-flashcards':
+        return learningContent.flashcards.planningExecution;
+      case 'agent-components-flashcards':
+        return learningContent.flashcards.agentComponents;
+      case 'agent-architectures-flashcards':
+        return learningContent.flashcards.agentArchitectures;
+      default:
+        return [];
+    }
+  };
+
+  const getCodeChallengeContent = (challengeId: string) => {
+    // Map learning module challenge IDs to actual code challenge IDs
+    const challengeMapping: { [key: string]: string } = {
+      'implement-tot': 'implement-tot-reasoning',
+      'build-react-agent': 'implement-react-agent',
+      'build-dynamic-router': 'implement-dynamic-routing'
+    };
+    
+    const actualChallengeId = challengeMapping[challengeId] || challengeId;
+    const challenge = learningContent.codeChallenges.find(c => c.id === actualChallengeId);
+    return challenge || null;
+  };
+
   const renderLesson = () => {
     if (!selectedLesson) return null;
+
+    const isQuickPractice = selectedLesson.id.startsWith('quick-');
+    const exitAction = () => {
+      setSelectedLesson(null);
+      setActiveView(isQuickPractice ? 'dashboard' : 'chapter');
+    };
 
     // Map lesson types to existing components
     if (selectedLesson.type === 'quiz' && selectedLesson.challenges) {
       const quizId = selectedLesson.challenges[0];
+      const quizContent = getQuizContent(quizId);
       return (
         <QuizComponent
-          questions={learningContent.quizzes.reasoningTechniques} // TODO: Map to correct quiz
+          questions={quizContent}
           title={selectedLesson.title}
           description={selectedLesson.description}
           xpReward={selectedLesson.xpReward}
           timeLimit={selectedLesson.estimatedTime * 60}
-          onComplete={(score, xpEarned) => handleLessonComplete(selectedLesson.id, score, xpEarned)}
-          onExit={() => {
-            setSelectedLesson(null);
-            setActiveView('chapter');
+          onComplete={(score, xpEarned) => {
+            if (isQuickPractice) {
+              // For quick practice, just go back to dashboard
+              exitAction();
+            } else {
+              handleLessonComplete(selectedLesson.id, score, xpEarned);
+            }
           }}
+          onExit={exitAction}
         />
       );
     }
 
     if (selectedLesson.type === 'flashcard' && selectedLesson.challenges) {
+      const flashcardId = selectedLesson.challenges[0];
+      const flashcardContent = getFlashcardContent(flashcardId);
       return (
         <FlashcardComponent
-          flashcards={learningContent.flashcards.reasoningTechniques} // TODO: Map to correct flashcards
+          flashcards={flashcardContent}
           title={selectedLesson.title}
           description={selectedLesson.description}
           xpReward={selectedLesson.xpReward}
-          onComplete={(score, xpEarned) => handleLessonComplete(selectedLesson.id, score, xpEarned)}
-          onExit={() => {
-            setSelectedLesson(null);
-            setActiveView('chapter');
+          onComplete={(score, xpEarned) => {
+            if (isQuickPractice) {
+              exitAction();
+            } else {
+              handleLessonComplete(selectedLesson.id, score, xpEarned);
+            }
           }}
+          onExit={exitAction}
         />
       );
     }
 
     if (selectedLesson.type === 'code' && selectedLesson.challenges) {
-      const challenge = learningContent.codeChallenges[0]; // TODO: Map to correct challenge
-      return (
-        <CodeChallengeComponent
-          challenge={challenge}
-          xpReward={selectedLesson.xpReward}
-          onComplete={(score, xpEarned) => handleLessonComplete(selectedLesson.id, score, xpEarned)}
-          onExit={() => {
-            setSelectedLesson(null);
-            setActiveView('chapter');
-          }}
-        />
-      );
+      const challengeId = selectedLesson.challenges[0];
+      const challenge = getCodeChallengeContent(challengeId);
+      if (challenge) {
+        return (
+          <CodeChallengeComponent
+            challenge={challenge}
+            xpReward={selectedLesson.xpReward}
+            onComplete={(score, xpEarned) => {
+              if (isQuickPractice) {
+                exitAction();
+              } else {
+                handleLessonComplete(selectedLesson.id, score, xpEarned);
+              }
+            }}
+            onExit={exitAction}
+          />
+        );
+      }
     }
 
     // Default content for other lesson types
@@ -1151,6 +1232,251 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
               );
             })}
           </div>
+        </div>
+
+        {/* Quick Practice Section */}
+        <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700 mb-8">
+          <h3 className="text-xl font-semibold text-white mb-4 flex items-center">
+            <Sparkles className="w-5 h-5 mr-2 text-yellow-400" />
+            Quick Practice by Journey
+          </h3>
+          
+          {/* Master Agentic Patterns */}
+          <div className="mb-6">
+            <h4 className="text-lg font-medium text-white mb-3 flex items-center">
+              <Brain className="w-4 h-4 mr-2 text-purple-400" />
+              Master Agentic Patterns
+            </h4>
+            
+            {/* Reasoning Techniques */}
+            <div className="mb-4">
+              <h5 className="text-sm font-medium text-gray-300 mb-2">Reasoning Techniques</h5>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                <button
+                  onClick={() => {
+                    setSelectedLesson({
+                      id: 'quick-reasoning-flashcards',
+                      title: 'Reasoning Patterns Flashcards',
+                      description: 'Learn CoT, ToT, LRT, GoT, ReAct patterns',
+                      type: 'flashcard',
+                      difficulty: 'beginner',
+                      xpReward: 40,
+                      estimatedTime: 20,
+                      challenges: ['reasoning-flashcards']
+                    });
+                    setActiveView('lesson');
+                  }}
+                  className="bg-gray-900/50 rounded-lg p-3 hover:bg-gray-700/50 transition-all text-left"
+                >
+                  <div className="flex items-center space-x-2 mb-1">
+                    <Sparkles className="w-4 h-4 text-yellow-400" />
+                    <span className="text-white font-medium text-sm">Flashcards</span>
+                  </div>
+                  <p className="text-xs text-gray-400">20 min • 40 XP</p>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setSelectedLesson({
+                      id: 'quick-reasoning-quiz',
+                      title: 'Reasoning Techniques Quiz',
+                      description: 'Test your knowledge of reasoning patterns',
+                      type: 'quiz',
+                      difficulty: 'beginner',
+                      xpReward: 60,
+                      estimatedTime: 25,
+                      challenges: ['reasoning-quiz']
+                    });
+                    setActiveView('lesson');
+                  }}
+                  className="bg-gray-900/50 rounded-lg p-3 hover:bg-gray-700/50 transition-all text-left"
+                >
+                  <div className="flex items-center space-x-2 mb-1">
+                    <Brain className="w-4 h-4 text-blue-400" />
+                    <span className="text-white font-medium text-sm">Quiz</span>
+                  </div>
+                  <p className="text-xs text-gray-400">25 min • 60 XP</p>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setSelectedLesson({
+                      id: 'quick-implement-tot',
+                      title: 'Build Tree of Thought',
+                      description: 'Implement ToT reasoning system',
+                      type: 'code',
+                      difficulty: 'intermediate',
+                      xpReward: 100,
+                      estimatedTime: 60,
+                      challenges: ['implement-tot']
+                    });
+                    setActiveView('lesson');
+                  }}
+                  className="bg-gray-900/50 rounded-lg p-3 hover:bg-gray-700/50 transition-all text-left"
+                >
+                  <div className="flex items-center space-x-2 mb-1">
+                    <Code className="w-4 h-4 text-purple-400" />
+                    <span className="text-white font-medium text-sm">Code Challenge</span>
+                  </div>
+                  <p className="text-xs text-gray-400">60 min • 100 XP</p>
+                </button>
+              </div>
+            </div>
+
+            {/* Routing Techniques */}
+            <div className="mb-4">
+              <h5 className="text-sm font-medium text-gray-300 mb-2">Intelligent Routing</h5>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                <button
+                  onClick={() => {
+                    setSelectedLesson({
+                      id: 'quick-routing-flashcards',
+                      title: 'Routing Patterns Flashcards',
+                      description: 'Learn routing and load balancing',
+                      type: 'flashcard',
+                      difficulty: 'intermediate',
+                      xpReward: 40,
+                      estimatedTime: 20,
+                      challenges: ['routing-flashcards']
+                    });
+                    setActiveView('lesson');
+                  }}
+                  className="bg-gray-900/50 rounded-lg p-3 hover:bg-gray-700/50 transition-all text-left"
+                >
+                  <div className="flex items-center space-x-2 mb-1">
+                    <Sparkles className="w-4 h-4 text-yellow-400" />
+                    <span className="text-white font-medium text-sm">Flashcards</span>
+                  </div>
+                  <p className="text-xs text-gray-400">20 min • 40 XP</p>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setSelectedLesson({
+                      id: 'quick-routing-quiz',
+                      title: 'Routing Techniques Quiz',
+                      description: 'Test routing knowledge',
+                      type: 'quiz',
+                      difficulty: 'intermediate',
+                      xpReward: 55,
+                      estimatedTime: 25,
+                      challenges: ['routing-quiz']
+                    });
+                    setActiveView('lesson');
+                  }}
+                  className="bg-gray-900/50 rounded-lg p-3 hover:bg-gray-700/50 transition-all text-left"
+                >
+                  <div className="flex items-center space-x-2 mb-1">
+                    <Brain className="w-4 h-4 text-blue-400" />
+                    <span className="text-white font-medium text-sm">Quiz</span>
+                  </div>
+                  <p className="text-xs text-gray-400">25 min • 55 XP</p>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setSelectedLesson({
+                      id: 'quick-dynamic-router',
+                      title: 'Build Dynamic Router',
+                      description: 'Create routing system',
+                      type: 'code',
+                      difficulty: 'advanced',
+                      xpReward: 120,
+                      estimatedTime: 75,
+                      challenges: ['build-dynamic-router']
+                    });
+                    setActiveView('lesson');
+                  }}
+                  className="bg-gray-900/50 rounded-lg p-3 hover:bg-gray-700/50 transition-all text-left"
+                >
+                  <div className="flex items-center space-x-2 mb-1">
+                    <Code className="w-4 h-4 text-purple-400" />
+                    <span className="text-white font-medium text-sm">Code Challenge</span>
+                  </div>
+                  <p className="text-xs text-gray-400">75 min • 120 XP</p>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Master Prompting */}
+          <div className="mb-6">
+            <h4 className="text-lg font-medium text-white mb-3 flex items-center">
+              <MessageSquare className="w-4 h-4 mr-2 text-blue-400" />
+              Master Prompting
+            </h4>
+            
+            {/* Prompt Chaining */}
+            <div className="mb-4">
+              <h5 className="text-sm font-medium text-gray-300 mb-2">Prompt Chaining</h5>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                <button
+                  onClick={() => {
+                    setSelectedLesson({
+                      id: 'quick-chaining-flashcards',
+                      title: 'Chaining Patterns Flashcards',
+                      description: 'Master prompt chaining approaches',
+                      type: 'flashcard',
+                      difficulty: 'beginner',
+                      xpReward: 35,
+                      estimatedTime: 18,
+                      challenges: ['chaining-flashcards']
+                    });
+                    setActiveView('lesson');
+                  }}
+                  className="bg-gray-900/50 rounded-lg p-3 hover:bg-gray-700/50 transition-all text-left"
+                >
+                  <div className="flex items-center space-x-2 mb-1">
+                    <Sparkles className="w-4 h-4 text-yellow-400" />
+                    <span className="text-white font-medium text-sm">Flashcards</span>
+                  </div>
+                  <p className="text-xs text-gray-400">18 min • 35 XP</p>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setSelectedLesson({
+                      id: 'quick-chaining-quiz',
+                      title: 'Prompt Chaining Quiz',
+                      description: 'Test your understanding',
+                      type: 'quiz',
+                      difficulty: 'beginner',
+                      xpReward: 50,
+                      estimatedTime: 22,
+                      challenges: ['chaining-quiz']
+                    });
+                    setActiveView('lesson');
+                  }}
+                  className="bg-gray-900/50 rounded-lg p-3 hover:bg-gray-700/50 transition-all text-left"
+                >
+                  <div className="flex items-center space-x-2 mb-1">
+                    <Brain className="w-4 h-4 text-blue-400" />
+                    <span className="text-white font-medium text-sm">Quiz</span>
+                  </div>
+                  <p className="text-xs text-gray-400">22 min • 50 XP</p>
+                </button>
+
+                <button
+                  disabled
+                  className="bg-gray-900/50 rounded-lg p-3 opacity-50 cursor-not-allowed text-left"
+                >
+                  <div className="flex items-center space-x-2 mb-1">
+                    <Code className="w-4 h-4 text-gray-500" />
+                    <span className="text-gray-500 font-medium text-sm">Coming Soon</span>
+                  </div>
+                  <p className="text-xs text-gray-500">Build chain system</p>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* More topics button */}
+          <button
+            onClick={() => setActiveView('journeys')}
+            className="w-full py-2 bg-gray-900/50 rounded-lg hover:bg-gray-700/50 transition-all text-center text-sm text-gray-400 hover:text-white"
+          >
+            View all topics in Learning Journeys →
+          </button>
         </div>
 
         {/* Quick Actions */}

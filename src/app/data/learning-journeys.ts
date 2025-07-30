@@ -287,6 +287,16 @@ export const agenticPatternsJourney: Journey = {
           challenges: ['agent-components-flashcards']
         },
         {
+          id: 'agent-fundamentals-quiz',
+          title: 'AI Agent Fundamentals Quiz',
+          description: 'Test your understanding of AI agent concepts',
+          type: 'quiz',
+          difficulty: 'beginner',
+          xpReward: 80,
+          estimatedTime: 15,
+          challenges: ['agent-fundamentals-quiz']
+        },
+        {
           id: 'simple-agent',
           title: 'Build Your First Agent',
           description: 'Create a basic reactive agent',
@@ -299,13 +309,54 @@ export const agenticPatternsJourney: Journey = {
       ]
     },
     {
+      id: 'agent-architectures',
+      title: 'Agent Architectures',
+      description: 'Explore different architectural patterns for AI agents',
+      order: 2,
+      xpReward: 450,
+      estimatedTime: 90,
+      unlockAfter: 'agent-fundamentals',
+      lessons: [
+        {
+          id: 'architecture-patterns',
+          title: 'Common Agent Architectures',
+          description: 'Learn about BDI, Subsumption, Hybrid, and other architectures',
+          type: 'flashcard',
+          difficulty: 'intermediate',
+          xpReward: 60,
+          estimatedTime: 25,
+          challenges: ['agent-architectures-flashcards']
+        },
+        {
+          id: 'architecture-quiz',
+          title: 'Agent Architectures Quiz',
+          description: 'Test your knowledge of different agent architectures',
+          type: 'quiz',
+          difficulty: 'intermediate',
+          xpReward: 90,
+          estimatedTime: 20,
+          challenges: ['agent-architectures-quiz']
+        },
+        {
+          id: 'implement-bdi',
+          title: 'Implement a BDI Agent',
+          description: 'Build a Belief-Desire-Intention agent',
+          type: 'code',
+          difficulty: 'advanced',
+          xpReward: 150,
+          estimatedTime: 45,
+          challenges: ['implement-bdi-agent']
+        }
+      ]
+    },
+    {
       id: 'reasoning-patterns',
       title: 'Advanced Reasoning Patterns',
       description: 'Implement sophisticated reasoning techniques',
-      order: 2,
+      order: 3,
       xpReward: 500,
       estimatedTime: 120,
-      unlockAfter: 'agent-fundamentals',
+      unlockAfter: 'agent-architectures',
       lessons: [
         {
           id: 'react-pattern',
@@ -343,7 +394,7 @@ export const agenticPatternsJourney: Journey = {
       id: 'multi-agent-systems',
       title: 'Multi-Agent Orchestration',
       description: 'Build systems with multiple cooperating agents',
-      order: 3,
+      order: 4,
       xpReward: 600,
       estimatedTime: 150,
       unlockAfter: 'reasoning-patterns',

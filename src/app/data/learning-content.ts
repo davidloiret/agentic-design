@@ -1560,6 +1560,14 @@ export const allQuizQuestions: QuizQuestion[] = [
   ...planningExecutionQuiz
 ];
 
+// Import AI Agent learning content
+import { 
+  agentComponentsFlashcards,
+  agentArchitecturesFlashcards,
+  agentFundamentalsQuiz,
+  agentArchitecturesQuiz
+} from './ai-agent-learning-content';
+
 export const learningContent = {
   quizzes: {
     reasoningTechniques: reasoningTechniquesQuiz,
@@ -1568,6 +1576,8 @@ export const learningContent = {
     toolUse: toolUseQuiz,
     workflowOrchestration: workflowOrchestrationQuiz,
     planningExecution: planningExecutionQuiz,
+    agentFundamentals: agentFundamentalsQuiz,
+    agentArchitectures: agentArchitecturesQuiz,
     all: allQuizQuestions
   },
   flashcards: {
@@ -1577,6 +1587,8 @@ export const learningContent = {
     toolUse: toolUseFlashcards,
     workflowOrchestration: workflowOrchestrationFlashcards,
     planningExecution: planningExecutionFlashcards,
+    agentComponents: agentComponentsFlashcards,
+    agentArchitectures: agentArchitecturesFlashcards,
     all: allFlashcards
   },
   codeChallenges: advancedCodeChallenges,

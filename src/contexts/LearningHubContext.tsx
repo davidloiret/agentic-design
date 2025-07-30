@@ -111,20 +111,89 @@ export function LearningHubProvider({ children }: { children: React.ReactNode })
       setHasInitialized(true);
     }
   }, [user, authLoading, hasInitialized]);
-  // Update progress
+  // Update progress with optimistic updates
   const updateProgress = async (data: UpdateProgressRequest) => {
     if (!user) return;
     
-    try {
-      console.log('[LearningHub] Updating progress:', data);
-      const result = await learningHubApi.updateProgress(data);
-      console.log('[LearningHub] Progress updated:', result);
+    // Optimistically update local state immediately
+    const optimisticUpdate = () => {
+      // Update progress
+      setProgress(prev => {
+        const existingIndex = prev.findIndex(p => 
+          p.lessonId === data.lessonId && 
+          p.chapterId === data.chapterId && 
+          p.journeyId === data.journeyId
+        );
+        
+        const newProgress: UserProgress = {
+          id: existingIndex >= 0 ? prev[existingIndex].id : `temp-${Date.now()}`,
+          userId: user.id,
+          journeyId: data.journeyId,
+          chapterId: data.chapterId,
+          lessonId: data.lessonId,
+          isCompleted: data.isCompleted,
+          score: data.score,
+          completedAt: data.isCompleted ? new Date().toISOString() : null,
+          createdAt: existingIndex >= 0 ? prev[existingIndex].createdAt : new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        };
+        
+        if (existingIndex >= 0) {
+          const updated = [...prev];
+          updated[existingIndex] = newProgress;
+          return updated;
+        } else {
+          return [...prev, newProgress];
+        }
+      });
       
-      // Refresh all data to get updated achievements, XP, streak, etc.
-      await refreshData();
+      // Optimistically update XP
+      if (data.xpEarned && data.xpEarned > 0) {
+        setXp(prev => {
+          if (!prev) return null;
+          const newTotalXp = prev.totalXp + data.xpEarned!;
+          
+          // Simple level calculation (you may want to adjust this)
+          let newLevel = prev.level;
+          let xpThreshold = prev.level * 100; // Example: 100 XP per level
+          
+          while (newTotalXp >= xpThreshold) {
+            newLevel++;
+            xpThreshold = newLevel * 100;
+          }
+          
+          return {
+            ...prev,
+            totalXp: newTotalXp,
+            level: newLevel
+          };
+        });
+      }
+    };
+    
+    // Apply optimistic update immediately
+    optimisticUpdate();
+    
+    // Save to backend in the background
+    try {
+      console.log('[LearningHub] Saving progress to backend:', data);
+      const result = await learningHubApi.updateProgress(data);
+      console.log('[LearningHub] Progress saved successfully:', result);
+      
+      // Refresh data in background to sync any server-side calculations
+      // (achievements, accurate XP calculations, etc.)
+      // Don't await this - let it run in background
+      refreshData().catch(err => {
+        console.error('[LearningHub] Background refresh failed:', err);
+      });
     } catch (err) {
-      console.error('[LearningHub] Error updating progress:', err);
-      setError(err instanceof Error ? err.message : 'Failed to update progress');
+      console.error('[LearningHub] Error saving progress:', err);
+      setError(err instanceof Error ? err.message : 'Failed to save progress');
+      
+      // On error, refresh data to revert to server state
+      await refreshData();
+      
+      // Re-throw to let calling component handle the error
       throw err;
     }
   };

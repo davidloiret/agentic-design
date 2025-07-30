@@ -635,3 +635,51 @@ find a coach / find an expert
 challenge battle
 
 faire un jeux ou tu fais une battle de pattern
+
+
+--------------
+
+bataille de patterns tu as un deck et un challenge et tu dois prendre la bonne carte => gagne ou pas
+
+to own a pattern you need to study it and earn it with QCM etc after I want a battle like 
+
+I want a battle like Hearthstone using the earned deck. 
+Idea is that we have a AI challenge that need to be achieve. For that we need patterns (card)
+We need player level so deck of same patterns are potentially equal and we have random pattern.
+Each player will earn XP from playing and winning etc.
+
+
+battle questionnaire etc 
+
+réponse => LLM évalue si ok ou non
+
+battle against LLM or true player
+
+ I understand! You want a true Hearthstone-style battle system where players use their earned pattern cards from the
+  learning hub. Let me update the game to focus on the actual battle mechanics:
+
+
+Gem finder => gamifier les news ressource / battle => celui qui contribue le plus etc
+
+QCM builder
+
+prompt cheatsheet
+
+context engineer lessons
+
+formation pour gens non technique
+
+
+---------
+Plus tu apprends / plus tu debloques des cartes
+Plus t assidu => nouvelle carte
+
+module se debloque tout les jours et si tu y vas pas ca se deactive (repart à zero du module) => si tu 
+
+chapitre / unité => perte de l'unité
+Gèle de série => payer
+
+http://localhost:3000/pattern-cards
+http://localhost:3000/pattern-card-game
+
+Add taunt in collection

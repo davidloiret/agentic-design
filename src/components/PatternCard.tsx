@@ -3,6 +3,7 @@
 import React from 'react';
 import { PatternCard as PatternCardType, PatternRarity } from '@/types/pattern-cards';
 import { motion } from 'framer-motion';
+import { Brain, Zap, Shield, Star, Lock, HelpCircle } from 'lucide-react';
 
 interface PatternCardProps {
   pattern: PatternCardType;
@@ -11,36 +12,50 @@ interface PatternCardProps {
   size?: 'small' | 'medium' | 'large';
 }
 
-const rarityColors: Record<PatternRarity, string> = {
-  common: 'from-gray-400 to-gray-600',
-  uncommon: 'from-green-400 to-green-600',
-  rare: 'from-blue-400 to-blue-600',
-  epic: 'from-purple-400 to-purple-600',
-  legendary: 'from-yellow-400 to-orange-500'
+const rarityColors: Record<PatternRarity, {
+  bg: string;
+  border: string;
+  text: string;
+  icon: string;
+}> = {
+  common: {
+    bg: 'bg-gray-800/30',
+    border: 'border-gray-700/50',
+    text: 'text-gray-400',
+    icon: 'text-gray-500'
+  },
+  uncommon: {
+    bg: 'bg-green-900/20',
+    border: 'border-green-700/50',
+    text: 'text-green-400',
+    icon: 'text-green-500'
+  },
+  rare: {
+    bg: 'bg-blue-900/20',
+    border: 'border-blue-700/50',
+    text: 'text-blue-400',
+    icon: 'text-blue-500'
+  },
+  epic: {
+    bg: 'bg-purple-900/20',
+    border: 'border-purple-700/50',
+    text: 'text-purple-400',
+    icon: 'text-purple-500'
+  },
+  legendary: {
+    bg: 'bg-amber-900/20',
+    border: 'border-amber-700/50',
+    text: 'text-amber-400',
+    icon: 'text-amber-500'
+  }
 };
 
-const rarityGlow: Record<PatternRarity, string> = {
-  common: '',
-  uncommon: 'shadow-green-500/30',
-  rare: 'shadow-blue-500/40',
-  epic: 'shadow-purple-500/50',
-  legendary: 'shadow-yellow-500/60'
-};
-
-const typeIcons: Record<string, string> = {
-  behavioral: '🧠',
-  structural: '🏗️',
-  creational: '✨',
-  cognitive: '💭',
-  architectural: '🏛️'
-};
-
-const elementColors: Record<string, string> = {
-  logic: 'bg-blue-500',
-  memory: 'bg-purple-500',
-  flow: 'bg-green-500',
-  communication: 'bg-yellow-500',
-  computation: 'bg-red-500'
+const typeIcons: Record<string, React.ComponentType<any>> = {
+  behavioral: Brain,
+  structural: Shield,
+  creational: Star,
+  cognitive: Brain,
+  architectural: Shield
 };
 
 export const PatternCard: React.FC<PatternCardProps> = ({ 
@@ -50,104 +65,147 @@ export const PatternCard: React.FC<PatternCardProps> = ({
   size = 'medium' 
 }) => {
   const sizeClasses = {
-    small: 'w-48 h-64',
-    medium: 'w-64 h-80',
-    large: 'w-80 h-96'
+    small: 'w-72',
+    medium: 'w-80',
+    large: 'w-96'
   };
 
-  const statBarWidth = (value: number) => `${Math.min(100, Math.max(0, value))}%`;
+  const rarity = rarityColors[pattern.rarity];
+  const TypeIcon = typeIcons[pattern.type] || Brain;
 
   return (
     <motion.div
-      className={`${sizeClasses[size]} relative cursor-pointer transform-gpu`}
-      whileHover={isInteractive ? { scale: 1.05, rotateY: 5 } : {}}
-      whileTap={isInteractive ? { scale: 0.95 } : {}}
+      className={`${sizeClasses[size]} cursor-pointer`}
+      whileHover={isInteractive ? { y: -4 } : {}}
+      whileTap={isInteractive ? { scale: 0.98 } : {}}
       onClick={onClick}
-      initial={{ rotateY: 0 }}
-      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      transition={{ type: "spring", stiffness: 400, damping: 25 }}
     >
       <div className={`
-        w-full h-full rounded-xl overflow-hidden
-        bg-gradient-to-br ${rarityColors[pattern.rarity]}
-        shadow-2xl ${rarityGlow[pattern.rarity]}
-        border-2 border-white/20
-        relative
+        ${rarity.bg} backdrop-blur-sm ${rarity.border} border rounded-xl
+        hover:bg-gray-800/50 transition-all duration-200
+        overflow-hidden h-full
       `}>
-        {/* Card Header */}
-        <div className="absolute top-0 left-0 right-0 p-3 bg-black/30 backdrop-blur-sm">
-          <div className="flex justify-between items-start">
-            <div>
-              <h3 className="text-white font-bold text-lg leading-tight">{pattern.name}</h3>
-              <div className="flex items-center gap-2 mt-1">
-                <span className="text-2xl">{typeIcons[pattern.type]}</span>
-                <span className={`px-2 py-0.5 rounded-full text-xs font-medium text-white ${elementColors[pattern.element]}`}>
-                  {pattern.element}
+        {/* Header */}
+        <div className="p-5 pb-3">
+          <div className="flex items-start justify-between mb-3">
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-2">
+                <TypeIcon className={`w-5 h-5 ${rarity.icon}`} />
+                <span className={`text-xs font-medium ${rarity.text} uppercase tracking-wider`}>
+                  {pattern.rarity}
                 </span>
               </div>
+              <h3 className="text-lg font-semibold text-white mb-1">
+                {pattern.name}
+              </h3>
+              <p className="text-sm text-gray-400 capitalize">
+                {pattern.type} • {pattern.element}
+              </p>
             </div>
             <div className="text-right">
-              <div className="text-yellow-300 text-sm font-bold">Lv.{pattern.level}</div>
-              <div className="text-xs text-white/70">{pattern.rarity}</div>
+              <div className="text-amber-400 font-bold text-sm">Lv.{pattern.level}</div>
+              {pattern.owned && (
+                <div className="text-xs text-gray-500 mt-1">
+                  {Math.round((pattern.experience / pattern.maxExperience) * 100)}% XP
+                </div>
+              )}
             </div>
           </div>
-        </div>
 
-        {/* Card Image Area */}
-        <div className="absolute top-20 left-4 right-4 h-24 bg-black/20 rounded-lg flex items-center justify-center">
-          <div className="text-4xl opacity-50">
-            {pattern.image || typeIcons[pattern.type]}
-          </div>
-        </div>
+          {/* Description */}
+          <p className="text-xs text-gray-400 line-clamp-2 mb-3">
+            {pattern.description}
+          </p>
 
-        {/* Stats Section */}
-        <div className="absolute bottom-24 left-4 right-4 space-y-1">
-          {Object.entries(pattern.stats).slice(0, 3).map(([stat, value]) => (
-            <div key={stat} className="flex items-center gap-2">
-              <span className="text-xs text-white/80 w-16 capitalize">{stat}</span>
-              <div className="flex-1 h-2 bg-black/30 rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-gradient-to-r from-white/80 to-white/40 transition-all duration-300"
-                  style={{ width: statBarWidth(value) }}
-                />
-              </div>
-              <span className="text-xs text-white/80 w-8 text-right">{value}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* Abilities Section */}
-        <div className="absolute bottom-2 left-4 right-4">
-          <div className="bg-black/30 rounded-lg p-2">
-            {pattern.abilities.slice(0, 2).map((ability, idx) => (
-              <div key={idx} className="text-xs text-white/90">
-                <span className="font-semibold">{ability.name}:</span>
-                <span className="ml-1 text-white/70">{ability.description}</span>
+          {/* Stats Grid */}
+          <div className="grid grid-cols-3 gap-2 mb-3">
+            {Object.entries(pattern.stats).slice(0, 3).map(([stat, value]) => (
+              <div key={stat} className="text-center">
+                <div className="text-xs text-gray-500 capitalize mb-1">{stat}</div>
+                <div className="relative">
+                  <div className="h-1 bg-gray-700/50 rounded-full overflow-hidden">
+                    <motion.div 
+                      className={`h-full ${rarity.text} opacity-60`}
+                      style={{ 
+                        background: `linear-gradient(to right, currentColor, currentColor)`,
+                        width: `${value}%` 
+                      }}
+                      initial={{ width: 0 }}
+                      animate={{ width: `${value}%` }}
+                      transition={{ duration: 1, delay: 0.5 }}
+                    />
+                  </div>
+                  <div className="text-xs text-gray-300 font-mono mt-1">{value}</div>
+                </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Ownership/Discovery Status */}
-        {!pattern.owned && (
-          <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-            <div className="text-center">
-              <div className="text-white text-xl font-bold">
-                {pattern.discovered ? 'Not Owned' : 'Undiscovered'}
+        {/* Abilities Section */}
+        <div className="px-5 pb-5">
+          <div className="space-y-2">
+            {pattern.abilities.slice(0, 2).map((ability, idx) => (
+              <div key={idx} className="bg-gray-800/30 rounded-lg p-2.5 border border-gray-700/30">
+                <div className="flex items-start gap-2">
+                  <Zap className={`w-3 h-3 ${rarity.icon} mt-0.5 flex-shrink-0`} />
+                  <div className="flex-1 min-w-0">
+                    <h4 className={`text-xs font-medium ${rarity.text} mb-0.5`}>
+                      {ability.name}
+                    </h4>
+                    <p className="text-xs text-gray-500 leading-relaxed">
+                      {ability.description}
+                    </p>
+                  </div>
+                </div>
               </div>
-              {pattern.discovered && (
-                <div className="text-white/70 text-sm mt-1">Click to learn more</div>
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="px-5 py-3 bg-gray-900/20 border-t border-gray-700/30">
+          <div className="flex items-center justify-between">
+            <div className="flex gap-2">
+              {pattern.synergies?.slice(0, 2).map(synergy => (
+                <span key={synergy} className="text-xs px-2 py-0.5 bg-gray-800/50 rounded text-gray-400">
+                  {synergy}
+                </span>
+              ))}
+            </div>
+            <div className="flex items-center gap-1">
+              {pattern.owned ? (
+                <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
+              ) : pattern.discovered ? (
+                <Lock className="w-4 h-4 text-gray-500" />
+              ) : (
+                <HelpCircle className="w-4 h-4 text-gray-600" />
               )}
             </div>
           </div>
-        )}
+        </div>
 
-        {/* Experience Bar */}
-        {pattern.owned && (
-          <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/50">
-            <div 
-              className="h-full bg-gradient-to-r from-yellow-400 to-yellow-600 transition-all duration-300"
-              style={{ width: `${(pattern.experience / pattern.maxExperience) * 100}%` }}
-            />
+        {/* Lock overlay for unowned cards */}
+        {!pattern.owned && (
+          <div className="absolute inset-0 bg-gray-900/70 backdrop-blur-sm flex items-center justify-center">
+            <div className="text-center p-6">
+              <div className="mb-3">
+                {pattern.discovered ? (
+                  <Lock className="w-8 h-8 text-gray-400 mx-auto" />
+                ) : (
+                  <HelpCircle className="w-8 h-8 text-gray-500 mx-auto" />
+                )}
+              </div>
+              <p className="text-white font-medium text-sm">
+                {pattern.discovered ? 'Locked' : 'Undiscovered'}
+              </p>
+              {pattern.discovered && (
+                <p className="text-gray-400 text-xs mt-1">
+                  Complete more patterns to unlock
+                </p>
+              )}
+            </div>
           </div>
         )}
       </div>
