@@ -415,10 +415,17 @@ export const LearningHubConnected: React.FC<LearningHubProps> = ({ techniques = 
         // Always mark as 100% when challenge is completed (regardless of score)
         // The score affects XP earned, not completion status
         const progressData = {
+          xpEarned: challenge?.xpReward || 10, // Use challenge XP reward or default
+          userId: '', // Will be filled by context
           courseId: mapping.courseId,
+          journeyId: mapping.courseId, // Use courseId as journeyId for now
+          chapterId: mapping.courseId, // Use courseId as chapterId for now  
           lessonId: mapping.lessonId,
-          progressPercentage: 100, // Challenge is completed
-          timeSpent
+          isCompleted: true,
+          score: 100, // Challenge completed successfully
+          completedAt: new Date().toISOString(),
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
         };
         
         console.log('[Learning Hub] Sending progress update:', progressData);

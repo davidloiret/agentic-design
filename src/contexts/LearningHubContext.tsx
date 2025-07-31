@@ -128,11 +128,13 @@ export function LearningHubProvider({ children }: { children: React.ReactNode })
         const newProgress: UserProgress = {
           id: existingIndex >= 0 ? prev[existingIndex].id : `temp-${Date.now()}`,
           userId: user.id,
+          courseId: data.courseId,
           journeyId: data.journeyId,
           chapterId: data.chapterId,
           lessonId: data.lessonId,
-          isCompleted: data.isCompleted,
-          score: data.score,
+          progressPercentage: data.isCompleted ? 100 : 0,
+          isCompleted: data.isCompleted || false,
+          score: data.score || 0,
           completedAt: data.isCompleted ? new Date().toISOString() : null,
           createdAt: existingIndex >= 0 ? prev[existingIndex].createdAt : new Date().toISOString(),
           updatedAt: new Date().toISOString()

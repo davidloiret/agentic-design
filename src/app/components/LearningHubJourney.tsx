@@ -104,7 +104,7 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
   } = useLearningHub();
 
   // View states
-  const [activeView, setActiveView] = useState<'dashboard' | 'journeys' | 'journey-detail' | 'chapter' | 'lesson' | 'achievements' | 'certification'>('dashboard');
+  const [activeView, setActiveView] = useState<'dashboard' | 'journeys' | 'journey-detail' | 'chapter' | 'lesson' | 'achievements' | 'certification' | 'leaderboard'>('dashboard');
   const [selectedJourney, setSelectedJourney] = useState<Journey | null>(null);
   const [selectedChapter, setSelectedChapter] = useState<Chapter | null>(null);
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
@@ -208,10 +208,17 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
     // Update backend
     try {
       await updateProgress({
+        xpEarned: 10, // Standard XP for lesson completion
+        userId: '', // Will be filled by context
         courseId: selectedJourney.id,
+        journeyId: selectedJourney.id,
+        chapterId: selectedChapter.id,
         lessonId: lessonId,
-        progressPercentage: 100,
-        timeSpent: selectedLesson?.estimatedTime || 0
+        isCompleted: true,
+        score: 100,
+        completedAt: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
       });
     } catch (error) {
       console.error('Failed to update progress:', error);

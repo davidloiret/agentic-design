@@ -125,6 +125,20 @@ export class KnowledgeBaseService {
     if (updateDto.isFavorite !== undefined) {
       updateDto.isFavorite ? item.markAsFavorite() : item.unmarkAsFavorite();
     }
+    if (updateDto.isRead !== undefined) {
+      updateDto.isRead ? item.markAsRead() : item.markAsUnread();
+    }
+
+    // Handle collection updates
+    if (updateDto.collectionIds !== undefined) {
+      // Validate collections belong to the item's workspace and user has access
+      const { collections } = await this.validateWorkspaceAndCollections(
+        item.workspace.id,
+        updateDto.collectionIds,
+        userId,
+      );
+      item.collections.set(collections);
+    }
 
     return this.knowledgeBaseRepository.update(item);
   }

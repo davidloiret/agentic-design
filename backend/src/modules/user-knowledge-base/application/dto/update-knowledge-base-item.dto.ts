@@ -29,4 +29,13 @@ export class UpdateKnowledgeBaseItemDto {
   @IsOptional()
   @IsBoolean()
   isFavorite?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  isRead?: boolean;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  collectionIds?: string[];
 }

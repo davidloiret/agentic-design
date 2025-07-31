@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { PatternGameView } from './PatternGameView';
 import { PatternBattleView } from './PatternBattleView';
+import { UnifiedPatternLayout } from './UnifiedPatternLayout';
 import { PlayerManager } from '@/utils/player-manager';
 import { aiChallenges } from '@/data/ai-challenges';
 import { patternCardsData } from '@/data/pattern-cards-data';
@@ -158,31 +159,37 @@ export const PatternCardGame: React.FC = () => {
 
   if (gameMode === 'collection') {
     return (
-      <div className="min-h-screen bg-gray-900">
+      <UnifiedPatternLayout
+        currentView="collection"
+        title="Pattern Collection"
+        subtitle="Browse and manage your pattern cards"
+        onBack={() => setGameMode('menu')}
+        player={player ? {
+          name: player.name,
+          level: player.level,
+          coins: player.currency.coins
+        } : undefined}
+      >
         <PatternGameView />
-        <button
-          onClick={() => setGameMode('menu')}
-          className="fixed top-4 left-4 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-white"
-        >
-          Back to Menu
-        </button>
-      </div>
+      </UnifiedPatternLayout>
     );
   }
 
   if (gameMode === 'challenges') {
     return (
-      <div className="min-h-screen bg-gray-900 p-8">
+      <UnifiedPatternLayout
+        currentView="game"
+        title="AI Challenges"
+        subtitle="Test your patterns against AI opponents"
+        onBack={() => setGameMode('menu')}
+        player={player ? {
+          name: player.name,
+          level: player.level,
+          coins: player.currency.coins
+        } : undefined}
+        className="p-8"
+      >
         <div className="max-w-6xl mx-auto">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-3xl font-bold text-white">AI Challenges</h2>
-            <button
-              onClick={() => setGameMode('menu')}
-              className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-white"
-            >
-              Back to Menu
-            </button>
-          </div>
           
           <div className="grid gap-4">
             {challenges.map(challenge => {
@@ -235,23 +242,25 @@ export const PatternCardGame: React.FC = () => {
             })}
           </div>
         </div>
-      </div>
+      </UnifiedPatternLayout>
     );
   }
 
   if (gameMode === 'profile') {
     return (
-      <div className="min-h-screen bg-gray-900 p-8">
+      <UnifiedPatternLayout
+        currentView="game"
+        title="Player Profile"
+        subtitle="View your progress and achievements"
+        onBack={() => setGameMode('menu')}
+        player={player ? {
+          name: player.name,
+          level: player.level,
+          coins: player.currency.coins
+        } : undefined}
+        className="p-8"
+      >
         <div className="max-w-4xl mx-auto">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-3xl font-bold text-white">Player Profile</h2>
-            <button
-              onClick={() => setGameMode('menu')}
-              className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-white"
-            >
-              Back to Menu
-            </button>
-          </div>
           
           <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-8">
             <div className="flex items-center gap-6 mb-8">
@@ -330,22 +339,18 @@ export const PatternCardGame: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
+      </UnifiedPatternLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-8">
-      <div className="max-w-4xl w-full">
-        <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-4">
-            Pattern Card Battle
-          </h1>
-          <p className="text-gray-400 text-lg">
-            Master AI patterns through strategic card battles
-          </p>
-        </div>
-        
+    <UnifiedPatternLayout
+      currentView="game"
+      title="Pattern Card Battle"
+      subtitle="Master AI patterns through strategic card battles"
+      className="p-8"
+    >
+      <div className="max-w-4xl w-full mx-auto">
         <div className="grid grid-cols-2 gap-6">
           <MenuCard
             title="Collection"
@@ -379,25 +384,8 @@ export const PatternCardGame: React.FC = () => {
             color="red"
           />
         </div>
-        
-        <div className="mt-8 text-center">
-          <div className="inline-flex items-center gap-4 text-sm text-gray-500">
-            <div className="flex items-center gap-2">
-              <User className="w-4 h-4" />
-              <span>{player.name}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Star className="w-4 h-4" />
-              <span>Level {player.level}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Coins className="w-4 h-4" />
-              <span>{player.currency.coins}</span>
-            </div>
-          </div>
-        </div>
       </div>
-    </div>
+    </UnifiedPatternLayout>
   );
 };
 

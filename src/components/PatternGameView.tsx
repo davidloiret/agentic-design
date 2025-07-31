@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { PatternCollection } from './PatternCollection';
 import { PatternDeckBuilder } from './PatternDeckBuilder';
+import { UnifiedPatternLayout } from './UnifiedPatternLayout';
 import { PatternCard as PatternCardType, PatternDeck } from '@/types/pattern-cards';
 import { patternCardsData } from '@/data/pattern-cards-data';
 import { motion } from 'framer-motion';
@@ -127,17 +128,12 @@ export const PatternGameView: React.FC = () => {
   };
 
   return (
-    <div className="w-full max-w-none space-y-6">
-      {/* Header */}
-      <div className="text-center p-6">
-        <Brain className="w-12 h-12 mx-auto mb-4 text-purple-400" />
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-2">
-          Pattern Cards Collection
-        </h1>
-        <p className="text-gray-400">
-          Collect, master, and organize AI design patterns in a gamified experience
-        </p>
-      </div>
+    <UnifiedPatternLayout
+      currentView="collection"
+      title="Pattern Cards"
+      subtitle="Collect, master, and organize AI design patterns"
+    >
+      <div className="w-full max-w-none space-y-6 pt-6">
 
       {/* Analytics Dashboard */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 px-6">
@@ -316,6 +312,7 @@ export const PatternGameView: React.FC = () => {
           </motion.div>
         </motion.div>
       )}
-    </div>
+      </div>
+    </UnifiedPatternLayout>
   );
 };

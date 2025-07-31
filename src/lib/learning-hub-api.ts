@@ -3,13 +3,19 @@ import { api } from './api-client';
 // Types
 export interface UserProgress {
   id: string;
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
   courseId: string;
+  score: number;
   lessonId: string;
   progressPercentage: number;
   isCompleted: boolean;
-  completedAt?: string;
+  completedAt?: string | null;
   timeSpent?: number;
   lastAccessedAt?: string;
+  chapterId?: string;
+  journeyId?: string;
 }
 
 export interface UserAchievement {
@@ -57,10 +63,17 @@ export interface LearningHubStats {
 }
 
 export interface UpdateProgressRequest {
+  xpEarned: number | null;
+  userId: string;
   courseId: string;
+  journeyId: string;
+  chapterId: string;
   lessonId: string;
-  progressPercentage: number;
-  timeSpent?: number;
+  isCompleted: boolean | null;
+  score: number | null;
+  completedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
 }
 
 // API Functions

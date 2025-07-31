@@ -452,7 +452,7 @@ export const HearthstoneBattle: React.FC<HearthstoneBattleProps> = ({
 
       {/* Card hover preview */}
       {hoveredCard && (
-        <CardPreview card={hoveredCard} />
+        <CardPreview onClose={() => setHoveredCard(null)} card={hoveredCard} />
       )}
       
       {/* Targeting mode indicator */}
@@ -1598,8 +1598,8 @@ const AnimationEffect: React.FC<{ animation: Animation }> = ({ animation }) => {
   if (animation.type === 'attack') {
     return (
       <AttackAnimation
-        sourceId={animation.sourceId}
-        targetId={animation.targetId}
+        sourceId={animation.sourceId || ''}
+        targetId={animation.targetId || ''}
         duration={animation.duration}
       />
     );
@@ -1608,7 +1608,7 @@ const AnimationEffect: React.FC<{ animation: Animation }> = ({ animation }) => {
   if (animation.type === 'damage') {
     return (
       <DamageAnimation
-        targetId={animation.targetId}
+        targetId={animation.targetId || ''}
         value={animation.value || 0}
         duration={animation.duration}
       />
@@ -1618,8 +1618,8 @@ const AnimationEffect: React.FC<{ animation: Animation }> = ({ animation }) => {
   if (animation.type === 'spell_cast') {
     return (
       <SpellAnimation
-        sourceId={animation.sourceId}
-        targetId={animation.targetId}
+        sourceId={animation.sourceId || ''}
+        targetId={animation.targetId || ''}
         duration={animation.duration}
       />
     );
@@ -1628,7 +1628,7 @@ const AnimationEffect: React.FC<{ animation: Animation }> = ({ animation }) => {
   if (animation.type === 'card_played') {
     return (
       <CardPlayAnimation
-        sourceId={animation.sourceId}
+        sourceId={animation.sourceId || ''}
         targetPosition={animation.targetPosition}
         duration={animation.duration}
       />
@@ -1638,7 +1638,7 @@ const AnimationEffect: React.FC<{ animation: Animation }> = ({ animation }) => {
   if (animation.type === 'draw') {
     return (
       <DrawAnimation
-        cardId={animation.targetId}
+        cardId={animation.targetId || ''}
         duration={animation.duration}
       />
     );
@@ -1647,7 +1647,7 @@ const AnimationEffect: React.FC<{ animation: Animation }> = ({ animation }) => {
   if (animation.type === 'death') {
     return (
       <DeathAnimation
-        cardId={animation.targetId}
+        cardId={animation.targetId || ''}
         duration={animation.duration}
       />
     );

@@ -687,3 +687,64 @@ Add taunt in collection
 ----
 
 Jeux ou l'idée c'est de choisir la bonne carte pour le bon challenge au lieu de faire un hearthstone, l'idée c'est d'utiliser les bonnes carte
+
+
+besoin de formation continue technique / executif / non technique
+
+
+au lieu de mana on peut parler de jus de cerveau etc
+
+faire battle qcm et learderboard
+
+Agenthone
+
+
+-----------
+
+
+En l’état actuel du droit, **reprendre le principe général** d’une partie de cartes à collectionner en duel (comme dans Hearthstone) **est possible**, mais il faut bien distinguer :
+
+1. **Les règles et mécaniques de jeu**
+
+   * Les règles d’un jeu (tour par tour, gestion de ressources, construction de deck, etc.) ne sont pas protégeables par le droit d’auteur : on parle de « ideas » ou « systems », qui ne sont pas couverts © ([Reddit][1]).
+   * Seuls sont protégés l’**expression** de ces règles : le code source, les textes, les illustrations, les noms des cartes, le design spécifique, etc. ([copyright.gov][2]).
+
+2. **Les brevets éventuels**
+
+   * Certains mécanismes de jeu peuvent être couverts par des brevets : par exemple, la fameuse « Nemesis System » de Shadow of Mordor ou des systèmes de matchmaking et de microtransactions ([journals.library.columbia.edu][3], [patents.google.com][4]).
+   * Dans le cas de Hearthstone, des brevets d’Activision-Blizzard décrivent des logiques de matchmaking ou de stimulation de microtransactions, mais rien n’indique qu’ils soient effectivement exploités dans le jeu ([us.forums.blizzard.com][5], [us.forums.blizzard.com][6]).
+
+3. **Les marques déposées**
+
+   * Le nom « Hearthstone » et tout ce qui relève de l’identification du jeu (logo, trade dress) sont protégés par des marques : il faudra choisir un titre et une identité visuelle suffisamment différents pour éviter toute confusion commerciale ou risque de contrefaçon de marque.
+
+4. **Ce que vous pouvez faire**
+
+   * **Reprendre le concept** de duel de decks, tours alternés, gestion de cristaux (ou d’une autre ressource) ;
+   * **Créer vos propres cartes** (noms, illustrations, textes, mécaniques) ;
+   * **Écrire votre propre code** ou utiliser un moteur open-source (en respectant ses licences) ;
+   * **Inventer une identité visuelle et un univers narratif** originaux.
+
+5. **Points de vigilance**
+
+   * Ne copiez ni le **code**, ni les **bibliothèques internes**, ni les **graphismes** de Hearthstone.
+   * Vérifiez que vous n’êtes pas en train d’implémenter, tel quel, un mécanisme expressément breveté (vous pouvez consulter les bases de brevets publiques).
+   * Choisissez un nom et un graphisme qui ne rappellent pas trop ceux de Blizzard pour écarter tout risque de confusion.
+
+---
+
+**En résumé**, vous êtes libre de développer un jeu de cartes à collectionner **sur le même principe** que Hearthstone, à condition de créer intégralement vos propres contenus (cartes, code, art, nom, univers) et de vous assurer qu’aucun mécanisme spécifique n’est verrouillé par un brevet actif.
+
+[1]: https://www.reddit.com/r/gamedev/comments/10o4mvi/at_what_point_are_game_mechanics_copyrighted/?utm_source=chatgpt.com "At what point are game mechanics copyrighted? : r/gamedev - Reddit"
+[2]: https://www.copyright.gov/register/tx-games.html?utm_source=chatgpt.com "Games - Copyright"
+[3]: https://journals.library.columbia.edu/index.php/lawandarts/announcement/view/553?utm_source=chatgpt.com "Should Video Game Mechanics Be Copyrightable?"
+[4]: https://patents.google.com/patent/US20160001181A1/en?utm_source=chatgpt.com "Matchmaking system and method for multiplayer video games"
+[5]: https://us.forums.blizzard.com/en/hearthstone/t/hearthstone-rigged-activision-owns-the-patent-to-do-so/102941?utm_source=chatgpt.com "Hearthstone rigged? Activision owns the patent to do so"
+[6]: https://us.forums.blizzard.com/en/hearthstone/t/blizzards-patent-really-seems-to-be-working-in-a-way/146040?utm_source=chatgpt.com "Blizzard's patent really seems to be working in a way"
+
+
+add contact
+
+agent ambient
+
+detect key property of interface not used
