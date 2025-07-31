@@ -302,4 +302,91 @@ export class AuthController {
       message: 'Code exchanged successfully' 
     };
   }
+
+  // Mobile-specific endpoints that return tokens instead of setting cookies
+  @Public()
+  @Post('mobile/login')
+  @HttpCode(HttpStatus.OK)
+  async mobileLogin(@Body() dto: LoginDto) {
+    const result = await this.authService.login(dto);
+    // Return tokens directly for mobile apps
+    return {
+      access_token: result.access_token,
+      refresh_token: result.refresh_token,
+      user: result.user,
+      expires_in: 24 * 60 * 60, // 1 day in seconds
+    };
+  }
+
+  @Public()
+  @Post('mobile/register')
+  async mobileRegister(@Body() dto: RegisterDto) {
+    const result = await this.authService.register(dto);
+    // Return tokens directly for mobile apps
+    return {
+      access_token: result.access_token,
+      refresh_token: result.refresh_token,
+      user: result.user,
+      expires_in: 24 * 60 * 60, // 1 day in seconds
+    };
+  }
+
+  @Public()
+  @Post('mobile/refresh')
+  @HttpCode(HttpStatus.OK)
+  async mobileRefresh(@Body() body: { refresh_token: string }) {
+    if (!body.refresh_token) {
+      throw new BadRequestException('Refresh token is required');
+    }
+
+    try {
+      const result = await this.authService.refreshSession(body.refresh_token);
+      if (!result?.session) {
+        throw new UnauthorizedException('Invalid refresh token');
+      }
+
+      return {
+        access_token: result.session.access_token,
+        refresh_token: result.session.refresh_token,
+        expires_in: 24 * 60 * 60, // 1 day in seconds
+      };
+    } catch (error) {
+      throw new UnauthorizedException('Failed to refresh token');
+    }
+  }
+
+  @Public()
+  @Get('mobile/google')
+  async mobileGoogleAuth() {
+    const { url } = await this.authService.signInWithGoogle();
+    return { url };
+  }
+
+  @Public()
+  @Get('mobile/github')
+  async mobileGithubAuth() {
+    const { url } = await this.authService.signInWithGitHub();
+    return { url };
+  }
+
+  @Public()
+  @Post('mobile/oauth/callback')
+  async mobileOAuthCallback(@Body() body: { code: string }) {
+    if (!body.code) {
+      throw new BadRequestException('Authorization code is required');
+    }
+
+    try {
+      const result = await this.authService.handleOAuthCallback(body.code);
+      
+      return {
+        access_token: result.access_token,
+        refresh_token: result.refresh_token,
+        user: result.user,
+        expires_in: 24 * 60 * 60, // 1 day in seconds
+      };
+    } catch (error) {
+      throw new BadRequestException('OAuth callback failed');
+    }
+  }
 }

@@ -177,4 +177,8 @@ export class AuthService {
       refresh_token: session.refresh_token,
     };
   }
+
+  async refreshSession(refreshToken: string): Promise<any> {
+    return await this.supabaseAuthService.refreshSession(refreshToken);
+  }
 }
