@@ -181,4 +181,8 @@ export class AuthService {
   async refreshSession(refreshToken: string): Promise<any> {
     return await this.supabaseAuthService.refreshSession(refreshToken);
   }
+
+  async resendConfirmationEmail(email: string): Promise<void> {
+    await this.supabaseAuthService.resendConfirmationEmail(email);
+  }
 }

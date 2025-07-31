@@ -12,8 +12,8 @@ async function bootstrap() {
   
   app.enableCors({
     origin: [
-      configService.get<string>('FRONTEND_URL') || 'https://agentic-design.ai',
-      'https://agentic-design.ai',
+      configService.get<string>('FRONTEND_URL') || 'http://localhost:3000',
+      'http://localhost:3000',
       'https://agentic-design.ai'
     ],
     credentials: true,
@@ -30,5 +30,6 @@ async function bootstrap() {
   const port = configService.get<number>('PORT') || 3001;
   await app.listen(port);
   console.log(`Application is running on: ${await app.getUrl()}`);
+  console.log(`WebSocket server is available at ws://localhost:${port}/game`);
 }
 bootstrap();

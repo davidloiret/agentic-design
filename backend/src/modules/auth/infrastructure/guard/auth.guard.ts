@@ -101,10 +101,29 @@ export class AuthGuard implements CanActivate {
       }
 
       // Get the local User entity using the Supabase user ID
-      const localUser = await this.userRepository.findBySupabaseId(user.id);
+      let localUser = await this.userRepository.findBySupabaseId(user.id);
       if (!localUser) {
-        console.error('[AuthGuard] Local user not found for supabaseId:', user.id);
-        throw new UnauthorizedException('User not found in local database');
+        console.log('[AuthGuard] Local user not found, attempting to create/sync for:', user.email);
+        
+        // Try to find by email first
+        localUser = await this.userRepository.findByEmail(user.email);
+        
+        if (localUser) {
+          // Update existing user with Supabase ID
+          localUser.supabaseId = user.id;
+          await this.userRepository.update(localUser);
+        } else {
+          // Create new user (fallback for race conditions)
+          const { User } = await import('../../../user/domain/entity/user.entity');
+          const newUser = new User(
+            user.email,
+            user.user_metadata?.firstName || user.email.split('@')[0],
+            user.user_metadata?.lastName || '',
+            user.id
+          );
+          await this.userRepository.save(newUser);
+          localUser = newUser;
+        }
       }
 
       request['user'] = localUser;

@@ -8,6 +8,7 @@ import { UserModule } from './modules/user/user.module';
 import { LearningHubModule } from './modules/learning-hub/learning-hub.module';
 import { NotificationModule } from './modules/notification/notification.module';
 import { SearchModule } from './modules/search/search.module';
+import { PatternGameModule } from './modules/pattern-game/pattern-game.module';
 // import { AiRedTeamingModule } from './modules/ai-red-teaming/ai-red-teaming.module';
 import { UserKnowledgeBaseModule } from './modules/user-knowledge-base/user-knowledge-base.module';
 import mikroOrmConfig from './mikro-orm.config';
@@ -23,6 +24,7 @@ import mikroOrmConfig from './mikro-orm.config';
     LearningHubModule,
     NotificationModule,
     SearchModule,
+    PatternGameModule,
     // AiRedTeamingModule,
     UserKnowledgeBaseModule,
   ],

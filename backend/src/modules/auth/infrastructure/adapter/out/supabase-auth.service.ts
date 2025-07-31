@@ -34,8 +34,10 @@ export class SupabaseAuthService {
         throw new ConflictException('A user with this email already exists');
       
       case 'Invalid login credentials':
-      case 'Email not confirmed':
         throw new UnauthorizedException('Invalid email or password');
+      
+      case 'Email not confirmed':
+        throw new UnauthorizedException('Please check your email and click the confirmation link to activate your account');
       
       case 'Password should be at least 6 characters':
         throw new BadRequestException('Password must be at least 6 characters long');
@@ -66,31 +68,55 @@ export class SupabaseAuthService {
   }
 
   async signUp(email: string, password: string, userData?: any) {
+    console.log(`[SupabaseAuth] Attempting sign up for: ${email}`);
+    
+    const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'https://agentic-design.ai';
+    
     const { data, error } = await this.supabase.auth.signUp({
       email,
       password,
       options: {
         data: userData,
+        emailRedirectTo: `${frontendUrl}/auth/callback`,
       },
     });
 
     if (error) {
+      console.error(`[SupabaseAuth] Sign up error for ${email}:`, {
+        message: error.message,
+        status: error.status,
+        code: error.code || 'unknown'
+      });
       this.handleAuthError(error);
     }
 
+    console.log(`[SupabaseAuth] Sign up result for ${email}:`, {
+      userId: data.user?.id,
+      confirmed: data.user?.email_confirmed_at ? 'confirmed' : 'pending',
+      sessionExists: !!data.session
+    });
+    
     return data;
   }
 
   async signIn(email: string, password: string) {
+    console.log(`[SupabaseAuth] Attempting sign in for: ${email}`);
+    
     const { data, error } = await this.supabase.auth.signInWithPassword({
       email,
       password,
     });
 
     if (error) {
+      console.error(`[SupabaseAuth] Sign in error for ${email}:`, {
+        message: error.message,
+        status: error.status,
+        code: error.code || 'unknown'
+      });
       this.handleAuthError(error);
     }
 
+    console.log(`[SupabaseAuth] Sign in successful for: ${email}`);
     return data;
   }
 
@@ -230,6 +256,24 @@ export class SupabaseAuthService {
       email,
       token,
       type,
+    });
+
+    if (error) {
+      this.handleAuthError(error);
+    }
+
+    return data;
+  }
+
+  async resendConfirmationEmail(email: string) {
+    const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'https://agentic-design.ai';
+    
+    const { data, error } = await this.supabase.auth.resend({
+      type: 'signup',
+      email,
+      options: {
+        emailRedirectTo: `${frontendUrl}/auth/callback`,
+      },
     });
 
     if (error) {

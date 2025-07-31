@@ -389,4 +389,19 @@ export class AuthController {
       throw new BadRequestException('OAuth callback failed');
     }
   }
+
+  @Public()
+  @Post('resend-confirmation')
+  @HttpCode(HttpStatus.OK)
+  async resendConfirmation(@Body() body: { email: string }) {
+    if (!body.email) {
+      throw new BadRequestException('Email is required');
+    }
+
+    await this.authService.resendConfirmationEmail(body.email);
+    
+    return { 
+      message: 'If an account exists with this email, a confirmation link has been sent.' 
+    };
+  }
 }

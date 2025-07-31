@@ -754,3 +754,19 @@ Eval lab and Ai red teaming are reloading the page ?
 choisir niveau pour apprentissage
 technique / executive etc / curious
 QCM battle
+
+level => learner level et level player, le meme ?
+battle arena
+
+ne pas passer par nextjs
+
+--------------
+QCM en plein milieu du jeux => celui qui répond le plus vite la bonne réponse gagne du mana ou avantage.
+
+Quand tu te fais attaquer tu peux prendre un QCM si tu réussi ca te fais un shield
+
+QCM doit etre gamifié bien sur avec joli option animés
+
+Affrontez vous sur le leaderboard de Agentic Design. Where Knowledge will save you.
+
+Setup resend

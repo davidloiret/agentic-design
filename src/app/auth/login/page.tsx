@@ -12,21 +12,57 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showResendConfirmation, setShowResendConfirmation] = useState(false);
+  const [resendingConfirmation, setResendingConfirmation] = useState(false);
+  const [confirmationSent, setConfirmationSent] = useState(false);
   const { signIn, signInWithGoogle, signInWithGitHub } = useAuth();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setShowResendConfirmation(false);
     setLoading(true);
 
     try {
       await signIn(email, password);
       router.push('/learning-hub');
     } catch (err: any) {
-      setError(err.message || 'Failed to sign in');
+      const errorMessage = err.message || 'Failed to sign in';
+      setError(errorMessage);
+      
+      // Show resend confirmation option if email not confirmed
+      if (errorMessage.includes('confirmation link')) {
+        setShowResendConfirmation(true);
+      }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleResendConfirmation = async () => {
+    setResendingConfirmation(true);
+    setError('');
+    
+    try {
+      const response = await fetch('/api/v1/auth/resend-confirmation', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      if (response.ok) {
+        setConfirmationSent(true);
+        setShowResendConfirmation(false);
+      } else {
+        throw new Error('Failed to resend confirmation email');
+      }
+    } catch (err: any) {
+      setError(err.message || 'Failed to resend confirmation email');
+    } finally {
+      setResendingConfirmation(false);
     }
   };
 
@@ -118,6 +154,25 @@ export default function LoginPage() {
             {error && (
               <div className="bg-red-900/20 border border-red-800/50 rounded-lg p-4">
                 <p className="text-sm text-red-400">{error}</p>
+                {showResendConfirmation && (
+                  <div className="mt-3 pt-3 border-t border-red-800/30">
+                    <button
+                      onClick={handleResendConfirmation}
+                      disabled={resendingConfirmation}
+                      className="text-sm text-blue-400 hover:text-blue-300 underline disabled:opacity-50"
+                    >
+                      {resendingConfirmation ? 'Sending...' : 'Resend confirmation email'}
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {confirmationSent && (
+              <div className="bg-green-900/20 border border-green-800/50 rounded-lg p-4">
+                <p className="text-sm text-green-400">
+                  Confirmation email sent! Please check your inbox and click the confirmation link.
+                </p>
               </div>
             )}
 
