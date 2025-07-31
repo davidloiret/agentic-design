@@ -27,7 +27,7 @@ export type BrainExpression =
 
 export interface BrainMascotProps {
   expression?: BrainExpression;
-  size?: 'small' | 'medium' | 'large';
+  size?: 'tiny' | 'small' | 'medium' | 'large';
   animate?: boolean;
   color?: 'purple' | 'blue' | 'green' | 'amber' | 'red';
   className?: string;
@@ -36,6 +36,7 @@ export interface BrainMascotProps {
 }
 
 const sizeMap = {
+  tiny: { width: 32, height: 32 },
   small: { width: 80, height: 80 },
   medium: { width: 120, height: 120 },
   large: { width: 160, height: 160 }

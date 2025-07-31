@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { generatePageMetadata } from '../lib/metadata';
+import { generatePageMetadata } from '../../lib/metadata';
 
 export const metadata: Metadata = generatePageMetadata({
   title: 'Pattern Evaluation Lab',

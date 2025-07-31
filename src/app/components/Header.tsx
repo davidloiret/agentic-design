@@ -7,9 +7,10 @@ import { UserMenu } from './UserMenu';
 import { NotificationBell } from './NotificationBell';
 import Link from 'next/link';
 import { useSearch } from '@/contexts/SearchContext';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
+import { BrainMascot, BrainExpression } from '@/components/BrainMascot';
 
 export const Header = () => {
   const { user, loading } = useAuth();
@@ -18,6 +19,7 @@ export const Header = () => {
   const router = useRouter();
   const pathname = usePathname();
   const isLearningHubActive = pathname === '/learning-hub' || pathname.startsWith('/learning-hub/');
+  const [logoExpression, setLogoExpression] = useState<BrainExpression>('happy');
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -42,46 +44,36 @@ export const Header = () => {
           {/* Left side - Logo and Title */}
           <div className="flex items-center space-x-3 flex-shrink-0">
             <div className="flex items-center space-x-3">
-              <div className="relative">
-                <motion.div 
-                  animate={{
-                    scale: [1, 1.02, 1],
-                    boxShadow: [
-                      "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
-                      "0 4px 12px -1px rgba(59, 130, 246, 0.15), 0 2px 8px -1px rgba(147, 51, 234, 0.1)",
-                      "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)"
-                    ]
+              <Link href="/" className="flex items-center space-x-3 group">
+                <motion.div
+                  className="flex items-center justify-center"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  onHoverStart={() => setLogoExpression('excited')}
+                  onHoverEnd={() => setLogoExpression('happy')}
+                  onClick={() => {
+                    setLogoExpression('winking');
+                    setTimeout(() => setLogoExpression('happy'), 1000);
                   }}
-                  transition={{ 
-                    duration: 5,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                  className="w-7 h-7 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center shadow-lg relative overflow-hidden"
                 >
-                  <motion.div
-                    animate={{ 
-                      rotate: [0, 2, -2, 0]
-                    }}
-                    transition={{ 
-                      duration: 8,
-                      repeat: Infinity,
-                      ease: "easeInOut"
-                    }}
-                  >
-                    <Sparkles className="w-3.5 h-3.5 text-white" />
-                  </motion.div>
+                  <BrainMascot
+                    expression={logoExpression}
+                    size="tiny"
+                    color="purple"
+                    animate={true}
+                    skipInitialAnimation={false}
+                  />
                 </motion.div>
-              </div>
-              
-              <div className="flex items-center space-x-2">
-                <h1 className="text-lg font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
-                  Agentic Design
-                </h1>
-                <span className="hidden lg:inline text-xs text-gray-400 font-medium">
-                  • Learn how to build reliable and secure AI systems
-                </span>
-              </div>
+                
+                <div className="flex items-center space-x-2">
+                  <h1 className="text-lg font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent group-hover:from-purple-400 group-hover:to-blue-400 transition-all duration-300">
+                    Agentic Design
+                  </h1>
+                  <span className="hidden lg:inline text-xs text-gray-400 font-medium">
+                    • Learn how to build reliable and secure AI systems
+                  </span>
+                </div>
+              </Link>
             </div>
           </div>
 
@@ -285,40 +277,27 @@ export const Header = () => {
         {/* Mobile Layout */}
         <div className="md:hidden">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <motion.div 
-                animate={{
-                  scale: [1, 1.02, 1],
-                  boxShadow: [
-                    "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
-                    "0 4px 12px -1px rgba(59, 130, 246, 0.15), 0 2px 8px -1px rgba(147, 51, 234, 0.1)",
-                    "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)"
-                  ]
+            <Link href="/" className="flex items-center space-x-2">
+              <motion.div
+                className="flex items-center justify-center"
+                whileTap={{ scale: 0.95 }}
+                onClick={() => {
+                  setLogoExpression('winking');
+                  setTimeout(() => setLogoExpression('happy'), 1000);
                 }}
-                transition={{ 
-                  duration: 5,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-                className="w-6 h-6 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center shadow-lg relative overflow-hidden"
               >
-                <motion.div
-                  animate={{ 
-                    rotate: [0, 2, -2, 0]
-                  }}
-                  transition={{ 
-                    duration: 8,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                >
-                  <Sparkles className="w-3 h-3 text-white" />
-                </motion.div>
+                <BrainMascot
+                  expression={logoExpression}
+                  size="tiny"
+                  color="purple"
+                  animate={true}
+                  skipInitialAnimation={false}
+                />
               </motion.div>
               <h1 className="text-base font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
                 Agentic Design
               </h1>
-            </div>
+            </Link>
             
             <div className="flex items-center space-x-2">
               <button

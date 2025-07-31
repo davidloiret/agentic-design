@@ -1,15 +1,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Metadata } from 'next';
-import { NavigationTabs } from '../components/NavigationTabs';
-import { Header } from '../components/Header';
-import { PatternEvaluationTab } from '../components/PatternEvaluationTab';
-import { ChatBot } from '../components/ChatBot';
+import { PatternEvaluationTab } from '../../components/PatternEvaluationTab';
 import { Construction, AlertTriangle, Zap, X } from 'lucide-react';
 
 export default function PatternEvaluationPage() {
-  const [activeTab, setActiveTab] = useState('pattern-evaluation');
   const [showDisclaimer, setShowDisclaimer] = useState(false);
 
   useEffect(() => {
@@ -30,18 +25,10 @@ export default function PatternEvaluationPage() {
   };
 
   return (
-    <div className="min-h-screen">
-      <Header />
-      <NavigationTabs activeTab={activeTab} setActiveTab={setActiveTab} />
-      
-      <main className="container mx-auto px-4 py-8 max-w-7xl">
+    <>
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
         <PatternEvaluationTab />
-      </main>
-      
-      <ChatBot 
-        onRecommendationSelect={() => {}}
-        getRecommendations={() => []}
-      />
+      </div>
 
       {/* Disclaimer Overlay */}
       {showDisclaimer && (
@@ -125,6 +112,6 @@ export default function PatternEvaluationPage() {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
