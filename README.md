@@ -785,3 +785,11 @@ magical
  au lieu des flocons on devrait avoir les petits point ou petite etincelle de magie
 
  etincelle de magie => signature on en veut un peu partout mais subtile
+
+ easter egg
+
+ Error: Failed to create room: "Player already has an active game"
+    at createConsoleError (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/console-error.js:23:71)
+    at handleConsoleError (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/use-error-handler.js:45:54)
+    at console.error (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.js:50:57)
+    at createGameRoom (webpack-internal:///(app-pages-browser)/./src/components/MultiplayerPatternCardGame.tsx:265:25)
