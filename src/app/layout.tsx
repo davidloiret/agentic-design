@@ -6,6 +6,7 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import { LearningHubProvider } from '@/contexts/LearningHubContext';
 import { SearchProvider } from '@/contexts/SearchContext';
 import { SearchModal } from '@/app/components/SearchModal';
+import JsonLd from '@/components/JsonLd';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -92,8 +93,32 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Agentic Design Patterns",
+    "description": "Comprehensive collection of AI agent design patterns, techniques, and best practices for building intelligent systems.",
+    "url": process.env.NEXT_PUBLIC_SITE_URL || "https://agentic-design.ai",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Agentic Design",
+      "url": process.env.NEXT_PUBLIC_SITE_URL || "https://agentic-design.ai"
+    },
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": `${process.env.NEXT_PUBLIC_SITE_URL || "https://agentic-design.ai"}/patterns?search={search_term_string}`
+      },
+      "query-input": "required name=search_term_string"
+    }
+  };
+
   return (
     <html lang="en">
+      <head>
+        <JsonLd data={structuredData} />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

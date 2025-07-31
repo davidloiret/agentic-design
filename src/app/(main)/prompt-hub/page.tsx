@@ -1,6 +1,10 @@
 "use client"
 
 import React from 'react';
+import { Metadata } from 'next';
+
+// Note: Client components cannot export metadata directly in Next.js App Router
+// This metadata would need to be moved to a parent layout or page wrapper
 import { 
   FileText,
   Lock,

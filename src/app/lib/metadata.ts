@@ -161,6 +161,177 @@ export function generateTechniqueMetadata(technique: any, category?: Category): 
   };
 }
 
+export function generatePageMetadata(config: {
+  title: string;
+  description: string;
+  path: string;
+  keywords?: string[];
+  type?: 'website' | 'article';
+  imageUrl?: string;
+}): Metadata {
+  const { title, description, path, keywords = [], type = 'website', imageUrl } = config;
+  const fullTitle = title.includes(SITE_NAME) ? title : `${title} - ${SITE_NAME}`;
+  const url = `${SITE_URL}${path}`;
+  const ogImageUrl = imageUrl || `${SITE_URL}/api/og/default`;
+
+  const defaultKeywords = [
+    'AI agents',
+    'design patterns',
+    'artificial intelligence',
+    'software architecture',
+    'agentic systems',
+    'machine learning patterns',
+  ];
+
+  return {
+    title: fullTitle,
+    description,
+    keywords: [...defaultKeywords, ...keywords],
+    authors: [{ name: 'Agentic Design Team' }],
+    creator: 'Agentic Design',
+    publisher: 'Agentic Design',
+    openGraph: {
+      type,
+      title: fullTitle,
+      description,
+      url,
+      siteName: SITE_NAME,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: fullTitle,
+        },
+      ],
+      locale: 'en_US',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: fullTitle,
+      description,
+      images: [ogImageUrl],
+      creator: '@agentic_design',
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
+    alternates: {
+      canonical: url,
+    },
+  };
+}
+
+export function generateAuthPageMetadata(config: {
+  title: string;
+  description: string;
+  path: string;
+}): Metadata {
+  return generatePageMetadata({
+    ...config,
+    keywords: ['authentication', 'user account', 'security'],
+    type: 'website',
+  });
+}
+
+export function generateUserPageMetadata(config: {
+  title: string;
+  description: string;
+  path: string;
+}): Metadata {
+  return generatePageMetadata({
+    ...config,
+    keywords: ['user dashboard', 'account management', 'profile'],
+    type: 'website',
+  });
+}
+
+export function generateHubPageMetadata(config: {
+  title: string;
+  description: string;
+  path: string;
+  hubType: string;
+}): Metadata {
+  return generatePageMetadata({
+    ...config,
+    keywords: [config.hubType, 'AI tools', 'resources', 'development'],
+    type: 'website',
+  });
+}
+
+export function generatePromptPageMetadata(config: {
+  provider: string;
+  model: string;
+  date: string;
+  path: string;
+  description?: string;
+}): Metadata {
+  const { provider, model, date, path, description } = config;
+  const title = `${provider} ${model} System Prompt`;
+  const defaultDescription = `Leaked system prompt for ${provider} ${model} (${date}). Explore the hidden instructions that define this AI model's behavior, personality, and capabilities.`;
+  
+  return generatePageMetadata({
+    title,
+    description: description || defaultDescription,
+    path,
+    keywords: [
+      provider.toLowerCase(),
+      model.toLowerCase(),
+      'system prompt',
+      'AI prompts',
+      'leaked prompts',
+      'AI behavior',
+      'prompt engineering',
+      'AI instructions',
+    ],
+    type: 'article',
+  });
+}
+
+export function generateArticleStructuredData(title: string, description: string, url: string, category?: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": title,
+    "description": description,
+    "url": url,
+    "author": {
+      "@type": "Organization",
+      "name": "Agentic Design Team"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Agentic Design",
+      "url": SITE_URL
+    },
+    "datePublished": new Date().toISOString(),
+    "dateModified": new Date().toISOString(),
+    "articleSection": category || "AI Design Patterns",
+    "keywords": ["AI agents", "design patterns", "artificial intelligence", "software architecture"]
+  };
+}
+
+export function generateBreadcrumbStructuredData(items: Array<{name: string, url: string}>) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": items.map((item, index) => ({
+      "@type": "ListItem",
+      "position": index + 1,
+      "name": item.name,
+      "item": item.url
+    }))
+  };
+}
+
 export function generateDefaultMetadata(config: Metadata = {}): Metadata {
   const defaults: Metadata = {
     title: SITE_NAME,

@@ -26,6 +26,9 @@ export const metadata: Metadata = {
     title: 'About Agentic Design Patterns',
     description: 'Learn about the comprehensive collection of AI agent design patterns, techniques, and best practices for building intelligent systems.',
   },
+  alternates: {
+    canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://agentic-design.ai'}/about`,
+  },
 }
 
 export default function About() {

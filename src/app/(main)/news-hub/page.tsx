@@ -1,4 +1,13 @@
 import { NewsTab } from '../../components/NewsTab';
+import { Metadata } from 'next';
+import { generateHubPageMetadata } from '../../lib/metadata';
+
+export const metadata: Metadata = generateHubPageMetadata({
+  title: 'News Hub',
+  description: 'Stay updated with the latest AI developments, research breakthroughs, and industry trends. Curated news and insights for AI professionals and enthusiasts.',
+  path: '/news-hub',
+  hubType: 'AI news',
+});
 
 export default function NewsHubPage() {
   return (

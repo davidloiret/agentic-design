@@ -1,4 +1,13 @@
 import { ProjectHub } from '../../components/ProjectHub';
+import { Metadata } from 'next';
+import { generateHubPageMetadata } from '../../lib/metadata';
+
+export const metadata: Metadata = generateHubPageMetadata({
+  title: 'Project Hub',
+  description: 'Discover and showcase AI agent projects, implementations, and real-world applications. Connect with the community and explore innovative agentic system builds.',
+  path: '/project-hub',
+  hubType: 'project showcase',
+});
 
 export default function ProjectHubPage() {
   return (

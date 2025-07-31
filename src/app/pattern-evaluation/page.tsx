@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { Metadata } from 'next';
 import { NavigationTabs } from '../components/NavigationTabs';
 import { Header } from '../components/Header';
 import { PatternEvaluationTab } from '../components/PatternEvaluationTab';

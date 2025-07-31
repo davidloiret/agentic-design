@@ -748,3 +748,9 @@ add contact
 agent ambient
 
 detect key property of interface not used
+
+Eval lab and Ai red teaming are reloading the page ?
+
+choisir niveau pour apprentissage
+technique / executive etc / curious
+QCM battle
