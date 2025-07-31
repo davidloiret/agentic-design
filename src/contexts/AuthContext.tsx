@@ -74,7 +74,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signUp = async (email: string, password: string, firstName: string, lastName: string) => {
     const response = await api.post('/api/v1/auth/register', { email, password, firstName, lastName });
     const data = await response.json();
-    setUser(data.user);
+    // Don't set user immediately - they need to validate their email first
+    // setUser(data.user);
   };
 
   const signInWithGoogle = () => {

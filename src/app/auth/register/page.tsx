@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
-import { Sparkles, Mail, Lock, Eye, EyeOff, User } from 'lucide-react';
+import { Sparkles, Mail, Lock, Eye, EyeOff, User, CheckCircle, Heart } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function RegisterPage() {
   const [email, setEmail] = useState('');
@@ -16,6 +17,7 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
   const { signUp, signInWithGoogle, signInWithGitHub } = useAuth();
   const router = useRouter();
 
@@ -37,7 +39,7 @@ export default function RegisterPage() {
 
     try {
       await signUp(email, password, firstName, lastName);
-      router.push('/auth/login');
+      setRegistrationSuccess(true);
     } catch (err: any) {
       setError(err.message || 'Failed to create account');
     } finally {
@@ -63,11 +65,201 @@ export default function RegisterPage() {
           <p className="mt-2 text-sm sm:text-base text-gray-400 px-4 sm:px-0">Learn how to build reliable and secure AI systems</p>
         </div>
 
-        {/* Sign up form */}
+        {/* Success message or Sign up form */}
         <div className="bg-gray-900/50 backdrop-blur-xl rounded-2xl border border-gray-800 p-6 sm:p-8 shadow-2xl">
-          <h2 className="text-xl sm:text-2xl font-semibold text-gray-100 text-center mb-5 sm:mb-6">
-            Create your account
-          </h2>
+          <AnimatePresence mode="wait">
+            {registrationSuccess ? (
+              // Success view with animations
+              <motion.div 
+                key="success"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                className="text-center"
+              >
+                {/* Animated success icon */}
+                <motion.div 
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ 
+                    delay: 0.2, 
+                    duration: 0.5, 
+                    type: "spring",
+                    stiffness: 200,
+                    damping: 15
+                  }}
+                  className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full shadow-2xl mb-6 relative"
+                >
+                  <motion.div
+                    initial={{ scale: 0, rotate: -90 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ 
+                      delay: 0.5, 
+                      duration: 0.4, 
+                      type: "spring",
+                      stiffness: 300,
+                      damping: 20
+                    }}
+                  >
+                    <CheckCircle className="w-10 h-10 text-white" />
+                  </motion.div>
+                  
+                  {/* Animated rings around the icon */}
+                  <motion.div
+                    initial={{ scale: 1, opacity: 0.8 }}
+                    animate={{ scale: 1.4, opacity: 0 }}
+                    transition={{ 
+                      duration: 1.5, 
+                      repeat: Infinity, 
+                      ease: "easeOut" 
+                    }}
+                    className="absolute inset-0 rounded-full border-2 border-green-400/60"
+                  />
+                  <motion.div
+                    initial={{ scale: 1, opacity: 0.6 }}
+                    animate={{ scale: 1.8, opacity: 0 }}
+                    transition={{ 
+                      duration: 1.5, 
+                      repeat: Infinity, 
+                      delay: 0.3, 
+                      ease: "easeOut" 
+                    }}
+                    className="absolute inset-0 rounded-full border-2 border-emerald-400/40"
+                  />
+                </motion.div>
+                
+                {/* Welcome message */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4, duration: 0.5 }}
+                  className="mb-6"
+                >
+                  <h2 className="text-2xl sm:text-3xl font-bold text-gray-100 mb-2">
+                    Welcome to Agentic Design! 
+                    <motion.span
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ delay: 1, duration: 0.3, ease: "easeOut" }}
+                      className="inline-block ml-2"
+                    >
+                      <Heart className="w-6 h-6 text-pink-400 inline" fill="currentColor" />
+                    </motion.span>
+                  </h2>
+                  <p className="text-gray-400">
+                    We're excited to have you on board, {firstName}!
+                  </p>
+                </motion.div>
+                
+                {/* Animated content */}
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6, duration: 0.5 }}
+                  className="space-y-6 text-left"
+                >
+                  <div className="bg-gradient-to-r from-blue-900/30 to-purple-900/30 border border-blue-800/50 rounded-xl p-5">
+                    <div className="flex items-start space-x-3 mb-4">
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 0.8, duration: 0.3 }}
+                        className="flex-shrink-0"
+                      >
+                        <Mail className="w-5 h-5 text-blue-400 mt-0.5" />
+                      </motion.div>
+                      <div>
+                        <h3 className="font-semibold text-blue-300 mb-1">Check your inbox!</h3>
+                        <p className="text-blue-200 text-sm leading-relaxed">
+                          We've sent an activation link to{' '}
+                          <span className="font-medium text-blue-400 bg-blue-400/10 px-2 py-0.5 rounded">
+                            {email}
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-blue-900/30 rounded-lg p-4">
+                      <h4 className="font-medium text-blue-300 mb-3 flex items-center">
+                        <Sparkles className="w-4 h-4 mr-2" />
+                        Your journey begins in 3 simple steps:
+                      </h4>
+                      <motion.ol className="text-sm text-blue-200 space-y-2">
+                        {[
+                          "Check your email inbox (don't forget spam!)",
+                          "Click the magical activation link we sent you",
+                          "Come back and start exploring AI design patterns"
+                        ].map((step, index) => (
+                          <motion.li
+                            key={index}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 1 + index * 0.2, duration: 0.4 }}
+                            className="flex items-start space-x-2"
+                          >
+                            <span className="flex-shrink-0 w-5 h-5 bg-blue-500 text-white text-xs rounded-full flex items-center justify-center font-medium mt-0.5">
+                              {index + 1}
+                            </span>
+                            <span>{step}</span>
+                          </motion.li>
+                        ))}
+                      </motion.ol>
+                    </div>
+                  </div>
+                  
+                  <motion.p 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1.8, duration: 0.5 }}
+                    className="text-sm text-gray-400 text-center bg-gray-800/50 rounded-lg p-3"
+                  >
+                    <span className="text-gray-300">💡 Pro tip:</span> The activation link expires in 24 hours, so don't wait too long!
+                  </motion.p>
+                </motion.div>
+                
+                {/* Animated buttons */}
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 2, duration: 0.5 }}
+                  className="mt-8 space-y-3"
+                >
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Link
+                      href="/auth/login"
+                      className="w-full inline-flex justify-center items-center py-3 px-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-lg shadow-lg transition-all duration-200"
+                    >
+                      <Mail className="w-4 h-4 mr-2" />
+                      I've activated my account - Let's go!
+                    </Link>
+                  </motion.div>
+                  
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setRegistrationSuccess(false)}
+                    className="w-full inline-flex justify-center py-2 px-4 text-gray-400 hover:text-gray-300 text-sm transition-colors"
+                  >
+                    ← Need to change something? Go back
+                  </motion.button>
+                </motion.div>
+              </motion.div>
+          ) : (
+            // Registration form with animation
+            <motion.div
+              key="form"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+            >
+              <h2 className="text-xl sm:text-2xl font-semibold text-gray-100 text-center mb-5 sm:mb-6">
+                Create your account
+              </h2>
           
           <form className="space-y-4" onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
@@ -283,6 +475,9 @@ export default function RegisterPage() {
               Sign in
             </Link>
           </div>
+            </motion.div>
+          )}
+          </AnimatePresence>
         </div>
       </div>
     </div>

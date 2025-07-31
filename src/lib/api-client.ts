@@ -22,7 +22,19 @@ export async function apiClient(
     if (response.status === 401 && url.includes('/auth/me')) {
       return response;
     }
-    throw new Error(`API Error: ${response.status} ${response.statusText}`);
+    
+    // Try to parse error message from response body
+    let errorMessage = `API Error: ${response.status} ${response.statusText}`;
+    try {
+      const errorData = await response.json();
+      if (errorData.message) {
+        errorMessage = errorData.message;
+      }
+    } catch (e) {
+      // If parsing fails, keep the generic message
+    }
+    
+    throw new Error(errorMessage);
   }
 
   return response;

@@ -32,7 +32,10 @@ export default function LoginPage() {
       setError(errorMessage);
       
       // Show resend confirmation option if email not confirmed
-      if (errorMessage.includes('confirmation link')) {
+      if (errorMessage.includes('confirmation link') || 
+          errorMessage.includes('activate your account') ||
+          errorMessage.toLowerCase().includes('email not confirmed') ||
+          errorMessage.toLowerCase().includes('check your email')) {
         setShowResendConfirmation(true);
       }
     } finally {

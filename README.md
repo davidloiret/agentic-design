@@ -770,3 +770,5 @@ QCM doit etre gamifié bien sur avec joli option animés
 Affrontez vous sur le leaderboard de Agentic Design. Where Knowledge will save you.
 
 Setup resend
+
+https://www.deeplearning.ai/the-batch/agentic-design-patterns-part-4-planning/
