@@ -793,3 +793,6 @@ magical
     at handleConsoleError (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/use-error-handler.js:45:54)
     at console.error (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.js:50:57)
     at createGameRoom (webpack-internal:///(app-pages-browser)/./src/components/MultiplayerPatternCardGame.tsx:265:25)
+
+
+    angry brain

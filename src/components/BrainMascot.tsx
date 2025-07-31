@@ -23,7 +23,8 @@ export type BrainExpression =
   | 'skeptical'
   | 'proud'
   | 'shy'
-  | 'mischievous';
+  | 'mischievous'
+  | 'fighter';
 
 export interface BrainMascotProps {
   expression?: BrainExpression;
@@ -254,6 +255,16 @@ const expressionData: Record<BrainExpression, {
       left: { rotate: -15, translateY: -1 },
       right: { rotate: -25, translateY: -2 }
     }
+  },
+  fighter: {
+    leftEye: { scaleY: 0.6, translateY: 2 },
+    rightEye: { scaleY: 0.6, translateY: 2 },
+    mouth: { d: "M 40 64 L 60 64", scaleY: 1, translateY: 0 },
+    eyebrows: {
+      left: { rotate: 20, translateY: -1 },
+      right: { rotate: -20, translateY: -1 }
+    },
+    sparkles: true
   }
 };
 

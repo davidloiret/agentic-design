@@ -2,6 +2,8 @@
 
 import React, { useState } from 'react';
 import { Shield, AlertTriangle, Target, Search, BookOpen, Users, Code, Eye, Lock, Brain, Bug, Zap, ChevronRight, ExternalLink, Play } from 'lucide-react';
+import { BrainMascot, BrainExpression } from '@/components/BrainMascot';
+import { motion } from 'framer-motion';
 
 interface RedTeamingTechnique {
   id: string;
@@ -198,6 +200,7 @@ const difficultyColors = {
 export const AIRedTeamingHub = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedTechnique, setSelectedTechnique] = useState<RedTeamingTechnique | null>(null);
+  const [headerExpression, setHeaderExpression] = useState<BrainExpression>('fighter');
 
   const categories = Array.from(new Set(redTeamingTechniques.map(t => t.category)));
   const filteredTechniques = selectedCategory 
@@ -211,14 +214,43 @@ export const AIRedTeamingHub = () => {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-red-900/10 via-transparent to-transparent"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
           <div className="text-center">
-            <div className="flex justify-center mb-6">
-              <div className="p-4 bg-red-500/10 rounded-2xl">
-                <Shield className="w-12 h-12 text-red-400" />
-              </div>
-            </div>
-            <h1 className="text-5xl font-bold text-white mb-6">
+            <motion.div 
+              className="flex justify-center mb-6"
+              initial={{ opacity: 0, scale: 0.5, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ 
+                duration: 0.8,
+                ease: [0.4, 0, 0.2, 1],
+                scale: {
+                  type: "spring",
+                  damping: 15,
+                  stiffness: 100
+                }
+              }}
+            >
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.2 }}
+                onHoverStart={() => setHeaderExpression('angry')}
+                onHoverEnd={() => setHeaderExpression('fighter')}
+              >
+                <BrainMascot
+                  expression={headerExpression}
+                  size="medium"
+                  color="red"
+                  animate={true}
+                  skipInitialAnimation={false}
+                />
+              </motion.div>
+            </motion.div>
+            <motion.h1 
+              className="text-5xl font-bold text-white mb-6"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
               AI Red Teaming Hub
-            </h1>
+            </motion.h1>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
               Learn defensive security techniques, red teaming methodologies, and vulnerability assessment for AI systems. 
               Build robust defenses against adversarial attacks.

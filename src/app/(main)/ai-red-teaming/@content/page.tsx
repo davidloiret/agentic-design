@@ -1,6 +1,11 @@
+'use client';
+
+import React from 'react';
 import { Shield, TrendingUp, Activity, Star, Code, BookOpen, Users, Target, AlertTriangle, ChartBar, Lock, Zap, FileText, ArrowRight, CheckSquare } from 'lucide-react';
 import { allRedTeamingTechniques, redTeamingCategories } from '../../../red-teaming';
 import Link from 'next/link';
+import { BrainMascot, BrainExpression } from '@/components/BrainMascot';
+import { motion } from 'framer-motion';
 
 // Analytics Components
 const MetricCard: React.FC<{ 
@@ -72,6 +77,9 @@ export default function ContentPage() {
   const totalCategories = Object.keys(redTeamingCategories).length;
   const totalUseCases = allRedTeamingTechniques.reduce((sum, technique) => sum + (technique.useCases?.length || 0), 0);
   const avgTechniquesPerCategory = Math.round(totalTechniques / totalCategories);
+  
+  // Brain mascot state
+  const [headerExpression, setHeaderExpression] = React.useState<BrainExpression>('fighter');
 
   // Category distribution data
   const categoryData = Object.entries(redTeamingCategories).map(([key, category], index) => ({
@@ -99,10 +107,43 @@ export default function ContentPage() {
     <div className="w-full max-w-none p-4 sm:p-6 space-y-6">
       {/* Header */}
       <div className="text-center">
-        <Shield className="w-10 h-10 mx-auto mb-3 text-red-400" />
-        <h2 className="text-xl font-bold bg-gradient-to-r from-red-400 to-orange-400 bg-clip-text text-transparent mb-2">
+        <motion.div 
+          className="flex justify-center mb-3"
+          initial={{ opacity: 0, scale: 0.5, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ 
+            duration: 0.8,
+            ease: [0.4, 0, 0.2, 1],
+            scale: {
+              type: "spring",
+              damping: 15,
+              stiffness: 100
+            }
+          }}
+        >
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.2 }}
+            onHoverStart={() => setHeaderExpression('angry')}
+            onHoverEnd={() => setHeaderExpression('fighter')}
+          >
+            <BrainMascot
+              expression={headerExpression}
+              size="medium"
+              color="red"
+              animate={true}
+              skipInitialAnimation={false}
+            />
+          </motion.div>
+        </motion.div>
+        <motion.h2 
+          className="text-xl font-bold bg-gradient-to-r from-red-400 to-orange-400 bg-clip-text text-transparent mb-2"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
           AI Red Teaming Hub
-        </h2>
+        </motion.h2>
         <p className="text-gray-400 text-sm">
           Comprehensive security testing techniques and defensive strategies for AI systems. Learn to identify vulnerabilities and build more secure AI.
         </p>
