@@ -772,3 +772,16 @@ Affrontez vous sur le leaderboard de Agentic Design. Where Knowledge will save y
 Setup resend
 
 https://www.deeplearning.ai/the-batch/agentic-design-patterns-part-4-planning/
+
+
+I want onboarding, I want it to be magical, do it according to website content.
+
+subtle micro interaction
+Disney-inspired experience
+magical
+
+ I want onboarding, I want it to be magical, do it according to website content.  
+
+ au lieu des flocons on devrait avoir les petits point ou petite etincelle de magie
+
+ etincelle de magie => signature on en veut un peu partout mais subtile
