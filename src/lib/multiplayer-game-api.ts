@@ -343,6 +343,25 @@ export class MultiplayerGameAPI {
 
     return response.json();
   }
+
+  async getActiveGames(): Promise<{ success: boolean; games?: GameRoom[]; error?: string }> {
+    try {
+      const response = await fetch('/api/backend/pattern-game/rooms/my-active', {
+        headers: {
+          'X-User-Id': this.userId || 'anonymous',
+        },
+      });
+
+      if (!response.ok) {
+        return { success: false, error: `Failed to get active games: ${response.statusText}` };
+      }
+
+      const games = await response.json();
+      return { success: true, games };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  }
 }
 
 // Singleton instance

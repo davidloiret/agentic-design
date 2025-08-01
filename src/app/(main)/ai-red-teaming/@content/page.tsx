@@ -132,7 +132,7 @@ export default function ContentPage() {
               size="medium"
               color="red"
               animate={true}
-              skipInitialAnimation={false}
+              skipInitialAnimation={true}
             />
           </motion.div>
         </motion.div>

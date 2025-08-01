@@ -14,6 +14,7 @@ type GameMode = 'menu' | 'singleplayer' | 'multiplayer_lobby' | 'multiplayer_gam
 
 interface GameLobbyState {
   availableRooms: GameRoom[];
+  activeGames: GameRoom[];
   currentRoom: GameRoom | null;
   playerStats: PlayerStats | null;
   connectionStatus: 'disconnected' | 'connecting' | 'connected';
@@ -23,6 +24,7 @@ export const MultiplayerPatternCardGame: React.FC = () => {
   const [gameMode, setGameMode] = useState<GameMode>('menu');
   const [lobbyState, setLobbyState] = useState<GameLobbyState>({
     availableRooms: [],
+    activeGames: [],
     currentRoom: null,
     playerStats: null,
     connectionStatus: 'disconnected'
@@ -60,8 +62,9 @@ export const MultiplayerPatternCardGame: React.FC = () => {
           setLobbyState(prev => ({ ...prev, playerStats: statsResponse.stats }));
         }
         
-        // Load available rooms
+        // Load available rooms and active games
         await refreshAvailableRooms();
+        await refreshActiveGames();
       } else {
         setLobbyState(prev => ({ ...prev, connectionStatus: 'disconnected' }));
       }
@@ -79,6 +82,18 @@ export const MultiplayerPatternCardGame: React.FC = () => {
       }
     } catch (error) {
       console.error('Failed to load available rooms:', error);
+    }
+  };
+
+  const refreshActiveGames = async () => {
+    try {
+      const activeGamesResponse = await multiplayerGameAPI.getActiveGames();
+      console.log('Active games response:', activeGamesResponse);
+      if (activeGamesResponse.success && activeGamesResponse.games) {
+        setLobbyState(prev => ({ ...prev, activeGames: activeGamesResponse.games }));
+      }
+    } catch (error) {
+      console.error('Failed to load active games:', error);
     }
   };
 
@@ -183,11 +198,46 @@ export const MultiplayerPatternCardGame: React.FC = () => {
       if (response.success && response.gameRoom) {
         setLobbyState(prev => ({ ...prev, currentRoom: response.gameRoom }));
         setGameMode('join_room'); // Show waiting room
+        await refreshActiveGames();
       } else {
-        console.error('Failed to create room:', response.error);
+        console.error('Create room response:', response);
+        if (response.error?.includes('already has an active game')) {
+          // First refresh to see if we can find the active games
+          const activeGamesResponse = await multiplayerGameAPI.getActiveGames();
+          console.log('Active games after error:', activeGamesResponse);
+          
+          if (activeGamesResponse.success && activeGamesResponse.games && activeGamesResponse.games.length > 0) {
+            // Update state with the active games
+            setLobbyState(prev => ({ ...prev, activeGames: activeGamesResponse.games }));
+            alert(`You have ${activeGamesResponse.games.length} active game(s). Please check the "Your Active Games" section above to rejoin or leave them.`);
+          } else {
+            // Try to force clear any stale games
+            alert('The server indicates you have an active game, but none are visible. Attempting to clear stale games...');
+            
+            // Make a direct API call to leave any potential stale games
+            try {
+              // Try to get and clear games one more time
+              const retryResponse = await multiplayerGameAPI.getActiveGames();
+              if (retryResponse.success && retryResponse.games) {
+                for (const game of retryResponse.games) {
+                  await multiplayerGameAPI.leaveGameRoom(game.id);
+                }
+              }
+              alert('Stale games cleared. Please try creating a room again.');
+              await refreshActiveGames();
+            } catch (clearError) {
+              console.error('Error clearing stale games:', clearError);
+              alert('Could not clear stale games. Please try logging out and back in.');
+            }
+          }
+        } else {
+          console.error('Failed to create room:', response.error);
+          alert(`Failed to create room: ${response.error}`);
+        }
       }
     } catch (error) {
       console.error('Error creating room:', error);
+      alert('Error creating room. Please try again.');
     }
   };
 
@@ -215,8 +265,19 @@ export const MultiplayerPatternCardGame: React.FC = () => {
       await multiplayerGameAPI.leaveGameRoom(lobbyState.currentRoom.id);
       setLobbyState(prev => ({ ...prev, currentRoom: null }));
       setGameMode('multiplayer_lobby');
+      await refreshActiveGames();
     } catch (error) {
       console.error('Error leaving room:', error);
+    }
+  };
+
+  const rejoinGame = async (game: GameRoom) => {
+    setLobbyState(prev => ({ ...prev, currentRoom: game }));
+    
+    if (game.status === 'waiting') {
+      setGameMode('join_room');
+    } else if (game.status === 'playing') {
+      setGameMode('multiplayer_game');
     }
   };
 
@@ -330,6 +391,8 @@ export const MultiplayerPatternCardGame: React.FC = () => {
 
   // Show multiplayer lobby
   if (gameMode === 'multiplayer_lobby') {
+    console.log('Lobby state:', lobbyState);
+    console.log('Active games:', lobbyState.activeGames);
     return (
       <div className="min-h-screen bg-gray-900 text-white p-8">
         <div className="max-w-6xl mx-auto">
@@ -383,15 +446,107 @@ export const MultiplayerPatternCardGame: React.FC = () => {
             </button>
             
             <button
-              onClick={refreshAvailableRooms}
+              onClick={async () => {
+                await refreshAvailableRooms();
+                await refreshActiveGames();
+              }}
               disabled={lobbyState.connectionStatus !== 'connected'}
               className="bg-purple-600 hover:bg-purple-700 disabled:bg-gray-700 disabled:cursor-not-allowed rounded-xl p-6 transition-colors"
             >
               <Eye className="w-8 h-8 mx-auto mb-2" />
               <h3 className="text-lg font-semibold">Refresh Rooms</h3>
-              <p className="text-sm text-gray-300">Update available game list</p>
+              <p className="text-sm text-gray-300">Update game lists</p>
             </button>
           </div>
+
+          {/* Debug info */}
+          <div className="bg-gray-800 rounded-xl p-4 mb-6 text-xs">
+            <p>Debug: Active games count: {lobbyState.activeGames.length}</p>
+            <p>User ID: {userId}</p>
+            <div className="flex gap-2 mt-2">
+              <button onClick={refreshActiveGames} className="px-3 py-1 bg-gray-600 hover:bg-gray-500 rounded">
+                Manual Refresh Active Games
+              </button>
+              <button 
+                onClick={async () => {
+                  // Force cleanup of all active games
+                  const activeGamesResponse = await multiplayerGameAPI.getActiveGames();
+                  console.log('Active games to clear:', activeGamesResponse);
+                  
+                  if (activeGamesResponse.success && activeGamesResponse.games && activeGamesResponse.games.length > 0) {
+                    alert(`Found ${activeGamesResponse.games.length} active game(s). Clearing...`);
+                    for (const game of activeGamesResponse.games) {
+                      console.log(`Leaving game ${game.id} with status ${game.status}`);
+                      await multiplayerGameAPI.leaveGameRoom(game.id);
+                    }
+                    await refreshActiveGames();
+                    alert('All active games have been cleared');
+                  } else {
+                    alert('No active games found to clear');
+                  }
+                }}
+                className="px-3 py-1 bg-red-600 hover:bg-red-500 rounded"
+              >
+                Clear All Active Games
+              </button>
+            </div>
+          </div>
+
+          {/* Active games */}
+          {lobbyState.activeGames.length > 0 && (
+            <div className="bg-gray-800 rounded-xl p-6 mb-6">
+              <h2 className="text-xl font-semibold mb-4 text-yellow-400">Your Active Games ({lobbyState.activeGames.length})</h2>
+              <div className="space-y-3">
+                {lobbyState.activeGames.map(game => (
+                  <motion.div
+                    key={game.id}
+                    whileHover={{ scale: 1.02 }}
+                    className="bg-yellow-900/20 border border-yellow-700 rounded-lg p-4 flex justify-between items-center"
+                  >
+                    <div>
+                      <h4 className="font-semibold">
+                        {game.hostPlayerId === userId ? 'Your game' : `Game with ${game.hostPlayerId.slice(-8)}`}
+                      </h4>
+                      <div className="flex items-center space-x-4 text-sm text-gray-400">
+                        <span className={`capitalize px-2 py-0.5 rounded text-xs ${
+                          game.status === 'waiting' ? 'bg-yellow-600 text-yellow-100' : 
+                          game.status === 'playing' ? 'bg-green-600 text-green-100' : 
+                          'bg-gray-600 text-gray-100'
+                        }`}>
+                          {game.status}
+                        </span>
+                        <span>Turn {game.turnNumber}</span>
+                        {game.status === 'waiting' && !game.guestPlayerId && (
+                          <span className="text-yellow-400">Waiting for opponent...</span>
+                        )}
+                        {game.guestPlayerId && (
+                          <span>vs {game.guestPlayerId === userId ? game.hostPlayerId.slice(-8) : game.guestPlayerId.slice(-8)}</span>
+                        )}
+                      </div>
+                    </div>
+                    
+                    <div className="flex space-x-2">
+                      <button
+                        onClick={() => rejoinGame(game)}
+                        className="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 rounded-lg text-sm transition-colors"
+                      >
+                        Rejoin
+                      </button>
+                      <button
+                        onClick={async () => {
+                          await multiplayerGameAPI.leaveGameRoom(game.id);
+                          await refreshActiveGames();
+                        }}
+                        className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg text-sm transition-colors"
+                      >
+                        Leave
+                      </button>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Available rooms */}
           <div className="bg-gray-800 rounded-xl p-6">
@@ -457,7 +612,14 @@ export const MultiplayerPatternCardGame: React.FC = () => {
             title="Multiplayer"
             description="Challenge other players online"
             icon={<Users className="w-8 h-8" />}
-            onClick={() => setGameMode('multiplayer_lobby')}
+            onClick={async () => {
+              setGameMode('multiplayer_lobby');
+              // Refresh data when entering lobby
+              setTimeout(async () => {
+                await refreshAvailableRooms();
+                await refreshActiveGames();
+              }, 100);
+            }}
             color="purple"
           />
           <MenuCard

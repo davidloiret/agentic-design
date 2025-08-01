@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useId } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export type BrainExpression = 
@@ -322,13 +322,13 @@ export const BrainMascot: React.FC<BrainMascotProps> = ({
 
   return (
     <motion.div 
-      className={`inline-block cursor-pointer ${className}`}
+      className={`block cursor-pointer ${className}`}
       style={{ width: dimensions.width, height: dimensions.height }}
       animate={hoverAnimation || pulseAnimation}
       onHoverStart={() => setIsHovering(true)}
       onHoverEnd={() => setIsHovering(false)}
       onClick={handleClick}
-      initial={skipInitialAnimation ? {} : { opacity: 0, scale: 0.8 }}
+      initial={skipInitialAnimation ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
       whileInView={skipInitialAnimation ? {} : { opacity: 1, scale: 1 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, ease: "easeOut" }}

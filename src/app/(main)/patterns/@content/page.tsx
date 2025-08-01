@@ -134,6 +134,7 @@ export default function ContentPage() {
               size="medium"
               color="purple"
               animate={true}
+              skipInitialAnimation={true}
               onExpressionChange={handleBrainClick}
             />
           </motion.div>

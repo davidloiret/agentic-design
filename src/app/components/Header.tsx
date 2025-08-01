@@ -61,7 +61,7 @@ export const Header = () => {
                     size="tiny"
                     color="purple"
                     animate={true}
-                    skipInitialAnimation={false}
+                    skipInitialAnimation={true}
                   />
                 </motion.div>
                 
@@ -291,7 +291,7 @@ export const Header = () => {
                   size="tiny"
                   color="purple"
                   animate={true}
-                  skipInitialAnimation={false}
+                  skipInitialAnimation={true}
                 />
               </motion.div>
               <h1 className="text-base font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
