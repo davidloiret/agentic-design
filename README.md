@@ -817,3 +817,16 @@ Select the good pattern for a use case etc
 
 
 BrainMascot should have thumb up / thumb done and other proper reaction so we can express a lot of things.
+
+add bye or hello with hands
+
+Mascot est la pour encourager ect
+
+focus sur technique / ingénieur => AI expert road
+
+les mains sont trop pres du corps elle devrait etre deplacé 
+
+if logged I should not be able to go to auth pages
+
+
+make brain mascot talk => TTS

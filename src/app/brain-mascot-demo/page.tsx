@@ -1,18 +1,21 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { BrainMascot, BrainExpression, SpeechBubbleType } from '@/components/BrainMascot';
+import { BrainMascot, BrainExpression, SpeechBubbleType, ReactionType, getReactionExpression, HandGesture, HandDisplay } from '@/components/BrainMascot';
 import { motion } from 'framer-motion';
 
 const expressions: BrainExpression[] = [
   'neutral', 'happy', 'sad', 'excited', 'confused', 'thinking', 
   'surprised', 'angry', 'sleepy', 'winking', 'focused', 'worried',
   'love', 'dizzy', 'crying', 'laughing', 'skeptical', 'proud', 
-  'shy', 'mischievous'
+  'shy', 'mischievous', 'thumbsUp', 'thumbsDown', 'applause', 
+  'disapproval', 'amazed', 'satisfied', 'bored', 'celebration'
 ];
 
 const colors = ['purple', 'blue', 'green', 'amber', 'red'] as const;
 const sizes = ['small', 'medium', 'large'] as const;
+const handGestures: HandGesture[] = ['none', 'thumbsUp', 'thumbsDown', 'wave', 'applause', 'pointUp', 'pointDown', 'openHands'];
+const handDisplayOptions: HandDisplay[] = ['both', 'left', 'right', 'none'];
 
 // Dialog simulation script
 const dialogScript = [
@@ -32,6 +35,8 @@ const dialogScript = [
 
 export default function BrainMascotDemo() {
   const [currentExpression, setCurrentExpression] = useState<BrainExpression>('happy');
+  const [currentHandGesture, setCurrentHandGesture] = useState<HandGesture>('none');
+  const [currentHandDisplay, setCurrentHandDisplay] = useState<HandDisplay>('both');
   const [currentColor, setCurrentColor] = useState<typeof colors[number]>('purple');
   const [currentSize, setCurrentSize] = useState<typeof sizes[number]>('medium');
   const [animate, setAnimate] = useState(true);
@@ -116,10 +121,14 @@ export default function BrainMascotDemo() {
             <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-12 mb-6">
               <BrainMascot
                 expression={currentExpression}
+                handGesture={currentHandGesture}
+                handDisplay={currentHandDisplay}
                 size={currentSize}
                 color={currentColor}
                 animate={animate}
                 onExpressionChange={(newExpression) => setCurrentExpression(newExpression)}
+                onHandGestureChange={(newGesture) => setCurrentHandGesture(newGesture)}
+                onHandDisplayChange={(newDisplay) => setCurrentHandDisplay(newDisplay)}
                 speechText={showSpeech ? speechText : undefined}
                 speechBubblePosition={speechPosition}
                 speechBubbleColor={speechBubbleColor}
@@ -129,6 +138,46 @@ export default function BrainMascotDemo() {
             <p className="text-gray-400 text-sm text-center max-w-xs">
               Click on the brain to trigger random expressions!
             </p>
+            
+            {/* Reaction Buttons */}
+            <div className="flex flex-wrap gap-2 mt-4 justify-center">
+              {(['positive', 'negative', 'excited', 'thinking', 'neutral'] as ReactionType[]).map((reaction) => (
+                <motion.button
+                  key={reaction}
+                  onClick={() => {
+                    const expression = getReactionExpression(reaction);
+                    setCurrentExpression(expression);
+                    // Set appropriate hand gesture for reactions
+                    const handGestureMap = {
+                      positive: 'thumbsUp' as HandGesture,
+                      negative: 'thumbsDown' as HandGesture,
+                      excited: 'applause' as HandGesture,
+                      thinking: 'none' as HandGesture,
+                      neutral: 'none' as HandGesture
+                    };
+                    setCurrentHandGesture(handGestureMap[reaction]);
+                    // Update speech text based on reaction
+                    const reactionTexts = {
+                      positive: ['Awesome!', 'Great job!', 'Love it!', 'Perfect!'],
+                      negative: ['Oh no...', 'Not good', 'Hmm...', 'Could be better'],
+                      excited: ['Wow!', 'Amazing!', 'Incredible!', 'So cool!'],
+                      thinking: ['Let me think...', 'Hmm...', 'Considering...', 'Analyzing...'],
+                      neutral: ['Okay', 'I see', 'Got it', 'Understood']
+                    };
+                    const texts = reactionTexts[reaction];
+                    setSpeechText(texts[Math.floor(Math.random() * texts.length)]);
+                  }}
+                  className={`px-3 py-1 rounded-lg text-sm font-medium transition-all border capitalize ${
+                    'bg-gray-800/30 text-gray-300 border-gray-700/50 hover:bg-gray-800/50'
+                  }`}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {reaction === 'positive' ? '👍' : reaction === 'negative' ? '👎' : 
+                   reaction === 'excited' ? '🎉' : reaction === 'thinking' ? '🤔' : '😐'} {reaction}
+                </motion.button>
+              ))}
+            </div>
             
             {/* Dialog Simulation Button */}
             <motion.button
@@ -213,14 +262,68 @@ export default function BrainMascotDemo() {
               </div>
             </div>
 
+            {/* Hand Gestures */}
+            <div>
+              <h3 className="text-xl font-semibold mb-4 text-amber-400">Hand Gestures</h3>
+              <div className="grid grid-cols-4 gap-2">
+                {handGestures.map((gesture) => (
+                  <motion.button
+                    key={gesture}
+                    onClick={() => setCurrentHandGesture(gesture)}
+                    className={`p-2 rounded-lg font-medium text-sm transition-all border ${
+                      currentHandGesture === gesture
+                        ? 'bg-amber-500 text-white border-amber-400'
+                        : 'bg-gray-800/30 text-gray-300 border-gray-700/50 hover:bg-gray-800/50'
+                    }`}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    {gesture === 'none' ? 'None' : 
+                     gesture === 'thumbsUp' ? '👍' :
+                     gesture === 'thumbsDown' ? '👎' :
+                     gesture === 'wave' ? '👋' :
+                     gesture === 'applause' ? '👏' :
+                     gesture === 'pointUp' ? '☝️' :
+                     gesture === 'pointDown' ? '👇' :
+                     gesture === 'openHands' ? '🙌' : gesture}
+                  </motion.button>
+                ))}
+              </div>
+            </div>
+
+            {/* Hand Display */}
+            <div>
+              <h3 className="text-xl font-semibold mb-4 text-orange-400">Hand Display</h3>
+              <div className="grid grid-cols-4 gap-2">
+                {handDisplayOptions.map((display) => (
+                  <motion.button
+                    key={display}
+                    onClick={() => setCurrentHandDisplay(display)}
+                    className={`p-2 rounded-lg font-medium text-sm transition-all border capitalize ${
+                      currentHandDisplay === display
+                        ? 'bg-orange-500 text-white border-orange-400'
+                        : 'bg-gray-800/30 text-gray-300 border-gray-700/50 hover:bg-gray-800/50'
+                    }`}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    {display === 'both' ? '🙌 Both' :
+                     display === 'left' ? '🤚 Left' :
+                     display === 'right' ? '✋ Right' :
+                     display === 'none' ? '🚫 None' : display}
+                  </motion.button>
+                ))}
+              </div>
+            </div>
+
             {/* Animation Toggle */}
             <div>
-              <h3 className="text-xl font-semibold mb-4 text-amber-400">Animation</h3>
+              <h3 className="text-xl font-semibold mb-4 text-red-400">Animation</h3>
               <motion.button
                 onClick={() => setAnimate(!animate)}
                 className={`px-6 py-3 rounded-lg font-medium transition-all border ${
                   animate
-                    ? 'bg-amber-500 text-white border-amber-400'
+                    ? 'bg-red-500 text-white border-red-400'
                     : 'bg-gray-800/30 text-gray-300 border-gray-700/50 hover:bg-gray-800/50'
                 }`}
                 whileHover={{ scale: 1.02 }}
@@ -362,33 +465,63 @@ export default function BrainMascotDemo() {
 // Basic usage
 <BrainMascot expression="happy" />
 
-// With speech bubble
+// With hand gestures
+<BrainMascot
+  expression="excited"
+  handGesture="thumbsUp"
+  handDisplay="both"
+/>
+
+// Left hand only
 <BrainMascot
   expression="thinking"
-  speechText="Hmm..."
+  handGesture="wave"
+  handDisplay="left"
+  speechText="Hello there!"
   speechBubblePosition="top"
   speechBubbleColor="white"
 />
 
 // Full customization
 <BrainMascot
-  expression="excited"
+  expression="celebration"
+  handGesture="applause"
+  handDisplay="right"
   size="large"
   color="blue"
   animate={true}
-  speechText="Wow!"
+  speechText="Amazing work!"
   speechBubblePosition="right"
   speechBubbleColor="blue"
   onExpressionChange={(newExpression) => {
     console.log('Expression changed to:', newExpression);
   }}
+  onHandGestureChange={(newGesture) => {
+    console.log('Hand gesture changed to:', newGesture);
+  }}
+  onHandDisplayChange={(newDisplay) => {
+    console.log('Hand display changed to:', newDisplay);
+  }}
 />
 
 // Available expressions:
-// 'neutral', 'happy', 'sad', 'excited', 'confused', 
-// 'thinking', 'surprised', 'angry', 'sleepy', 'winking', 
-// 'focused', 'worried', 'love', 'dizzy', 'crying',
-// 'laughing', 'skeptical', 'proud', 'shy', 'mischievous'
+// Basic: 'neutral', 'happy', 'sad', 'excited', 'confused', 'thinking'
+// Emotions: 'surprised', 'angry', 'sleepy', 'winking', 'focused', 'worried'
+// Advanced: 'love', 'dizzy', 'crying', 'laughing', 'skeptical', 'proud'
+// Personality: 'shy', 'mischievous', 'fighter'
+// Reactions: 'thumbsUp', 'thumbsDown', 'applause', 'disapproval'
+// Special: 'amazed', 'satisfied', 'bored', 'celebration'
+
+// Reaction helper:
+import { getReactionExpression } from '@/components/BrainMascot';
+const randomPositive = getReactionExpression('positive');
+
+// Available hand gestures:
+// 'none', 'thumbsUp', 'thumbsDown', 'wave', 'applause', 
+// 'pointUp', 'pointDown', 'openHands'
+
+// Available hand display options:
+// 'both', 'left', 'right', 'none'
 
 // Available colors: 'purple', 'blue', 'green', 'amber', 'red'
 // Available sizes: 'small', 'medium', 'large'
@@ -403,27 +536,30 @@ export default function BrainMascotDemo() {
           <div className="bg-gray-800/20 rounded-xl p-6 border border-gray-700/30">
             <h3 className="text-xl font-semibold mb-4 text-purple-400">Features</h3>
             <ul className="space-y-2 text-gray-300">
-              <li>• 20 different expressions with unique animations</li>
+              <li>• 28 different expressions with unique animations</li>
+              <li>• Independent hand gesture system (8 gestures)</li>
+              <li>• Configurable hand display (left, right, both, none)</li>
+              <li>• Combine any expression with any hand gesture</li>
+              <li>• Reaction system with thumbs up/down and more</li>
               <li>• 5 color themes to match your brand</li>
               <li>• 3 size options (small, medium, large)</li>
               <li>• Speech bubbles with customizable text and colors</li>
               <li>• 4 speech bubble positions (top, bottom, left, right)</li>
               <li>• Smooth Framer Motion animations</li>
               <li>• Interactive click handling</li>
-              <li>• Hover effects and visual feedback</li>
-              <li>• Customizable animation toggle</li>
             </ul>
           </div>
           <div className="bg-gray-800/20 rounded-xl p-6 border border-gray-700/30">
             <h3 className="text-xl font-semibold mb-4 text-blue-400">Expression Details</h3>
             <ul className="space-y-2 text-gray-300 text-sm">
-              <li>• <strong>Happy:</strong> Squinted eyes, upward mouth, sparkles</li>
+              <li>• <strong>Hand Gestures:</strong> Thumbs up/down, waving, applause</li>
+              <li>• <strong>Configurable Display:</strong> Show left, right, both, or no hands</li>
+              <li>• <strong>Independent Control:</strong> Mix any expression + gesture + display</li>
+              <li>• <strong>Example:</strong> Happy + left thumb up, excited + right wave</li>
+              <li>• <strong>Animations:</strong> Hands have their own motion cycles</li>
+              <li>• <strong>Celebration:</strong> Closed eyes, huge smile, hearts + sparkles</li>
               <li>• <strong>Love:</strong> Heart eyes, wide smile, floating hearts</li>
-              <li>• <strong>Laughing:</strong> Closed eyes, huge smile, sparkles + blush</li>
-              <li>• <strong>Crying:</strong> Sad eyes, tears flowing down</li>
-              <li>• <strong>Dizzy:</strong> Spinning stars, confused expression</li>
-              <li>• <strong>Mischievous:</strong> Asymmetric wink, sly smile</li>
-              <li>• <strong>And 14 more...</strong> Each with unique animations</li>
+              <li>• <strong>And 21 more...</strong> Each with unique animations</li>
             </ul>
           </div>
         </div>
