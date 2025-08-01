@@ -1,6 +1,9 @@
 'use client';
 import React, { useState } from 'react';
-import { BookOpen, Code, Check, Brain, GitBranch, Play } from 'lucide-react';
+import { BookOpen, Code, Check, Brain, GitBranch, Play, Sparkles, ArrowRight } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
+import { AuthPromptPage } from './AuthPromptPage';
 import CodeSandbox from '../../components/CodeSandbox';
 import { InteractivePatternFlow } from '../../components/InteractivePatternFlow';
 import { RemotionPlayer } from '../../components/RemotionPlayer';
@@ -64,11 +67,24 @@ export const TechniqueDetails = ({
 }: TechniqueDetailsProps) => {
   const [localDetailsTab, setLocalDetailsTab] = useState<'overview' | 'flow' | 'interactive' | 'code'>('overview');
   const [localSelectedLanguage, setLocalSelectedLanguage] = useState<LanguageType>('typescript');
+  const { user, loading } = useAuth();
+  const router = useRouter();
   
   const detailsTab = propDetailsTab || localDetailsTab;
   const setDetailsTab = propSetDetailsTab || setLocalDetailsTab;
   const selectedLanguage = propSelectedLanguage || localSelectedLanguage;
   const setSelectedLanguage = propSetSelectedLanguage || setLocalSelectedLanguage;
+
+  // Handle tab switching with auth checks
+  const handleTabChange = (tab: 'overview' | 'flow' | 'interactive' | 'code') => {
+    // Check if user is trying to access protected content
+    if ((tab === 'interactive' || tab === 'code') && !user) {
+      // Don't switch tab, let the content section handle showing auth prompt
+      setDetailsTab(tab);
+      return;
+    }
+    setDetailsTab(tab);
+  };
   if (!selectedTechnique) {
     return (
       <div className="lg:col-span-3">
@@ -122,7 +138,7 @@ export const TechniqueDetails = ({
           {/* Desktop tabs */}
           <div className="hidden md:flex gap-6 px-6">
             <button
-              onClick={() => setDetailsTab('overview')}
+              onClick={() => handleTabChange('overview')}
               className={`cursor-pointer py-4 px-3 font-medium transition-all border-b-2 ${
                 detailsTab === 'overview'
                   ? 'text-blue-400 border-blue-400'
@@ -133,7 +149,7 @@ export const TechniqueDetails = ({
               Overview
             </button>
             <button
-              onClick={() => setDetailsTab('flow')}
+              onClick={() => handleTabChange('flow')}
               className={`cursor-pointer py-4 px-3 font-medium transition-all border-b-2 ${
                 detailsTab === 'flow'
                   ? 'text-orange-400 border-orange-400'
@@ -144,7 +160,7 @@ export const TechniqueDetails = ({
               Flow Visualization
             </button>
             <button
-              onClick={() => setDetailsTab('interactive')}
+              onClick={() => handleTabChange('interactive')}
               className={`cursor-pointer py-4 px-3 font-medium transition-all border-b-2 ${
                 detailsTab === 'interactive'
                   ? 'text-purple-400 border-purple-400'
@@ -155,7 +171,7 @@ export const TechniqueDetails = ({
               Interactive Demo
             </button>
             <button
-              onClick={() => setDetailsTab('code')}
+              onClick={() => handleTabChange('code')}
               className={`cursor-pointer py-4 px-3 font-medium transition-all border-b-2 ${
                 detailsTab === 'code'
                   ? 'text-green-400 border-green-400'
@@ -171,7 +187,7 @@ export const TechniqueDetails = ({
           <div className="md:hidden px-4 py-3">
             <div className="grid grid-cols-2 gap-2">
               <button
-                onClick={() => setDetailsTab('overview')}
+                onClick={() => handleTabChange('overview')}
                 className={`py-4 px-3 rounded-lg font-medium transition-all text-sm min-h-[48px] ${
                   detailsTab === 'overview'
                     ? 'bg-blue-600 text-white'
@@ -182,7 +198,7 @@ export const TechniqueDetails = ({
                 Overview
               </button>
               <button
-                onClick={() => setDetailsTab('flow')}
+                onClick={() => handleTabChange('flow')}
                 className={`py-4 px-3 rounded-lg font-medium transition-all text-sm min-h-[48px] ${
                   detailsTab === 'flow'
                     ? 'bg-orange-600 text-white'
@@ -193,7 +209,7 @@ export const TechniqueDetails = ({
                 Flow
               </button>
               <button
-                onClick={() => setDetailsTab('interactive')}
+                onClick={() => handleTabChange('interactive')}
                 className={`py-4 px-3 rounded-lg font-medium transition-all text-sm min-h-[48px] ${
                   detailsTab === 'interactive'
                     ? 'bg-purple-600 text-white'
@@ -204,7 +220,7 @@ export const TechniqueDetails = ({
                 Demo
               </button>
               <button
-                onClick={() => setDetailsTab('code')}
+                onClick={() => handleTabChange('code')}
                 className={`py-4 px-3 rounded-lg font-medium transition-all text-sm min-h-[48px] ${
                   detailsTab === 'code'
                     ? 'bg-green-600 text-white'
@@ -507,6 +523,59 @@ export const TechniqueDetails = ({
               </div>
             </div>
           ) : detailsTab === 'interactive' ? (
+            !user ? (
+              <div className="min-h-screen bg-gray-950 relative overflow-hidden">
+                {/* Background gradient effects */}
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/20 via-transparent to-purple-900/20"></div>
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-purple-900/20 via-transparent to-transparent"></div>
+                
+                <div className="relative z-10 container mx-auto px-4 py-12 max-w-6xl">
+                  {/* Hero Section */}
+                  <div className="text-center mb-16">
+                    <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-3xl shadow-2xl mb-8">
+                      <Play className="w-12 h-12 text-white" />
+                    </div>
+                    
+                    <h1 className="text-4xl sm:text-5xl font-bold text-gray-100 mb-6">
+                      Interactive Demonstrations
+                    </h1>
+                    
+                    <p className="text-xl text-gray-400 mb-8 max-w-3xl mx-auto">
+                      Experience hands-on demonstrations and interactive learning for AI design patterns
+                    </p>
+
+                    <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-2xl p-8 max-w-4xl mx-auto mb-12">
+                      <div className="flex items-center justify-center space-x-3 mb-4">
+                        <Sparkles className="w-6 h-6 text-blue-400" />
+                        <span className="text-2xl font-semibold text-blue-400">Sign in to access interactive demos!</span>
+                      </div>
+                      <p className="text-gray-300 text-lg">
+                        Create your free account to explore interactive pattern demonstrations.
+                      </p>
+                    </div>
+
+                    {/* CTA Buttons */}
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                      <button
+                        onClick={() => router.push('/auth/register')}
+                        className="group flex items-center justify-center space-x-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-xl shadow-lg transform transition-all duration-200 hover:scale-[1.02]"
+                      >
+                        <Play className="w-5 h-5" />
+                        <span>Start Exploring Free</span>
+                        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" />
+                      </button>
+                      
+                      <button
+                        onClick={() => router.push('/auth/login')}
+                        className="px-8 py-4 bg-gray-800 hover:bg-gray-700 text-gray-100 font-semibold rounded-xl border border-gray-700 transition-colors duration-200"
+                      >
+                        Already have an account? Sign In
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : (
             <div className="space-y-6">
               {/* Interactive Demos */}
               <div>
@@ -659,7 +728,61 @@ export const TechniqueDetails = ({
                 </div>
               </div>
             </div>
+            )
           ) : (
+            !user ? (
+              <div className="min-h-screen bg-gray-950 relative overflow-hidden">
+                {/* Background gradient effects */}
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-green-900/20 via-transparent to-blue-900/20"></div>
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-blue-900/20 via-transparent to-transparent"></div>
+                
+                <div className="relative z-10 container mx-auto px-4 py-12 max-w-6xl">
+                  {/* Hero Section */}
+                  <div className="text-center mb-16">
+                    <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-green-500 to-blue-600 rounded-3xl shadow-2xl mb-8">
+                      <Code className="w-12 h-12 text-white" />
+                    </div>
+                    
+                    <h1 className="text-4xl sm:text-5xl font-bold text-gray-100 mb-6">
+                      Code Playground
+                    </h1>
+                    
+                    <p className="text-xl text-gray-400 mb-8 max-w-3xl mx-auto">
+                      Access live code examples and interactive programming environments for AI design patterns
+                    </p>
+
+                    <div className="bg-gradient-to-r from-green-500/10 to-blue-500/10 border border-green-500/20 rounded-2xl p-8 max-w-4xl mx-auto mb-12">
+                      <div className="flex items-center justify-center space-x-3 mb-4">
+                        <Sparkles className="w-6 h-6 text-green-400" />
+                        <span className="text-2xl font-semibold text-green-400">Sign in to access the code playground!</span>
+                      </div>
+                      <p className="text-gray-300 text-lg">
+                        Create your free account to explore live code examples and interactive environments.
+                      </p>
+                    </div>
+
+                    {/* CTA Buttons */}
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                      <button
+                        onClick={() => router.push('/auth/register')}
+                        className="group flex items-center justify-center space-x-3 px-8 py-4 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-semibold rounded-xl shadow-lg transform transition-all duration-200 hover:scale-[1.02]"
+                      >
+                        <Code className="w-5 h-5" />
+                        <span>Start Coding Free</span>
+                        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" />
+                      </button>
+                      
+                      <button
+                        onClick={() => router.push('/auth/login')}
+                        className="px-8 py-4 bg-gray-800 hover:bg-gray-700 text-gray-100 font-semibold rounded-xl border border-gray-700 transition-colors duration-200"
+                      >
+                        Already have an account? Sign In
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : (
             <div className="space-y-6">
               {/* Language Selection */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -701,6 +824,7 @@ export const TechniqueDetails = ({
                 </div>
               )}
             </div>
+            )
           )}
         </div>
       </div>

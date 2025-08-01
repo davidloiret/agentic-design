@@ -830,3 +830,5 @@ if logged I should not be able to go to auth pages
 
 
 make brain mascot talk => TTS
+
+create workshop complete 
