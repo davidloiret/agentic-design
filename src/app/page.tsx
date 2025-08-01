@@ -74,6 +74,30 @@ export default function Home() {
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-500/20 rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-500/20 rounded-full blur-3xl" />
         
+        {/* Auth Buttons - Top Right */}
+        <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20">
+          <div className="flex items-center gap-3">
+            <Link href="/auth/login">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white transition-colors rounded-lg hover:bg-gray-800/50 backdrop-blur-sm"
+              >
+                Sign In
+              </motion.button>
+            </Link>
+            <Link href="/auth/register">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-4 py-2 text-sm font-medium bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white rounded-lg shadow-lg transition-all duration-200"
+              >
+                Sign Up
+              </motion.button>
+            </Link>
+          </div>
+        </div>
+        
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-32">
           <div className="text-center">
             {/* Animated Brain Mascot */}

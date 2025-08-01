@@ -808,3 +808,12 @@ magical
     Test the game / card
 
      Maybe we could animate the mouth too to have the impression that the brain is talking  
+
+
+-------------------
+create another game where you need to get the correct card for a challenge => QCM like battle
+
+Select the good pattern for a use case etc
+
+
+BrainMascot should have thumb up / thumb done and other proper reaction so we can express a lot of things.
