@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { PatternCardGame } from './PatternCardGame';
+import { HearthstoneGameHub } from './HearthstoneGameHub';
 import { multiplayerGameAPI, GameRoom, PlayerStats, GameAction, CreateGameRoomRequest } from '@/lib/multiplayer-game-api';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -312,7 +312,7 @@ export const MultiplayerPatternCardGame: React.FC = () => {
 
   // Show single player game
   if (gameMode === 'singleplayer') {
-    return <PatternCardGame />;
+    return <HearthstoneGameHub />;
   }
 
   // Show multiplayer game
