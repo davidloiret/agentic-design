@@ -26,6 +26,8 @@ export type BrainExpression =
   | 'mischievous'
   | 'fighter';
 
+export type SpeechBubbleType = 'talk' | 'think' | 'shout' | 'whisper';
+
 export interface BrainMascotProps {
   expression?: BrainExpression;
   size?: 'tiny' | 'small' | 'medium' | 'large';
@@ -34,6 +36,10 @@ export interface BrainMascotProps {
   className?: string;
   onExpressionChange?: (expression: BrainExpression) => void;
   skipInitialAnimation?: boolean;
+  speechText?: string;
+  speechBubblePosition?: 'top' | 'bottom' | 'left' | 'right';
+  speechBubbleColor?: 'white' | 'purple' | 'blue' | 'green' | 'amber' | 'red';
+  speechBubbleType?: SpeechBubbleType;
 }
 
 const sizeMap = {
@@ -68,6 +74,33 @@ const colorMap = {
     primary: '#EF4444',
     secondary: '#F87171',
     accent: '#FCA5A5'
+  }
+};
+
+const speechBubbleColorMap = {
+  white: {
+    background: '#FFFFFF',
+    text: '#1F2937'
+  },
+  purple: {
+    background: '#F3E8FF',
+    text: '#6B21A8'
+  },
+  blue: {
+    background: '#EFF6FF',
+    text: '#1E40AF'
+  },
+  green: {
+    background: '#F0FDF4',
+    text: '#166534'
+  },
+  amber: {
+    background: '#FEF3C7',
+    text: '#92400E'
+  },
+  red: {
+    background: '#FEE2E2',
+    text: '#991B1B'
   }
 };
 
@@ -275,7 +308,11 @@ export const BrainMascot: React.FC<BrainMascotProps> = ({
   color = 'purple',
   className = '',
   onExpressionChange,
-  skipInitialAnimation = false
+  skipInitialAnimation = false,
+  speechText,
+  speechBubblePosition = 'right',
+  speechBubbleColor = 'white',
+  speechBubbleType = 'talk'
 }) => {
   const [currentExpression, setCurrentExpression] = useState<BrainExpression>(expression);
   const [isHovering, setIsHovering] = useState(false);
@@ -283,6 +320,7 @@ export const BrainMascot: React.FC<BrainMascotProps> = ({
   const dimensions = sizeMap[size];
   const colors = colorMap[color];
   const expressionConfig = expressionData[currentExpression];
+  const speechColors = speechBubbleColorMap[speechBubbleColor];
 
   useEffect(() => {
     // Add a small delay for smoother transition
@@ -320,18 +358,84 @@ export const BrainMascot: React.FC<BrainMascotProps> = ({
     transition: { duration: 0.5 }
   } : undefined;
 
+  // Calculate text dimensions first
+  const calculateTextDimensions = (text: string) => {
+    const maxCharsPerLine = 20;
+    const charWidth = 8; // Approximate width per character
+    const lineHeight = 18;
+    const padding = { x: 16, y: 10 };
+    
+    // Split text into lines
+    const words = text.split(' ');
+    const lines: string[] = [];
+    let currentLine = '';
+    
+    words.forEach(word => {
+      const testLine = currentLine ? `${currentLine} ${word}` : word;
+      if (testLine.length <= maxCharsPerLine) {
+        currentLine = testLine;
+      } else {
+        if (currentLine) lines.push(currentLine);
+        currentLine = word;
+      }
+    });
+    if (currentLine) lines.push(currentLine);
+    
+    const maxLineLength = Math.max(...lines.map(line => line.length));
+    const width = Math.max(50, Math.min(150, maxLineLength * charWidth + padding.x * 2));
+    const height = lines.length * lineHeight + padding.y * 2;
+    
+    return { width, height, lines };
+  };
+
+  const textDimensions = speechText ? calculateTextDimensions(speechText) : null;
+
+  // Calculate speech bubble position based on position prop and size
+  const getBubblePosition = () => {
+    const margin = 15; // Space between brain and bubble
+    const bubbleWidth = textDimensions?.width || 70;
+    const bubbleHeight = textDimensions?.height || 28;
+    
+    // Brain bounds approximately from 15 to 85 in viewBox coordinates
+    const brainTop = 22;
+    const brainBottom = 78;
+    const brainLeft = 15;
+    const brainRight = 85;
+    
+    const positions = {
+      top: { 
+        x: 50, 
+        y: brainTop - margin - bubbleHeight/2,
+        tailPath: `M 48 ${brainTop - margin - 2} L 50 ${brainTop - 5} L 52 ${brainTop - margin - 2} Z`
+      },
+      bottom: { 
+        x: 50, 
+        y: brainBottom + margin + bubbleHeight/2,
+        tailPath: `M 48 ${brainBottom + margin + 2} L 50 ${brainBottom + 5} L 52 ${brainBottom + margin + 2} Z`
+      },
+      left: { 
+        x: brainLeft - margin - bubbleWidth/2, 
+        y: 50,
+        tailPath: `M ${brainLeft - margin - 2} 48 L ${brainLeft - 5} 50 L ${brainLeft - margin - 2} 52 Z`
+      },
+      right: { 
+        x: brainRight + margin + bubbleWidth/2, 
+        y: 50,
+        tailPath: `M ${brainRight + margin + 2} 48 L ${brainRight + 5} 50 L ${brainRight + margin + 2} 52 Z`
+      }
+    };
+    return positions[speechBubblePosition];
+  };
+
+  const bubblePosition = getBubblePosition();
+
   return (
-    <motion.div 
-      className={`block cursor-pointer ${className}`}
+    <div 
+      className={`relative inline-block cursor-pointer ${className}`}
       style={{ width: dimensions.width, height: dimensions.height }}
-      animate={hoverAnimation || pulseAnimation}
-      onHoverStart={() => setIsHovering(true)}
-      onHoverEnd={() => setIsHovering(false)}
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
       onClick={handleClick}
-      initial={skipInitialAnimation ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
-      whileInView={skipInitialAnimation ? {} : { opacity: 1, scale: 1 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
     >
       <svg
         width={dimensions.width}
@@ -339,6 +443,7 @@ export const BrainMascot: React.FC<BrainMascotProps> = ({
         viewBox="0 0 100 100"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
+        style={{ overflow: 'visible' }}
       >
         {/* Brain Body with gradient */}
         <defs>
@@ -356,6 +461,210 @@ export const BrainMascot: React.FC<BrainMascotProps> = ({
           </filter>
         </defs>
 
+        {/* Speech Bubble - Outside the animated brain group */}
+        <AnimatePresence>
+          {speechText && (
+            <motion.g
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0, opacity: 0 }}
+              transition={{ 
+                type: "spring",
+                stiffness: 500,
+                damping: 25,
+                duration: 0.2,
+                delay: skipInitialAnimation ? 0 : 0.6 // Wait for brain animation
+              }}
+              style={{ transformOrigin: `${bubblePosition.x}px ${bubblePosition.y}px` }}
+            >
+              {/* Animated bubble shape */}
+              <motion.path
+                d=""
+                fill={speechColors.background}
+                stroke={speechBubbleType === 'whisper' ? speechColors.text : 'none'}
+                strokeWidth={speechBubbleType === 'whisper' ? '1' : '0'}
+                strokeDasharray={speechBubbleType === 'whisper' ? '3 3' : '0'}
+                opacity={speechBubbleType === 'whisper' ? 0.85 : 0.95}
+                animate={{
+                  d: (() => {
+                    const w = (textDimensions?.width || 70) / 2;
+                    const h = (textDimensions?.height || 28) / 2;
+                    const x = bubblePosition.x;
+                    const y = bubblePosition.y;
+                    
+                    if (speechBubbleType === 'think') {
+                      // Simple cloud shape with 3-4 bumps
+                      const padding = 8;
+                      const cloudW = w + padding;
+                      const cloudH = h + padding;
+                      const r = Math.min(cloudH * 0.8, 20); // Bump radius
+                      
+                      return `
+                        M ${x - cloudW} ${y}
+                        C ${x - cloudW} ${y - r}, ${x - cloudW + r} ${y - cloudH}, ${x - cloudW/2} ${y - cloudH}
+                        C ${x - cloudW/3} ${y - cloudH - r/2}, ${x + cloudW/3} ${y - cloudH - r/2}, ${x + cloudW/2} ${y - cloudH}
+                        C ${x + cloudW - r} ${y - cloudH}, ${x + cloudW} ${y - r}, ${x + cloudW} ${y}
+                        C ${x + cloudW} ${y + r}, ${x + cloudW - r} ${y + cloudH}, ${x + cloudW/2} ${y + cloudH}
+                        C ${x + cloudW/3} ${y + cloudH + r/2}, ${x - cloudW/3} ${y + cloudH + r/2}, ${x - cloudW/2} ${y + cloudH}
+                        C ${x - cloudW + r} ${y + cloudH}, ${x - cloudW} ${y + r}, ${x - cloudW} ${y}
+                        Z
+                      `;
+                    } else if (speechBubbleType === 'shout') {
+                      // Spiky shape with zigzag edges - keep close to text size
+                      const spike = 5;
+                      const shoutW = w + spike;
+                      const shoutH = h + spike/2;
+                      return `
+                        M ${x - shoutW} ${y - spike}
+                        L ${x - shoutW + spike} ${y - shoutH}
+                        L ${x - shoutW/2} ${y - shoutH + spike/2}
+                        L ${x} ${y - shoutH - spike}
+                        L ${x + shoutW/2} ${y - shoutH + spike/2}
+                        L ${x + shoutW - spike} ${y - shoutH}
+                        L ${x + shoutW} ${y - spike}
+                        L ${x + shoutW - spike/2} ${y}
+                        L ${x + shoutW} ${y + spike}
+                        L ${x + shoutW - spike} ${y + shoutH}
+                        L ${x + shoutW/2} ${y + shoutH - spike/2}
+                        L ${x} ${y + shoutH + spike}
+                        L ${x - shoutW/2} ${y + shoutH - spike/2}
+                        L ${x - shoutW + spike} ${y + shoutH}
+                        L ${x - shoutW} ${y + spike}
+                        L ${x - shoutW + spike/2} ${y}
+                        Z
+                      `;
+                    } else {
+                      // Smooth rounded rectangle
+                      const r = Math.min(h * 0.5, 14);
+                      return `
+                        M ${x - w + r} ${y - h}
+                        Q ${x - w} ${y - h}, ${x - w} ${y - h + r}
+                        L ${x - w} ${y + h - r}
+                        Q ${x - w} ${y + h}, ${x - w + r} ${y + h}
+                        L ${x + w - r} ${y + h}
+                        Q ${x + w} ${y + h}, ${x + w} ${y + h - r}
+                        L ${x + w} ${y - h + r}
+                        Q ${x + w} ${y - h}, ${x + w - r} ${y - h}
+                        Z
+                      `;
+                    }
+                  })()
+                }}
+                transition={{ 
+                  duration: 0.3, 
+                  ease: [0.4, 0, 0.2, 1],
+                  type: "tween"
+                }}
+              />
+              
+              {/* Animated tail */}
+              {speechBubbleType === 'think' ? (
+                // Thought bubble tail - small circles
+                <>
+                  {(() => {
+                    const dx = speechBubblePosition === 'left' ? 20 : speechBubblePosition === 'right' ? -20 : 0;
+                    const dy = speechBubblePosition === 'top' ? 20 : speechBubblePosition === 'bottom' ? -20 : 0;
+                    return (
+                      <>
+                        <motion.circle 
+                          cx={bubblePosition.x + dx * 0.8} 
+                          cy={bubblePosition.y + dy * 0.8} 
+                          r="4" 
+                          fill={speechColors.background} 
+                          opacity="0.95"
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ duration: 0.3, ease: "easeOut" }}
+                        />
+                        <motion.circle 
+                          cx={bubblePosition.x + dx * 1.2} 
+                          cy={bubblePosition.y + dy * 1.2} 
+                          r="3" 
+                          fill={speechColors.background} 
+                          opacity="0.95"
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ duration: 0.3, delay: 0.1, ease: "easeOut" }}
+                        />
+                        <motion.circle 
+                          cx={bubblePosition.x + dx * 1.5} 
+                          cy={bubblePosition.y + dy * 1.5} 
+                          r="2" 
+                          fill={speechColors.background} 
+                          opacity="0.95"
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ duration: 0.3, delay: 0.2, ease: "easeOut" }}
+                        />
+                      </>
+                    );
+                  })()}
+                </>
+              ) : (
+                // Regular tail for talk/shout/whisper
+                <motion.path
+                  d={bubblePosition.tailPath}
+                  fill={speechColors.background}
+                  stroke={speechBubbleType === 'whisper' ? speechColors.text : 'none'}
+                  strokeWidth={speechBubbleType === 'whisper' ? '1' : '0'}
+                  strokeDasharray={speechBubbleType === 'whisper' ? '2 2' : '0'}
+                  opacity={speechBubbleType === 'whisper' ? 0.85 : 0.95}
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                />
+              )}
+              
+              {/* Text - Multi-line support with style variations */}
+              <motion.g
+                animate={{
+                  opacity: [0, 1],
+                }}
+                transition={{
+                  duration: 0.2,
+                  delay: 0.1,
+                  ease: "easeOut"
+                }}
+              >
+                {textDimensions?.lines.map((line, index) => (
+                  <motion.text
+                    key={`${line}-${index}`}
+                    x={bubblePosition.x}
+                    y={bubblePosition.y - ((textDimensions.lines.length - 1) * 9) + (index * 18)}
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    fill={speechColors.text}
+                    fontFamily="system-ui, -apple-system, sans-serif"
+                    animate={{
+                      fontSize: speechBubbleType === 'shout' ? 15 : speechBubbleType === 'whisper' ? 11 : 13,
+                      fontWeight: speechBubbleType === 'shout' ? 700 : speechBubbleType === 'whisper' ? 300 : 500,
+                      opacity: speechBubbleType === 'whisper' ? 0.7 : 1,
+                    }}
+                    transition={{
+                      duration: 0.25,
+                      ease: [0.4, 0, 0.2, 1]
+                    }}
+                    style={{
+                      fontStyle: speechBubbleType === 'think' ? 'italic' : 'normal'
+                    }}
+                  >
+                    {speechBubbleType === 'shout' ? line.toUpperCase() : line}
+                  </motion.text>
+                ))}
+              </motion.g>
+            </motion.g>
+          )}
+        </AnimatePresence>
+
+        {/* Animated Brain Group */}
+        <motion.g
+          animate={hoverAnimation || pulseAnimation}
+          initial={skipInitialAnimation ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
+          whileInView={skipInitialAnimation ? {} : { opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          style={{ transformOrigin: "50px 50px" }}
+        >
         {/* Cute Cloud-like Brain Shape */}
         <motion.path
           d="M 20 45 
@@ -901,8 +1210,9 @@ export const BrainMascot: React.FC<BrainMascotProps> = ({
             </>
           )}
         </AnimatePresence>
+        </motion.g>
       </svg>
-    </motion.div>
+    </div>
   );
 };
 

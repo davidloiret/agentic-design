@@ -59,7 +59,7 @@ export const MultiplayerPatternCardGame: React.FC = () => {
         // Load player stats
         const statsResponse = await multiplayerGameAPI.getPlayerStats();
         if (statsResponse.success && statsResponse.stats) {
-          setLobbyState(prev => ({ ...prev, playerStats: statsResponse.stats }));
+          setLobbyState(prev => ({ ...prev, playerStats: statsResponse.stats || null }));
         }
         
         // Load available rooms and active games
@@ -78,7 +78,7 @@ export const MultiplayerPatternCardGame: React.FC = () => {
     try {
       const roomsResponse = await multiplayerGameAPI.getAvailableGames();
       if (roomsResponse.success && roomsResponse.games) {
-        setLobbyState(prev => ({ ...prev, availableRooms: roomsResponse.games }));
+        setLobbyState(prev => ({ ...prev, availableRooms: roomsResponse.games || [] }));
       }
     } catch (error) {
       console.error('Failed to load available rooms:', error);
@@ -90,7 +90,7 @@ export const MultiplayerPatternCardGame: React.FC = () => {
       const activeGamesResponse = await multiplayerGameAPI.getActiveGames();
       console.log('Active games response:', activeGamesResponse);
       if (activeGamesResponse.success && activeGamesResponse.games) {
-        setLobbyState(prev => ({ ...prev, activeGames: activeGamesResponse.games }));
+        setLobbyState(prev => ({ ...prev, activeGames: activeGamesResponse.games || [] }));
       }
     } catch (error) {
       console.error('Failed to load active games:', error);
@@ -196,7 +196,7 @@ export const MultiplayerPatternCardGame: React.FC = () => {
       const response = await multiplayerGameAPI.createGameRoom(request);
       
       if (response.success && response.gameRoom) {
-        setLobbyState(prev => ({ ...prev, currentRoom: response.gameRoom }));
+        setLobbyState(prev => ({ ...prev, currentRoom: response.gameRoom || null }));
         setGameMode('join_room'); // Show waiting room
         await refreshActiveGames();
       } else {
@@ -208,7 +208,7 @@ export const MultiplayerPatternCardGame: React.FC = () => {
           
           if (activeGamesResponse.success && activeGamesResponse.games && activeGamesResponse.games.length > 0) {
             // Update state with the active games
-            setLobbyState(prev => ({ ...prev, activeGames: activeGamesResponse.games }));
+            setLobbyState(prev => ({ ...prev, activeGames: activeGamesResponse.games || [] }));
             alert(`You have ${activeGamesResponse.games.length} active game(s). Please check the "Your Active Games" section above to rejoin or leave them.`);
           } else {
             // Try to force clear any stale games
@@ -248,7 +248,7 @@ export const MultiplayerPatternCardGame: React.FC = () => {
       const response = await multiplayerGameAPI.joinGameRoom(roomId);
       
       if (response.success && response.gameRoom) {
-        setLobbyState(prev => ({ ...prev, currentRoom: response.gameRoom }));
+        setLobbyState(prev => ({ ...prev, currentRoom: response.gameRoom || null }));
         setGameMode('multiplayer_game');
       } else {
         console.error('Failed to join room:', response.error);

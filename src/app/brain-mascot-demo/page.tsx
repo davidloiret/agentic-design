@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { BrainMascot, BrainExpression } from '@/components/BrainMascot';
+import React, { useState, useEffect, useRef } from 'react';
+import { BrainMascot, BrainExpression, SpeechBubbleType } from '@/components/BrainMascot';
 import { motion } from 'framer-motion';
 
 const expressions: BrainExpression[] = [
@@ -14,11 +14,88 @@ const expressions: BrainExpression[] = [
 const colors = ['purple', 'blue', 'green', 'amber', 'red'] as const;
 const sizes = ['small', 'medium', 'large'] as const;
 
+// Dialog simulation script
+const dialogScript = [
+  { text: "Hello! I'm Brain!", expression: 'happy' as BrainExpression, type: 'talk' as SpeechBubbleType, duration: 1800 },
+  { text: "How can I help you today?", expression: 'happy' as BrainExpression, type: 'talk' as SpeechBubbleType, duration: 1800 },
+  { text: "Hmm... Let me think about that", expression: 'thinking' as BrainExpression, type: 'think' as SpeechBubbleType, duration: 2200 },
+  { text: "I GOT IT!", expression: 'excited' as BrainExpression, type: 'shout' as SpeechBubbleType, duration: 1500 },
+  { text: "The answer is 42", expression: 'proud' as BrainExpression, type: 'talk' as SpeechBubbleType, duration: 1800 },
+  { text: "...or maybe not", expression: 'confused' as BrainExpression, type: 'whisper' as SpeechBubbleType, duration: 1800 },
+  { text: "Actually, I'm not sure", expression: 'worried' as BrainExpression, type: 'think' as SpeechBubbleType, duration: 1800 },
+  { text: "WAIT! I KNOW NOW!", expression: 'surprised' as BrainExpression, type: 'shout' as SpeechBubbleType, duration: 1500 },
+  { text: "Just kidding!", expression: 'mischievous' as BrainExpression, type: 'talk' as SpeechBubbleType, duration: 1500 },
+  { text: "*wink wink*", expression: 'winking' as BrainExpression, type: 'whisper' as SpeechBubbleType, duration: 1500 },
+  { text: "I love helping people!", expression: 'love' as BrainExpression, type: 'talk' as SpeechBubbleType, duration: 1800 },
+  { text: "Zzz... so sleepy", expression: 'sleepy' as BrainExpression, type: 'whisper' as SpeechBubbleType, duration: 2200 },
+];
+
 export default function BrainMascotDemo() {
   const [currentExpression, setCurrentExpression] = useState<BrainExpression>('happy');
   const [currentColor, setCurrentColor] = useState<typeof colors[number]>('purple');
   const [currentSize, setCurrentSize] = useState<typeof sizes[number]>('medium');
   const [animate, setAnimate] = useState(true);
+  const [speechText, setSpeechText] = useState('Hello! How can I help you today?');
+  const [showSpeech, setShowSpeech] = useState(true);
+  const [speechPosition, setSpeechPosition] = useState<'top' | 'bottom' | 'left' | 'right'>('right');
+  const [speechBubbleColor, setSpeechBubbleColor] = useState<'white' | 'purple' | 'blue' | 'green' | 'amber' | 'red'>('white');
+  const [speechBubbleType, setSpeechBubbleType] = useState<SpeechBubbleType>('talk');
+  const [isSimulating, setIsSimulating] = useState(false);
+  const [currentDialogIndex, setCurrentDialogIndex] = useState(0);
+  const simulationTimeoutRef = useRef<NodeJS.Timeout>();
+
+  // Dialog simulation effect
+  useEffect(() => {
+    if (isSimulating && currentDialogIndex < dialogScript.length) {
+      const currentDialog = dialogScript[currentDialogIndex];
+      
+      // Fade out current bubble
+      setShowSpeech(false);
+      
+      // After fade out, update content and fade back in
+      setTimeout(() => {
+        setSpeechText(currentDialog.text);
+        setCurrentExpression(currentDialog.expression);
+        setSpeechBubbleType(currentDialog.type);
+        setShowSpeech(true);
+      }, 200); // Wait for fade out animation
+      
+      // Schedule next dialog
+      simulationTimeoutRef.current = setTimeout(() => {
+        if (currentDialogIndex < dialogScript.length - 1) {
+          setCurrentDialogIndex(currentDialogIndex + 1);
+        } else {
+          // Reset after last dialog
+          setIsSimulating(false);
+          setCurrentDialogIndex(0);
+          setTimeout(() => {
+            setSpeechText("Hello! How can I help you today?");
+            setCurrentExpression('happy');
+            setSpeechBubbleType('talk');
+          }, 300);
+        }
+      }, currentDialog.duration);
+    }
+    
+    return () => {
+      if (simulationTimeoutRef.current) {
+        clearTimeout(simulationTimeoutRef.current);
+      }
+    };
+  }, [isSimulating, currentDialogIndex]);
+
+  const startSimulation = () => {
+    setIsSimulating(true);
+    setCurrentDialogIndex(0);
+  };
+
+  const stopSimulation = () => {
+    setIsSimulating(false);
+    setCurrentDialogIndex(0);
+    if (simulationTimeoutRef.current) {
+      clearTimeout(simulationTimeoutRef.current);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-900 text-white p-8">
@@ -43,17 +120,35 @@ export default function BrainMascotDemo() {
                 color={currentColor}
                 animate={animate}
                 onExpressionChange={(newExpression) => setCurrentExpression(newExpression)}
+                speechText={showSpeech ? speechText : undefined}
+                speechBubblePosition={speechPosition}
+                speechBubbleColor={speechBubbleColor}
+                speechBubbleType={speechBubbleType}
               />
             </div>
             <p className="text-gray-400 text-sm text-center max-w-xs">
               Click on the brain to trigger random expressions!
             </p>
+            
+            {/* Dialog Simulation Button */}
+            <motion.button
+              onClick={isSimulating ? stopSimulation : startSimulation}
+              className={`mt-4 px-6 py-2 rounded-lg font-medium transition-all border ${
+                isSimulating
+                  ? 'bg-red-500 text-white border-red-400'
+                  : 'bg-purple-500 text-white border-purple-400'
+              }`}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              {isSimulating ? 'Stop Dialog' : 'Start Dialog Simulation'}
+            </motion.button>
           </div>
 
           {/* Controls */}
           <div className="space-y-8">
             {/* Expression Selector */}
-            <div>
+            <div className={isSimulating ? 'opacity-50 pointer-events-none' : ''}>
               <h3 className="text-xl font-semibold mb-4 text-purple-400">Expressions</h3>
               <div className="grid grid-cols-3 gap-2 max-h-96 overflow-y-auto pr-2">
                 {expressions.map((expression) => (
@@ -134,6 +229,102 @@ export default function BrainMascotDemo() {
                 {animate ? 'Animation On' : 'Animation Off'}
               </motion.button>
             </div>
+
+            {/* Speech Bubble Controls */}
+            <div className={`space-y-4 ${isSimulating ? 'opacity-50 pointer-events-none' : ''}`}>
+              <h3 className="text-xl font-semibold mb-4 text-pink-400">Speech Bubble</h3>
+              
+              {/* Speech Toggle */}
+              <div className="flex items-center gap-4">
+                <motion.button
+                  onClick={() => setShowSpeech(!showSpeech)}
+                  className={`px-4 py-2 rounded-lg font-medium transition-all border ${
+                    showSpeech
+                      ? 'bg-pink-500 text-white border-pink-400'
+                      : 'bg-gray-800/30 text-gray-300 border-gray-700/50 hover:bg-gray-800/50'
+                  }`}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  {showSpeech ? 'Speech On' : 'Speech Off'}
+                </motion.button>
+                
+                <input
+                  type="text"
+                  value={speechText}
+                  onChange={(e) => setSpeechText(e.target.value)}
+                  placeholder="Enter speech text"
+                  className="px-4 py-2 rounded-lg bg-gray-800/50 border border-gray-700/50 text-gray-300 placeholder-gray-500 focus:border-pink-400 focus:outline-none"
+                  maxLength={100}
+                />
+              </div>
+
+              {/* Speech Position */}
+              <div>
+                <p className="text-sm text-gray-400 mb-2">Position</p>
+                <div className="flex gap-2">
+                  {(['top', 'bottom', 'left', 'right'] as const).map((position) => (
+                    <motion.button
+                      key={position}
+                      onClick={() => setSpeechPosition(position)}
+                      className={`px-3 py-1 rounded-lg font-medium text-sm transition-all border capitalize ${
+                        speechPosition === position
+                          ? 'bg-pink-500 text-white border-pink-400'
+                          : 'bg-gray-800/30 text-gray-300 border-gray-700/50 hover:bg-gray-800/50'
+                      }`}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      {position}
+                    </motion.button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Speech Bubble Color */}
+              <div>
+                <p className="text-sm text-gray-400 mb-2">Bubble Color</p>
+                <div className="grid grid-cols-3 gap-2">
+                  {(['white', 'purple', 'blue', 'green', 'amber', 'red'] as const).map((bubbleColor) => (
+                    <motion.button
+                      key={bubbleColor}
+                      onClick={() => setSpeechBubbleColor(bubbleColor)}
+                      className={`px-3 py-1 rounded-lg font-medium text-sm transition-all border capitalize ${
+                        speechBubbleColor === bubbleColor
+                          ? 'bg-pink-500 text-white border-pink-400'
+                          : 'bg-gray-800/30 text-gray-300 border-gray-700/50 hover:bg-gray-800/50'
+                      }`}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      {bubbleColor}
+                    </motion.button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Speech Bubble Type */}
+              <div>
+                <p className="text-sm text-gray-400 mb-2">Bubble Type</p>
+                <div className="flex gap-2">
+                  {(['talk', 'think', 'shout', 'whisper'] as const).map((type) => (
+                    <motion.button
+                      key={type}
+                      onClick={() => setSpeechBubbleType(type)}
+                      className={`px-3 py-1 rounded-lg font-medium text-sm transition-all border capitalize ${
+                        speechBubbleType === type
+                          ? 'bg-pink-500 text-white border-pink-400'
+                          : 'bg-gray-800/30 text-gray-300 border-gray-700/50 hover:bg-gray-800/50'
+                      }`}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      {type}
+                    </motion.button>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -171,12 +362,23 @@ export default function BrainMascotDemo() {
 // Basic usage
 <BrainMascot expression="happy" />
 
-// With customization
+// With speech bubble
 <BrainMascot
   expression="thinking"
+  speechText="Hmm..."
+  speechBubblePosition="top"
+  speechBubbleColor="white"
+/>
+
+// Full customization
+<BrainMascot
+  expression="excited"
   size="large"
   color="blue"
   animate={true}
+  speechText="Wow!"
+  speechBubblePosition="right"
+  speechBubbleColor="blue"
   onExpressionChange={(newExpression) => {
     console.log('Expression changed to:', newExpression);
   }}
@@ -189,7 +391,9 @@ export default function BrainMascotDemo() {
 // 'laughing', 'skeptical', 'proud', 'shy', 'mischievous'
 
 // Available colors: 'purple', 'blue', 'green', 'amber', 'red'
-// Available sizes: 'small', 'medium', 'large'`}</code>
+// Available sizes: 'small', 'medium', 'large'
+// Speech positions: 'top', 'bottom', 'left', 'right'
+// Speech bubble colors: 'white', 'purple', 'blue', 'green', 'amber', 'red'`}</code>
             </pre>
           </div>
         </div>
@@ -202,6 +406,8 @@ export default function BrainMascotDemo() {
               <li>• 20 different expressions with unique animations</li>
               <li>• 5 color themes to match your brand</li>
               <li>• 3 size options (small, medium, large)</li>
+              <li>• Speech bubbles with customizable text and colors</li>
+              <li>• 4 speech bubble positions (top, bottom, left, right)</li>
               <li>• Smooth Framer Motion animations</li>
               <li>• Interactive click handling</li>
               <li>• Hover effects and visual feedback</li>

@@ -71,6 +71,73 @@ const CategoryChart: React.FC<{ data: { label: string; value: number; color: str
   );
 };
 
+// CategoryItem Component
+const CategoryItem: React.FC<{ category: any; index: number }> = ({ category, index }) => {
+  const [isHovered, setIsHovered] = React.useState(false);
+  
+  // Different brain expressions for different categories
+  const categoryExpressions: BrainExpression[] = ['focused', 'thinking', 'excited', 'happy', 'surprised', 'neutral'];
+  const categoryColors = ['purple', 'blue', 'green', 'amber', 'red', 'purple'] as const;
+  
+  return (
+    <Link href={`/patterns/${category.id}`} className="block">
+      <motion.div 
+        className="relative bg-gray-700/30 border border-gray-600/50 rounded-xl p-4 hover:bg-gray-700/50 transition-all cursor-pointer group overflow-hidden"
+        whileHover={{ y: -2, scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: index * 0.1 }}
+        onHoverStart={() => setIsHovered(true)}
+        onHoverEnd={() => setIsHovered(false)}
+      >
+        {/* Floating Brain Mascot - Positioned Absolutely */}
+        <AnimatePresence mode="wait">
+          {isHovered && (
+            <motion.div
+              className="absolute top-2 right-2 z-10"
+              initial={{ opacity: 0, scale: 0.5, rotate: -20, x: 10, y: -10 }}
+              animate={{ opacity: 1, scale: 1, rotate: 0, x: 0, y: 0 }}
+              exit={{ opacity: 0, scale: 0.5, rotate: -20, x: 10, y: -10 }}
+              transition={{ 
+                duration: 0.3, 
+                ease: [0.4, 0, 0.2, 1]
+              }}
+            >
+              <BrainMascot
+                expression={categoryExpressions[index]}
+                size="small"
+                color={categoryColors[index]}
+                animate={true}
+                skipInitialAnimation={true}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+        
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2">
+              <span className="text-lg">{category.icon}</span>
+              <h4 className="font-semibold text-white text-sm">{category.name}</h4>
+            </div>
+          </div>
+          <span className="px-2 py-1 bg-blue-500/10 text-blue-400 text-xs rounded-full">
+            {category.techniques?.length || 0} techniques
+          </span>
+        </div>
+        <p className="text-xs text-gray-300 mb-3 line-clamp-2">{category.description}</p>
+        <div className="flex items-center justify-between text-xs text-gray-400">
+          <span>{category.useCases?.length || 0} use cases</span>
+          <span className="text-purple-400 hover:text-purple-300 group-hover:translate-x-1 transition-transform">
+            Explore →
+          </span>
+        </div>
+      </motion.div>
+    </Link>
+  );
+};
+
 export default function ContentPage() {
   // Calculate analytics from categories data
   const totalTechniques = categories.reduce((sum, cat) => sum + (cat.techniques?.length || 0), 0);
@@ -249,70 +316,9 @@ export default function ContentPage() {
           <span>Featured Categories</span>
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {categories.slice(0, 6).map((category, index) => {
-            // Different brain expressions for different categories
-            const categoryExpressions: BrainExpression[] = ['focused', 'thinking', 'excited', 'happy', 'surprised', 'neutral'];
-            const categoryColors = ['purple', 'blue', 'green', 'amber', 'red', 'purple'] as const;
-            const [isHovered, setIsHovered] = React.useState(false);
-            
-            return (
-              <Link key={category.id} href={`/patterns/${category.id}`} className="block">
-                <motion.div 
-                  className="relative bg-gray-700/30 border border-gray-600/50 rounded-xl p-4 hover:bg-gray-700/50 transition-all cursor-pointer group overflow-hidden"
-                  whileHover={{ y: -2, scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: index * 0.1 }}
-                  onHoverStart={() => setIsHovered(true)}
-                  onHoverEnd={() => setIsHovered(false)}
-                >
-                  {/* Floating Brain Mascot - Positioned Absolutely */}
-                  <AnimatePresence mode="wait">
-                    {isHovered && (
-                      <motion.div
-                        className="absolute top-2 right-2 z-10"
-                        initial={{ opacity: 0, scale: 0.5, rotate: -20, x: 10, y: -10 }}
-                        animate={{ opacity: 1, scale: 1, rotate: 0, x: 0, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.5, rotate: -20, x: 10, y: -10 }}
-                        transition={{ 
-                          duration: 0.3, 
-                          ease: [0.4, 0, 0.2, 1]
-                        }}
-                      >
-                        <BrainMascot
-                          expression={categoryExpressions[index]}
-                          size="small"
-                          color={categoryColors[index]}
-                          animate={true}
-                          skipInitialAnimation={true}
-                        />
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                  
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center space-x-3">
-                      <div className="flex items-center space-x-2">
-                        <span className="text-lg">{category.icon}</span>
-                        <h4 className="font-semibold text-white text-sm">{category.name}</h4>
-                      </div>
-                    </div>
-                    <span className="px-2 py-1 bg-blue-500/10 text-blue-400 text-xs rounded-full">
-                      {category.techniques?.length || 0} techniques
-                    </span>
-                  </div>
-                  <p className="text-xs text-gray-300 mb-3 line-clamp-2">{category.description}</p>
-                  <div className="flex items-center justify-between text-xs text-gray-400">
-                    <span>{category.useCases?.length || 0} use cases</span>
-                    <span className="text-purple-400 hover:text-purple-300 group-hover:translate-x-1 transition-transform">
-                      Explore →
-                    </span>
-                  </div>
-                </motion.div>
-              </Link>
-            );
-          })}
+          {categories.slice(0, 6).map((category, index) => (
+            <CategoryItem key={category.id} category={category} index={index} />
+          ))}
         </div>
       </div>
 

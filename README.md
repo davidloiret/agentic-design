@@ -796,3 +796,13 @@ magical
 
 
     angry brain
+
+    Bubble should aligned according to the mouth of the brain for right / left position   
+
+
+
+    Faire une BD d'apprentissage for non technique people to explain how AI is working etc
+
+
+
+    Test the game / card
