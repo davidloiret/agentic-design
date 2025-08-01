@@ -1,5 +1,4 @@
-import { io } from 'socket.io-client';
-import type { Socket } from 'socket.io-client';
+import io from 'socket.io-client';
 
 export interface GameRoom {
   id: string;
@@ -77,7 +76,7 @@ export interface CreateGameRoomRequest {
 }
 
 export class MultiplayerGameAPI {
-  private socket: Socket | null = null;
+  private socket: ReturnType<typeof io> | null = null;
   private userId: string | null = null;
   private connected = false;
 
@@ -96,7 +95,7 @@ export class MultiplayerGameAPI {
       autoConnect: false,
       transports: ['websocket', 'polling'],
       withCredentials: true, // This enables sending cookies
-    });
+    } as any);
 
     this.setupSocketListeners();
   }
@@ -191,7 +190,7 @@ export class MultiplayerGameAPI {
       this.userId = userId;
       
       if (this.socket) {
-        this.socket.auth = { userId };
+        (this.socket as any).auth = { userId };
         this.socket.connect();
 
         const timeout = setTimeout(() => {
@@ -360,7 +359,7 @@ export class MultiplayerGameAPI {
       const games = await response.json();
       return { success: true, games };
     } catch (error) {
-      return { success: false, error: error.message };
+      return { success: false, error: (error as Error).message };
     }
   }
 }

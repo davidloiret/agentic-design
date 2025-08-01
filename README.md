@@ -806,3 +806,5 @@ magical
 
 
     Test the game / card
+
+     Maybe we could animate the mouth too to have the impression that the brain is talking  

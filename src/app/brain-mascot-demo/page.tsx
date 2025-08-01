@@ -42,7 +42,7 @@ export default function BrainMascotDemo() {
   const [speechBubbleType, setSpeechBubbleType] = useState<SpeechBubbleType>('talk');
   const [isSimulating, setIsSimulating] = useState(false);
   const [currentDialogIndex, setCurrentDialogIndex] = useState(0);
-  const simulationTimeoutRef = useRef<NodeJS.Timeout>();
+  const simulationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Dialog simulation effect
   useEffect(() => {
