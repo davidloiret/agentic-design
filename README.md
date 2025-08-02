@@ -890,3 +890,5 @@ VM => on peut garder le state
 
 jeux pour aider ELyo à comprendre les scenartios => image clique son 
 => repete etc
+
+block network access outside from VM to prevent abuse except for openai etc
