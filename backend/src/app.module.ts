@@ -11,6 +11,7 @@ import { SearchModule } from './modules/search/search.module';
 import { PatternGameModule } from './modules/pattern-game/pattern-game.module';
 // import { AiRedTeamingModule } from './modules/ai-red-teaming/ai-red-teaming.module';
 import { UserKnowledgeBaseModule } from './modules/user-knowledge-base/user-knowledge-base.module';
+import { CodeExecutionModule } from './modules/code-execution/code-execution.module';
 import mikroOrmConfig from './mikro-orm.config';
 
 @Module({
@@ -27,6 +28,7 @@ import mikroOrmConfig from './mikro-orm.config';
     PatternGameModule,
     // AiRedTeamingModule,
     UserKnowledgeBaseModule,
+    CodeExecutionModule,
   ],
   controllers: [AppController, HealthController],
 })

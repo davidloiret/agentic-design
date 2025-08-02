@@ -24,6 +24,11 @@ export default function CodeSandbox({ patternId, initialCode, language, onCodeCh
   const [executionResult, setExecutionResult] = useState<ExecutionResult | null>(null);
   const editorRef = useRef<any>(null);
 
+  // Update code when language changes
+  useEffect(() => {
+    setCode(initialCode);
+  }, [language, initialCode]);
+
   const handleEditorDidMount = (editor: any, monaco: any) => {
     editorRef.current = editor;
     
@@ -93,24 +98,27 @@ export default function CodeSandbox({ patternId, initialCode, language, onCodeCh
   };
 
   const executeCode = async (code: string, language: string): Promise<string> => {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-    
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+    console.log('API_BASE_URL', API_BASE_URL);
     try {
-      const response = await fetch(`${API_BASE_URL}/execute`, {
+      const response = await fetch(`${API_BASE_URL}/api/v1/code/execute`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include', // Include cookies for authentication
         body: JSON.stringify({
           code,
-          language,
-          timeout: 10
+          language
         })
       });
 
       if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Authentication required. Please log in to execute code.');
+        }
         const errorData = await response.json();
-        throw new Error(errorData.detail || 'Execution failed');
+        throw new Error(errorData.message || errorData.detail || 'Execution failed');
       }
 
       const result = await response.json();
@@ -230,7 +238,7 @@ export default function CodeSandbox({ patternId, initialCode, language, onCodeCh
       <div className="h-64 sm:h-80 md:h-96">
         <Editor
           height="100%"
-          defaultLanguage={language}
+          language={language}
           value={code}
           onMount={handleEditorDidMount}
           onChange={handleCodeChange}

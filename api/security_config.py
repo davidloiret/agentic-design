@@ -16,7 +16,7 @@ class SecurityLevel(Enum):
 @dataclass
 class ResourceLimits:
     """Resource limits for VM execution"""
-    max_execution_time_seconds: int = 10
+    max_execution_time_seconds: int = 60
     max_memory_mb: int = 64
     max_cpu_percent: int = 50
     max_disk_io_mb: int = 10
@@ -49,7 +49,7 @@ class SecurityManager:
         sandbox_policy = SecurityPolicy(
             security_level=SecurityLevel.SANDBOX,
             resource_limits=ResourceLimits(
-                max_execution_time_seconds=5,
+                max_execution_time_seconds=60,
                 max_memory_mb=32,
                 max_cpu_percent=25,
                 max_disk_io_mb=1,
@@ -73,7 +73,7 @@ class SecurityManager:
         restricted_policy = SecurityPolicy(
             security_level=SecurityLevel.RESTRICTED,
             resource_limits=ResourceLimits(
-                max_execution_time_seconds=10,
+                max_execution_time_seconds=60,
                 max_memory_mb=64,
                 max_cpu_percent=50,
                 max_disk_io_mb=5,
@@ -101,7 +101,7 @@ class SecurityManager:
         standard_policy = SecurityPolicy(
             security_level=SecurityLevel.STANDARD,
             resource_limits=ResourceLimits(
-                max_execution_time_seconds=30,
+                max_execution_time_seconds=60,
                 max_memory_mb=128,
                 max_cpu_percent=75,
                 max_disk_io_mb=20,

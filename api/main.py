@@ -37,7 +37,7 @@ app.add_middleware(
 class CodeExecutionRequest(BaseModel):
     code: str
     language: str
-    timeout: Optional[int] = 10
+    timeout: Optional[int] = 60
     security_level: Optional[str] = "sandbox"  # sandbox, restricted, standard
 
 class CodeExecutionResponse(BaseModel):
@@ -321,12 +321,59 @@ class CodeExecutor:
         return commands.get(language, ["cat", file_path])
     
     def _get_subprocess_command(self, language: str, file_path: str) -> list:
+        if language == "rust":
+            return self._get_rust_execution_command(file_path)
+        
         commands = {
             "python": ["python3", file_path],
             "typescript": ["npx", "ts-node", file_path],
-            "rust": ["sh", "-c", f"rustc {file_path} -o {file_path}.out && {file_path}.out"]
         }
         return commands.get(language, ["cat", file_path])
+    
+    def _get_rust_execution_command(self, file_path: str) -> list:
+        """Create a Rust project with modern dependencies and execute it"""
+        import os
+        import tempfile
+        
+        # Create a temporary directory for the Rust project
+        project_dir = tempfile.mkdtemp()
+        
+        # Create Cargo.toml with modern Rust and common dependencies
+        cargo_toml = f"""[package]
+name = "sandbox"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = {{ version = "1.0", features = ["full"] }}
+serde = {{ version = "1.0", features = ["derive"] }}
+serde_json = "1.0"
+anyhow = "1.0"
+chrono = "0.4"
+uuid = "1.0"
+
+[[bin]]
+name = "main"
+path = "src/main.rs"
+"""
+        
+        # Write Cargo.toml
+        with open(os.path.join(project_dir, "Cargo.toml"), "w") as f:
+            f.write(cargo_toml)
+        
+        # Create src directory
+        src_dir = os.path.join(project_dir, "src")
+        os.makedirs(src_dir, exist_ok=True)
+        
+        # Copy the user code to main.rs
+        with open(file_path, "r") as source:
+            code = source.read()
+        
+        with open(os.path.join(src_dir, "main.rs"), "w") as f:
+            f.write(code)
+        
+        # Return command to build and run the project
+        return ["sh", "-c", f"cd {project_dir} && cargo run --release 2>&1"]
 
 executor = CodeExecutor()
 

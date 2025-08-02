@@ -51,6 +51,25 @@ services:
     networks:
       - agentic-network
 
+  # Firecracker Code Execution API for development
+  firecracker-api:
+    build:
+      context: ../api
+      dockerfile: Dockerfile.firecracker
+    container_name: agentic-design-firecracker-api-dev
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    privileged: true
+    devices:
+      - /dev/kvm:/dev/kvm
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - PYTHONUNBUFFERED=1
+    networks:
+      - agentic-network
+
 networks:
   agentic-network:
     driver: bridge

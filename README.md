@@ -832,3 +832,18 @@ if logged I should not be able to go to auth pages
 make brain mascot talk => TTS
 
 create workshop complete 
+
+
+## codegen agent
+-> validate with test
+-> if validated => commit
+-> git workflow tree
+
+teme de la magie pck ia c magique
+
+installer un petit qwen ou ollama pour tester les patterns
+
+bring your own token that will be use in sandbox
+simulate api request for demo or run local one
+
+install default dependencies => tokio, serde etc

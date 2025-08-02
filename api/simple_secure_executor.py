@@ -139,12 +139,38 @@ class SimpleSecureExecutor:
         return extensions[language]
     
     def _get_execution_command(self, language: Language, file_path: str) -> list:
+        if language == Language.RUST:
+            return self._get_rust_execution_command(file_path)
+        
         commands = {
             Language.PYTHON: ["python3", file_path],
             Language.TYPESCRIPT: ["npx", "tsx", file_path],
-            Language.RUST: ["sh", "-c", f"rustc {file_path} -o {file_path}.out && {file_path}.out"]
         }
         return commands[language]
+    
+    def _get_rust_execution_command(self, file_path: str) -> list:
+        """Use pre-built Rust template and execute with user code"""
+        import os
+        import tempfile
+        import shutil
+        
+        # Copy the pre-built template to a temporary directory
+        project_dir = tempfile.mkdtemp()
+        template_dir = "/opt/rust-template"
+        
+        # Copy template (including pre-built dependencies)
+        shutil.copytree(template_dir, os.path.join(project_dir, "sandbox"))
+        rust_project = os.path.join(project_dir, "sandbox")
+        
+        # Copy user code to main.rs
+        with open(file_path, "r") as source:
+            code = source.read()
+        
+        with open(os.path.join(rust_project, "src", "main.rs"), "w") as f:
+            f.write(code)
+        
+        # Return command to build and run (dependencies already cached)
+        return ["sh", "-c", f"cd {rust_project} && cargo run --release 2>&1"]
     
     async def shutdown(self):
         """Shutdown executor (no-op for simple executor)"""
