@@ -108,6 +108,7 @@ export default function OnboardingFlow({ isVisible, onClose, onComplete }: Onboa
               size="small"
               color="purple"
               animate={true}
+              glasses={true}
             />
             <div className="bg-gray-800/50 border border-gray-600/30 rounded-lg p-3 flex-1 relative">
               <div className="absolute -left-2 top-3">

@@ -180,10 +180,15 @@ class FirecrackerVM:
         if self.process:
             self.process.terminate()
             try:
-                await asyncio.wait_for(self.process.wait(), timeout=5)
+                # Use asyncio.to_thread to make the blocking wait() call async
+                await asyncio.wait_for(
+                    asyncio.to_thread(self.process.wait), 
+                    timeout=5
+                )
             except asyncio.TimeoutError:
                 self.process.kill()
-                await self.process.wait()
+                # Wait synchronously for the kill to complete
+                await asyncio.to_thread(self.process.wait)
         
         # Cleanup socket
         try:
@@ -205,7 +210,7 @@ class FirecrackerVM:
         """Get command to execute code (placeholder for VM communication)"""
         commands = {
             Language.PYTHON: ["python3", file_path],
-            Language.TYPESCRIPT: ["npx", "ts-node", file_path],
+            Language.TYPESCRIPT: ["tsx", file_path],
             Language.RUST: ["sh", "-c", f"rustc {file_path} -o {file_path}.out && {file_path}.out"]
         }
         return commands[self.language]
@@ -220,7 +225,25 @@ class VMPool:
             Language.TYPESCRIPT: [],
             Language.RUST: []
         }
-        self.vm_stats = {}
+        self.vm_stats = {
+            'total_created': 0,
+            'total_destroyed': 0,
+            'executions_count': 0,
+            'pool_hits': 0,
+            'pool_misses': 0,
+            'by_language': {
+                lang.value: {
+                    'created': 0,
+                    'destroyed': 0,
+                    'executions': 0,
+                    'pool_hits': 0,
+                    'pool_misses': 0
+                }
+                for lang in Language
+            }
+        }
+        self.active_vms: Dict[str, FirecrackerVM] = {}
+        self.created_at = time.time()
         
     async def initialize(self):
         """Initialize VM pools for all languages"""
@@ -240,16 +263,32 @@ class VMPool:
         
         if pool:
             vm = pool.pop(0)
+            self.vm_stats['pool_hits'] += 1
+            self.vm_stats['by_language'][language.value]['pool_hits'] += 1
+            self.active_vms[vm.vm_id] = vm
             # Start replenishing the pool in the background
             asyncio.create_task(self._replenish_pool(language))
             return vm
         
         # If no VMs available, create one on demand
-        return await self._create_vm(language)
+        self.vm_stats['pool_misses'] += 1
+        self.vm_stats['by_language'][language.value]['pool_misses'] += 1
+        vm = await self._create_vm(language)
+        if vm:
+            self.active_vms[vm.vm_id] = vm
+        return vm
     
     async def return_vm(self, vm: FirecrackerVM):
         """Return a VM to the pool (or dispose if pool is full)"""
         language = vm.language
+        
+        # Remove from active VMs
+        if vm.vm_id in self.active_vms:
+            del self.active_vms[vm.vm_id]
+        
+        # Track execution
+        self.vm_stats['executions_count'] += 1
+        self.vm_stats['by_language'][language.value]['executions'] += 1
         
         if len(self.pools[language]) < self.pool_size:
             # Reset VM state and return to pool
@@ -258,6 +297,8 @@ class VMPool:
         else:
             # Pool is full, dispose of the VM
             await vm.stop()
+            self.vm_stats['total_destroyed'] += 1
+            self.vm_stats['by_language'][language.value]['destroyed'] += 1
     
     async def _create_vm(self, language: Language) -> Optional[FirecrackerVM]:
         """Create and start a new VM"""
@@ -267,6 +308,8 @@ class VMPool:
             vm = FirecrackerVM(vm_id, language, config)
             
             if await vm.start():
+                self.vm_stats['total_created'] += 1
+                self.vm_stats['by_language'][language.value]['created'] += 1
                 return vm
             else:
                 return None
@@ -295,6 +338,48 @@ class VMPool:
         return {
             lang.value: len(vms) 
             for lang, vms in self.pools.items()
+        }
+    
+    def get_debug_info(self) -> Dict:
+        """Get comprehensive debugging information about VM pools"""
+        current_time = time.time()
+        uptime = current_time - self.created_at
+        
+        pool_status = {}
+        for lang, vms in self.pools.items():
+            pool_status[lang.value] = {
+                'available': len(vms),
+                'target_size': self.pool_size,
+                'vm_ids': [vm.vm_id for vm in vms],
+                'vm_ages': [current_time - vm.created_at for vm in vms]
+            }
+        
+        active_status = {
+            'count': len(self.active_vms),
+            'vms': {
+                vm_id: {
+                    'language': vm.language.value,
+                    'age': current_time - vm.created_at,
+                    'is_running': vm.is_running
+                }
+                for vm_id, vm in self.active_vms.items()
+            }
+        }
+        
+        return {
+            'timestamp': current_time,
+            'uptime_seconds': uptime,
+            'pool_status': pool_status,
+            'active_vms': active_status,
+            'statistics': self.vm_stats,
+            'health': {
+                'total_pools': len(self.pools),
+                'healthy_pools': sum(1 for vms in self.pools.values() if len(vms) > 0),
+                'pool_utilization': {
+                    lang.value: len(vms) / self.pool_size * 100
+                    for lang, vms in self.pools.items()
+                }
+            }
         }
     
     async def shutdown(self):

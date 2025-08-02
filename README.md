@@ -885,3 +885,8 @@ rapport de news
 
 
 VM => on peut garder le state
+
+
+
+jeux pour aider ELyo à comprendre les scenartios => image clique son 
+=> repete etc

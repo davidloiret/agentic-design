@@ -48,6 +48,8 @@ export default function BrainMascotDemo() {
   const [isSimulating, setIsSimulating] = useState(false);
   const [currentDialogIndex, setCurrentDialogIndex] = useState(0);
   const [glasses, setGlasses] = useState(false);
+  const [coffeeMug, setCoffeeMug] = useState(false);
+  const [hat, setHat] = useState(false);
   const simulationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Dialog simulation effect
@@ -128,6 +130,8 @@ export default function BrainMascotDemo() {
                 color={currentColor}
                 animate={animate}
                 glasses={glasses}
+                coffeeMug={coffeeMug}
+                hat={hat}
                 onExpressionChange={(newExpression) => setCurrentExpression(newExpression)}
                 onHandGestureChange={(newGesture) => setCurrentHandGesture(newGesture)}
                 onHandDisplayChange={(newDisplay) => setCurrentHandDisplay(newDisplay)}
@@ -353,6 +357,40 @@ export default function BrainMascotDemo() {
               </motion.button>
             </div>
 
+            {/* Coffee Mug Toggle */}
+            <div>
+              <h3 className="text-xl font-semibold mb-4 text-yellow-400">Coffee Mug</h3>
+              <motion.button
+                onClick={() => setCoffeeMug(!coffeeMug)}
+                className={`px-6 py-3 rounded-lg font-medium transition-all border ${
+                  coffeeMug
+                    ? 'bg-yellow-500 text-white border-yellow-400'
+                    : 'bg-gray-800/30 text-gray-300 border-gray-700/50 hover:bg-gray-800/50'
+                }`}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                {coffeeMug ? '☕ Coffee Time' : '🚫 No Coffee'}
+              </motion.button>
+            </div>
+
+            {/* Graduation Hat Toggle */}
+            <div>
+              <h3 className="text-xl font-semibold mb-4 text-blue-400">Graduation Hat</h3>
+              <motion.button
+                onClick={() => setHat(!hat)}
+                className={`px-6 py-3 rounded-lg font-medium transition-all border ${
+                  hat
+                    ? 'bg-blue-500 text-white border-blue-400'
+                    : 'bg-gray-800/30 text-gray-300 border-gray-700/50 hover:bg-gray-800/50'
+                }`}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                {hat ? '🎓 Graduated' : '🏫 Student'}
+              </motion.button>
+            </div>
+
             {/* Speech Bubble Controls */}
             <div className={`space-y-4 ${isSimulating ? 'opacity-50 pointer-events-none' : ''}`}>
               <h3 className="text-xl font-semibold mb-4 text-pink-400">Speech Bubble</h3>
@@ -493,14 +531,15 @@ export default function BrainMascotDemo() {
   glasses={true}
 />
 
-// Left hand only
+// With graduation hat
 <BrainMascot
-  expression="thinking"
-  handGesture="wave"
-  handDisplay="left"
-  speechText="Hello there!"
+  expression="proud"
+  handGesture="thumbsUp"
+  handDisplay="right"
+  hat={true}
+  speechText="I graduated!"
   speechBubblePosition="top"
-  speechBubbleColor="white"
+  speechBubbleColor="blue"
 />
 
 // Full customization
@@ -512,6 +551,8 @@ export default function BrainMascotDemo() {
   color="blue"
   animate={true}
   glasses={true}
+  coffeeMug={true}
+  hat={true}
   speechText="Amazing work!"
   speechBubblePosition="right"
   speechBubbleColor="blue"
@@ -562,6 +603,8 @@ const randomPositive = getReactionExpression('positive');
               <li>• Independent hand gesture system (8 gestures)</li>
               <li>• Configurable hand display (left, right, both, none)</li>
               <li>• Optional glasses accessory with glint effects</li>
+              <li>• Coffee mug accessory with animated steam</li>
+              <li>• Graduation cap accessory with animated tassel</li>
               <li>• Combine any expression with any hand gesture</li>
               <li>• Reaction system with thumbs up/down and more</li>
               <li>• 5 color themes to match your brand</li>

@@ -39,6 +39,7 @@ import { useLearningHub } from '@/contexts/LearningHubContext';
 import { QuizComponent } from './learning/QuizComponent';
 import { FlashcardComponent } from './learning/FlashcardComponent';
 import { CodeChallengeComponent } from './learning/CodeChallengeComponent';
+import { BrainMascot } from '@/components/BrainMascot';
 import { learningContent } from '../data/learning-content';
 import { allJourneys, Journey, Chapter, Lesson, achievements as journeyAchievements } from '../data/learning-journeys';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -1769,7 +1770,16 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
         <div className="max-w-7xl mx-auto mb-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-8">
-              <h1 className="text-2xl font-bold text-white">Learning Hub</h1>
+              <div className="flex items-center space-x-3">
+                <BrainMascot 
+                  size="small"
+                  expression="love"
+                  glasses={true}
+                  color="purple"
+                  animate={true}
+                />
+                <h1 className="text-2xl font-bold text-white">Learning Hub</h1>
+              </div>
               <nav className="flex space-x-1">
                 <button
                   onClick={() => setActiveView('dashboard')}

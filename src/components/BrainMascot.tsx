@@ -65,6 +65,8 @@ export interface BrainMascotProps {
   speechBubbleColor?: 'white' | 'purple' | 'blue' | 'green' | 'amber' | 'red';
   speechBubbleType?: SpeechBubbleType;
   glasses?: boolean;
+  coffeeMug?: boolean;
+  hat?: boolean;
 }
 
 // Convenience reaction helper types
@@ -431,7 +433,9 @@ export const BrainMascot: React.FC<BrainMascotProps> = ({
   speechBubblePosition = 'right',
   speechBubbleColor = 'white',
   speechBubbleType = 'talk',
-  glasses = false
+  glasses = false,
+  coffeeMug = false,
+  hat = false
 }) => {
   const [currentExpression, setCurrentExpression] = useState<BrainExpression>(expression);
   const [currentHandGesture, setCurrentHandGesture] = useState<HandGesture>(handGesture);
@@ -2195,6 +2199,122 @@ export const BrainMascot: React.FC<BrainMascotProps> = ({
               opacity="0.7"
               style={{ zIndex: 9999 }}
             />
+          </motion.g>
+        )}
+
+        {/* Coffee Mug - Using provided SVG */}
+        {coffeeMug && (
+          <motion.g
+            initial={{ scale: 0, opacity: 0, y: 10 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: "easeOut", delay: 0.2 }}
+          >
+            {/* Steam lines */}
+            <motion.g
+              animate={{
+                y: [0, -2, 0],
+                opacity: [0.6, 0.3, 0.6]
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            >
+              <path
+                d="M 45 72 Q 45 68 47 68 Q 49 68 49 72"
+                stroke="white"
+                strokeWidth="1"
+                fill="none"
+                opacity="0.6"
+                strokeLinecap="round"
+              />
+              <path
+                d="M 49 70 Q 49 66 51 66 Q 53 66 53 70"
+                stroke="white"
+                strokeWidth="1"
+                fill="none"
+                opacity="0.4"
+                strokeLinecap="round"
+              />
+              <path
+                d="M 53 72 Q 53 68 55 68 Q 57 68 57 72"
+                stroke="white"
+                strokeWidth="1"
+                fill="none"
+                opacity="0.5"
+                strokeLinecap="round"
+              />
+            </motion.g>
+            
+            {/* Your provided SVG */}
+            <g transform="translate(37, 75) scale(0.8)">
+              <path d="M367.028169,4964.99989 C367.587944,4964.99989 368.042254,4964.5519 368.042254,4963.99991 L368.042254,4960.99998 C368.042254,4960.44799 367.587944,4960 367.028169,4960 C366.468394,4960 366.014085,4960.44799 366.014085,4960.99998 L366.014085,4963.99991 C366.014085,4964.5519 366.468394,4964.99989 367.028169,4964.99989 L367.028169,4964.99989 Z M379.197183,4968.99981 L377.169014,4968.99981 L377.169014,4971.99974 L379.197183,4971.99974 C381.563042,4971.99974 381.563042,4968.99981 379.197183,4968.99981 L379.197183,4968.99981 Z M375.140845,4968.99981 L368.042254,4968.99981 C367.482479,4968.99981 367.028169,4969.4478 367.028169,4969.99978 L367.028169,4971.82775 C367.028169,4973.9167 368.576676,4975.78266 370.685972,4975.98066 C373.105577,4976.20865 375.140845,4974.33869 375.140845,4971.99974 L375.140845,4968.99981 Z M379.197183,4973.9997 L376.815099,4973.9997 C375.903437,4976.53864 373.316507,4978.29561 370.359437,4977.95861 C367.25938,4977.60462 365,4974.86768 365,4971.78975 L365,4968.99981 C365,4967.89483 365.907606,4966.99985 367.028169,4966.99985 L377.169014,4966.99985 L379.197183,4966.99985 C384.267606,4966.99985 384.267606,4973.9997 379.197183,4973.9997 L379.197183,4973.9997 Z M375.140845,4964.99989 C375.70062,4964.99989 376.15493,4964.5519 376.15493,4963.99991 L376.15493,4960.99998 C376.15493,4960.44799 375.70062,4960 375.140845,4960 C374.58107,4960 374.126761,4960.44799 374.126761,4960.99998 L374.126761,4963.99991 C374.126761,4964.5519 374.58107,4964.99989 375.140845,4964.99989 L375.140845,4964.99989 Z M370.070423,4963.99991 L370.070423,4960.99998 C370.070423,4960.44799 370.524732,4960 371.084507,4960 C371.644282,4960 372.098592,4960.44799 372.098592,4960.99998 L372.098592,4963.99991 C372.098592,4964.5519 371.644282,4964.99989 371.084507,4964.99989 C370.524732,4964.99989 370.070423,4964.5519 370.070423,4963.99991 L370.070423,4963.99991 Z" 
+                fill="#8B4513" 
+                transform="translate(-365, -4960)"
+              />
+            </g>
+          </motion.g>
+        )}
+
+        {/* Graduation Cap - Positioned on top of brain */}
+        {hat && (
+          <motion.g
+            initial={{ scale: 0, opacity: 0, y: -10 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: "easeOut", delay: 0.3 }}
+          >
+            {/* Using your provided graduation cap SVG */}
+            <g transform="translate(50, 6) scale(1.8)">
+              {/* Cap base (the part that sits on head) */}
+              <ellipse
+                cx="-2"
+                cy="8"
+                rx="6"
+                ry="3"
+                fill="#1a1a1a"
+                stroke="#333"
+                strokeWidth="0.3"
+                transform="translate(2, 0)"
+              />
+              
+              <path 
+                d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z" 
+                fill="#1a1a1a"
+                stroke="#333"
+                strokeWidth="0.5"
+                transform="translate(-12, -5)"
+              />
+              
+              {/* Fixed connection line from cap */}
+              <path 
+                d="M10 5 L10 11" 
+                stroke="#1a1a1a"
+                strokeWidth="1"
+                strokeLinecap="round"
+              />
+              
+              {/* Tassel */}
+              <motion.g
+                animate={{
+                  rotate: [0, 8, -8, 0],
+                }}
+                transition={{
+                  duration: 2.5,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                style={{ transformOrigin: "10px 11px" }}
+              >
+                <circle cx="10" cy="11" r="1" fill="#DAA520" />
+                <path 
+                  d="M10 12 L10 16 M9 16 L11 16" 
+                  stroke="#DAA520"
+                  strokeWidth="1"
+                  strokeLinecap="round"
+                />
+              </motion.g>
+            </g>
           </motion.g>
         )}
         

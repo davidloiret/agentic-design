@@ -1,25 +1,15 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import subprocess
-import tempfile
-import os
 import time
-import json
-import sys
-from typing import Optional, Dict, Any
-import docker
-import asyncio
-from pathlib import Path
+from typing import Optional
 import logging
 try:
     from firecracker_manager import FirecrackerExecutor
 except ImportError:
     FirecrackerExecutor = None
 
-from firecracker_docker_hybrid import FirecrackerDockerExecutor
-from simple_secure_executor import SimpleSecureExecutor
-from security_config import security_manager, SecurityLevel
+from security_config import SecurityLevel
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -49,58 +39,28 @@ class CodeExecutionResponse(BaseModel):
 class CodeExecutor:
     def __init__(self):
         self.firecracker_executor = None
-        self.firecracker_docker_executor = None
-        self.simple_secure_executor = None
-        self.docker_client = None
         
-        # Try to initialize Simple Secure Executor first (most reliable)
-        try:
-            self.simple_secure_executor = SimpleSecureExecutor()
-            logger.info("Simple secure executor initialized")
-        except Exception as e:
-            logger.warning(f"Simple secure executor not available: {e}")
-        
-        # Try to initialize Firecracker Docker hybrid 
-        try:
-            self.firecracker_docker_executor = FirecrackerDockerExecutor(pool_size=2)
-            logger.info("Firecracker-Docker hybrid executor initialized")
-        except Exception as e:
-            logger.warning(f"Firecracker-Docker hybrid not available: {e}")
-        
-        # Try real Firecracker if available
+        # Initialize Firecracker executor only
         if FirecrackerExecutor:
             try:
                 self.firecracker_executor = FirecrackerExecutor(pool_size=3)
-                logger.info("Real Firecracker executor initialized")
+                logger.info("Firecracker executor initialized")
             except Exception as e:
-                logger.warning(f"Real Firecracker not available: {e}")
-        
-        # Fallback to regular Docker
-        try:
-            self.docker_client = docker.from_env()
-            logger.info("Docker client initialized")
-        except Exception as e:
-            logger.warning(f"Docker not available: {e}, falling back to subprocess execution")
+                logger.error(f"Firecracker executor failed to initialize: {e}")
+                raise RuntimeError("Firecracker is required but failed to initialize")
+        else:
+            logger.error("Firecracker executor not available")
+            raise RuntimeError("Firecracker executor is required but not available")
     
     async def execute_code(self, code: str, language: str, timeout: int = 10, security_level: SecurityLevel = SecurityLevel.SANDBOX) -> CodeExecutionResponse:
         start_time = time.time()
         
         try:
-            # Try Simple Secure Executor first (most reliable)
-            if self.simple_secure_executor:
-                return await self._execute_with_simple_secure(code, language, timeout, security_level)
-            # Try Firecracker-Docker hybrid 
-            elif self.firecracker_docker_executor:
-                return await self._execute_with_firecracker_docker(code, language, timeout, security_level)
-            # Try real Firecracker if available
-            elif self.firecracker_executor:
+            # Use Firecracker microVMs only
+            if self.firecracker_executor:
                 return await self._execute_with_firecracker(code, language, timeout, security_level)
-            # Fallback to regular Docker
-            elif self.docker_client:
-                return await self._execute_with_docker(code, language, timeout)
-            # Last resort: subprocess
             else:
-                return await self._execute_with_subprocess(code, language, timeout)
+                raise RuntimeError("Firecracker executor not available. Only Firecracker execution is allowed.")
         except Exception as e:
             execution_time = time.time() - start_time
             return CodeExecutionResponse(
@@ -110,61 +70,6 @@ class CodeExecutor:
                 success=False
             )
     
-    async def _execute_with_simple_secure(self, code: str, language: str, timeout: int, security_level: SecurityLevel) -> CodeExecutionResponse:
-        """Execute code using Simple Secure Executor"""
-        start_time = time.time()
-        print(f"[DEBUG] Executing with simple secure executor: {language}, timeout: {timeout}")
-        
-        try:
-            # Execute code
-            result = await self.simple_secure_executor.execute_code(code, language, timeout, security_level)
-            print(f"[DEBUG] Simple secure result: success={result.success}, error={result.error[:100] if result.error else None}")
-            
-            return CodeExecutionResponse(
-                output=result.output,
-                error=result.error,
-                execution_time=result.execution_time,
-                success=result.success
-            )
-            
-        except Exception as e:
-            execution_time = time.time() - start_time
-            logger.error(f"Simple secure execution failed: {e}")
-            return CodeExecutionResponse(
-                output="",
-                error=f"Simple secure execution failed: {str(e)}",
-                execution_time=execution_time,
-                success=False
-            )
-    
-    async def _execute_with_firecracker_docker(self, code: str, language: str, timeout: int, security_level: SecurityLevel) -> CodeExecutionResponse:
-        """Execute code using Firecracker-Docker hybrid"""
-        start_time = time.time()
-        
-        try:
-            # Initialize if not done yet
-            if not self.firecracker_docker_executor.initialized:
-                await self.firecracker_docker_executor.initialize()
-            
-            # Execute code
-            result = await self.firecracker_docker_executor.execute_code(code, language, timeout, security_level)
-            
-            return CodeExecutionResponse(
-                output=result.output,
-                error=result.error,
-                execution_time=result.execution_time,
-                success=result.success
-            )
-            
-        except Exception as e:
-            execution_time = time.time() - start_time
-            logger.error(f"Firecracker-Docker execution failed: {e}")
-            return CodeExecutionResponse(
-                output="",
-                error=f"Firecracker-Docker execution failed: {str(e)}",
-                execution_time=execution_time,
-                success=False
-            )
     
     async def _execute_with_firecracker(self, code: str, language: str, timeout: int, security_level: SecurityLevel) -> CodeExecutionResponse:
         """Execute code using Firecracker microVMs"""
@@ -195,185 +100,7 @@ class CodeExecutor:
                 success=False
             )
     
-    async def _execute_with_docker(self, code: str, language: str, timeout: int) -> CodeExecutionResponse:
-        start_time = time.time()
-        
-        # Docker image mapping
-        images = {
-            "python": "python:3.11-slim",
-            "typescript": "node:18-slim",
-            "rust": "rust:1.70-slim"
-        }
-        
-        if language not in images:
-            raise ValueError(f"Unsupported language: {language}")
-        
-        try:
-            # Create temporary file with code
-            with tempfile.NamedTemporaryFile(mode='w', suffix=self._get_file_extension(language), delete=False) as f:
-                f.write(code)
-                temp_file = f.name
-            
-            # Prepare Docker command
-            container_file = f"/app/code{self._get_file_extension(language)}"
-            command = self._get_execution_command(language, container_file)
-            
-            # Run container
-            container = self.docker_client.containers.run(
-                images[language],
-                command=command,
-                volumes={temp_file: {'bind': container_file, 'mode': 'ro'}},
-                working_dir='/app',
-                detach=True,
-                mem_limit='128m',
-                cpu_period=100000,
-                cpu_quota=50000,
-                network_disabled=True,
-                remove=True
-            )
-            
-            # Wait for completion with timeout
-            try:
-                result = container.wait(timeout=timeout)
-                logs = container.logs().decode('utf-8')
-                
-                execution_time = time.time() - start_time
-                
-                if result['StatusCode'] == 0:
-                    return CodeExecutionResponse(
-                        output=logs,
-                        execution_time=execution_time,
-                        success=True
-                    )
-                else:
-                    return CodeExecutionResponse(
-                        output="",
-                        error=logs,
-                        execution_time=execution_time,
-                        success=False
-                    )
-            except:
-                container.kill()
-                raise TimeoutError(f"Execution timed out after {timeout} seconds")
-                
-        finally:
-            if 'temp_file' in locals():
-                os.unlink(temp_file)
     
-    async def _execute_with_subprocess(self, code: str, language: str, timeout: int) -> CodeExecutionResponse:
-        start_time = time.time()
-        
-        try:
-            with tempfile.NamedTemporaryFile(mode='w', suffix=self._get_file_extension(language), delete=False) as f:
-                f.write(code)
-                temp_file = f.name
-            
-            command = self._get_subprocess_command(language, temp_file)
-            
-            process = await asyncio.create_subprocess_exec(
-                *command,
-                stdout=asyncio.subprocess.PIPE,
-                stderr=asyncio.subprocess.PIPE,
-                cwd=tempfile.gettempdir()
-            )
-            
-            try:
-                stdout, stderr = await asyncio.wait_for(
-                    process.communicate(), 
-                    timeout=timeout
-                )
-                
-                execution_time = time.time() - start_time
-                
-                if process.returncode == 0:
-                    return CodeExecutionResponse(
-                        output=stdout.decode('utf-8'),
-                        execution_time=execution_time,
-                        success=True
-                    )
-                else:
-                    return CodeExecutionResponse(
-                        output="",
-                        error=stderr.decode('utf-8'),
-                        execution_time=execution_time,
-                        success=False
-                    )
-            except asyncio.TimeoutError:
-                process.kill()
-                raise TimeoutError(f"Execution timed out after {timeout} seconds")
-                
-        finally:
-            if 'temp_file' in locals():
-                os.unlink(temp_file)
-    
-    def _get_file_extension(self, language: str) -> str:
-        extensions = {
-            "python": ".py",
-            "typescript": ".ts",
-            "rust": ".rs"
-        }
-        return extensions.get(language, ".txt")
-    
-    def _get_execution_command(self, language: str, file_path: str) -> list:
-        commands = {
-            "python": ["python", file_path],
-            "typescript": ["sh", "-c", f"npm install -g typescript ts-node && ts-node {file_path}"],
-            "rust": ["sh", "-c", f"rustc {file_path} -o /app/output && /app/output"]
-        }
-        return commands.get(language, ["cat", file_path])
-    
-    def _get_subprocess_command(self, language: str, file_path: str) -> list:
-        if language == "rust":
-            return self._get_rust_execution_command(file_path)
-        
-        commands = {
-            "python": ["python3", file_path],
-            "typescript": ["npx", "ts-node", file_path],
-        }
-        return commands.get(language, ["cat", file_path])
-    
-    def _get_rust_execution_command(self, file_path: str) -> list:
-        """Use pre-built Rust template with optimized copying to avoid disk space issues"""
-        import os
-        import tempfile
-        import shutil
-        
-        # Create a minimal Rust project without copying the large target directory
-        project_dir = tempfile.mkdtemp()
-        template_dir = "/opt/rust-template"
-        rust_project = os.path.join(project_dir, "sandbox")
-        
-        # Create project structure manually
-        os.makedirs(rust_project, exist_ok=True)
-        os.makedirs(os.path.join(rust_project, "src"), exist_ok=True)
-        
-        # Copy only essential files (not the target directory)
-        essential_files = ["Cargo.toml", "Cargo.lock"]
-        for file_name in essential_files:
-            src_file = os.path.join(template_dir, file_name)
-            dst_file = os.path.join(rust_project, file_name)
-            if os.path.exists(src_file):
-                shutil.copy2(src_file, dst_file)
-        
-        # Create symlink to the pre-built target directory to reuse compiled dependencies
-        template_target = os.path.join(template_dir, "target")
-        project_target = os.path.join(rust_project, "target")
-        if os.path.exists(template_target):
-            try:
-                os.symlink(template_target, project_target)
-            except OSError:
-                # Fallback: if symlinks not supported, proceed without cache
-                pass
-        
-        # Copy user code to main.rs
-        with open(file_path, "r") as source:
-            code = source.read()
-        
-        with open(os.path.join(rust_project, "src", "main.rs"), "w") as f:
-            f.write(code)
-        
-        # Return command to build and run (dependencies cached via symlink)
-        return ["sh", "-c", f"cd {rust_project} && cargo run --release 2>&1"]
 
 executor = CodeExecutor()
 
@@ -417,26 +144,38 @@ async def execute_code(request: CodeExecutionRequest):
 @app.get("/health")
 async def health_check():
     """Health check endpoint"""
-    execution_method = "simple-secure"
-    if executor.simple_secure_executor:
-        execution_method = "simple-secure"
-    elif executor.firecracker_docker_executor:
-        execution_method = "firecracker-docker-hybrid"
-    elif executor.firecracker_executor:
+    # Only use Firecracker
+    if executor.firecracker_executor:
         execution_method = "firecracker"
-    elif executor.docker_client:
-        execution_method = "docker"
     else:
-        execution_method = "subprocess"
+        execution_method = "unavailable"
     
     return {
         "status": "healthy", 
-        "simple_secure_available": executor.simple_secure_executor is not None,
-        "firecracker_docker_available": executor.firecracker_docker_executor is not None,
         "firecracker_available": executor.firecracker_executor is not None,
-        "docker_available": executor.docker_client is not None,
         "execution_method": execution_method
     }
+
+@app.get("/debug/vm-pools")
+async def debug_vm_pools():
+    """Debug endpoint to monitor VM pool status and statistics"""
+    if not executor.firecracker_executor or not executor.firecracker_executor.initialized:
+        raise HTTPException(
+            status_code=503, 
+            detail="Firecracker executor not initialized"
+        )
+    
+    try:
+        debug_info = executor.firecracker_executor.vm_pool.get_debug_info()
+        return {
+            "status": "success",
+            "data": debug_info
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, 
+            detail=f"Failed to get debug info: {str(e)}"
+        )
 
 @app.get("/")
 async def root():
@@ -447,16 +186,14 @@ async def root():
         "supported_languages": ["python", "typescript", "rust"],
         "endpoints": {
             "execute": "POST /execute - Execute code",
-            "health": "GET /health - Health check"
+            "health": "GET /health - Health check",
+            "debug": "GET /debug/vm-pools - VM pool debugging info"
         }
     }
 
 @app.on_event("shutdown")
 async def shutdown_event():
     """Cleanup when shutting down"""
-    if executor.firecracker_docker_executor:
-        await executor.firecracker_docker_executor.shutdown()
-        logger.info("Firecracker-Docker executor shutdown completed")
     if executor.firecracker_executor:
         await executor.firecracker_executor.shutdown()
         logger.info("Firecracker executor shutdown completed")
