@@ -23,10 +23,10 @@ class VMImageBuilder:
     
     def __init__(self):
         self.base_packages = [
-            "alpine-base", "busybox", "musl", "libc6-compat", "python3", "curl", 
-            "net-tools", "iproute2", "iptables"
+            "alpine-base", "busybox", "musl", "libc6-compat", 
+            "curl", "net-tools", "iproute2", "iptables", "util-linux"
         ]
-        self.guest_agent_path = os.path.join(os.path.dirname(__file__), "guest_agent.py")
+        self.guest_agent_path = "/app/guest_agent.py"
         
     def build_all_images(self):
         """Build all language runtime images"""
@@ -82,28 +82,63 @@ class VMImageBuilder:
             rootfs_dir = f"{temp_dir}/rootfs"
             
             # Create base Alpine rootfs
-            self._create_base_rootfs(rootfs_dir, ["python3", "py3-pip"])
+            self._create_base_rootfs(rootfs_dir, ["python3", "py3-pip", "python3-dev"])
             
             # Add Python-specific configurations
             init_script = f"{rootfs_dir}/init"
-            with open(init_script, "w") as f:
-                f.write("""#!/bin/sh
-mount -t proc proc /proc
-mount -t sysfs sysfs /sys
-mount -t tmpfs tmpfs /tmp
-mount -t devtmpfs devtmpfs /dev
+            with open(init_script, "wb") as f:
+                # Write shebang using binary mode to avoid escaping issues
+                f.write(b'#!/bin/sh\n')
+                f.write(b'''# Firecracker VM Init Script
 
-# Configure network
-ifconfig lo up
-ifconfig eth0 169.254.0.2 netmask 255.255.255.0 up
-route add default gw 169.254.0.1
+# Mount essential filesystems (check if already mounted)
+[ ! -d /proc/sys ] && mount -t proc proc /proc 2>/dev/null || true
+[ ! -d /sys/class ] && mount -t sysfs sysfs /sys 2>/dev/null || true
+[ ! -d /tmp ] && mount -t tmpfs tmpfs /tmp 2>/dev/null || true
 
-# Start guest agent
+# Mount devtmpfs only if not already mounted  
+if ! mount | grep -q "devtmpfs on /dev"; then
+    mount -t devtmpfs devtmpfs /dev 2>/dev/null || true
+fi
+
+# Create device nodes if needed
+[ ! -e /dev/null ] && mknod /dev/null c 1 3 2>/dev/null || true
+[ ! -e /dev/console ] && mknod /dev/console c 5 1 2>/dev/null || true
+
+# Configure network interface
+ip link set lo up 2>/dev/null || true
+ip addr add 169.254.0.2/24 dev eth0 2>/dev/null || true
+ip link set eth0 up 2>/dev/null || true
+ip route add default via 169.254.0.1 dev eth0 2>/dev/null || true
+
+# Set hostname
+echo "firecracker-vm" > /proc/sys/kernel/hostname 2>/dev/null || true
+
+# Start guest agent in background
 python3 /usr/local/bin/guest_agent.py &
+AGENT_PID=$!
 
-# Keep running
-while true; do sleep 1; done
-""")
+# Wait for agent to start
+sleep 2
+
+# Check if agent is running
+if ! kill -0 $AGENT_PID 2>/dev/null; then
+    echo "Guest agent failed to start, retrying..."
+    python3 /usr/local/bin/guest_agent.py &
+    AGENT_PID=$!
+fi
+
+# Keep init running
+while true; do 
+    sleep 30
+    # Restart agent if it dies
+    if ! kill -0 $AGENT_PID 2>/dev/null; then
+        echo "Restarting guest agent..."
+        python3 /usr/local/bin/guest_agent.py &
+        AGENT_PID=$!
+    fi
+done
+''')
             
             os.chmod(init_script, 0o755)
             
@@ -120,31 +155,66 @@ while true; do sleep 1; done
             rootfs_dir = f"{temp_dir}/rootfs"
             
             # Create base Alpine rootfs with Rust
-            self._create_base_rootfs(rootfs_dir, ["rust", "cargo"])
+            self._create_base_rootfs(rootfs_dir, ["rust", "cargo", "gcc", "musl-dev"])
             
             # Create pre-built cargo project with dependencies
             self._setup_rust_template_project(rootfs_dir)
             
             # Add Rust-specific configurations
             init_script = f"{rootfs_dir}/init"
-            with open(init_script, "w") as f:
-                f.write("""#!/bin/sh
-mount -t proc proc /proc
-mount -t sysfs sysfs /sys
-mount -t tmpfs tmpfs /tmp
-mount -t devtmpfs devtmpfs /dev
+            with open(init_script, "wb") as f:
+                # Write shebang using binary mode to avoid escaping issues
+                f.write(b'#!/bin/sh\n')
+                f.write(b'''# Firecracker VM Init Script
 
-# Configure network
-ifconfig lo up
-ifconfig eth0 169.254.0.2 netmask 255.255.255.0 up
-route add default gw 169.254.0.1
+# Mount essential filesystems (check if already mounted)
+[ ! -d /proc/sys ] && mount -t proc proc /proc 2>/dev/null || true
+[ ! -d /sys/class ] && mount -t sysfs sysfs /sys 2>/dev/null || true
+[ ! -d /tmp ] && mount -t tmpfs tmpfs /tmp 2>/dev/null || true
 
-# Start guest agent
+# Mount devtmpfs only if not already mounted  
+if ! mount | grep -q "devtmpfs on /dev"; then
+    mount -t devtmpfs devtmpfs /dev 2>/dev/null || true
+fi
+
+# Create device nodes if needed
+[ ! -e /dev/null ] && mknod /dev/null c 1 3 2>/dev/null || true
+[ ! -e /dev/console ] && mknod /dev/console c 5 1 2>/dev/null || true
+
+# Configure network interface
+ip link set lo up 2>/dev/null || true
+ip addr add 169.254.0.2/24 dev eth0 2>/dev/null || true
+ip link set eth0 up 2>/dev/null || true
+ip route add default via 169.254.0.1 dev eth0 2>/dev/null || true
+
+# Set hostname
+echo "firecracker-vm" > /proc/sys/kernel/hostname 2>/dev/null || true
+
+# Start guest agent in background
 python3 /usr/local/bin/guest_agent.py &
+AGENT_PID=$!
 
-# Keep running
-while true; do sleep 1; done
-""")
+# Wait for agent to start
+sleep 2
+
+# Check if agent is running
+if ! kill -0 $AGENT_PID 2>/dev/null; then
+    echo "Guest agent failed to start, retrying..."
+    python3 /usr/local/bin/guest_agent.py &
+    AGENT_PID=$!
+fi
+
+# Keep init running
+while true; do 
+    sleep 30
+    # Restart agent if it dies
+    if ! kill -0 $AGENT_PID 2>/dev/null; then
+        echo "Restarting guest agent..."
+        python3 /usr/local/bin/guest_agent.py &
+        AGENT_PID=$!
+    fi
+done
+''')
             
             os.chmod(init_script, 0o755)
             
@@ -205,7 +275,7 @@ path = "src/main.rs"
             rootfs_dir = f"{temp_dir}/rootfs"
             
             # Create base Alpine rootfs with Node.js
-            self._create_base_rootfs(rootfs_dir, ["nodejs", "npm"])
+            self._create_base_rootfs(rootfs_dir, ["nodejs", "npm", "python3", "make", "g++"])
             
             # Install TypeScript globally
             subprocess.run([
@@ -214,24 +284,59 @@ path = "src/main.rs"
             
             # Add TypeScript-specific configurations
             init_script = f"{rootfs_dir}/init"
-            with open(init_script, "w") as f:
-                f.write("""#!/bin/sh
-mount -t proc proc /proc
-mount -t sysfs sysfs /sys
-mount -t tmpfs tmpfs /tmp
-mount -t devtmpfs devtmpfs /dev
+            with open(init_script, "wb") as f:
+                # Write shebang using binary mode to avoid escaping issues
+                f.write(b'#!/bin/sh\n')
+                f.write(b'''# Firecracker VM Init Script
 
-# Configure network
-ifconfig lo up
-ifconfig eth0 169.254.0.2 netmask 255.255.255.0 up
-route add default gw 169.254.0.1
+# Mount essential filesystems (check if already mounted)
+[ ! -d /proc/sys ] && mount -t proc proc /proc 2>/dev/null || true
+[ ! -d /sys/class ] && mount -t sysfs sysfs /sys 2>/dev/null || true
+[ ! -d /tmp ] && mount -t tmpfs tmpfs /tmp 2>/dev/null || true
 
-# Start guest agent
+# Mount devtmpfs only if not already mounted  
+if ! mount | grep -q "devtmpfs on /dev"; then
+    mount -t devtmpfs devtmpfs /dev 2>/dev/null || true
+fi
+
+# Create device nodes if needed
+[ ! -e /dev/null ] && mknod /dev/null c 1 3 2>/dev/null || true
+[ ! -e /dev/console ] && mknod /dev/console c 5 1 2>/dev/null || true
+
+# Configure network interface
+ip link set lo up 2>/dev/null || true
+ip addr add 169.254.0.2/24 dev eth0 2>/dev/null || true
+ip link set eth0 up 2>/dev/null || true
+ip route add default via 169.254.0.1 dev eth0 2>/dev/null || true
+
+# Set hostname
+echo "firecracker-vm" > /proc/sys/kernel/hostname 2>/dev/null || true
+
+# Start guest agent in background
 python3 /usr/local/bin/guest_agent.py &
+AGENT_PID=$!
 
-# Keep running
-while true; do sleep 1; done
-""")
+# Wait for agent to start
+sleep 2
+
+# Check if agent is running
+if ! kill -0 $AGENT_PID 2>/dev/null; then
+    echo "Guest agent failed to start, retrying..."
+    python3 /usr/local/bin/guest_agent.py &
+    AGENT_PID=$!
+fi
+
+# Keep init running
+while true; do 
+    sleep 30
+    # Restart agent if it dies
+    if ! kill -0 $AGENT_PID 2>/dev/null; then
+        echo "Restarting guest agent..."
+        python3 /usr/local/bin/guest_agent.py &
+        AGENT_PID=$!
+    fi
+done
+''')
             
             os.chmod(init_script, 0o755)
             
@@ -246,24 +351,50 @@ while true; do sleep 1; done
         
         packages = self.base_packages + additional_packages
         
-        # Bootstrap Alpine Linux
-        subprocess.run([
-            "docker", "run", "--rm", "-v", f"{rootfs_dir}:/rootfs",
-            "alpine:latest", "sh", "-c",
-            f"apk update && apk add --root /rootfs --initdb {' '.join(packages)}"
-        ], check=True)
+        # Use a different approach: create container and copy files
+        container_name = f"alpine_builder_{os.getpid()}"
+        
+        try:
+            # Create container with packages installed
+            subprocess.run([
+                "docker", "create", "--name", container_name,
+                "alpine:latest", "sh", "-c", 
+                f"apk update && apk add {' '.join(packages)} && sleep 1"
+            ], check=True)
+            
+            # Start container to install packages
+            subprocess.run([
+                "docker", "start", "-a", container_name
+            ], check=True)
+            
+            # Copy the entire filesystem from container
+            subprocess.run([
+                "docker", "cp", f"{container_name}:/.", rootfs_dir
+            ], check=True)
+            
+        finally:
+            # Clean up container
+            subprocess.run([
+                "docker", "rm", "-f", container_name
+            ], check=False)
         
         # Create necessary directories
         for dir_path in ["/proc", "/sys", "/tmp", "/dev"]:
             os.makedirs(f"{rootfs_dir}{dir_path}", exist_ok=True)
         
-        # Create basic device nodes
-        subprocess.run([
-            "mknod", f"{rootfs_dir}/dev/null", "c", "1", "3"
-        ], check=True)
-        subprocess.run([
-            "mknod", f"{rootfs_dir}/dev/console", "c", "5", "1"
-        ], check=True)
+        # Create basic device nodes if they don't exist
+        null_device = f"{rootfs_dir}/dev/null"
+        console_device = f"{rootfs_dir}/dev/console"
+        
+        if not os.path.exists(null_device):
+            subprocess.run([
+                "mknod", null_device, "c", "1", "3"
+            ], check=True)
+        
+        if not os.path.exists(console_device):
+            subprocess.run([
+                "mknod", console_device, "c", "5", "1"
+            ], check=True)
         
         # Set up basic configuration
         with open(f"{rootfs_dir}/etc/hostname", "w") as f:

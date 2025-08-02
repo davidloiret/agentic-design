@@ -337,7 +337,7 @@ class FirecrackerVM:
         # Set boot source
         boot_config = {
             "kernel_image_path": f"/opt/firecracker/kernels/{self.language.value}/vmlinux",
-            "boot_args": "console=ttyS0 reboot=k panic=1 pci=off ip=169.254.0.2::169.254.0.1:255.255.255.0::eth0:on"
+            "boot_args": "console=ttyS0 reboot=k panic=1 pci=off init=/init ip=169.254.0.2::169.254.0.1:255.255.255.0::eth0:on"
         }
         await self._make_api_request("PUT", "/boot-source", boot_config)
         

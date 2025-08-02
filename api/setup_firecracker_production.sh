@@ -35,9 +35,28 @@ apt-get install -y \
     wget \
     build-essential \
     pkg-config \
-    libssl-dev \
-    docker.io \
-    docker-compose
+    libssl-dev
+
+# Check and install Docker if needed
+echo "🐳 Checking Docker installation..."
+if ! command -v docker &> /dev/null; then
+    echo "Installing Docker..."
+    apt-get install -y docker.io docker-compose
+else
+    echo "✅ Docker is already installed"
+    # Check for docker compose (plugin version)
+    if ! docker compose version &> /dev/null; then
+        # Check for docker-compose (standalone version)
+        if ! command -v docker-compose &> /dev/null; then
+            echo "Installing Docker Compose..."
+            apt-get install -y docker-compose
+        else
+            echo "✅ Docker Compose (standalone) is already installed"
+        fi
+    else
+        echo "✅ Docker Compose (plugin) is already installed"
+    fi
+fi
 
 # 2. Install Firecracker
 echo "🔥 Installing Firecracker..."
@@ -159,16 +178,24 @@ EOF
 systemctl enable firecracker-network.service
 systemctl start firecracker-network.service
 
-# 6. Install Python dependencies
-echo "🐍 Installing Python dependencies..."
-cd /Users/dlo.ext/code/agentic-design/api
-pip3 install -r requirements.txt
+# 6. Install uv and Python dependencies
+echo "🐍 Installing uv and Python dependencies..."
+# Install uv for the actual user
+su - $ACTUAL_USER -c 'if ! command -v uv &> /dev/null; then echo "Installing uv for user..."; curl -LsSf https://astral.sh/uv/install.sh | sh; fi'
+cd /data/code/agentic-design/api
+# Create virtual environment and install dependencies
+su - $ACTUAL_USER -c "cd /data/code/agentic-design/api && export PATH=\"\$HOME/.local/bin:\$PATH\" && uv venv .venv && uv pip install -r requirements.txt"
 
 # 7. Install Node.js and TypeScript tools (for TypeScript VMs)
 echo "📜 Installing Node.js and TypeScript tools..."
-curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
-apt-get install -y nodejs
-npm install -g typescript ts-node tsx
+if ! command -v nvm &> /dev/null; then
+    echo "Installing nvm..."
+    su - $ACTUAL_USER -c 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash'
+    su - $ACTUAL_USER -c 'export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" && nvm install 18 && nvm use 18'
+    su - $ACTUAL_USER -c 'export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" && npm install -g typescript ts-node tsx'
+else
+    echo "✅ nvm is already installed"
+fi
 
 # 8. Install Rust (for Rust VMs)
 echo "🦀 Installing Rust..."
@@ -176,7 +203,7 @@ su - $ACTUAL_USER -c 'curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs 
 
 # 9. Build VM images
 echo "🏗️ Building VM images with guest agent..."
-cd /Users/dlo.ext/code/agentic-design/api
+cd /data/code/agentic-design/api
 python3 build_vm_images.py
 
 # 10. Create systemd service for Firecracker API
@@ -189,10 +216,10 @@ After=network.target firecracker-network.service
 [Service]
 Type=simple
 User=$ACTUAL_USER
-WorkingDirectory=/Users/dlo.ext/code/agentic-design/api
+WorkingDirectory=/data/code/agentic-design/api
 Environment=PATH=/usr/local/bin:/usr/bin:/bin
-Environment=PYTHONPATH=/Users/dlo.ext/code/agentic-design/api
-ExecStart=/usr/bin/python3 -m uvicorn main:app --host 0.0.0.0 --port 8000
+Environment=PYTHONPATH=/data/code/agentic-design/api
+ExecStart=/data/code/agentic-design/api/.venv/bin/python -m uvicorn main:app --host 0.0.0.0 --port 8000
 Restart=always
 RestartSec=5
 
@@ -202,8 +229,8 @@ EOF
 
 # 11. Set permissions and ownership
 echo "🔐 Setting up permissions..."
-chown -R $ACTUAL_USER:$ACTUAL_USER /Users/dlo.ext/code/agentic-design/api
-chmod +x /Users/dlo.ext/code/agentic-design/api/*.py
+chown -R $ACTUAL_USER:$ACTUAL_USER /data/code/agentic-design/api
+chmod +x /data/code/agentic-design/api/*.py
 
 # 12. Test Firecracker installation
 echo "🧪 Testing Firecracker installation..."
@@ -263,6 +290,6 @@ echo "   • Status: systemctl status firecracker-api"
 echo "   • Logs:   journalctl -u firecracker-api -f"
 echo ""
 echo "🔧 Manual VM testing:"
-echo "   cd /Users/dlo.ext/code/agentic-design/api"
+echo "   cd /data/code/agentic-design/api"
 echo "   python3 quick_test.py"
 echo ""
