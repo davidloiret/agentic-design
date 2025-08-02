@@ -98,10 +98,8 @@ export default function CodeSandbox({ patternId, initialCode, language, onCodeCh
   };
 
   const executeCode = async (code: string, language: string): Promise<string> => {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
-    console.log('API_BASE_URL', API_BASE_URL);
     try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/code/execute`, {
+      const response = await fetch(`/api/v1/code/execute`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
