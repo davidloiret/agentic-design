@@ -113,10 +113,12 @@ class CodeExecutor:
     async def _execute_with_simple_secure(self, code: str, language: str, timeout: int, security_level: SecurityLevel) -> CodeExecutionResponse:
         """Execute code using Simple Secure Executor"""
         start_time = time.time()
+        print(f"[DEBUG] Executing with simple secure executor: {language}, timeout: {timeout}")
         
         try:
             # Execute code
             result = await self.simple_secure_executor.execute_code(code, language, timeout, security_level)
+            print(f"[DEBUG] Simple secure result: success={result.success}, error={result.error[:100] if result.error else None}")
             
             return CodeExecutionResponse(
                 output=result.output,
@@ -331,49 +333,47 @@ class CodeExecutor:
         return commands.get(language, ["cat", file_path])
     
     def _get_rust_execution_command(self, file_path: str) -> list:
-        """Create a Rust project with modern dependencies and execute it"""
+        """Use pre-built Rust template with optimized copying to avoid disk space issues"""
         import os
         import tempfile
+        import shutil
         
-        # Create a temporary directory for the Rust project
+        # Create a minimal Rust project without copying the large target directory
         project_dir = tempfile.mkdtemp()
+        template_dir = "/opt/rust-template"
+        rust_project = os.path.join(project_dir, "sandbox")
         
-        # Create Cargo.toml with modern Rust and common dependencies
-        cargo_toml = f"""[package]
-name = "sandbox"
-version = "0.1.0"
-edition = "2021"
-
-[dependencies]
-tokio = {{ version = "1.0", features = ["full"] }}
-serde = {{ version = "1.0", features = ["derive"] }}
-serde_json = "1.0"
-anyhow = "1.0"
-chrono = "0.4"
-uuid = "1.0"
-
-[[bin]]
-name = "main"
-path = "src/main.rs"
-"""
+        # Create project structure manually
+        os.makedirs(rust_project, exist_ok=True)
+        os.makedirs(os.path.join(rust_project, "src"), exist_ok=True)
         
-        # Write Cargo.toml
-        with open(os.path.join(project_dir, "Cargo.toml"), "w") as f:
-            f.write(cargo_toml)
+        # Copy only essential files (not the target directory)
+        essential_files = ["Cargo.toml", "Cargo.lock"]
+        for file_name in essential_files:
+            src_file = os.path.join(template_dir, file_name)
+            dst_file = os.path.join(rust_project, file_name)
+            if os.path.exists(src_file):
+                shutil.copy2(src_file, dst_file)
         
-        # Create src directory
-        src_dir = os.path.join(project_dir, "src")
-        os.makedirs(src_dir, exist_ok=True)
+        # Create symlink to the pre-built target directory to reuse compiled dependencies
+        template_target = os.path.join(template_dir, "target")
+        project_target = os.path.join(rust_project, "target")
+        if os.path.exists(template_target):
+            try:
+                os.symlink(template_target, project_target)
+            except OSError:
+                # Fallback: if symlinks not supported, proceed without cache
+                pass
         
-        # Copy the user code to main.rs
+        # Copy user code to main.rs
         with open(file_path, "r") as source:
             code = source.read()
         
-        with open(os.path.join(src_dir, "main.rs"), "w") as f:
+        with open(os.path.join(rust_project, "src", "main.rs"), "w") as f:
             f.write(code)
         
-        # Return command to build and run the project
-        return ["sh", "-c", f"cd {project_dir} && cargo run --release 2>&1"]
+        # Return command to build and run (dependencies cached via symlink)
+        return ["sh", "-c", f"cd {rust_project} && cargo run --release 2>&1"]
 
 executor = CodeExecutor()
 

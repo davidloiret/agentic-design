@@ -10,6 +10,9 @@ RUN apt-get update && apt-get install -y \
     e2fsprogs \
     docker.io \
     kmod \
+    pkg-config \
+    libssl-dev \
+    build-essential \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Node.js and TypeScript tools
@@ -36,13 +39,16 @@ serde_json = "1.0"\n\
 anyhow = "1.0"\n\
 chrono = "0.4"\n\
 uuid = "1.0"\n\
+async-trait = "0.1"\n\
+clap = { version = "4.0", features = ["derive"] }\n\
+rand = "0.8"\n\
 \n\
 [[bin]]\n\
 name = "main"\n\
 path = "src/main.rs"' > Cargo.toml && \
     echo 'fn main() {\n    println!("Hello, World!");\n}' > src/main.rs && \
     cargo build --release && \
-    rm -rf target/release/deps/*.o target/release/deps/*.d
+    rm -rf target/release/deps/*.o target/release/deps/*.d target/release/build/*/out target/release/.fingerprint/*/invoked.timestamp
 
 # Install Firecracker
 RUN FIRECRACKER_VERSION="v1.4.1" && \

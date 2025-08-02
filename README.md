@@ -847,3 +847,10 @@ bring your own token that will be use in sandbox
 simulate api request for demo or run local one
 
 install default dependencies => tokio, serde etc
+
+add BAML
+
+Find the prompt that work
+
+si ca dure plus de 30 seconde => 500 error
+we need something to see error / prometheus / grafana et un puis de log => elastic search

@@ -69,6 +69,7 @@ class SimpleSecureExecutor:
             try:
                 # Get execution command
                 cmd = self._get_execution_command(language, temp_file)
+                logger.info(f"Executing command: {cmd}")
                 
                 # Execute with timeout
                 process = await asyncio.create_subprocess_exec(
@@ -86,19 +87,41 @@ class SimpleSecureExecutor:
                     
                     execution_time = time.time() - start_time
                     
-                    if process.returncode == 0:
+                    stdout_text = stdout.decode('utf-8')
+                    stderr_text = stderr.decode('utf-8')
+                    
+                    logger.info(f"Process returncode: {process.returncode}")
+                    logger.info(f"STDOUT length: {len(stdout_text)}, STDERR length: {len(stderr_text)}")
+                    logger.info(f"STDERR content: {stderr_text[:200]}")
+                    
+                    # Check for compilation errors even if return code is 0
+                    has_error = (
+                        process.returncode != 0 or
+                        "error:" in stderr_text or
+                        "error[E" in stderr_text or
+                        "could not compile" in stderr_text
+                    )
+                    
+                    logger.info(f"Has error: {has_error}")
+                    
+                    if not has_error:
                         return ExecutionResult(
                             success=True,
-                            output=stdout.decode('utf-8'),
+                            output=stdout_text,
                             error=None,
                             execution_time=execution_time,
                             vm_id=vm_id
                         )
                     else:
+                        # For compilation errors, stderr usually contains the error details
+                        error_output = stderr_text
+                        if not error_output and stdout_text:
+                            error_output = stdout_text
+                        
                         return ExecutionResult(
                             success=False,
                             output="",
-                            error=stderr.decode('utf-8'),
+                            error=error_output or "Process failed with no error output",
                             execution_time=execution_time,
                             vm_id=vm_id
                         )
@@ -149,28 +172,67 @@ class SimpleSecureExecutor:
         return commands[language]
     
     def _get_rust_execution_command(self, file_path: str) -> list:
-        """Use pre-built Rust template and execute with user code"""
+        """Use pre-built Rust template with optimized copying to avoid disk space issues"""
         import os
         import tempfile
         import shutil
         
-        # Copy the pre-built template to a temporary directory
-        project_dir = tempfile.mkdtemp()
-        template_dir = "/opt/rust-template"
-        
-        # Copy template (including pre-built dependencies)
-        shutil.copytree(template_dir, os.path.join(project_dir, "sandbox"))
-        rust_project = os.path.join(project_dir, "sandbox")
-        
-        # Copy user code to main.rs
-        with open(file_path, "r") as source:
-            code = source.read()
-        
-        with open(os.path.join(rust_project, "src", "main.rs"), "w") as f:
-            f.write(code)
-        
-        # Return command to build and run (dependencies already cached)
-        return ["sh", "-c", f"cd {rust_project} && cargo run --release 2>&1"]
+        try:
+            # Create a minimal Rust project without copying the large target directory
+            project_dir = tempfile.mkdtemp()
+            template_dir = "/opt/rust-template"
+            rust_project = os.path.join(project_dir, "sandbox")
+            
+            logger.info(f"Creating minimal Rust project in {project_dir}")
+            
+            # Check if template exists
+            if not os.path.exists(template_dir):
+                logger.error(f"Rust template not found at {template_dir}")
+                raise FileNotFoundError(f"Rust template not found at {template_dir}")
+            
+            # Create project structure manually to avoid copying large target directory
+            os.makedirs(rust_project, exist_ok=True)
+            os.makedirs(os.path.join(rust_project, "src"), exist_ok=True)
+            
+            # Copy only essential files (not the target directory)
+            essential_files = ["Cargo.toml", "Cargo.lock"]
+            for file_name in essential_files:
+                src_file = os.path.join(template_dir, file_name)
+                dst_file = os.path.join(rust_project, file_name)
+                if os.path.exists(src_file):
+                    shutil.copy2(src_file, dst_file)
+                    logger.info(f"Copied {file_name}")
+            
+            # Create symlink to the pre-built target directory to reuse compiled dependencies
+            template_target = os.path.join(template_dir, "target")
+            project_target = os.path.join(rust_project, "target")
+            if os.path.exists(template_target):
+                try:
+                    os.symlink(template_target, project_target)
+                    logger.info("Created symlink to pre-built target directory")
+                except OSError as e:
+                    # Fallback: if symlinks not supported, use cargo cache instead
+                    logger.warning(f"Symlink failed: {e}, using cargo build without cache")
+            
+            # Copy user code to main.rs
+            with open(file_path, "r") as source:
+                code = source.read()
+            
+            logger.info(f"Writing user code to {rust_project}/src/main.rs")
+            logger.debug(f"User code: {code[:100]}...")
+            
+            with open(os.path.join(rust_project, "src", "main.rs"), "w") as f:
+                f.write(code)
+            
+            # Return command to build and run
+            # Use exec to preserve cargo's exit code
+            cmd = ["sh", "-c", f"cd {rust_project} && exec cargo run --release"]
+            logger.info(f"Rust execution command: {cmd}")
+            return cmd
+            
+        except Exception as e:
+            logger.error(f"Error setting up Rust execution: {e}")
+            raise
     
     async def shutdown(self):
         """Shutdown executor (no-op for simple executor)"""

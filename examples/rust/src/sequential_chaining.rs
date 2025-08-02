@@ -1,7 +1,5 @@
 use async_trait::async_trait;
 use serde_json::Value;
-use std::collections::HashMap;
-use std::fmt::Debug;
 use std::time::{Duration, Instant};
 use tokio::time::sleep;
 
@@ -120,43 +118,23 @@ impl SequentialChain {
         &self.results
     }
 
-    pub fn get_execution_summary(&self) -> ExecutionSummary {
+    pub fn print_summary(&self) {
         if self.results.is_empty() {
-            return ExecutionSummary::default();
+            return;
         }
 
         let total_steps = self.results.len();
         let successful_steps = self.results.iter().filter(|r| r.success).count();
-        let total_duration = self.results.iter().map(|r| r.duration).sum();
+        let total_duration: Duration = self.results.iter().map(|r| r.duration).sum();
         let average_duration = total_duration / total_steps as u32;
 
-        ExecutionSummary {
-            total_steps,
-            successful_steps,
-            success_rate: (successful_steps as f64 / total_steps as f64) * 100.0,
-            total_duration,
-            average_duration,
-        }
-    }
-
-    pub fn print_summary(&self) {
-        let summary = self.get_execution_summary();
         println!("=== Execution Summary ===");
-        println!("Total steps: {}", summary.total_steps);
-        println!("Successful steps: {}", summary.successful_steps);
-        println!("Success rate: {:.1}%", summary.success_rate);
-        println!("Total duration: {:.3}s", summary.total_duration.as_secs_f64());
-        println!("Average step duration: {:.3}s", summary.average_duration.as_secs_f64());
+        println!("Total steps: {}", total_steps);
+        println!("Successful steps: {}", successful_steps);
+        println!("Success rate: {:.1}%", (successful_steps as f64 / total_steps as f64) * 100.0);
+        println!("Total duration: {:.3}s", total_duration.as_secs_f64());
+        println!("Average step duration: {:.3}s", average_duration.as_secs_f64());
     }
-}
-
-#[derive(Debug, Default)]
-pub struct ExecutionSummary {
-    pub total_steps: usize,
-    pub successful_steps: usize,
-    pub success_rate: f64,
-    pub total_duration: Duration,
-    pub average_duration: Duration,
 }
 
 // Product Review Chain Implementation
@@ -173,7 +151,7 @@ impl ChainStep for ResearchFeaturesStep {
     }
 
     async fn execute(&self, input: Value) -> Result<Value, Box<dyn std::error::Error + Send + Sync>> {
-        sleep(Duration::from_millis(500)).await; // Simulate API call
+        sleep(Duration::from_millis(500)).await;
         
         let product_name = input.as_str().unwrap_or("Unknown Product");
         
@@ -311,10 +289,13 @@ impl ChainStep for PolishReviewStep {
             "{} {}/5 - {}\n\n{}\n\n💰 Price: {}\n🔥 Key Features: {}\n📊 Market Position: {}\n💎 Value Assessment: {}",
             rating_stars, rating, recommendation, review_text, price, features_text, market_position, value_assessment
         );
+
+        // Compute word_count BEFORE moving `final_review` into the JSON value
+        let word_count = final_review.split_whitespace().count() as u64;
         
         polished_data["final_review"] = Value::String(final_review);
         polished_data["publish_ready"] = Value::Bool(true);
-        polished_data["word_count"] = Value::Number(final_review.split_whitespace().count().into());
+        polished_data["word_count"] = Value::Number(word_count.into());
         polished_data["sentiment"] = Value::String(
             if rating >= 4.0 { "positive" } else { "neutral" }.to_string()
         );
@@ -330,197 +311,6 @@ pub fn create_product_review_chain() -> SequentialChain {
     chain.add_step(CompetitorAnalysisStep);
     chain.add_step(GenerateReviewStep);
     chain.add_step(PolishReviewStep);
-    
-    chain
-}
-
-// Data Processing Chain Implementation
-pub struct LoadDataStep;
-
-#[async_trait]
-impl ChainStep for LoadDataStep {
-    fn name(&self) -> &str {
-        "Load Data"
-    }
-
-    fn description(&self) -> &str {
-        "Load and validate input data"
-    }
-
-    async fn execute(&self, input: Value) -> Result<Value, Box<dyn std::error::Error + Send + Sync>> {
-        sleep(Duration::from_millis(200)).await;
-        
-        let data_source = input.as_str().unwrap_or("unknown");
-        
-        let mock_data = serde_json::json!({
-            "source": data_source,
-            "records": [
-                {"id": 1, "value": 100, "category": "A"},
-                {"id": 2, "value": 200, "category": "B"},
-                {"id": 3, "value": 150, "category": "A"},
-                {"id": 4, "value": 300, "category": "C"}
-            ],
-            "metadata": {
-                "total_records": 4,
-                "loaded_at": chrono::Utc::now().timestamp()
-            }
-        });
-        
-        Ok(mock_data)
-    }
-}
-
-pub struct CleanDataStep;
-
-#[async_trait]
-impl ChainStep for CleanDataStep {
-    fn name(&self) -> &str {
-        "Clean Data"
-    }
-
-    fn description(&self) -> &str {
-        "Clean and normalize data"
-    }
-
-    async fn execute(&self, input: Value) -> Result<Value, Box<dyn std::error::Error + Send + Sync>> {
-        sleep(Duration::from_millis(300)).await;
-        
-        let mut data = input;
-        let records = data["records"].as_array().unwrap();
-        
-        let mut cleaned_records = Vec::new();
-        for record in records {
-            let value = record["value"].as_f64().unwrap_or(0.0);
-            if value > 0.0 {
-                let cleaned_record = serde_json::json!({
-                    "id": record["id"],
-                    "value": (value * 100.0).round() / 100.0,
-                    "category": record["category"].as_str().unwrap_or("").to_uppercase()
-                });
-                cleaned_records.push(cleaned_record);
-            }
-        }
-        
-        let original_count = records.len();
-        let cleaned_count = cleaned_records.len();
-        
-        data["records"] = Value::Array(cleaned_records);
-        data["metadata"]["cleaned_records"] = Value::Number(cleaned_count.into());
-        data["metadata"]["removed_records"] = Value::Number((original_count - cleaned_count).into());
-        
-        Ok(data)
-    }
-}
-
-pub struct TransformDataStep;
-
-#[async_trait]
-impl ChainStep for TransformDataStep {
-    fn name(&self) -> &str {
-        "Transform Data"
-    }
-
-    fn description(&self) -> &str {
-        "Apply transformations and calculations"
-    }
-
-    async fn execute(&self, input: Value) -> Result<Value, Box<dyn std::error::Error + Send + Sync>> {
-        sleep(Duration::from_millis(400)).await;
-        
-        let mut data = input;
-        let records = data["records"].as_array().unwrap();
-        
-        let total_value: f64 = records
-            .iter()
-            .map(|r| r["value"].as_f64().unwrap_or(0.0))
-            .sum();
-        
-        let avg_value = if !records.is_empty() {
-            total_value / records.len() as f64
-        } else {
-            0.0
-        };
-        
-        let mut category_sums: HashMap<String, f64> = HashMap::new();
-        for record in records {
-            let category = record["category"].as_str().unwrap_or("").to_string();
-            let value = record["value"].as_f64().unwrap_or(0.0);
-            *category_sums.entry(category).or_insert(0.0) += value;
-        }
-        
-        let category_breakdown: Value = category_sums
-            .into_iter()
-            .map(|(k, v)| (k, Value::Number(serde_json::Number::from_f64(v).unwrap())))
-            .collect::<serde_json::Map<_, _>>()
-            .into();
-        
-        data["aggregates"] = serde_json::json!({
-            "total_value": total_value,
-            "average_value": avg_value,
-            "category_breakdown": category_breakdown,
-            "record_count": records.len()
-        });
-        
-        Ok(data)
-    }
-}
-
-pub struct ValidateResultsStep;
-
-#[async_trait]
-impl ChainStep for ValidateResultsStep {
-    fn name(&self) -> &str {
-        "Validate Results"
-    }
-
-    fn description(&self) -> &str {
-        "Validate the processed data"
-    }
-
-    async fn execute(&self, input: Value) -> Result<Value, Box<dyn std::error::Error + Send + Sync>> {
-        sleep(Duration::from_millis(100)).await;
-        
-        let mut data = input;
-        let records = data["records"].as_array().unwrap();
-        
-        let data_integrity = true;
-        let completeness = !records.is_empty();
-        let consistency = records.iter().all(|r| r["value"].as_f64().unwrap_or(-1.0) >= 0.0);
-        
-        let calculated_total: f64 = records
-            .iter()
-            .map(|r| r["value"].as_f64().unwrap_or(0.0))
-            .sum();
-        
-        let stored_total = data["aggregates"]["total_value"].as_f64().unwrap_or(0.0);
-        let aggregate_accuracy = (calculated_total - stored_total).abs() < 0.01;
-        
-        let validation_results = serde_json::json!({
-            "data_integrity": data_integrity,
-            "completeness": completeness,
-            "consistency": consistency,
-            "aggregate_accuracy": aggregate_accuracy
-        });
-        
-        let quality_score = [data_integrity, completeness, consistency, aggregate_accuracy]
-            .iter()
-            .map(|&b| if b { 1.0 } else { 0.0 })
-            .sum::<f64>() / 4.0;
-        
-        data["validation"] = validation_results;
-        data["quality_score"] = Value::Number(serde_json::Number::from_f64(quality_score).unwrap());
-        
-        Ok(data)
-    }
-}
-
-pub fn create_data_processing_chain() -> SequentialChain {
-    let mut chain = SequentialChain::new();
-    
-    chain.add_step(LoadDataStep);
-    chain.add_step(CleanDataStep);
-    chain.add_step(TransformDataStep);
-    chain.add_step(ValidateResultsStep);
     
     chain
 }
@@ -545,34 +335,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
         Err(error) => {
             println!("Review chain failed: {}", error);
-        }
-    }
-    
-    println!("\n{}\n", "=".repeat(50));
-    
-    println!("=== Data Processing Chain ===");
-    
-    let mut data_chain = create_data_processing_chain();
-    let data_source = Value::String("sales_data.csv".to_string());
-    
-    println!("Processing data from: {}\n", data_source);
-    
-    match data_chain.execute(data_source).await {
-        Ok(result) => {
-            println!("=== Final Result ===");
-            if let Some(aggregates) = result["aggregates"].as_object() {
-                println!("Processed {} records", aggregates["record_count"]);
-                println!("Total value: ${}", aggregates["total_value"]);
-                println!("Average value: ${:.2}", aggregates["average_value"]);
-            }
-            if let Some(quality_score) = result["quality_score"].as_f64() {
-                println!("Quality score: {:.1}%", quality_score * 100.0);
-            }
-            println!();
-            data_chain.print_summary();
-        }
-        Err(error) => {
-            println!("Data processing chain failed: {}", error);
         }
     }
     
