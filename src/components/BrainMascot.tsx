@@ -1591,18 +1591,14 @@ export const BrainMascot: React.FC<BrainMascotProps> = ({
           } : {}}
         />
 
-        {/* Cute Center Indent */}
-        <motion.path
-          d="M 50 25 C 48 30, 52 35, 50 40 C 48 45, 52 50, 50 55 C 48 60, 52 65, 50 70"
-          stroke={colors.primary}
-          strokeWidth="3"
-          fill="none"
-          opacity="0.8"
-          strokeLinecap="round"
-          animate={animate ? {
-            pathOffset: [0, 0.1, 0],
-            transition: { duration: 3, repeat: Infinity, ease: "easeInOut" }
-          } : {}}
+        {/* Cute Nose */}
+        <ellipse
+          cx="50"
+          cy="52"
+          rx="2.5"
+          ry="3"
+          fill={colors.primary}
+          opacity="0.7"
         />
 
         {/* Little Brain Bumps - Left */}
