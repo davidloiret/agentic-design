@@ -13,9 +13,12 @@ from pathlib import Path
 from typing import Dict, Optional, List
 import subprocess
 import aiofiles
+import aiohttp
 import logging
 from dataclasses import dataclass
 from enum import Enum
+import base64
+import hashlib
 from security_config import SecurityLevel, security_manager
 
 logger = logging.getLogger(__name__)
@@ -63,60 +66,48 @@ class FirecrackerVM:
         self.execution_count = 0
         self.needs_reset = False
         
+        # Firecracker API communication
+        self.api_base_url = f"http://localhost/{vm_id}"
+        self.vm_ready = False
+        self.guest_ip = "169.254.0.2"  # Default guest IP
+        self.ssh_port = 22
+        
     async def start(self) -> bool:
-        """Start the Firecracker microVM"""
+        """Start the Firecracker microVM with proper API integration"""
         try:
-            # Prepare VM configuration
-            vm_config = {
-                "boot-source": {
-                    "kernel_image_path": f"/opt/firecracker/kernels/{self.language.value}/vmlinux",
-                    "boot_args": "console=ttyS0 reboot=k panic=1 pci=off"
-                },
-                "drives": [{
-                    "drive_id": "rootfs",
-                    "path_on_host": f"/opt/firecracker/rootfs/{self.language.value}/rootfs.ext4",
-                    "is_root_device": True,
-                    "is_read_only": False
-                }],
-                "machine-config": {
-                    "vcpu_count": self.config.vcpu_count,
-                    "mem_size_mib": self.config.mem_size_mib
-                }
-            }
-            
             # Create working copy of rootfs for this VM instance
             await self._create_working_rootfs()
             
-            # Update vm_config to use working rootfs
-            vm_config["drives"][0]["path_on_host"] = self.rootfs_working_path
-            
-            # Start Firecracker process
+            # Start Firecracker process with API socket
             cmd = [
                 "firecracker",
-                "--api-sock", self.socket_path,
-                "--config-file", "/dev/stdin"
+                "--api-sock", self.socket_path
             ]
             
             self.process = subprocess.Popen(
                 cmd,
-                stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True
             )
             
-            # Send configuration
-            config_json = json.dumps(vm_config)
-            self.process.stdin.write(config_json)
-            self.process.stdin.close()
+            # Wait for API socket to be ready
+            await self._wait_for_api_socket()
             
-            # Wait for VM to be ready
-            await asyncio.sleep(1.0)
+            # Configure VM via API calls
+            await self._configure_vm_via_api()
+            
+            # Start VM
+            await self._start_vm_via_api()
+            
+            # Wait for guest to boot and be ready
+            await self._wait_for_guest_ready()
             
             # Create base snapshot after first boot
             await self._create_base_snapshot()
             
             self.is_running = True
+            self.vm_ready = True
             return True
             
         except Exception as e:
@@ -124,79 +115,76 @@ class FirecrackerVM:
             return False
     
     async def execute_code(self, code: str) -> ExecutionResult:
-        """Execute code in the microVM"""
+        """Execute code inside the microVM using guest agent communication"""
         start_time = time.time()
         self.execution_count += 1
         self.needs_reset = True
         
+        if not self.vm_ready:
+            return ExecutionResult(
+                success=False,
+                output="",
+                error="VM is not ready for execution",
+                execution_time=time.time() - start_time,
+                vm_id=self.vm_id
+            )
+        
         try:
-            # Create temporary file with code
-            code_file = f"/tmp/code_{self.vm_id}{self._get_file_extension()}"
-            async with aiofiles.open(code_file, 'w') as f:
-                await f.write(code)
+            # Generate unique execution ID for this run
+            execution_id = f"exec_{int(time.time() * 1000000)}_{self.execution_count}"
             
-            # Execute via VM (simplified - would use actual VM communication)
-            # This is a placeholder for the actual VM execution
-            cmd = self._get_execution_command(code_file)
+            # Create code file inside the VM guest
+            guest_code_path = f"/tmp/user_code_{execution_id}{self._get_file_extension()}"
             
-            process = await asyncio.create_subprocess_exec(
-                *cmd,
-                stdout=asyncio.subprocess.PIPE,
-                stderr=asyncio.subprocess.PIPE
+            # Transfer code to guest VM
+            await self._transfer_code_to_guest(code, guest_code_path)
+            
+            # Execute code inside the VM
+            execution_command = self._get_guest_execution_command(guest_code_path)
+            
+            result = await self._execute_in_guest(
+                execution_command, 
+                timeout=self.config.timeout_seconds
             )
             
-            try:
-                stdout, stderr = await asyncio.wait_for(
-                    process.communicate(),
-                    timeout=self.config.timeout_seconds
+            execution_time = time.time() - start_time
+            
+            # Parse execution result
+            if result.get("success", False):
+                return ExecutionResult(
+                    success=True,
+                    output=result.get("stdout", ""),
+                    error=result.get("stderr") if result.get("stderr") else None,
+                    execution_time=execution_time,
+                    vm_id=self.vm_id
                 )
-                
-                execution_time = time.time() - start_time
-                
-                if process.returncode == 0:
-                    return ExecutionResult(
-                        success=True,
-                        output=stdout.decode('utf-8'),
-                        error=None,
-                        execution_time=execution_time,
-                        vm_id=self.vm_id
-                    )
-                else:
-                    return ExecutionResult(
-                        success=False,
-                        output="",
-                        error=stderr.decode('utf-8'),
-                        execution_time=execution_time,
-                        vm_id=self.vm_id
-                    )
-                    
-            except asyncio.TimeoutError:
-                process.kill()
+            else:
                 return ExecutionResult(
                     success=False,
-                    output="",
-                    error=f"Execution timed out after {self.config.timeout_seconds} seconds",
-                    execution_time=time.time() - start_time,
+                    output=result.get("stdout", ""),
+                    error=result.get("stderr", "Unknown execution error"),
+                    execution_time=execution_time,
                     vm_id=self.vm_id
                 )
                 
+        except asyncio.TimeoutError:
+            return ExecutionResult(
+                success=False,
+                output="",
+                error=f"Execution timed out after {self.config.timeout_seconds} seconds",
+                execution_time=time.time() - start_time,
+                vm_id=self.vm_id
+            )
         except Exception as e:
             return ExecutionResult(
                 success=False,
                 output="",
-                error=str(e),
+                error=f"VM execution error: {str(e)}",
                 execution_time=time.time() - start_time,
                 vm_id=self.vm_id
             )
         finally:
-            # Cleanup temporary files
-            try:
-                if 'code_file' in locals():
-                    os.unlink(code_file)
-            except:
-                pass
-            
-            # Clean up any temp files in VM (via guest agent would be ideal)
+            # Clean up guest temp files
             await self._cleanup_guest_temp_files()
     
     async def stop(self):
@@ -225,7 +213,8 @@ class FirecrackerVM:
             self.socket_path,
             self.base_snapshot_path,
             self.mem_snapshot_path,
-            self.rootfs_working_path
+            self.rootfs_working_path,
+            f"{self.base_snapshot_path}.metadata"
         ]
         
         for resource_path in resources_to_clean:
@@ -235,6 +224,17 @@ class FirecrackerVM:
                     logger.debug(f"Cleaned up resource: {resource_path}")
             except Exception as e:
                 logger.warning(f"Failed to cleanup resource {resource_path}: {e}")
+        
+        # Clean up tap network interface if it exists
+        tap_interface = f"tap{self.vm_id}"
+        try:
+            await asyncio.create_subprocess_exec(
+                "ip", "link", "delete", tap_interface,
+                stdout=asyncio.subprocess.DEVNULL,
+                stderr=asyncio.subprocess.DEVNULL
+            )
+        except:
+            pass  # Interface might not exist
     
     def _get_file_extension(self) -> str:
         extensions = {
@@ -244,14 +244,178 @@ class FirecrackerVM:
         }
         return extensions[self.language]
     
-    def _get_execution_command(self, file_path: str) -> List[str]:
-        """Get command to execute code (placeholder for VM communication)"""
-        commands = {
-            Language.PYTHON: ["python3", file_path],
-            Language.TYPESCRIPT: ["tsx", file_path],
-            Language.RUST: ["sh", "-c", f"rustc {file_path} -o {file_path}.out && {file_path}.out"]
+    def _get_guest_execution_command(self, guest_file_path: str) -> str:
+        """Get command to execute code inside the guest VM"""
+        if self.language == Language.RUST:
+            # For Rust, copy user code to the pre-built cargo project and run it
+            return f"cp {guest_file_path} /opt/rust-template/src/main.rs && cd /opt/rust-template && timeout {self.config.timeout_seconds} cargo run --release 2>&1"
+        elif self.language == Language.PYTHON:
+            return f"timeout {self.config.timeout_seconds} python3 {guest_file_path} 2>&1"
+        elif self.language == Language.TYPESCRIPT:
+            return f"timeout {self.config.timeout_seconds} tsx {guest_file_path} 2>&1"
+        else:
+            raise ValueError(f"Unsupported language: {self.language}")
+    
+    async def _transfer_code_to_guest(self, code: str, guest_path: str):
+        """Transfer code content to a file inside the guest VM"""
+        try:
+            # Encode code to base64 to safely transfer it
+            code_b64 = base64.b64encode(code.encode('utf-8')).decode('ascii')
+            
+            # Create the file inside guest using echo and base64 decode
+            create_file_cmd = f"echo '{code_b64}' | base64 -d > {guest_path} && chmod +r {guest_path}"
+            
+            result = await self._execute_in_guest(create_file_cmd, timeout=5)
+            
+            if not result.get("success", False):
+                raise RuntimeError(f"Failed to transfer code to guest: {result.get('stderr', 'Unknown error')}")
+                
+            logger.debug(f"Transferred code to guest file: {guest_path}")
+            
+        except Exception as e:
+            logger.error(f"Failed to transfer code to guest VM {self.vm_id}: {e}")
+            raise
+    
+    async def _make_api_request(self, method: str, endpoint: str, data: Optional[dict] = None) -> dict:
+        """Make HTTP request to Firecracker API via Unix socket"""
+        connector = aiohttp.UnixConnector(path=self.socket_path)
+        
+        try:
+            async with aiohttp.ClientSession(connector=connector) as session:
+                url = f"http://localhost{endpoint}"
+                
+                if method.upper() == "GET":
+                    async with session.get(url) as response:
+                        return await self._handle_api_response(response)
+                elif method.upper() == "PUT":
+                    async with session.put(url, json=data) as response:
+                        return await self._handle_api_response(response)
+                elif method.upper() == "PATCH":
+                    async with session.patch(url, json=data) as response:
+                        return await self._handle_api_response(response)
+                else:
+                    raise ValueError(f"Unsupported HTTP method: {method}")
+                    
+        except Exception as e:
+            logger.error(f"Firecracker API request failed: {e}")
+            raise
+    
+    async def _handle_api_response(self, response: aiohttp.ClientResponse) -> dict:
+        """Handle Firecracker API response"""
+        if response.status >= 400:
+            error_text = await response.text()
+            raise RuntimeError(f"Firecracker API error {response.status}: {error_text}")
+        
+        if response.content_type == 'application/json':
+            return await response.json()
+        else:
+            return {"text": await response.text()}
+    
+    async def _wait_for_api_socket(self, timeout: int = 10):
+        """Wait for Firecracker API socket to be ready"""
+        start_time = time.time()
+        
+        while time.time() - start_time < timeout:
+            if os.path.exists(self.socket_path):
+                # Try a simple API call to verify it's working
+                try:
+                    await self._make_api_request("GET", "/")
+                    return
+                except:
+                    pass
+            
+            await asyncio.sleep(0.1)
+        
+        raise RuntimeError(f"Firecracker API socket not ready after {timeout}s")
+    
+    async def _configure_vm_via_api(self):
+        """Configure VM using Firecracker API"""
+        # Set machine configuration
+        machine_config = {
+            "vcpu_count": self.config.vcpu_count,
+            "mem_size_mib": self.config.mem_size_mib,
+            "smt": False
         }
-        return commands[self.language]
+        await self._make_api_request("PUT", "/machine-config", machine_config)
+        
+        # Set boot source
+        boot_config = {
+            "kernel_image_path": f"/opt/firecracker/kernels/{self.language.value}/vmlinux",
+            "boot_args": "console=ttyS0 reboot=k panic=1 pci=off ip=169.254.0.2::169.254.0.1:255.255.255.0::eth0:off"
+        }
+        await self._make_api_request("PUT", "/boot-source", boot_config)
+        
+        # Set rootfs drive
+        drive_config = {
+            "drive_id": "rootfs",
+            "path_on_host": self.rootfs_working_path,
+            "is_root_device": True,
+            "is_read_only": False
+        }
+        await self._make_api_request("PUT", "/drives/rootfs", drive_config)
+        
+        # Configure network interface
+        network_config = {
+            "iface_id": "eth0",
+            "guest_mac": "02:FC:00:00:00:05",
+            "host_dev_name": f"tap{self.vm_id}"
+        }
+        await self._make_api_request("PUT", "/network-interfaces/eth0", network_config)
+        
+        logger.debug(f"VM {self.vm_id} configured via API")
+    
+    async def _start_vm_via_api(self):
+        """Start VM using Firecracker API"""
+        start_config = {"action_type": "InstanceStart"}
+        await self._make_api_request("PUT", "/actions", start_config)
+        
+        logger.info(f"VM {self.vm_id} started via API")
+    
+    async def _wait_for_guest_ready(self, timeout: int = 30):
+        """Wait for guest OS to be ready for command execution"""
+        start_time = time.time()
+        
+        while time.time() - start_time < timeout:
+            try:
+                # Try to execute a simple command to check if guest is ready
+                result = await self._execute_in_guest("echo ready", timeout=2)
+                if result and "ready" in result.get("stdout", ""):
+                    logger.info(f"Guest {self.vm_id} is ready")
+                    return
+            except:
+                pass
+            
+            await asyncio.sleep(1.0)
+        
+        raise RuntimeError(f"Guest {self.vm_id} not ready after {timeout}s")
+    
+    async def _execute_in_guest(self, command: str, timeout: int = 10) -> dict:
+        """Execute command inside the guest VM via guest agent"""
+        # This is a simplified implementation
+        # In production, you'd use a proper guest agent like qemu-guest-agent
+        # or implement a custom agent protocol
+        
+        try:
+            # For now, we'll use a simple HTTP server running in the guest
+            # In production, replace this with proper guest agent communication
+            
+            guest_url = f"http://{self.guest_ip}:8080/execute"
+            
+            payload = {
+                "command": command,
+                "timeout": timeout
+            }
+            
+            async with aiohttp.ClientSession() as session:
+                async with session.post(guest_url, json=payload, timeout=timeout) as response:
+                    if response.status == 200:
+                        return await response.json()
+                    else:
+                        raise RuntimeError(f"Guest execution failed: {response.status}")
+                        
+        except Exception as e:
+            logger.error(f"Failed to execute in guest {self.vm_id}: {e}")
+            raise
     
     async def _create_working_rootfs(self):
         """Create a working copy of the base rootfs for this VM instance"""
@@ -279,26 +443,37 @@ class FirecrackerVM:
             raise
     
     async def _create_base_snapshot(self):
-        """Create base snapshot after VM boot for fast reset"""
+        """Create base snapshot after VM boot using Firecracker API"""
         try:
-            # Create VM snapshot via API (simplified - real implementation would use Firecracker API)
-            # For now, we'll use filesystem-level snapshots
+            # Create snapshot via Firecracker API
+            snapshot_config = {
+                "snapshot_type": "Full",
+                "snapshot_path": self.base_snapshot_path,
+                "mem_file_path": self.mem_snapshot_path
+            }
             
-            # Create memory snapshot placeholder (would use actual Firecracker API)
-            snapshot_data = {
+            await self._make_api_request("PUT", "/snapshot/create", snapshot_config)
+            
+            # Store snapshot metadata
+            snapshot_metadata = {
                 "vm_id": self.vm_id,
                 "language": self.language.value,
                 "created_at": time.time(),
-                "rootfs_checksum": await self._calculate_rootfs_checksum()
+                "rootfs_checksum": await self._calculate_rootfs_checksum(),
+                "snapshot_path": self.base_snapshot_path,
+                "mem_file_path": self.mem_snapshot_path
             }
             
-            async with aiofiles.open(self.base_snapshot_path, 'w') as f:
-                await f.write(json.dumps(snapshot_data))
+            metadata_path = f"{self.base_snapshot_path}.metadata"
+            async with aiofiles.open(metadata_path, 'w') as f:
+                await f.write(json.dumps(snapshot_metadata))
                 
-            logger.debug(f"Created base snapshot for VM {self.vm_id}")
+            logger.info(f"Created base snapshot for VM {self.vm_id}")
             
         except Exception as e:
             logger.error(f"Failed to create base snapshot for VM {self.vm_id}: {e}")
+            # Continue without snapshot - VM will be recreated on reset
+            pass
     
     async def _calculate_rootfs_checksum(self) -> str:
         """Calculate checksum of rootfs for integrity verification"""
@@ -324,10 +499,12 @@ class FirecrackerVM:
             return "error"
     
     async def _cleanup_guest_temp_files(self):
-        """Clean up temporary files inside the VM guest (simplified)"""
-        # In production, this would use a guest agent or VM communication
-        # For now, we'll rely on the reset mechanism
-        pass
+        """Clean up temporary files inside the VM guest via guest agent"""
+        try:
+            await self._execute_in_guest("rm -rf /tmp/user_code_* /tmp/execution_*", timeout=5)
+            logger.debug(f"Cleaned up guest temp files for VM {self.vm_id}")
+        except Exception as e:
+            logger.warning(f"Failed to cleanup guest temp files: {e}")
     
     async def reset_to_clean_state(self) -> bool:
         """Reset VM to clean state using snapshot restoration"""
@@ -405,63 +582,83 @@ class FirecrackerVM:
             raise
     
     async def _restart_from_snapshot(self) -> bool:
-        """Restart VM from snapshot"""
+        """Restart VM from snapshot using Firecracker API"""
         try:
-            # Verify snapshot exists
-            if not os.path.exists(self.base_snapshot_path):
-                logger.error(f"Base snapshot not found for VM {self.vm_id}")
-                return False
+            # Verify snapshot files exist
+            if not os.path.exists(self.base_snapshot_path) or not os.path.exists(self.mem_snapshot_path):
+                logger.warning(f"Snapshot files not found for VM {self.vm_id}, will recreate VM")
+                return await self._recreate_vm_from_scratch()
             
             # Read snapshot metadata
-            async with aiofiles.open(self.base_snapshot_path, 'r') as f:
-                snapshot_data = json.loads(await f.read())
-            
-            # Restart VM using the same configuration
-            vm_config = {
-                "boot-source": {
-                    "kernel_image_path": f"/opt/firecracker/kernels/{self.language.value}/vmlinux",
-                    "boot_args": "console=ttyS0 reboot=k panic=1 pci=off"
-                },
-                "drives": [{
-                    "drive_id": "rootfs",
-                    "path_on_host": self.rootfs_working_path,
-                    "is_root_device": True,
-                    "is_read_only": False
-                }],
-                "machine-config": {
-                    "vcpu_count": self.config.vcpu_count,
-                    "mem_size_mib": self.config.mem_size_mib
-                }
-            }
+            metadata_path = f"{self.base_snapshot_path}.metadata"
+            if os.path.exists(metadata_path):
+                async with aiofiles.open(metadata_path, 'r') as f:
+                    snapshot_metadata = json.loads(await f.read())
+            else:
+                logger.warning(f"Snapshot metadata not found for VM {self.vm_id}")
+                return await self._recreate_vm_from_scratch()
             
             # Start new Firecracker process
             cmd = [
                 "firecracker",
-                "--api-sock", self.socket_path,
-                "--config-file", "/dev/stdin"
+                "--api-sock", self.socket_path
             ]
             
             self.process = subprocess.Popen(
                 cmd,
-                stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True
             )
             
-            # Send configuration
-            config_json = json.dumps(vm_config)
-            self.process.stdin.write(config_json)
-            self.process.stdin.close()
+            # Wait for API socket
+            await self._wait_for_api_socket()
             
-            # Wait for VM to be ready
-            await asyncio.sleep(1.0)
+            # Load snapshot via Firecracker API
+            load_config = {
+                "snapshot_path": self.base_snapshot_path,
+                "mem_file_path": self.mem_snapshot_path,
+                "enable_diff_snapshots": False,
+                "resume_vm": True
+            }
+            
+            await self._make_api_request("PUT", "/snapshot/load", load_config)
+            
+            # Verify VM is responsive
+            await self._wait_for_guest_ready(timeout=15)
             
             self.is_running = True
+            self.vm_ready = True
+            logger.info(f"Successfully restored VM {self.vm_id} from snapshot")
             return True
             
         except Exception as e:
             logger.error(f"Failed to restart VM {self.vm_id} from snapshot: {e}")
+            # Fallback to recreating VM from scratch
+            return await self._recreate_vm_from_scratch()
+    
+    async def _recreate_vm_from_scratch(self) -> bool:
+        """Recreate VM from scratch when snapshot restoration fails"""
+        try:
+            logger.info(f"Recreating VM {self.vm_id} from scratch")
+            
+            # Restore rootfs from base image
+            await self._restore_rootfs()
+            
+            # Configure and start VM normally
+            await self._configure_vm_via_api()
+            await self._start_vm_via_api()
+            await self._wait_for_guest_ready()
+            
+            # Create new snapshot
+            await self._create_base_snapshot()
+            
+            self.is_running = True
+            self.vm_ready = True
+            return True
+            
+        except Exception as e:
+            logger.error(f"Failed to recreate VM {self.vm_id} from scratch: {e}")
             return False
     
     async def _verify_vm_health(self) -> bool:

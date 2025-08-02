@@ -157,10 +157,13 @@ class FirecrackerDockerVM:
         return extensions[self.language]
     
     def _get_execution_command(self, file_path: str) -> str:
+        if self.language == Language.RUST:
+            # For Rust, copy user code to the pre-built cargo project and run it
+            return f"cp {file_path} /opt/rust-template/src/main.rs && cd /opt/rust-template && cargo run --release"
+        
         commands = {
             Language.PYTHON: f"python3 {file_path}",
             Language.TYPESCRIPT: f"npx ts-node {file_path}",
-            Language.RUST: f"rustc {file_path} -o /tmp/program && /tmp/program"
         }
         return commands[self.language]
 

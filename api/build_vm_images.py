@@ -23,8 +23,9 @@ class VMImageBuilder:
     
     def __init__(self):
         self.base_packages = [
-            "alpine-base", "busybox", "musl", "libc6-compat"
+            "alpine-base", "busybox", "musl", "libc6-compat", "python3", "curl"
         ]
+        self.guest_agent_path = os.path.join(os.path.dirname(__file__), "guest_agent.py")
         
     def build_all_images(self):
         """Build all language runtime images"""
@@ -121,6 +122,9 @@ while true; do sleep 1; done
             # Create base Alpine rootfs with Rust
             self._create_base_rootfs(rootfs_dir, ["rust", "cargo"])
             
+            # Create pre-built cargo project with dependencies
+            self._setup_rust_template_project(rootfs_dir)
+            
             # Add Rust-specific configurations
             init_script = f"{rootfs_dir}/init"
             with open(init_script, "w") as f:
@@ -134,9 +138,9 @@ while [ ! -f /tmp/code.rs ]; do
     sleep 0.1
 done
 
-# Execute Rust code
-cd /tmp
-rustc --edition 2024 /tmp/code.rs -o /tmp/program && /tmp/program > /tmp/output 2> /tmp/error
+# Execute Rust code using the pre-built cargo project
+# Copy user code to the cargo project and run it
+cp /tmp/code.rs /opt/rust-template/src/main.rs && cd /opt/rust-template && cargo run --release > /tmp/output 2> /tmp/error
 echo $? > /tmp/exitcode
 
 # Keep running
@@ -149,6 +153,50 @@ while true; do sleep 1; done
             self._create_ext4_image(rootfs_dir, f"{ROOTFS_DIR}/rust/rootfs.ext4")
         
         logger.info("Rust rootfs completed")
+    
+    def _setup_rust_template_project(self, rootfs_dir):
+        """Set up a pre-built Rust cargo project with common dependencies"""
+        template_dir = f"{rootfs_dir}/opt/rust-template"
+        os.makedirs(template_dir, exist_ok=True)
+        os.makedirs(f"{template_dir}/src", exist_ok=True)
+        
+        # Create Cargo.toml with dependencies
+        cargo_toml = f"""\
+[package]
+name = "sandbox"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = {{ version = "1.0", features = ["full"] }}
+serde = {{ version = "1.0", features = ["derive"] }}
+serde_json = "1.0"
+anyhow = "1.0"
+chrono = "0.4"
+uuid = "1.0"
+async-trait = "0.1"
+clap = {{ version = "4.0", features = ["derive"] }}
+rand = "0.8"
+
+[[bin]]
+name = "main"
+path = "src/main.rs"
+"""
+        
+        with open(f"{template_dir}/Cargo.toml", "w") as f:
+            f.write(cargo_toml)
+        
+        # Create a placeholder main.rs
+        with open(f"{template_dir}/src/main.rs", "w") as f:
+            f.write('fn main() {\n    println!("Hello, World!");\n}\n')
+        
+        # Pre-build the project to download and compile dependencies
+        # This is done in chroot to ensure it works in the VM environment
+        logger.info("Pre-building Rust project dependencies...")
+        subprocess.run([
+            "chroot", rootfs_dir, "sh", "-c", 
+            "cd /opt/rust-template && cargo build --release"
+        ], check=True, cwd="/")
     
     def build_typescript_image(self):
         """Build TypeScript/Node.js runtime rootfs"""
@@ -225,6 +273,64 @@ while true; do sleep 1; done
         
         with open(f"{rootfs_dir}/etc/hosts", "w") as f:
             f.write("127.0.0.1 localhost firecracker-vm\n")
+        
+        # Install guest agent
+        self._install_guest_agent(rootfs_dir)
+    
+    def _install_guest_agent(self, rootfs_dir: str):
+        """Install guest agent into VM image"""
+        if not os.path.exists(self.guest_agent_path):
+            logger.error(f"Guest agent not found at {self.guest_agent_path}")
+            return
+        
+        # Copy guest agent
+        agent_dest = f"{rootfs_dir}/usr/local/bin/guest_agent.py"
+        os.makedirs(os.path.dirname(agent_dest), exist_ok=True)
+        shutil.copy2(self.guest_agent_path, agent_dest)
+        os.chmod(agent_dest, 0o755)
+        
+        # Create systemd-style init script for guest agent
+        init_script = f"{rootfs_dir}/etc/init.d/guest-agent"
+        os.makedirs(os.path.dirname(init_script), exist_ok=True)
+        
+        with open(init_script, "w") as f:
+            f.write("""#!/bin/sh
+# Guest agent init script
+case "$1" in
+    start)
+        echo "Starting guest agent..."
+        python3 /usr/local/bin/guest_agent.py &
+        echo $! > /var/run/guest-agent.pid
+        ;;
+    stop)
+        echo "Stopping guest agent..."
+        if [ -f /var/run/guest-agent.pid ]; then
+            kill $(cat /var/run/guest-agent.pid)
+            rm -f /var/run/guest-agent.pid
+        fi
+        ;;
+    *)
+        echo "Usage: $0 {start|stop}"
+        exit 1
+        ;;
+esac
+exit 0
+""")
+        
+        os.chmod(init_script, 0o755)
+        
+        # Create auto-start script
+        rc_local = f"{rootfs_dir}/etc/rc.local"
+        with open(rc_local, "w") as f:
+            f.write("""#!/bin/sh
+# Auto-start guest agent
+/etc/init.d/guest-agent start
+exit 0
+""")
+        
+        os.chmod(rc_local, 0o755)
+        
+        logger.info("Guest agent installed and configured for auto-start")
     
     def _create_ext4_image(self, rootfs_dir: str, output_path: str):
         """Create ext4 filesystem image from directory"""
