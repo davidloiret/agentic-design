@@ -17,10 +17,9 @@ Execute code in Python, TypeScript, or Rust with security isolation.
 #### Request Body
 ```json
 {
-  "code": "string",           // Code to execute
-  "language": "string",       // "python", "typescript", or "rust"
-  "timeout": 10,              // Optional: timeout in seconds (default: 60)
-  "security_level": "sandbox" // Optional: "sandbox", "restricted", or "standard"
+  "code": "string",     // Code to execute
+  "language": "string", // "python", "typescript", or "rust"
+  "timeout": 10         // Optional: timeout in seconds (default: 60)
 }
 ```
 
@@ -100,7 +99,8 @@ curl -X GET http://localhost:8000/health
 {
   "status": "healthy",
   "firecracker_available": true,
-  "execution_method": "firecracker"
+  "execution_method": "firecracker",
+  "security_level": "sandbox"
 }
 ```
 
@@ -135,11 +135,21 @@ Get API information and available endpoints.
 curl -X GET http://localhost:8000/
 ```
 
-## Security Levels
+## Security Configuration
+
+Security level is configured via environment variables on the server side:
 
 - **sandbox** (default): Maximum isolation, limited resources
 - **restricted**: Moderate restrictions
 - **standard**: Minimal restrictions, more resources
+
+**Environment Variable:**
+```bash
+# Set security level (server-side configuration)
+export SECURITY_LEVEL=sandbox  # or "restricted" or "standard"
+```
+
+**Note:** Security level cannot be modified by API requests for security reasons.
 
 ## Error Handling
 
@@ -208,4 +218,20 @@ docker-compose -f docker-compose.dev.yml logs firecracker-api
 
 # Restart API only
 docker-compose -f docker-compose.dev.yml restart firecracker-api
+```
+
+### Setting Security Level in Docker
+
+Add environment variable to docker-compose.yml:
+```yaml
+services:
+  firecracker-api:
+    environment:
+      - SECURITY_LEVEL=sandbox  # or "restricted" or "standard"
+```
+
+Or use .env file:
+```bash
+# .env file
+SECURITY_LEVEL=sandbox
 ```

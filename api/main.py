@@ -4,6 +4,7 @@ from pydantic import BaseModel
 import time
 from typing import Optional
 import logging
+import os
 try:
     from firecracker_manager import FirecrackerExecutor
 except ImportError:
@@ -28,7 +29,6 @@ class CodeExecutionRequest(BaseModel):
     code: str
     language: str
     timeout: Optional[int] = 60
-    security_level: Optional[str] = "sandbox"  # sandbox, restricted, standard
 
 class CodeExecutionResponse(BaseModel):
     output: str
@@ -39,6 +39,15 @@ class CodeExecutionResponse(BaseModel):
 class CodeExecutor:
     def __init__(self):
         self.firecracker_executor = None
+        
+        # Get security level from environment variable
+        security_level_str = os.getenv("SECURITY_LEVEL", "sandbox").lower()
+        try:
+            self.security_level = SecurityLevel(security_level_str)
+            logger.info(f"Security level set to: {self.security_level.value}")
+        except ValueError:
+            logger.warning(f"Invalid security level '{security_level_str}', defaulting to 'sandbox'")
+            self.security_level = SecurityLevel.SANDBOX
         
         # Initialize Firecracker executor only
         if FirecrackerExecutor:
@@ -52,13 +61,13 @@ class CodeExecutor:
             logger.error("Firecracker executor not available")
             raise RuntimeError("Firecracker executor is required but not available")
     
-    async def execute_code(self, code: str, language: str, timeout: int = 10, security_level: SecurityLevel = SecurityLevel.SANDBOX) -> CodeExecutionResponse:
+    async def execute_code(self, code: str, language: str, timeout: int = 10) -> CodeExecutionResponse:
         start_time = time.time()
         
         try:
             # Use Firecracker microVMs only
             if self.firecracker_executor:
-                return await self._execute_with_firecracker(code, language, timeout, security_level)
+                return await self._execute_with_firecracker(code, language, timeout, self.security_level)
             else:
                 raise RuntimeError("Firecracker executor not available. Only Firecracker execution is allowed.")
         except Exception as e:
@@ -108,20 +117,12 @@ executor = CodeExecutor()
 async def execute_code(request: CodeExecutionRequest):
     """Execute code in the specified language with enhanced security"""
     
-    # Parse security level
-    try:
-        security_level = SecurityLevel(request.security_level)
-    except ValueError:
-        raise HTTPException(
-            status_code=400, 
-            detail=f"Invalid security level: {request.security_level}. Must be: sandbox, restricted, or standard"
-        )
-    
+    # Security level is now controlled by environment variable
     # Skip security validation since we're already in a sandboxed VM
     # is_valid, violations = security_manager.validate_code(
     #     request.code, 
     #     request.language, 
-    #     security_level
+    #     executor.security_level
     # )
     # 
     # if not is_valid:
@@ -134,8 +135,7 @@ async def execute_code(request: CodeExecutionRequest):
         result = await executor.execute_code(
             request.code, 
             request.language, 
-            request.timeout,
-            security_level
+            request.timeout
         )
         return result
     except Exception as e:
@@ -153,7 +153,8 @@ async def health_check():
     return {
         "status": "healthy", 
         "firecracker_available": executor.firecracker_executor is not None,
-        "execution_method": execution_method
+        "execution_method": execution_method,
+        "security_level": executor.security_level.value
     }
 
 @app.get("/debug/vm-pools")

@@ -68,6 +68,7 @@ services:
       - ../api:/app
     environment:
       - PYTHONUNBUFFERED=1
+      - SECURITY_LEVEL=sandbox
     networks:
       - agentic-network
 
