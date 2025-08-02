@@ -1592,11 +1592,8 @@ export const BrainMascot: React.FC<BrainMascotProps> = ({
         />
 
         {/* Cute Nose */}
-        <ellipse
-          cx="50"
-          cy="52"
-          rx="2.5"
-          ry="3"
+        <path
+          d="M 48 54 Q 50 56 52 54 Q 51.2 51.5 50 50.5 Q 48.8 51.5 48 54"
           fill={colors.primary}
           opacity="0.7"
         />

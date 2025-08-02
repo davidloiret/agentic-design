@@ -52,8 +52,10 @@ class CodeExecutor:
         # Initialize Firecracker executor only
         if FirecrackerExecutor:
             try:
-                self.firecracker_executor = FirecrackerExecutor(pool_size=3)
-                logger.info("Firecracker executor initialized")
+                # Get pool size from environment variable
+                pool_size = int(os.getenv("FIRECRACKER_POOL_SIZE", "3"))
+                self.firecracker_executor = FirecrackerExecutor(pool_size=pool_size)
+                logger.info(f"Firecracker executor initialized with pool size: {pool_size}")
             except Exception as e:
                 logger.error(f"Firecracker executor failed to initialize: {e}")
                 raise RuntimeError("Firecracker is required but failed to initialize")
@@ -63,6 +65,10 @@ class CodeExecutor:
     
     async def execute_code(self, code: str, language: str, timeout: int = 10) -> CodeExecutionResponse:
         start_time = time.time()
+        
+        # Apply environment variable timeout limits
+        max_timeout = int(os.getenv("FIRECRACKER_VM_TIMEOUT", "30"))
+        timeout = min(timeout, max_timeout)
         
         try:
             # Use Firecracker microVMs only

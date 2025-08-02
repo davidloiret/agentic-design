@@ -83,5 +83,9 @@ EXPOSE 8000
 # Set up proper permissions and run
 RUN chmod +x /usr/local/bin/firecracker
 
+# Create startup script for production
+COPY start_firecracker_container.sh /usr/local/bin/start_firecracker_container.sh
+RUN chmod +x /usr/local/bin/start_firecracker_container.sh
+
 # Use privileged mode to access KVM
-CMD ["python3", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["/usr/local/bin/start_firecracker_container.sh"]

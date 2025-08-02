@@ -78,6 +78,9 @@ class FirecrackerVM:
             # Create working copy of rootfs for this VM instance
             await self._create_working_rootfs()
             
+            # Setup network TAP interface before starting VM
+            await self._setup_tap_interface()
+            
             # Start Firecracker process with API socket
             cmd = [
                 "firecracker",
@@ -112,6 +115,7 @@ class FirecrackerVM:
             
         except Exception as e:
             logger.error(f"Failed to start VM {self.vm_id}: {e}")
+            await self._cleanup_tap_interface()  # Cleanup on failure
             return False
     
     async def execute_code(self, code: str) -> ExecutionResult:
@@ -226,15 +230,7 @@ class FirecrackerVM:
                 logger.warning(f"Failed to cleanup resource {resource_path}: {e}")
         
         # Clean up tap network interface if it exists
-        tap_interface = f"tap{self.vm_id}"
-        try:
-            await asyncio.create_subprocess_exec(
-                "ip", "link", "delete", tap_interface,
-                stdout=asyncio.subprocess.DEVNULL,
-                stderr=asyncio.subprocess.DEVNULL
-            )
-        except:
-            pass  # Interface might not exist
+        await self._cleanup_tap_interface()
     
     def _get_file_extension(self) -> str:
         extensions = {
@@ -341,7 +337,7 @@ class FirecrackerVM:
         # Set boot source
         boot_config = {
             "kernel_image_path": f"/opt/firecracker/kernels/{self.language.value}/vmlinux",
-            "boot_args": "console=ttyS0 reboot=k panic=1 pci=off ip=169.254.0.2::169.254.0.1:255.255.255.0::eth0:off"
+            "boot_args": "console=ttyS0 reboot=k panic=1 pci=off ip=169.254.0.2::169.254.0.1:255.255.255.0::eth0:on"
         }
         await self._make_api_request("PUT", "/boot-source", boot_config)
         
@@ -505,6 +501,127 @@ class FirecrackerVM:
             logger.debug(f"Cleaned up guest temp files for VM {self.vm_id}")
         except Exception as e:
             logger.warning(f"Failed to cleanup guest temp files: {e}")
+    
+    async def _setup_tap_interface(self):
+        """Create and configure TAP interface for VM networking"""
+        try:
+            tap_name = f"tap{self.vm_id}"
+            bridge_name = "fcbr0"
+            
+            # Check if bridge exists, create if not
+            try:
+                process = await asyncio.create_subprocess_exec(
+                    "ip", "link", "show", bridge_name,
+                    stdout=asyncio.subprocess.DEVNULL,
+                    stderr=asyncio.subprocess.DEVNULL
+                )
+                await process.communicate()
+                
+                if process.returncode != 0:
+                    # Bridge doesn't exist, create it
+                    await self._create_bridge_network()
+                    
+            except Exception as e:
+                logger.warning(f"Failed to check bridge {bridge_name}: {e}")
+                await self._create_bridge_network()
+            
+            # Create TAP interface
+            process = await asyncio.create_subprocess_exec(
+                "ip", "tuntap", "add", "dev", tap_name, "mode", "tap",
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE
+            )
+            stdout, stderr = await process.communicate()
+            
+            if process.returncode != 0:
+                raise RuntimeError(f"Failed to create TAP interface {tap_name}: {stderr.decode()}")
+            
+            # Set interface up
+            process = await asyncio.create_subprocess_exec(
+                "ip", "link", "set", "dev", tap_name, "up",
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE
+            )
+            await process.communicate()
+            
+            if process.returncode != 0:
+                raise RuntimeError(f"Failed to bring up TAP interface {tap_name}")
+            
+            # Add to bridge
+            process = await asyncio.create_subprocess_exec(
+                "ip", "link", "set", "dev", tap_name, "master", bridge_name,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE
+            )
+            await process.communicate()
+            
+            if process.returncode != 0:
+                raise RuntimeError(f"Failed to add TAP interface {tap_name} to bridge {bridge_name}")
+            
+            logger.debug(f"TAP interface {tap_name} created and added to bridge {bridge_name}")
+            
+        except Exception as e:
+            logger.error(f"Failed to setup TAP interface for VM {self.vm_id}: {e}")
+            raise
+    
+    async def _cleanup_tap_interface(self):
+        """Remove TAP interface"""
+        try:
+            tap_name = f"tap{self.vm_id}"
+            
+            process = await asyncio.create_subprocess_exec(
+                "ip", "link", "delete", tap_name,
+                stdout=asyncio.subprocess.DEVNULL,
+                stderr=asyncio.subprocess.DEVNULL
+            )
+            await process.communicate()
+            
+            logger.debug(f"TAP interface {tap_name} removed")
+            
+        except Exception as e:
+            logger.debug(f"TAP interface cleanup for VM {self.vm_id}: {e}")
+    
+    async def _create_bridge_network(self):
+        """Create bridge network for Firecracker VMs if it doesn't exist"""
+        try:
+            bridge_name = "fcbr0"
+            bridge_ip = "169.254.0.1/24"
+            
+            # Create bridge
+            process = await asyncio.create_subprocess_exec(
+                "ip", "link", "add", "name", bridge_name, "type", "bridge",
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE
+            )
+            stdout, stderr = await process.communicate()
+            
+            if process.returncode != 0 and "already exists" not in stderr.decode():
+                raise RuntimeError(f"Failed to create bridge {bridge_name}: {stderr.decode()}")
+            
+            # Set bridge IP
+            process = await asyncio.create_subprocess_exec(
+                "ip", "addr", "add", bridge_ip, "dev", bridge_name,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE
+            )
+            stdout, stderr = await process.communicate()
+            
+            if process.returncode != 0 and "exists" not in stderr.decode():
+                logger.warning(f"Failed to set bridge IP: {stderr.decode()}")
+            
+            # Bring bridge up
+            process = await asyncio.create_subprocess_exec(
+                "ip", "link", "set", "dev", bridge_name, "up",
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE
+            )
+            await process.communicate()
+            
+            logger.info(f"Bridge network {bridge_name} configured")
+            
+        except Exception as e:
+            logger.error(f"Failed to create bridge network: {e}")
+            # Continue without bridge - VM might still work
     
     async def reset_to_clean_state(self) -> bool:
         """Reset VM to clean state using snapshot restoration"""

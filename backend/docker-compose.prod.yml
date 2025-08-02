@@ -43,15 +43,25 @@ services:
     ports:
       - "8000:8000"
     privileged: true
+    cap_add:
+      - NET_ADMIN
+      - SYS_ADMIN
     devices:
       - /dev/kvm:/dev/kvm
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - firecracker_data:/opt/firecracker
+      - firecracker_logs:/app/logs
     environment:
       - PYTHONUNBUFFERED=1
       - SECURITY_LEVEL=sandbox
+      - FIRECRACKER_POOL_SIZE=3
+      - FIRECRACKER_MAX_VMS=10
+      - FIRECRACKER_VM_TIMEOUT=30
     networks:
       - agentic-network
+    sysctls:
+      - net.ipv4.ip_forward=1
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
@@ -61,11 +71,11 @@ services:
     deploy:
       resources:
         limits:
+          cpus: '4'
+          memory: 4G
+        reservations:
           cpus: '2'
           memory: 2G
-        reservations:
-          cpus: '1'
-          memory: 1G
 
   # Nginx reverse proxy for SSL termination
   nginx:
@@ -84,6 +94,12 @@ services:
       - backend
     networks:
       - agentic-network
+
+volumes:
+  firecracker_data:
+    driver: local
+  firecracker_logs:
+    driver: local
 
 networks:
   agentic-network:

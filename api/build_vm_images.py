@@ -23,7 +23,8 @@ class VMImageBuilder:
     
     def __init__(self):
         self.base_packages = [
-            "alpine-base", "busybox", "musl", "libc6-compat", "python3", "curl"
+            "alpine-base", "busybox", "musl", "libc6-compat", "python3", "curl", 
+            "net-tools", "iproute2", "iptables"
         ]
         self.guest_agent_path = os.path.join(os.path.dirname(__file__), "guest_agent.py")
         
@@ -90,16 +91,15 @@ class VMImageBuilder:
 mount -t proc proc /proc
 mount -t sysfs sysfs /sys
 mount -t tmpfs tmpfs /tmp
+mount -t devtmpfs devtmpfs /dev
 
-# Wait for code file
-while [ ! -f /tmp/code.py ]; do
-    sleep 0.1
-done
+# Configure network
+ifconfig lo up
+ifconfig eth0 169.254.0.2 netmask 255.255.255.0 up
+route add default gw 169.254.0.1
 
-# Execute Python code
-cd /tmp
-python3 /tmp/code.py > /tmp/output 2> /tmp/error
-echo $? > /tmp/exitcode
+# Start guest agent
+python3 /usr/local/bin/guest_agent.py &
 
 # Keep running
 while true; do sleep 1; done
@@ -132,16 +132,15 @@ while true; do sleep 1; done
 mount -t proc proc /proc
 mount -t sysfs sysfs /sys
 mount -t tmpfs tmpfs /tmp
+mount -t devtmpfs devtmpfs /dev
 
-# Wait for code file
-while [ ! -f /tmp/code.rs ]; do
-    sleep 0.1
-done
+# Configure network
+ifconfig lo up
+ifconfig eth0 169.254.0.2 netmask 255.255.255.0 up
+route add default gw 169.254.0.1
 
-# Execute Rust code using the pre-built cargo project
-# Copy user code to the cargo project and run it
-cp /tmp/code.rs /opt/rust-template/src/main.rs && cd /opt/rust-template && cargo run --release > /tmp/output 2> /tmp/error
-echo $? > /tmp/exitcode
+# Start guest agent
+python3 /usr/local/bin/guest_agent.py &
 
 # Keep running
 while true; do sleep 1; done
@@ -220,16 +219,15 @@ path = "src/main.rs"
 mount -t proc proc /proc
 mount -t sysfs sysfs /sys
 mount -t tmpfs tmpfs /tmp
+mount -t devtmpfs devtmpfs /dev
 
-# Wait for code file
-while [ ! -f /tmp/code.ts ]; do
-    sleep 0.1
-done
+# Configure network
+ifconfig lo up
+ifconfig eth0 169.254.0.2 netmask 255.255.255.0 up
+route add default gw 169.254.0.1
 
-# Execute TypeScript code
-cd /tmp
-npx ts-node /tmp/code.ts > /tmp/output 2> /tmp/error
-echo $? > /tmp/exitcode
+# Start guest agent
+python3 /usr/local/bin/guest_agent.py &
 
 # Keep running
 while true; do sleep 1; done
