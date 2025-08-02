@@ -136,7 +136,7 @@ done
 
 # Execute Rust code
 cd /tmp
-rustc /tmp/code.rs -o /tmp/program && /tmp/program > /tmp/output 2> /tmp/error
+rustc --edition 2024 /tmp/code.rs -o /tmp/program && /tmp/program > /tmp/output 2> /tmp/error
 echo $? > /tmp/exitcode
 
 # Keep running
