@@ -133,6 +133,7 @@ export default function BrainMascotDemo() {
                 speechBubblePosition={speechPosition}
                 speechBubbleColor={speechBubbleColor}
                 speechBubbleType={speechBubbleType}
+                skipInitialAnimation={true}
               />
             </div>
             <p className="text-gray-400 text-sm text-center max-w-xs">

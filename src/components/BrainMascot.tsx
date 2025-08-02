@@ -425,7 +425,7 @@ export const BrainMascot: React.FC<BrainMascotProps> = ({
   onExpressionChange,
   onHandGestureChange,
   onHandDisplayChange,
-  skipInitialAnimation = false,
+  skipInitialAnimation = true,
   speechText,
   speechBubblePosition = 'right',
   speechBubbleColor = 'white',
