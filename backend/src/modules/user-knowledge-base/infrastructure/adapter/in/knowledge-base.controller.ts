@@ -16,6 +16,7 @@ import { CreateKnowledgeBaseItemDto } from '../../../application/dto/create-know
 import { UpdateKnowledgeBaseItemDto } from '../../../application/dto/update-knowledge-base-item.dto';
 import { KnowledgeBaseSearchDto } from '../../../application/dto/knowledge-base-search.dto';
 import { UpdateContentWithDiffDto } from '../../../application/dto/update-content-with-diff.dto';
+import { PaginationDto } from '../../../application/dto/pagination.dto';
 import { KnowledgeBaseItemType } from '../../../domain/entity/knowledge-base-item.entity';
 
 @Controller('user-knowledge-base')
@@ -25,8 +26,8 @@ export class KnowledgeBaseController {
 
   // General endpoints (across all workspaces)
   @Get()
-  async findAll(@Request() req: any) {
-    return this.knowledgeBaseService.findByUserId(req.user.id);
+  async findAll(@Request() req: any, @Query() paginationDto: PaginationDto) {
+    return this.knowledgeBaseService.findByUserId(req.user.id, paginationDto);
   }
 
   // Workspace-scoped endpoints
@@ -44,8 +45,9 @@ export class KnowledgeBaseController {
   async findByWorkspace(
     @Request() req: any,
     @Param('workspaceId') workspaceId: string,
+    @Query() paginationDto: PaginationDto,
   ) {
-    return this.knowledgeBaseService.findByWorkspace(workspaceId, req.user.id);
+    return this.knowledgeBaseService.findByWorkspace(workspaceId, req.user.id, paginationDto);
   }
 
   @Get(':workspaceId/search')

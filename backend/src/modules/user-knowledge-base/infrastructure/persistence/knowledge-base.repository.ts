@@ -177,6 +177,38 @@ export class KnowledgeBaseRepository implements KnowledgeBaseRepositoryInterface
     );
   }
 
+  async findByUserIdPaginated(userId: string, skip: number, limit: number): Promise<KnowledgeBaseItem[]> {
+    return this.repository.find(
+      { user: userId },
+      { 
+        populate: ['user', 'workspace', 'collections'], 
+        orderBy: { updatedAt: 'DESC' },
+        offset: skip,
+        limit: limit
+      },
+    );
+  }
+
+  async countByUserId(userId: string): Promise<number> {
+    return this.repository.count({ user: userId });
+  }
+
+  async findByWorkspacePaginated(workspaceId: string, skip: number, limit: number): Promise<KnowledgeBaseItem[]> {
+    return this.repository.find(
+      { workspace: workspaceId },
+      { 
+        populate: ['user', 'workspace', 'collections'], 
+        orderBy: { updatedAt: 'DESC' },
+        offset: skip,
+        limit: limit
+      },
+    );
+  }
+
+  async countByWorkspace(workspaceId: string): Promise<number> {
+    return this.repository.count({ workspace: workspaceId });
+  }
+
   async update(item: KnowledgeBaseItem): Promise<KnowledgeBaseItem> {
     await this.repository.getEntityManager().persistAndFlush(item);
     return item;

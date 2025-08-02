@@ -4,6 +4,7 @@ import { KnowledgeBaseRepository } from '../../infrastructure/persistence/knowle
 import { CreateKnowledgeBaseItemDto } from '../dto/create-knowledge-base-item.dto';
 import { UpdateKnowledgeBaseItemDto } from '../dto/update-knowledge-base-item.dto';
 import { KnowledgeBaseSearchDto } from '../dto/knowledge-base-search.dto';
+import { PaginationDto, PaginatedResponse } from '../dto/pagination.dto';
 import { User } from '../../../user/domain/entity/user.entity';
 import { WorkspaceRepository } from '../../infrastructure/persistence/workspace.repository';
 import { CollectionRepository } from '../../infrastructure/persistence/collection.repository';
@@ -46,7 +47,28 @@ export class KnowledgeBaseService {
     return this.knowledgeBaseRepository.create(item);
   }
 
-  async findByUserId(userId: string): Promise<KnowledgeBaseItem[]> {
+  async findByUserId(userId: string, paginationDto?: PaginationDto): Promise<PaginatedResponse<KnowledgeBaseItem> | KnowledgeBaseItem[]> {
+    if (paginationDto && (paginationDto.page || paginationDto.pageSize)) {
+      const page = paginationDto.page || 1;
+      const pageSize = Math.min(paginationDto.pageSize || 20, 100); // Cap at 100 items per page
+      const skip = (page - 1) * pageSize;
+      
+      const [items, total] = await Promise.all([
+        this.knowledgeBaseRepository.findByUserIdPaginated(userId, skip, pageSize),
+        this.knowledgeBaseRepository.countByUserId(userId)
+      ]);
+      
+      return {
+        data: items,
+        pagination: {
+          page,
+          pageSize,
+          total,
+          totalPages: Math.ceil(total / pageSize)
+        }
+      };
+    }
+    
     return this.knowledgeBaseRepository.findByUserId(userId);
   }
 
@@ -70,8 +92,31 @@ export class KnowledgeBaseService {
   async findByWorkspace(
     workspaceId: string,
     userId: string,
-  ): Promise<KnowledgeBaseItem[]> {
+    paginationDto?: PaginationDto,
+  ): Promise<PaginatedResponse<KnowledgeBaseItem> | KnowledgeBaseItem[]> {
     await this.validateWorkspaceAccess(workspaceId, userId);
+    
+    if (paginationDto && (paginationDto.page || paginationDto.pageSize)) {
+      const page = paginationDto.page || 1;
+      const pageSize = Math.min(paginationDto.pageSize || 20, 100); // Cap at 100 items per page
+      const skip = (page - 1) * pageSize;
+      
+      const [items, total] = await Promise.all([
+        this.knowledgeBaseRepository.findByWorkspacePaginated(workspaceId, skip, pageSize),
+        this.knowledgeBaseRepository.countByWorkspace(workspaceId)
+      ]);
+      
+      return {
+        data: items,
+        pagination: {
+          page,
+          pageSize,
+          total,
+          totalPages: Math.ceil(total / pageSize)
+        }
+      };
+    }
+    
     return this.knowledgeBaseRepository.findByWorkspace(workspaceId);
   }
 
