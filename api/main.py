@@ -192,6 +192,13 @@ async def root():
         }
     }
 
+@app.on_event("startup")
+async def startup_event():
+    """Initialize Firecracker executor on startup"""
+    if executor.firecracker_executor:
+        await executor.firecracker_executor.initialize()
+        logger.info("Firecracker executor initialized on startup")
+
 @app.on_event("shutdown")
 async def shutdown_event():
     """Cleanup when shutting down"""
