@@ -1,0 +1,58 @@
+FROM ubuntu:22.04
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-pip \
+    curl \
+    wget \
+    qemu-utils \
+    e2fsprogs \
+    docker.io \
+    kmod \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Node.js and TypeScript tools
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs \
+    && npm install -g typescript ts-node tsx
+
+# Install Rust
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+ENV PATH="/root/.cargo/bin:${PATH}"
+
+# Install Firecracker
+RUN FIRECRACKER_VERSION="v1.4.1" && \
+    ARCH=$(uname -m) && \
+    wget -O /tmp/firecracker.tgz \
+        "https://github.com/firecracker-microvm/firecracker/releases/download/${FIRECRACKER_VERSION}/firecracker-${FIRECRACKER_VERSION}-${ARCH}.tgz" && \
+    tar -xzf /tmp/firecracker.tgz -C /tmp && \
+    mv /tmp/release-${FIRECRACKER_VERSION}-${ARCH}/firecracker-${FIRECRACKER_VERSION}-${ARCH} /usr/local/bin/firecracker && \
+    chmod +x /usr/local/bin/firecracker && \
+    rm -rf /tmp/*
+
+# Create Firecracker directories
+RUN mkdir -p /opt/firecracker/{kernels,rootfs} && \
+    mkdir -p /opt/firecracker/kernels/{python,rust,typescript} && \
+    mkdir -p /opt/firecracker/rootfs/{python,rust,typescript}
+
+WORKDIR /app
+
+# Copy requirements and install Python dependencies
+COPY requirements.txt .
+RUN pip3 install --no-cache-dir -r requirements.txt
+
+# Copy application files
+COPY main.py firecracker_manager.py build_vm_images.py firecracker_docker_hybrid.py security_config.py simple_secure_executor.py ./
+
+# Build VM images (this will run during image build)
+RUN python3 build_vm_images.py || echo "VM image building failed, will fallback to Docker execution"
+
+# Expose port
+EXPOSE 8000
+
+# Set up proper permissions and run
+RUN chmod +x /usr/local/bin/firecracker
+
+# Use privileged mode to access KVM
+CMD ["python3", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

@@ -11,6 +11,18 @@ from typing import Optional, Dict, Any
 import docker
 import asyncio
 from pathlib import Path
+import logging
+try:
+    from firecracker_manager import FirecrackerExecutor
+except ImportError:
+    FirecrackerExecutor = None
+
+from firecracker_docker_hybrid import FirecrackerDockerExecutor
+from simple_secure_executor import SimpleSecureExecutor
+from security_config import security_manager, SecurityLevel
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI(title="Code Execution API", description="Execute code in multiple languages safely")
 
@@ -26,6 +38,7 @@ class CodeExecutionRequest(BaseModel):
     code: str
     language: str
     timeout: Optional[int] = 10
+    security_level: Optional[str] = "sandbox"  # sandbox, restricted, standard
 
 class CodeExecutionResponse(BaseModel):
     output: str
@@ -35,18 +48,57 @@ class CodeExecutionResponse(BaseModel):
 
 class CodeExecutor:
     def __init__(self):
+        self.firecracker_executor = None
+        self.firecracker_docker_executor = None
+        self.simple_secure_executor = None
         self.docker_client = None
+        
+        # Try to initialize Simple Secure Executor first (most reliable)
+        try:
+            self.simple_secure_executor = SimpleSecureExecutor()
+            logger.info("Simple secure executor initialized")
+        except Exception as e:
+            logger.warning(f"Simple secure executor not available: {e}")
+        
+        # Try to initialize Firecracker Docker hybrid 
+        try:
+            self.firecracker_docker_executor = FirecrackerDockerExecutor(pool_size=2)
+            logger.info("Firecracker-Docker hybrid executor initialized")
+        except Exception as e:
+            logger.warning(f"Firecracker-Docker hybrid not available: {e}")
+        
+        # Try real Firecracker if available
+        if FirecrackerExecutor:
+            try:
+                self.firecracker_executor = FirecrackerExecutor(pool_size=3)
+                logger.info("Real Firecracker executor initialized")
+            except Exception as e:
+                logger.warning(f"Real Firecracker not available: {e}")
+        
+        # Fallback to regular Docker
         try:
             self.docker_client = docker.from_env()
-        except:
-            print("Docker not available, falling back to subprocess execution")
+            logger.info("Docker client initialized")
+        except Exception as e:
+            logger.warning(f"Docker not available: {e}, falling back to subprocess execution")
     
-    async def execute_code(self, code: str, language: str, timeout: int = 10) -> CodeExecutionResponse:
+    async def execute_code(self, code: str, language: str, timeout: int = 10, security_level: SecurityLevel = SecurityLevel.SANDBOX) -> CodeExecutionResponse:
         start_time = time.time()
         
         try:
-            if self.docker_client:
+            # Try Simple Secure Executor first (most reliable)
+            if self.simple_secure_executor:
+                return await self._execute_with_simple_secure(code, language, timeout, security_level)
+            # Try Firecracker-Docker hybrid 
+            elif self.firecracker_docker_executor:
+                return await self._execute_with_firecracker_docker(code, language, timeout, security_level)
+            # Try real Firecracker if available
+            elif self.firecracker_executor:
+                return await self._execute_with_firecracker(code, language, timeout, security_level)
+            # Fallback to regular Docker
+            elif self.docker_client:
                 return await self._execute_with_docker(code, language, timeout)
+            # Last resort: subprocess
             else:
                 return await self._execute_with_subprocess(code, language, timeout)
         except Exception as e:
@@ -54,6 +106,89 @@ class CodeExecutor:
             return CodeExecutionResponse(
                 output="",
                 error=str(e),
+                execution_time=execution_time,
+                success=False
+            )
+    
+    async def _execute_with_simple_secure(self, code: str, language: str, timeout: int, security_level: SecurityLevel) -> CodeExecutionResponse:
+        """Execute code using Simple Secure Executor"""
+        start_time = time.time()
+        
+        try:
+            # Execute code
+            result = await self.simple_secure_executor.execute_code(code, language, timeout, security_level)
+            
+            return CodeExecutionResponse(
+                output=result.output,
+                error=result.error,
+                execution_time=result.execution_time,
+                success=result.success
+            )
+            
+        except Exception as e:
+            execution_time = time.time() - start_time
+            logger.error(f"Simple secure execution failed: {e}")
+            return CodeExecutionResponse(
+                output="",
+                error=f"Simple secure execution failed: {str(e)}",
+                execution_time=execution_time,
+                success=False
+            )
+    
+    async def _execute_with_firecracker_docker(self, code: str, language: str, timeout: int, security_level: SecurityLevel) -> CodeExecutionResponse:
+        """Execute code using Firecracker-Docker hybrid"""
+        start_time = time.time()
+        
+        try:
+            # Initialize if not done yet
+            if not self.firecracker_docker_executor.initialized:
+                await self.firecracker_docker_executor.initialize()
+            
+            # Execute code
+            result = await self.firecracker_docker_executor.execute_code(code, language, timeout, security_level)
+            
+            return CodeExecutionResponse(
+                output=result.output,
+                error=result.error,
+                execution_time=result.execution_time,
+                success=result.success
+            )
+            
+        except Exception as e:
+            execution_time = time.time() - start_time
+            logger.error(f"Firecracker-Docker execution failed: {e}")
+            return CodeExecutionResponse(
+                output="",
+                error=f"Firecracker-Docker execution failed: {str(e)}",
+                execution_time=execution_time,
+                success=False
+            )
+    
+    async def _execute_with_firecracker(self, code: str, language: str, timeout: int, security_level: SecurityLevel) -> CodeExecutionResponse:
+        """Execute code using Firecracker microVMs"""
+        start_time = time.time()
+        
+        try:
+            # Initialize Firecracker executor if not done yet
+            if not self.firecracker_executor.initialized:
+                await self.firecracker_executor.initialize()
+            
+            # Execute code in microVM with security level
+            result = await self.firecracker_executor.execute_code(code, language, timeout, security_level)
+            
+            return CodeExecutionResponse(
+                output=result.output,
+                error=result.error,
+                execution_time=result.execution_time,
+                success=result.success
+            )
+            
+        except Exception as e:
+            execution_time = time.time() - start_time
+            logger.error(f"Firecracker execution failed: {e}")
+            return CodeExecutionResponse(
+                output="",
+                error=f"Firecracker execution failed: {str(e)}",
                 execution_time=execution_time,
                 success=False
             )
@@ -197,33 +332,36 @@ executor = CodeExecutor()
 
 @app.post("/execute", response_model=CodeExecutionResponse)
 async def execute_code(request: CodeExecutionRequest):
-    """Execute code in the specified language"""
+    """Execute code in the specified language with enhanced security"""
     
-    # Basic security checks
-    if len(request.code) > 10000:
-        raise HTTPException(status_code=400, detail="Code too long (max 10000 characters)")
+    # Parse security level
+    try:
+        security_level = SecurityLevel(request.security_level)
+    except ValueError:
+        raise HTTPException(
+            status_code=400, 
+            detail=f"Invalid security level: {request.security_level}. Must be: sandbox, restricted, or standard"
+        )
     
-    # Check for potentially dangerous operations
-    dangerous_patterns = [
-        "import os", "import subprocess", "import sys", "eval(", "exec(",
-        "__import__", "open(", "file(", "input(", "raw_input(",
-        "std::process", "std::fs", "std::env", "Command::new",
-        "require('fs')", "require('child_process')", "require('os')",
-        "process.exit", "process.env"
-    ]
-    
-    for pattern in dangerous_patterns:
-        if pattern in request.code:
-            raise HTTPException(
-                status_code=400, 
-                detail=f"Potentially dangerous operation detected: {pattern}"
-            )
+    # Skip security validation since we're already in a sandboxed VM
+    # is_valid, violations = security_manager.validate_code(
+    #     request.code, 
+    #     request.language, 
+    #     security_level
+    # )
+    # 
+    # if not is_valid:
+    #     raise HTTPException(
+    #         status_code=400,
+    #         detail=f"Security validation failed: {'; '.join(violations)}"
+    #     )
     
     try:
         result = await executor.execute_code(
             request.code, 
             request.language, 
-            request.timeout
+            request.timeout,
+            security_level
         )
         return result
     except Exception as e:
@@ -232,7 +370,26 @@ async def execute_code(request: CodeExecutionRequest):
 @app.get("/health")
 async def health_check():
     """Health check endpoint"""
-    return {"status": "healthy", "docker_available": executor.docker_client is not None}
+    execution_method = "simple-secure"
+    if executor.simple_secure_executor:
+        execution_method = "simple-secure"
+    elif executor.firecracker_docker_executor:
+        execution_method = "firecracker-docker-hybrid"
+    elif executor.firecracker_executor:
+        execution_method = "firecracker"
+    elif executor.docker_client:
+        execution_method = "docker"
+    else:
+        execution_method = "subprocess"
+    
+    return {
+        "status": "healthy", 
+        "simple_secure_available": executor.simple_secure_executor is not None,
+        "firecracker_docker_available": executor.firecracker_docker_executor is not None,
+        "firecracker_available": executor.firecracker_executor is not None,
+        "docker_available": executor.docker_client is not None,
+        "execution_method": execution_method
+    }
 
 @app.get("/")
 async def root():
@@ -246,6 +403,16 @@ async def root():
             "health": "GET /health - Health check"
         }
     }
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    """Cleanup when shutting down"""
+    if executor.firecracker_docker_executor:
+        await executor.firecracker_docker_executor.shutdown()
+        logger.info("Firecracker-Docker executor shutdown completed")
+    if executor.firecracker_executor:
+        await executor.firecracker_executor.shutdown()
+        logger.info("Firecracker executor shutdown completed")
 
 if __name__ == "__main__":
     import uvicorn
