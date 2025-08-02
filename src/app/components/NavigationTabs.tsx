@@ -203,6 +203,7 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
                       return (
                         <button
                           key={tab.id}
+                          id={`nav-tab-${tab.id}`}
                           onClick={() => handleTabClick(tab.id, tab.route)}
                           onKeyDown={(e) => handleKeyDown(e, tab.id, tab.route)}
                           className={`cursor-pointer px-4 py-4 rounded-lg transition-all duration-200 ${getTabClasses(tab.id, isActive)}`}
@@ -242,6 +243,7 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
               )}
             </div>
             <button
+              id="mobile-nav-toggle"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
               aria-label="Toggle navigation menu"
@@ -288,6 +290,7 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
                       return (
                         <button
                           key={tab.id}
+                          id={`nav-tab-mobile-${tab.id}`}
                           onClick={() => handleTabClick(tab.id, tab.route)}
                           onKeyDown={(e) => handleKeyDown(e, tab.id, tab.route)}
                           className={`w-full flex items-center space-x-3 px-3 py-3 rounded-lg text-left transition-all duration-200 ${

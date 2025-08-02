@@ -164,7 +164,7 @@ export default function Home() {
               transition={{ delay: 0.4 }}
               className="flex flex-col sm:flex-row gap-4 justify-center"
             >
-              <Link href="/patterns">
+              <Link href="/patterns" data-tour="patterns-link">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -174,7 +174,7 @@ export default function Home() {
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </motion.button>
               </Link>
-              <Link href="/learning-hub">
+              <Link href="/learning-hub" data-tour="learning-hub-link">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -246,6 +246,7 @@ export default function Home() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {features.map((feature, index) => {
               const Icon = feature.icon;
+              const tourIds = ['', 'ai-red-teaming', 'inference-optimization', 'code-sandbox'];
               return (
                 <motion.div
                   key={feature.title}
@@ -255,6 +256,7 @@ export default function Home() {
                   transition={{ delay: index * 0.1 }}
                   whileHover={{ y: -5, scale: 1.02 }}
                   className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-xl p-6 hover:bg-gray-800/70 transition-all duration-200"
+                  data-tour={tourIds[index]}
                 >
                   <div className={`${feature.bgColor} w-12 h-12 rounded-lg flex items-center justify-center mb-4`}>
                     <Icon className={`w-6 h-6 ${feature.color}`} />
@@ -318,6 +320,7 @@ export default function Home() {
           </motion.div>
         </div>
       </section>
+
     </div>
   );
 }

@@ -12,6 +12,58 @@ import { useRouter, usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BrainMascot, BrainExpression } from '@/components/BrainMascot';
 
+// Component to show either tour button or tagline based on tour status
+const TourButtonOrTagline = () => {
+  const [hasSeenOnboarding, setHasSeenOnboarding] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const seenTour = localStorage.getItem('hasSeenOnboarding');
+    setHasSeenOnboarding(!!seenTour);
+
+    // Listen for onboarding completion to update state
+    const handleOnboardingComplete = () => {
+      setHasSeenOnboarding(true);
+    };
+
+    window.addEventListener('onboardingCompleted', handleOnboardingComplete);
+    return () => window.removeEventListener('onboardingCompleted', handleOnboardingComplete);
+  }, []);
+
+  const startTour = () => {
+    // Trigger the tour by dispatching a custom event
+    window.dispatchEvent(new CustomEvent('startOnboardingTour'));
+  };
+
+  if (hasSeenOnboarding === null) {
+    // Loading state
+    return (
+      <div className="hidden lg:inline-block w-32 h-4 bg-gray-700/50 rounded animate-pulse"></div>
+    );
+  }
+
+  if (hasSeenOnboarding) {
+    // Show tagline if tour has been taken
+    return (
+      <span className="hidden lg:inline text-xs text-gray-400 font-medium">
+        • Learn how to build reliable and secure AI systems
+      </span>
+    );
+  }
+
+  // Show tour button if tour hasn't been taken
+  return (
+    <motion.button
+      onClick={startTour}
+      className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-purple-500/20 to-blue-500/20 hover:from-purple-500/30 hover:to-blue-500/30 border border-purple-500/30 hover:border-purple-400/50 rounded-full text-xs font-medium text-purple-300 hover:text-purple-200 transition-all duration-200"
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+    >
+      <Sparkles className="w-3 h-3" />
+      Take Tour
+    </motion.button>
+  );
+};
+
 export const Header = () => {
   const { user, loading } = useAuth();
   const { currentStreak } = useLearningHub();
@@ -69,9 +121,7 @@ export const Header = () => {
                   <h1 className="text-lg font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent group-hover:from-purple-400 group-hover:to-blue-400 transition-all duration-300">
                     Agentic Design
                   </h1>
-                  <span className="hidden lg:inline text-xs text-gray-400 font-medium">
-                    • Learn how to build reliable and secure AI systems
-                  </span>
+                  <TourButtonOrTagline />
                 </div>
               </Link>
             </div>
@@ -114,6 +164,7 @@ export const Header = () => {
           <div className="flex items-center space-x-3 flex-shrink-0">
             {/* Learning Hub - Gamified button with animations */}
             <motion.button
+              id="learning-hub-button"
               onClick={() => router.push('/learning-hub')}
               className={`relative flex items-center space-x-2 px-4 py-2 font-medium rounded-lg shadow-lg overflow-hidden ${
                 isLearningHubActive 
@@ -307,6 +358,7 @@ export const Header = () => {
                 <Search className="w-5 h-5" />
               </button>
               <motion.button
+                id="learning-hub-button-mobile"
                 onClick={() => router.push('/learning-hub')}
                 className={`relative flex items-center space-x-1 px-3 py-1.5 font-medium rounded-lg shadow-lg overflow-hidden ${
                   isLearningHubActive 

@@ -854,3 +854,29 @@ Find the prompt that work
 
 si ca dure plus de 30 seconde => 500 error
 we need something to see error / prometheus / grafana et un puis de log => elastic search
+
+
+
+make a reusable components of my own with my own design => design system that I can reuse accross all my project
+
+make a learning framework that we could use to make site on:
+- web security learning
+- rust learning
+
+Workshop / Find mentor / Find expert / Find employé / Faire passer entretien
+
+
+Focus on fondamentals / no framewrok
+
+compagnion to learn and to build
+knowledge base
+
+reusable code snippet rapid testing
+
+AI wizzard
+
+prompt hub => prompt gems
+
+je veux des etincelles magique en background
+
+on s'adresse à des geeks => jeux

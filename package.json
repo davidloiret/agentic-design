@@ -14,7 +14,9 @@
     "tts:generate": "node scripts/generate-tts-audio-unified.js",
     "tts:setup": "echo 'Add OPENAI_API_KEY=your_key_here to your .env file'",
     "search:generate": "node scripts/generate-search-index.js",
-    "search:update": "npm run search:generate"
+    "search:update": "npm run search:generate",
+    "rust:build": "node scripts/build-rust-examples.js",
+    "prebuild": "npm run rust:build"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
@@ -47,6 +49,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "babel-plugin-react-compiler": "^19.1.0-rc.2",
     "eslint": "^9",
     "eslint-config-next": "15.4.2",
     "tailwindcss": "^4",
