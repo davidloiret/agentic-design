@@ -47,6 +47,7 @@ export default function BrainMascotDemo() {
   const [speechBubbleType, setSpeechBubbleType] = useState<SpeechBubbleType>('talk');
   const [isSimulating, setIsSimulating] = useState(false);
   const [currentDialogIndex, setCurrentDialogIndex] = useState(0);
+  const [glasses, setGlasses] = useState(false);
   const simulationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Dialog simulation effect
@@ -126,6 +127,7 @@ export default function BrainMascotDemo() {
                 size={currentSize}
                 color={currentColor}
                 animate={animate}
+                glasses={glasses}
                 onExpressionChange={(newExpression) => setCurrentExpression(newExpression)}
                 onHandGestureChange={(newGesture) => setCurrentHandGesture(newGesture)}
                 onHandDisplayChange={(newDisplay) => setCurrentHandDisplay(newDisplay)}
@@ -334,6 +336,23 @@ export default function BrainMascotDemo() {
               </motion.button>
             </div>
 
+            {/* Glasses Toggle */}
+            <div>
+              <h3 className="text-xl font-semibold mb-4 text-indigo-400">Glasses</h3>
+              <motion.button
+                onClick={() => setGlasses(!glasses)}
+                className={`px-6 py-3 rounded-lg font-medium transition-all border ${
+                  glasses
+                    ? 'bg-indigo-500 text-white border-indigo-400'
+                    : 'bg-gray-800/30 text-gray-300 border-gray-700/50 hover:bg-gray-800/50'
+                }`}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                {glasses ? '🤓 Glasses On' : '😎 Glasses Off'}
+              </motion.button>
+            </div>
+
             {/* Speech Bubble Controls */}
             <div className={`space-y-4 ${isSimulating ? 'opacity-50 pointer-events-none' : ''}`}>
               <h3 className="text-xl font-semibold mb-4 text-pink-400">Speech Bubble</h3>
@@ -466,11 +485,12 @@ export default function BrainMascotDemo() {
 // Basic usage
 <BrainMascot expression="happy" />
 
-// With hand gestures
+// With hand gestures and glasses
 <BrainMascot
   expression="excited"
   handGesture="thumbsUp"
   handDisplay="both"
+  glasses={true}
 />
 
 // Left hand only
@@ -491,6 +511,7 @@ export default function BrainMascotDemo() {
   size="large"
   color="blue"
   animate={true}
+  glasses={true}
   speechText="Amazing work!"
   speechBubblePosition="right"
   speechBubbleColor="blue"
@@ -540,6 +561,7 @@ const randomPositive = getReactionExpression('positive');
               <li>• 28 different expressions with unique animations</li>
               <li>• Independent hand gesture system (8 gestures)</li>
               <li>• Configurable hand display (left, right, both, none)</li>
+              <li>• Optional glasses accessory with glint effects</li>
               <li>• Combine any expression with any hand gesture</li>
               <li>• Reaction system with thumbs up/down and more</li>
               <li>• 5 color themes to match your brand</li>

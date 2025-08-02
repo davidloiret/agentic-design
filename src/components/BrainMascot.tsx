@@ -64,6 +64,7 @@ export interface BrainMascotProps {
   speechBubblePosition?: 'top' | 'bottom' | 'left' | 'right';
   speechBubbleColor?: 'white' | 'purple' | 'blue' | 'green' | 'amber' | 'red';
   speechBubbleType?: SpeechBubbleType;
+  glasses?: boolean;
 }
 
 // Convenience reaction helper types
@@ -429,7 +430,8 @@ export const BrainMascot: React.FC<BrainMascotProps> = ({
   speechText,
   speechBubblePosition = 'right',
   speechBubbleColor = 'white',
-  speechBubbleType = 'talk'
+  speechBubbleType = 'talk',
+  glasses = false
 }) => {
   const [currentExpression, setCurrentExpression] = useState<BrainExpression>(expression);
   const [currentHandGesture, setCurrentHandGesture] = useState<HandGesture>(handGesture);
@@ -2116,6 +2118,85 @@ export const BrainMascot: React.FC<BrainMascotProps> = ({
         <AnimatePresence>
           {renderHands()}
         </AnimatePresence>
+
+        {/* Glasses - Rendered after hands with high z-index to force on top */}
+        {glasses && (
+          <motion.g
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            style={{ 
+              zIndex: 9999,
+              pointerEvents: 'none'
+            }}
+          >
+            {/* Left lens frame */}
+            <circle
+              cx="35"
+              cy="45"
+              r="12"
+              fill="none"
+              stroke="#374151"
+              strokeWidth="2.5"
+              style={{ zIndex: 9999 }}
+            />
+            {/* Right lens frame */}
+            <circle
+              cx="65"
+              cy="45"
+              r="12"
+              fill="none"
+              stroke="#374151"
+              strokeWidth="2.5"
+              style={{ zIndex: 9999 }}
+            />
+            {/* Bridge */}
+            <path
+              d="M 47 45 L 53 45"
+              stroke="#374151"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              style={{ zIndex: 9999 }}
+            />
+            {/* Left temple */}
+            <path
+              d="M 23 45 Q 17 45 17 50"
+              stroke="#374151"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              fill="none"
+              style={{ zIndex: 9999 }}
+            />
+            {/* Right temple */}
+            <path
+              d="M 77 45 Q 83 45 83 50"
+              stroke="#374151"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              fill="none"
+              style={{ zIndex: 9999 }}
+            />
+            {/* Lens glint effect */}
+            <ellipse
+              cx="38"
+              cy="39"
+              rx="2"
+              ry="3"
+              fill="white"
+              opacity="0.7"
+              style={{ zIndex: 9999 }}
+            />
+            <ellipse
+              cx="68"
+              cy="39"
+              rx="2"
+              ry="3"
+              fill="white"
+              opacity="0.7"
+              style={{ zIndex: 9999 }}
+            />
+          </motion.g>
+        )}
         
         </motion.g>
       </svg>
