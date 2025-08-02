@@ -236,8 +236,9 @@ export default function CodeSandbox({ patternId, initialCode, language, onCodeCh
       <div className="h-64 sm:h-80 md:h-96">
         <Editor
           height="100%"
-          language={language}
+          language={language === 'typescript' ? 'typescript' : language}
           value={code}
+          path={language === 'typescript' ? `${patternId}.ts` : language === 'python' ? `${patternId}.py` : `${patternId}.rs`}
           onMount={handleEditorDidMount}
           onChange={handleCodeChange}
           options={{

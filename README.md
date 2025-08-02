@@ -880,3 +880,5 @@ prompt hub => prompt gems
 je veux des etincelles magique en background
 
 on s'adresse à des geeks => jeux
+
+rapport de news
