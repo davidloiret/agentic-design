@@ -437,6 +437,7 @@ export const BrainMascot: React.FC<BrainMascotProps> = ({
   coffeeMug = false,
   hat = false
 }) => {
+  const componentId = useId();
   const [currentExpression, setCurrentExpression] = useState<BrainExpression>(expression);
   const [currentHandGesture, setCurrentHandGesture] = useState<HandGesture>(handGesture);
   const [currentHandDisplay, setCurrentHandDisplay] = useState<HandDisplay>(handDisplay);
@@ -1338,8 +1339,8 @@ export const BrainMascot: React.FC<BrainMascotProps> = ({
 
   return (
     <div 
-      className={`relative inline-block cursor-pointer ${className}`}
-      style={{ width: dimensions.width, height: dimensions.height }}
+      className={`relative inline-block cursor-pointer flex-shrink-0 ${className}`}
+      style={{ width: dimensions.width, height: dimensions.height, minWidth: dimensions.width, minHeight: dimensions.height }}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
       onClick={handleClick}
@@ -1350,11 +1351,12 @@ export const BrainMascot: React.FC<BrainMascotProps> = ({
         viewBox="0 0 100 100"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
+        preserveAspectRatio="xMidYMid meet"
         style={{ overflow: 'visible' }}
       >
         {/* Brain Body with gradient */}
         <defs>
-          <radialGradient id={`brainGradient-${color}`} cx="0.5" cy="0.3" r="0.7">
+          <radialGradient id={`brainGradient-${color}-${componentId}`} cx="0.5" cy="0.3" r="0.7">
             <stop offset="0%" stopColor={colors.accent} />
             <stop offset="50%" stopColor={colors.secondary} />
             <stop offset="100%" stopColor={colors.primary} />
@@ -1581,7 +1583,7 @@ export const BrainMascot: React.FC<BrainMascotProps> = ({
              C 85 55, 80 68, 68 72
              C 60 78, 40 78, 32 72
              C 20 68, 15 55, 20 45 Z"
-          fill={`url(#brainGradient-${color})`}
+          fill={`url(#brainGradient-${color}-${componentId})`}
           stroke={colors.primary}
           strokeWidth="2"
           filter="url(#glow)"
