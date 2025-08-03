@@ -1,6 +1,41 @@
 version: '3.8'
 
 services:
+  # Next.js Frontend
+  frontend:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    container_name: agentic-design-frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - BACKEND_URL=http://backend:3001
+      - NEXT_PUBLIC_FRONTEND_URL=http://frontend:3000
+    env_file:
+      - ../.env
+    depends_on:
+      - backend
+    networks:
+      - agentic-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
   backend:
     build:
       context: .
@@ -91,6 +126,7 @@ services:
       - ./certbot/www:/var/www/certbot:ro
       - ./nginx/logs:/var/log/nginx
     depends_on:
+      - frontend
       - backend
     networks:
       - agentic-network

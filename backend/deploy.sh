@@ -16,9 +16,12 @@ fi
 
 export $(cat .env.prod | grep -v '^#' | xargs)
 
-DOMAIN="${DOMAIN_NAME:-backend.agentic-design.ai}"
-if [ ! -f "./certbot/conf/live/$DOMAIN/fullchain.pem" ]; then
-    echo "❌ Error: SSL certificates not found for $DOMAIN!"
+FRONTEND_DOMAIN="${FRONTEND_DOMAIN:-agentic-design.ai}"
+BACKEND_DOMAIN="${DOMAIN_NAME:-backend.agentic-design.ai}"
+
+# Check SSL certificates for both domains
+if [ ! -f "./certbot/conf/live/$FRONTEND_DOMAIN/fullchain.pem" ]; then
+    echo "❌ Error: SSL certificates not found for $FRONTEND_DOMAIN!"
     echo "🔒 Please run the SSL initialization script first:"
     echo "   chmod +x init-letsencrypt.sh"
     echo "   ./init-letsencrypt.sh"
@@ -27,7 +30,17 @@ if [ ! -f "./certbot/conf/live/$DOMAIN/fullchain.pem" ]; then
     exit 1
 fi
 
-echo "✅ SSL certificates found for $DOMAIN"
+if [ ! -f "./certbot/conf/live/$BACKEND_DOMAIN/fullchain.pem" ]; then
+    echo "❌ Error: SSL certificates not found for $BACKEND_DOMAIN!"
+    echo "🔒 Please run the SSL initialization script first:"
+    echo "   chmod +x init-letsencrypt.sh"
+    echo "   ./init-letsencrypt.sh"
+    echo ""
+    echo "📋 Make sure your domain DNS points to this server before running the SSL script."
+    exit 1
+fi
+
+echo "✅ SSL certificates found for both domains ($FRONTEND_DOMAIN, $BACKEND_DOMAIN)"
 
 echo "🛑 Stopping existing containers..."
 docker compose -f docker-compose.prod.yml --env-file .env.prod down --volumes --remove-orphans

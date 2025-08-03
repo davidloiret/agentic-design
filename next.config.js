@@ -3,6 +3,7 @@ const nextConfig = {
   experimental: {
     reactCompiler: true,
   },
+  output: 'standalone',
   async rewrites() {
     return [
       {
