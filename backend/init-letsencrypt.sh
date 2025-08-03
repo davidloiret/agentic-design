@@ -4,7 +4,8 @@ set -e
 # ─── Configuration ─────────────────────────────────────────────────────────────
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >& /dev/null && pwd)"
 CERTBOT_DIR="$SCRIPT_DIR/certbot"
-DOMAIN="backend.agentic-design.ai"
+FRONTEND_DOMAIN="agentic-design.ai"
+BACKEND_DOMAIN="backend.agentic-design.ai"
 RSA_KEY_SIZE=4096
 DEFAULT_EMAIL="contact@agentic-design.ai"
 EMAIL="${SSL_EMAIL:-$DEFAULT_EMAIL}"
@@ -16,9 +17,13 @@ if [ -f "$SCRIPT_DIR/.env.prod" ]; then
   source <(grep -v '^\s*#' "$SCRIPT_DIR/.env.prod")
   set +o allexport
   EMAIL="${SSL_EMAIL:-$EMAIL}"
+  FRONTEND_DOMAIN="${FRONTEND_DOMAIN:-$FRONTEND_DOMAIN}"
+  BACKEND_DOMAIN="${DOMAIN_NAME:-$BACKEND_DOMAIN}"
 fi
 
-echo "🔒 Initializing Let's Encrypt for $DOMAIN…"
+echo "🔒 Initializing Let's Encrypt for both domains:"
+echo "   Frontend: $FRONTEND_DOMAIN"
+echo "   Backend:  $BACKEND_DOMAIN"
 
 # ─── Prepare directories ────────────────────────────────────────────────────────
 mkdir -p \
@@ -28,37 +33,70 @@ mkdir -p \
   "$CERTBOT_DIR/www"
 
 # ─── Existing‐certificate logic ─────────────────────────────────────────────────
-if [ -d "$CERTBOT_DIR/conf/live/$DOMAIN" ]; then
-  echo "⚠️  Certificates for $DOMAIN already exist!"
-  read -p "Do you want to recreate them? (y/N): " -n 1 -r
+FRONTEND_CERT_EXISTS=false
+BACKEND_CERT_EXISTS=false
+
+if [ -d "$CERTBOT_DIR/conf/live/$FRONTEND_DOMAIN" ]; then
+  FRONTEND_CERT_EXISTS=true
+  echo "⚠️  Certificates for $FRONTEND_DOMAIN already exist!"
+fi
+
+if [ -d "$CERTBOT_DIR/conf/live/$BACKEND_DOMAIN" ]; then
+  BACKEND_CERT_EXISTS=true
+  echo "⚠️  Certificates for $BACKEND_DOMAIN already exist!"
+fi
+
+if [ "$FRONTEND_CERT_EXISTS" = true ] || [ "$BACKEND_CERT_EXISTS" = true ]; then
+  read -p "Do you want to recreate existing certificates? (y/N): " -n 1 -r
   echo
   if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     echo "🚀 Using existing certificates. You can now run ./deploy.sh"
     exit 0
   fi
   echo "🗑️  Removing existing certificates..."
-  sudo rm -rf \
-    "$CERTBOT_DIR/conf/live/$DOMAIN" \
-    "$CERTBOT_DIR/conf/archive/$DOMAIN" \
-    "$CERTBOT_DIR/conf/renewal/$DOMAIN.conf"
+  
+  if [ "$FRONTEND_CERT_EXISTS" = true ]; then
+    sudo rm -rf \
+      "$CERTBOT_DIR/conf/live/$FRONTEND_DOMAIN" \
+      "$CERTBOT_DIR/conf/archive/$FRONTEND_DOMAIN" \
+      "$CERTBOT_DIR/conf/renewal/$FRONTEND_DOMAIN.conf"
+  fi
+  
+  if [ "$BACKEND_CERT_EXISTS" = true ]; then
+    sudo rm -rf \
+      "$CERTBOT_DIR/conf/live/$BACKEND_DOMAIN" \
+      "$CERTBOT_DIR/conf/archive/$BACKEND_DOMAIN" \
+      "$CERTBOT_DIR/conf/renewal/$BACKEND_DOMAIN.conf"
+  fi
 fi
 
 # ─── DNS check ──────────────────────────────────────────────────────────────────
-echo "🔍 Checking DNS configuration for $DOMAIN..."
-DOMAIN_IP=$(dig +short "$DOMAIN")
-if [ -z "$DOMAIN_IP" ]; then
-  echo "❌ Error: Domain $DOMAIN does not resolve to an IP address!"
-  echo "Please configure your DNS to point to this server’s IP address."
+echo "🔍 Checking DNS configuration..."
+
+echo "Checking $FRONTEND_DOMAIN..."
+FRONTEND_IP=$(dig +short "$FRONTEND_DOMAIN")
+if [ -z "$FRONTEND_IP" ]; then
+  echo "❌ Error: Domain $FRONTEND_DOMAIN does not resolve to an IP address!"
+  echo "Please configure your DNS to point to this server's IP address."
   exit 1
 fi
-echo "✅ Domain $DOMAIN resolves to: $DOMAIN_IP"
+echo "✅ Domain $FRONTEND_DOMAIN resolves to: $FRONTEND_IP"
+
+echo "Checking $BACKEND_DOMAIN..."
+BACKEND_IP=$(dig +short "$BACKEND_DOMAIN")
+if [ -z "$BACKEND_IP" ]; then
+  echo "❌ Error: Domain $BACKEND_DOMAIN does not resolve to an IP address!"
+  echo "Please configure your DNS to point to this server's IP address."
+  exit 1
+fi
+echo "✅ Domain $BACKEND_DOMAIN resolves to: $BACKEND_IP"
 
 # ─── Fire up temporary Nginx for HTTP-01 challenge ─────────────────────────────
 echo "🚀 Starting temporary web server for Let's Encrypt challenge..."
 cat > "$CERTBOT_DIR/nginx-temp.conf" <<EOF
 server {
     listen 80;
-    server_name $DOMAIN;
+    server_name $FRONTEND_DOMAIN $BACKEND_DOMAIN;
     location /.well-known/acme-challenge/ {
         root /var/www/certbot;
     }
@@ -77,8 +115,11 @@ docker run -d --name temp-nginx \
 
 sleep 3
 
-# ─── Request the certificate ───────────────────────────────────────────────────
-echo "📜 Requesting SSL certificate from Let's Encrypt..."
+# ─── Request certificates for both domains ─────────────────────────────────────
+echo "📜 Requesting SSL certificates from Let's Encrypt..."
+
+# Request certificate for frontend domain
+echo "Getting certificate for $FRONTEND_DOMAIN..."
 docker run --rm \
   -v "$CERTBOT_DIR/conf:/etc/letsencrypt" \
   -v "$CERTBOT_DIR/lib:/var/lib/letsencrypt" \
@@ -94,8 +135,35 @@ docker run --rm \
     --no-eff-email \
     --non-interactive \
     --rsa-key-size  "$RSA_KEY_SIZE" \
-    -d "$DOMAIN"
-CERTBOT_EXIT=$?
+    -d "$FRONTEND_DOMAIN"
+FRONTEND_CERTBOT_EXIT=$?
+
+# Request certificate for backend domain
+echo "Getting certificate for $BACKEND_DOMAIN..."
+docker run --rm \
+  -v "$CERTBOT_DIR/conf:/etc/letsencrypt" \
+  -v "$CERTBOT_DIR/lib:/var/lib/letsencrypt" \
+  -v "$CERTBOT_DIR/log:/var/log/letsencrypt" \
+  -v "$CERTBOT_DIR/www:/var/www/certbot" \
+  certbot/certbot certonly \
+    --config-dir    /etc/letsencrypt \
+    --work-dir      /var/lib/letsencrypt \
+    --logs-dir      /var/log/letsencrypt \
+    --webroot       -w /var/www/certbot \
+    --email         "$EMAIL" \
+    --agree-tos \
+    --no-eff-email \
+    --non-interactive \
+    --rsa-key-size  "$RSA_KEY_SIZE" \
+    -d "$BACKEND_DOMAIN"
+BACKEND_CERTBOT_EXIT=$?
+
+# Check if both certificates were obtained successfully
+if [ $FRONTEND_CERTBOT_EXIT -ne 0 ] || [ $BACKEND_CERTBOT_EXIT -ne 0 ]; then
+  CERTBOT_EXIT=1
+else
+  CERTBOT_EXIT=0
+fi
 
 # ─── Tear down temporary server ────────────────────────────────────────────────
 echo "🛑 Stopping temporary web server..."
@@ -109,12 +177,23 @@ sudo chown -R "$(id -u):$(id -g)" "$CERTBOT_DIR/conf"
 
 # ─── Final outcome ──────────────────────────────────────────────────────────────
 if [ $CERTBOT_EXIT -ne 0 ]; then
-  echo "❌ Failed to obtain SSL certificate!"
+  echo "❌ Failed to obtain SSL certificates!"
   echo "Please check the logs in $CERTBOT_DIR/log for errors."
+  if [ $FRONTEND_CERTBOT_EXIT -ne 0 ]; then
+    echo "   Frontend domain ($FRONTEND_DOMAIN) failed"
+  fi
+  if [ $BACKEND_CERTBOT_EXIT -ne 0 ]; then
+    echo "   Backend domain ($BACKEND_DOMAIN) failed"
+  fi
   exit 1
 else
-  echo "✅ SSL certificate successfully obtained for $DOMAIN"
-  echo "📅 Certificate expires at: $(openssl x509 -enddate -noout -in "$CERTBOT_DIR/conf/live/$DOMAIN/fullchain.pem")"
+  echo "✅ SSL certificates successfully obtained for both domains!"
+  echo ""
+  echo "📅 Frontend certificate ($FRONTEND_DOMAIN) expires at:"
+  openssl x509 -enddate -noout -in "$CERTBOT_DIR/conf/live/$FRONTEND_DOMAIN/fullchain.pem"
+  echo ""
+  echo "📅 Backend certificate ($BACKEND_DOMAIN) expires at:"
+  openssl x509 -enddate -noout -in "$CERTBOT_DIR/conf/live/$BACKEND_DOMAIN/fullchain.pem"
   echo ""
   echo "🚀 You can now:"
   echo "   1. Ensure your .env.prod is configured"
