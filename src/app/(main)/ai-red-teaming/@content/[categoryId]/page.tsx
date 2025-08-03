@@ -1,4 +1,13 @@
 import { RedTeamingCategoryDetails } from '../../../../components/RedTeamingCategoryDetails';
+import { categories } from '../../../../categories';
+
+export async function generateStaticParams() {
+  return categories
+    .filter(cat => cat.detailedDescription)
+    .map((category) => ({
+      categoryId: category.id,
+    }));
+}
 
 interface CategoryContentPageProps {
   params: Promise<{

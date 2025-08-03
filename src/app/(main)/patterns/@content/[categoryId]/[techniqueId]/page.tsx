@@ -6,6 +6,23 @@ import { generateTechniqueMetadata } from '../../../../../lib/metadata';
 import { redirect } from 'next/navigation';
 import { Metadata } from 'next';
 
+export async function generateStaticParams() {
+  const params: { categoryId: string; techniqueId: string }[] = [];
+  
+  for (const category of categories) {
+    for (const technique of techniques) {
+      if (technique.category === category.id) {
+        params.push({
+          categoryId: category.id,
+          techniqueId: technique.id,
+        });
+      }
+    }
+  }
+  
+  return params;
+}
+
 interface ContentTechniquePageProps {
   params: Promise<{ categoryId: string; techniqueId: string }>;
 }

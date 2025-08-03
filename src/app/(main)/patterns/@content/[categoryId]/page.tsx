@@ -5,6 +5,14 @@ import { generateCategoryMetadata } from '../../../../lib/metadata';
 import { redirect } from 'next/navigation';
 import { Metadata } from 'next';
 
+export async function generateStaticParams() {
+  return categories
+    .filter(cat => cat.detailedDescription)
+    .map((category) => ({
+      categoryId: category.id,
+    }));
+}
+
 interface ContentCategoryPageProps {
   params: Promise<{ categoryId: string }>;
 }
