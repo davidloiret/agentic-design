@@ -21,8 +21,8 @@ if [ -f "$SCRIPT_DIR/.env.prod" ]; then
   BACKEND_DOMAIN="${DOMAIN_NAME:-$BACKEND_DOMAIN}"
 fi
 
-echo "🔒 Initializing Let's Encrypt for both domains:"
-echo "   Frontend: $FRONTEND_DOMAIN"
+echo "🔒 Initializing Let's Encrypt for domains:"
+echo "   Frontend: $FRONTEND_DOMAIN (+ www.$FRONTEND_DOMAIN)"
 echo "   Backend:  $BACKEND_DOMAIN"
 
 # ─── Prepare directories ────────────────────────────────────────────────────────
@@ -82,6 +82,15 @@ if [ -z "$FRONTEND_IP" ]; then
 fi
 echo "✅ Domain $FRONTEND_DOMAIN resolves to: $FRONTEND_IP"
 
+echo "Checking www.$FRONTEND_DOMAIN..."
+WWW_FRONTEND_IP=$(dig +short "www.$FRONTEND_DOMAIN")
+if [ -z "$WWW_FRONTEND_IP" ]; then
+  echo "❌ Error: Domain www.$FRONTEND_DOMAIN does not resolve to an IP address!"
+  echo "Please configure your DNS to point to this server's IP address."
+  exit 1
+fi
+echo "✅ Domain www.$FRONTEND_DOMAIN resolves to: $WWW_FRONTEND_IP"
+
 echo "Checking $BACKEND_DOMAIN..."
 BACKEND_IP=$(dig +short "$BACKEND_DOMAIN")
 if [ -z "$BACKEND_IP" ]; then
@@ -96,7 +105,7 @@ echo "🚀 Starting temporary web server for Let's Encrypt challenge..."
 cat > "$CERTBOT_DIR/nginx-temp.conf" <<EOF
 server {
     listen 80;
-    server_name $FRONTEND_DOMAIN $BACKEND_DOMAIN;
+    server_name $FRONTEND_DOMAIN www.$FRONTEND_DOMAIN $BACKEND_DOMAIN;
     location /.well-known/acme-challenge/ {
         root /var/www/certbot;
     }
@@ -118,8 +127,8 @@ sleep 3
 # ─── Request certificates for both domains ─────────────────────────────────────
 echo "📜 Requesting SSL certificates from Let's Encrypt..."
 
-# Request certificate for frontend domain
-echo "Getting certificate for $FRONTEND_DOMAIN..."
+# Request certificate for frontend domain (including www subdomain)
+echo "Getting certificate for $FRONTEND_DOMAIN and www.$FRONTEND_DOMAIN..."
 docker run --rm \
   -v "$CERTBOT_DIR/conf:/etc/letsencrypt" \
   -v "$CERTBOT_DIR/lib:/var/lib/letsencrypt" \
@@ -135,7 +144,8 @@ docker run --rm \
     --no-eff-email \
     --non-interactive \
     --rsa-key-size  "$RSA_KEY_SIZE" \
-    -d "$FRONTEND_DOMAIN"
+    -d "$FRONTEND_DOMAIN" \
+    -d "www.$FRONTEND_DOMAIN"
 FRONTEND_CERTBOT_EXIT=$?
 
 # Request certificate for backend domain

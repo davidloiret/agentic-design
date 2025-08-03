@@ -72,6 +72,7 @@ docker compose -f docker-compose.prod.yml --env-file .env.prod logs --tail=20
 echo "✅ Deployment completed!"
 echo "🌐 Your application is available at:"
 echo "   🔒 Frontend: https://agentic-design.ai"
+echo "   🔒 Frontend (www): https://www.agentic-design.ai"
 echo "   🔒 Backend API: https://backend.agentic-design.ai"
 echo "   🔥 Firecracker API: http://localhost:8000"
 echo "   📱 All HTTP traffic is automatically redirected to HTTPS"
