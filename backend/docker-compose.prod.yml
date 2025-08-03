@@ -92,7 +92,7 @@ services:
       - SECURITY_LEVEL=sandbox
       - FIRECRACKER_POOL_SIZE=3
       - FIRECRACKER_MAX_VMS=10
-      - FIRECRACKER_VM_TIMEOUT=30
+      - FIRECRACKER_VM_TIMEOUT=120
     networks:
       - agentic-network
     sysctls:

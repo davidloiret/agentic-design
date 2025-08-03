@@ -78,7 +78,7 @@ class FirecrackerDockerVM:
             
             # Install TypeScript if needed
             if self.language == Language.TYPESCRIPT:
-                self.container.exec_run("npm install -g typescript ts-node")
+                self.container.exec_run("npm install -g typescript ts-node tsx")
             
             return True
             
@@ -163,7 +163,7 @@ class FirecrackerDockerVM:
         
         commands = {
             Language.PYTHON: f"python3 {file_path}",
-            Language.TYPESCRIPT: f"npx ts-node {file_path}",
+            Language.TYPESCRIPT: f"npx tsx {file_path}",
         }
         return commands[self.language]
 

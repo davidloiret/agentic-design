@@ -84,7 +84,7 @@ Root endpoint with API information and supported languages.
 ## Supported Languages
 
 - **Python**: Executes with Python 3.11
-- **TypeScript**: Compiled and executed with ts-node
+- **TypeScript**: Compiled and executed with tsx
 - **Rust**: Compiled with rustc and executed
 
 ## Environment Variables

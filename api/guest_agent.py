@@ -53,7 +53,7 @@ class CodeExecutionHandler(BaseHTTPRequestHandler):
             request_data = json.loads(body.decode('utf-8'))
             
             command = request_data.get('command', '')
-            timeout = min(request_data.get('timeout', 10), 30)  # Max 30 seconds
+            timeout = min(request_data.get('timeout', 10), 120)  # Max 120 seconds
             
             if not command:
                 self._send_error(400, "Missing command parameter")

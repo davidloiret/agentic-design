@@ -279,7 +279,7 @@ path = "src/main.rs"
             
             # Install TypeScript globally
             subprocess.run([
-                "chroot", rootfs_dir, "npm", "install", "-g", "typescript", "ts-node"
+                "chroot", rootfs_dir, "npm", "install", "-g", "typescript", "ts-node", "tsx"
             ], check=True)
             
             # Add TypeScript-specific configurations
