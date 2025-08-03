@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import time
+import asyncio
 from typing import Optional
 import logging
 import os
@@ -53,7 +54,7 @@ class CodeExecutor:
         if FirecrackerExecutor:
             try:
                 # Get pool size from environment variable
-                pool_size = int(os.getenv("FIRECRACKER_POOL_SIZE", "1"))  # Reduce pool size for faster startup
+                pool_size = int(os.getenv("FIRECRACKER_POOL_SIZE", "5"))  # Increased pool size for better concurrent handling
                 self.firecracker_executor = FirecrackerExecutor(pool_size=pool_size)
                 logger.info(f"Firecracker executor initialized with pool size: {pool_size}")
             except Exception as e:
@@ -89,33 +90,41 @@ class CodeExecutor:
     
     
     async def _execute_with_firecracker(self, code: str, language: str, timeout: int, security_level: SecurityLevel) -> CodeExecutionResponse:
-        """Execute code using Firecracker microVMs"""
+        """Execute code using Firecracker microVMs with retry logic"""
         start_time = time.time()
+        max_retries = 2  # Allow 1 retry for better reliability
         
-        try:
-            # Initialize Firecracker executor if not done yet
-            if not self.firecracker_executor.initialized:
-                await self.firecracker_executor.initialize()
-            
-            # Execute code in microVM with security level
-            result = await self.firecracker_executor.execute_code(code, language, timeout, security_level)
-            
-            return CodeExecutionResponse(
-                output=result.output,
-                error=result.error,
-                execution_time=result.execution_time,
-                success=result.success
-            )
-            
-        except Exception as e:
-            execution_time = time.time() - start_time
-            logger.error(f"Firecracker execution failed: {e}")
-            return CodeExecutionResponse(
-                output="",
-                error=f"Firecracker execution failed: {str(e)}",
-                execution_time=execution_time,
-                success=False
-            )
+        for attempt in range(max_retries + 1):
+            try:
+                # Initialize Firecracker executor if not done yet
+                if not self.firecracker_executor.initialized:
+                    await self.firecracker_executor.initialize()
+                
+                # Execute code in microVM with security level
+                result = await self.firecracker_executor.execute_code(code, language, timeout, security_level)
+                
+                return CodeExecutionResponse(
+                    output=result.output,
+                    error=result.error,
+                    execution_time=result.execution_time,
+                    success=result.success
+                )
+                
+            except Exception as e:
+                execution_time = time.time() - start_time
+                logger.error(f"Firecracker execution failed (attempt {attempt + 1}/{max_retries + 1}): {e}")
+                
+                # If it's the last attempt, return the error
+                if attempt == max_retries:
+                    return CodeExecutionResponse(
+                        output="",
+                        error=f"Firecracker execution failed after {max_retries + 1} attempts: {str(e)}",
+                        execution_time=execution_time,
+                        success=False
+                    )
+                
+                # Wait a bit before retrying
+                await asyncio.sleep(0.5)
     
     
 
@@ -202,11 +211,21 @@ async def root():
 
 @app.on_event("startup")
 async def startup_event():
-    """Initialize Firecracker executor on startup"""
+    """Initialize Firecracker executor on startup with proper health checks"""
     if executor.firecracker_executor:
         try:
             await executor.firecracker_executor.initialize()
-            logger.info("Firecracker executor initialized on startup")
+            
+            # Verify all VM pools are healthy
+            debug_info = executor.firecracker_executor.vm_pool.get_debug_info()
+            healthy_pools = debug_info['health']['healthy_pools']
+            total_pools = debug_info['health']['total_pools']
+            
+            if healthy_pools == total_pools:
+                logger.info(f"Firecracker executor initialized successfully - {healthy_pools}/{total_pools} pools healthy")
+            else:
+                logger.warning(f"Firecracker executor partially initialized - {healthy_pools}/{total_pools} pools healthy")
+                
         except Exception as e:
             logger.error(f"Failed to initialize Firecracker executor on startup: {e}")
             logger.warning("API will start without fully working Firecracker executor")

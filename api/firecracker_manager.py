@@ -368,50 +368,79 @@ class FirecrackerVM:
         logger.info(f"VM {self.vm_id} started via API")
     
     async def _wait_for_guest_ready(self, timeout: int = 30):
-        """Wait for guest OS to be ready for command execution"""
+        """Wait for guest OS and agent to be ready for command execution"""
         start_time = time.time()
         
         while time.time() - start_time < timeout:
             try:
-                # Try to execute a simple command to check if guest is ready
-                result = await self._execute_in_guest("echo ready", timeout=2)
-                if result and "ready" in result.get("stdout", ""):
-                    logger.info(f"Guest {self.vm_id} is ready")
-                    return
-            except:
-                pass
+                # First check if guest HTTP server is responding
+                guest_url = f"http://{self.guest_ip}:8080/health"
+                client_timeout = aiohttp.ClientTimeout(total=3)
+                
+                async with aiohttp.ClientSession(timeout=client_timeout) as session:
+                    async with session.get(guest_url) as response:
+                        if response.status == 200:
+                            health_data = await response.json()
+                            if health_data.get("status") == "healthy":
+                                # Double-check with command execution
+                                result = await self._execute_in_guest("echo ready", timeout=3)
+                                if result and result.get("success") and "ready" in result.get("stdout", ""):
+                                    logger.info(f"Guest {self.vm_id} is ready (both health check and command execution working)")
+                                    return
+                                    
+            except Exception as e:
+                logger.debug(f"Guest readiness check failed for VM {self.vm_id}: {e}")
             
             await asyncio.sleep(1.0)
         
         raise RuntimeError(f"Guest {self.vm_id} not ready after {timeout}s")
     
     async def _execute_in_guest(self, command: str, timeout: int = 10) -> dict:
-        """Execute command inside the guest VM via guest agent"""
-        # This is a simplified implementation
-        # In production, you'd use a proper guest agent like qemu-guest-agent
-        # or implement a custom agent protocol
+        """Execute command inside the guest VM via guest agent with robust error handling"""
+        max_retries = 3
+        base_timeout = max(5, timeout)  # Ensure minimum timeout for network operations
         
-        try:
-            # For now, we'll use a simple HTTP server running in the guest
-            # In production, replace this with proper guest agent communication
-            
-            guest_url = f"http://{self.guest_ip}:8080/execute"
-            
-            payload = {
-                "command": command,
-                "timeout": timeout
-            }
-            
-            async with aiohttp.ClientSession() as session:
-                async with session.post(guest_url, json=payload, timeout=timeout) as response:
-                    if response.status == 200:
-                        return await response.json()
-                    else:
-                        raise RuntimeError(f"Guest execution failed: {response.status}")
-                        
-        except Exception as e:
-            logger.error(f"Failed to execute in guest {self.vm_id}: {e}")
-            raise
+        for attempt in range(max_retries):
+            try:
+                guest_url = f"http://{self.guest_ip}:8080/execute"
+                
+                payload = {
+                    "command": command,
+                    "timeout": timeout
+                }
+                
+                # Configure timeout with retries - allow extra time for guest communication
+                client_timeout = aiohttp.ClientTimeout(total=base_timeout + 5)
+                
+                async with aiohttp.ClientSession(timeout=client_timeout) as session:
+                    async with session.post(guest_url, json=payload) as response:
+                        if response.status == 200:
+                            return await response.json()
+                        else:
+                            error_text = await response.text()
+                            raise RuntimeError(f"Guest execution failed with status {response.status}: {error_text}")
+                            
+            except (aiohttp.ClientError, asyncio.TimeoutError, OSError) as e:
+                logger.warning(f"Guest communication attempt {attempt + 1}/{max_retries} failed for VM {self.vm_id}: {e}")
+                
+                if attempt == max_retries - 1:  # Last attempt
+                    logger.error(f"All guest communication attempts failed for VM {self.vm_id}")
+                    # Before giving up, try to verify guest is still reachable
+                    try:
+                        await self._verify_guest_agent_health()
+                        logger.info(f"Guest agent is healthy but command execution failed for VM {self.vm_id}")
+                    except:
+                        logger.error(f"Guest agent is unreachable for VM {self.vm_id}, marking VM as unhealthy")
+                        self.vm_ready = False
+                    raise RuntimeError(f"Guest agent communication failed after {max_retries} attempts: {str(e)}")
+                
+                # Wait before retry, with exponential backoff
+                wait_time = 0.5 * (2 ** attempt)
+                await asyncio.sleep(wait_time)
+                
+            except Exception as e:
+                logger.error(f"Unexpected error executing in guest {self.vm_id}: {e}")
+                raise
     
     async def _create_working_rootfs(self):
         """Create a working copy of the base rootfs for this VM instance"""
@@ -864,37 +893,99 @@ class VMPool:
         self.created_at = time.time()
         
     async def initialize(self):
-        """Initialize VM pools for all languages"""
+        """Initialize VM pools for all languages with concurrent creation"""
         logger.info("Initializing Firecracker VM pools...")
         
+        # Create VMs concurrently for better startup performance
+        vm_tasks = []
         for language in Language:
             for i in range(self.pool_size):
-                vm = await self._create_vm(language)
+                task = asyncio.create_task(self._create_vm(language))
+                vm_tasks.append((language, task))
+        
+        # Wait for all VMs to be created
+        for language, task in vm_tasks:
+            try:
+                vm = await task
                 if vm:
                     self.pools[language].append(vm)
+                    logger.debug(f"Successfully created VM {vm.vm_id} for {language.value}")
+                else:
+                    logger.warning(f"Failed to create VM for {language.value}")
+            except Exception as e:
+                logger.error(f"Error creating VM for {language.value}: {e}")
                     
         logger.info(f"VM pools initialized: {self._get_pool_stats()}")
+        
+        # Log any pools that are under capacity
+        for language, vms in self.pools.items():
+            if len(vms) < self.pool_size:
+                logger.warning(f"Pool for {language.value} only has {len(vms)}/{self.pool_size} VMs ready")
     
     async def get_vm(self, language: Language, security_level: SecurityLevel = SecurityLevel.SANDBOX) -> Optional[FirecrackerVM]:
-        """Get an available VM from the pool"""
+        """Get an available VM from the pool with health verification"""
         pool = self.pools[language]
         
-        if pool:
+        # Try to get a healthy VM from the pool
+        while pool:
             vm = pool.pop(0)
-            self.vm_stats['pool_hits'] += 1
-            self.vm_stats['by_language'][language.value]['pool_hits'] += 1
-            self.active_vms[vm.vm_id] = vm
-            # Start replenishing the pool in the background
-            asyncio.create_task(self._replenish_pool(language))
-            return vm
+            
+            # Quick health check to ensure VM is still responsive
+            if await self._verify_vm_health(vm):
+                self.vm_stats['pool_hits'] += 1
+                self.vm_stats['by_language'][language.value]['pool_hits'] += 1
+                self.active_vms[vm.vm_id] = vm
+                # Start replenishing the pool in the background
+                asyncio.create_task(self._replenish_pool(language))
+                return vm
+            else:
+                logger.warning(f"VM {vm.vm_id} failed health check, discarding")
+                await vm.stop()
+                self.vm_stats['total_destroyed'] += 1
+                self.vm_stats['by_language'][language.value]['destroyed'] += 1
         
-        # If no VMs available, create one on demand
+        # If no healthy VMs available, create one on demand
+        logger.info(f"No healthy VMs available for {language.value}, creating on demand")
         self.vm_stats['pool_misses'] += 1
         self.vm_stats['by_language'][language.value]['pool_misses'] += 1
         vm = await self._create_vm(language)
         if vm:
             self.active_vms[vm.vm_id] = vm
         return vm
+    
+    async def _verify_vm_health(self, vm: FirecrackerVM) -> bool:
+        """Quick health check for a VM"""
+        try:
+            if not vm.is_running or not vm.vm_ready:
+                return False
+                
+            # Quick ping to guest agent
+            guest_url = f"http://{vm.guest_ip}:8080/health"
+            client_timeout = aiohttp.ClientTimeout(total=2)
+            
+            async with aiohttp.ClientSession(timeout=client_timeout) as session:
+                async with session.get(guest_url) as response:
+                    if response.status == 200:
+                        health_data = await response.json()
+                        return health_data.get("status") == "healthy"
+            return False
+            
+        except Exception as e:
+            logger.debug(f"VM {vm.vm_id} health check failed: {e}")
+            return False
+    
+    async def _verify_guest_agent_health(self):
+        """Verify that the guest agent is reachable"""
+        guest_url = f"http://{self.guest_ip}:8080/health"
+        client_timeout = aiohttp.ClientTimeout(total=3)
+        
+        async with aiohttp.ClientSession(timeout=client_timeout) as session:
+            async with session.get(guest_url) as response:
+                if response.status == 200:
+                    health_data = await response.json()
+                    if health_data.get("status") == "healthy":
+                        return True
+        raise RuntimeError("Guest agent health check failed")
     
     async def return_vm(self, vm: FirecrackerVM):
         """Return a VM to the pool (or dispose if pool is full)"""
@@ -974,12 +1065,17 @@ class VMPool:
     
     async def _replenish_pool(self, language: Language):
         """Replenish the VM pool in the background"""
-        while len(self.pools[language]) < self.pool_size:
-            vm = await self._create_vm(language)
-            if vm:
-                self.pools[language].append(vm)
-            else:
-                break
+        try:
+            while len(self.pools[language]) < self.pool_size:
+                vm = await self._create_vm(language)
+                if vm:
+                    self.pools[language].append(vm)
+                    logger.debug(f"Replenished pool for {language.value}, now has {len(self.pools[language])} VMs")
+                else:
+                    logger.warning(f"Failed to replenish pool for {language.value}")
+                    break
+        except Exception as e:
+            logger.error(f"Error replenishing pool for {language.value}: {e}")
     
     def _get_pool_stats(self) -> Dict[str, int]:
         """Get current pool statistics"""
