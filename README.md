@@ -975,3 +975,5 @@ news
 - rapport
 
 Focus sur rust / typescript / python
+
+Snippet de code
