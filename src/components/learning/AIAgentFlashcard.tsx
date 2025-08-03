@@ -160,7 +160,10 @@ export const AIAgentFlashcard: React.FC<AIAgentFlashcardProps> = ({
         </button>
 
         <button
-          onClick={handleFlip}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleFlip();
+          }}
           className="px-6 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-medium transition-colors flex items-center gap-2"
         >
           <RotateCcw className="w-4 h-4" />
