@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Analytics } from '@vercel/analytics/next';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { LearningHubProvider } from '@/contexts/LearningHubContext';
 import { SearchProvider } from '@/contexts/SearchContext';
@@ -130,7 +129,6 @@ export default function RootLayout({
             </LearningHubProvider>
           </SearchProvider>
         </AuthProvider>
-        <Analytics />
       </body>
     </html>
   );
