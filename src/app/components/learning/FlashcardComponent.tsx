@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { RotateCcw, Eye, EyeOff, CheckCircle, XCircle, Star, ArrowLeft, ArrowRight, Shuffle } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface Flashcard {
   id: string;
@@ -344,38 +345,52 @@ export const FlashcardComponent: React.FC<FlashcardComponentProps> = ({
       </div>
 
       {/* Flashcard */}
-      <div className="perspective-1000 mb-6">
+      <div className="mb-6">
         <div 
-          className={`relative w-full h-80 cursor-pointer transition-transform duration-500 transform-style-preserve-3d ${
-            isFlipped ? 'rotate-y-180' : ''
-          }`}
+          className="relative w-full h-80 cursor-pointer"
           onClick={handleCardFlip}
         >
-          {/* Front of card */}
-          <div className="absolute inset-0 w-full h-full backface-hidden">
-            <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-8 h-full flex flex-col justify-center items-center text-center">
-              <div className="mb-4">
-                <Eye className="w-8 h-8 text-rose-400 mx-auto" />
-              </div>
-              <h2 className="text-xl font-semibold text-white mb-4">
-                {currentCard.front}
-              </h2>
-              <p className="text-gray-400 text-sm">Click to reveal answer</p>
-            </div>
-          </div>
-
-          {/* Back of card */}
-          <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
-            <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-8 h-full flex flex-col justify-center items-center text-center">
-              <div className="mb-4">
-                <EyeOff className="w-8 h-8 text-green-400 mx-auto" />
-              </div>
-              <div className="text-lg text-white mb-6 max-w-md">
-                {currentCard.back}
-              </div>
-              <p className="text-gray-400 text-sm">Rate your knowledge below</p>
-            </div>
-          </div>
+          <AnimatePresence mode="wait">
+            {!isFlipped ? (
+              <motion.div
+                key="front"
+                initial={{ rotateY: 0, opacity: 1 }}
+                animate={{ rotateY: 0, opacity: 1 }}
+                exit={{ rotateY: 90, opacity: 0 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="absolute inset-0 w-full h-full"
+              >
+                <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-8 h-full flex flex-col justify-center items-center text-center">
+                  <div className="mb-4">
+                    <Eye className="w-8 h-8 text-rose-400 mx-auto" />
+                  </div>
+                  <h2 className="text-xl font-semibold text-white mb-4">
+                    {currentCard.front}
+                  </h2>
+                  <p className="text-gray-400 text-sm">Click to reveal answer</p>
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="back"
+                initial={{ rotateY: -90, opacity: 0 }}
+                animate={{ rotateY: 0, opacity: 1 }}
+                exit={{ rotateY: -90, opacity: 0 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="absolute inset-0 w-full h-full"
+              >
+                <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-8 h-full flex flex-col justify-center items-center text-center">
+                  <div className="mb-4">
+                    <EyeOff className="w-8 h-8 text-green-400 mx-auto" />
+                  </div>
+                  <div className="text-lg text-white mb-6 max-w-md">
+                    {currentCard.back}
+                  </div>
+                  <p className="text-gray-400 text-sm">Rate your knowledge below</p>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 
@@ -423,20 +438,6 @@ export const FlashcardComponent: React.FC<FlashcardComponentProps> = ({
         </button>
       </div>
 
-      <style jsx>{`
-        .perspective-1000 {
-          perspective: 1000px;
-        }
-        .transform-style-preserve-3d {
-          transform-style: preserve-3d;
-        }
-        .backface-hidden {
-          backface-visibility: hidden;
-        }
-        .rotate-y-180 {
-          transform: rotateY(180deg);
-        }
-      `}</style>
     </div>
   );
 }; 
