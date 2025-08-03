@@ -32,7 +32,7 @@ export default function OnboardingFlow({ isVisible, onClose, onComplete }: Onboa
     {
       id: 'welcome',
       target: 'body',
-      title: 'Welcome! Great to have you onboard! 🧠',
+      title: 'Welcome! Great to have you onboard!',
       content: (
         <div className="text-center">
           <div className="flex items-center justify-center mb-4">
@@ -67,7 +67,7 @@ export default function OnboardingFlow({ isVisible, onClose, onComplete }: Onboa
     {
       id: 'patterns',
       target: '#nav-tab-patterns',
-      title: 'The Pattern Library (My Favorite!) 📚',
+      title: 'The Pattern Library (My Favorite!)',
       content: (
         <div>
           <div className="flex items-start gap-3 mb-4">
@@ -99,7 +99,7 @@ export default function OnboardingFlow({ isVisible, onClose, onComplete }: Onboa
     {
       id: 'learning-hub',
       target: '#learning-hub-button',
-      title: 'Learning Hub - Where Fun Meets Genius! 🎮',
+      title: 'Learning Hub - Where Fun Meets Genius!',
       content: (
         <div>
           <div className="flex items-start gap-3 mb-4">
@@ -132,7 +132,7 @@ export default function OnboardingFlow({ isVisible, onClose, onComplete }: Onboa
     {
       id: 'ai-red-teaming',
       target: '#nav-tab-ai-red-teaming',
-      title: 'AI Security & Red Teaming - Time to Get Serious! 🛡️',
+      title: 'AI Security & Red Teaming - Time to Get Serious!',
       content: (
         <div>
           <div className="flex items-start gap-3 mb-4">
@@ -164,7 +164,7 @@ export default function OnboardingFlow({ isVisible, onClose, onComplete }: Onboa
     {
       id: 'evaluation-lab',
       target: '#nav-tab-pattern-evaluation',
-      title: 'Evaluation Laboratory - Mad Scientist Mode! 🧪',
+      title: 'Evaluation Laboratory - Mad Scientist Mode!',
       content: (
         <div>
           <div className="flex items-start gap-3 mb-4">
@@ -196,7 +196,7 @@ export default function OnboardingFlow({ isVisible, onClose, onComplete }: Onboa
     {
       id: 'prompt-hub',
       target: '#nav-tab-prompt-hub',
-      title: 'Prompt Hub - The Secret Vault! 🕵️',
+      title: 'Prompt Hub - The Secret Vault!',
       content: (
         <div>
           <div className="flex items-start gap-3 mb-4">
@@ -228,7 +228,7 @@ export default function OnboardingFlow({ isVisible, onClose, onComplete }: Onboa
     {
       id: 'project-hub',
       target: '#nav-tab-project-hub',
-      title: 'Project Hub - Discover Amazing Libraries! 📚',
+      title: 'Project Hub - Discover Amazing Libraries!',
       content: (
         <div>
           <div className="flex items-start gap-3 mb-4">
@@ -260,7 +260,7 @@ export default function OnboardingFlow({ isVisible, onClose, onComplete }: Onboa
     {
       id: 'news-hub',
       target: '#nav-tab-news-hub',
-      title: 'News Hub - Stay Updated Effortlessly! 📰',
+      title: 'News Hub - Stay Updated Effortlessly!',
       content: (
         <div>
           <div className="flex items-start gap-3 mb-4">
@@ -292,7 +292,7 @@ export default function OnboardingFlow({ isVisible, onClose, onComplete }: Onboa
     {
       id: 'mobile-nav',
       target: '#mobile-nav-toggle',
-      title: 'Mobile Navigation - Always Accessible! 📱',
+      title: 'Mobile Navigation - Always Accessible!',
       content: (
         <div>
           <div className="flex items-start gap-3 mb-4">
@@ -324,7 +324,7 @@ export default function OnboardingFlow({ isVisible, onClose, onComplete }: Onboa
     {
       id: 'cta',
       target: 'body',
-      title: 'Ready to Become an AI Superstar? 🚀',
+      title: 'Ready to Become an AI Superstar?',
       content: (
         <div className="text-center">
           <div className="flex items-center justify-center mb-4">

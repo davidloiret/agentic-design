@@ -892,3 +892,86 @@ jeux pour aider ELyo à comprendre les scenartios => image clique son
 => repete etc
 
 block network access outside from VM to prevent abuse except for openai etc
+
+
+isolation des vm => utilistauer A n'a pas la meme instance
+
+
+-------------
+
+
+Bonne question — la taille dépend surtout **des ressources par microVM** et du **taux de chevauchement** (oversubscription) acceptable. Voici une règle de pouce pour dimensionner rapidement.
+
+## 1) Fixe d’abord ton “profil” de charge par microVM
+
+Choisis les limites **par exécution** (par utilisateur simultané) :
+
+* **Léger** (scripts courts) : **1 vCPU**, **256 MB RAM**, disque éphémère 0,5–1 GB, 1–5 s d’exécution.
+* **Moyen** (tests + un peu de compilation) : **1 vCPU**, **512 MB RAM**, 1–2 GB, 3–15 s.
+* **Lourd** (compilations C/C++/Rust, Java/.NET) : **2 vCPU**, **1 GB RAM** (parfois 2 GB), 4–8 GB, 10–60 s.
+
+## 2) Règles de calcul
+
+* **CPU** (en *threads* logiques) ≈ `Utilisateurs × vCPU_par_VM ÷ facteur_oversub`.
+
+  * Oversub recommandé : **1,0** (lourd), **1,5** (moyen), **2,0** (léger/bref).
+  * Pour convertir en **cœurs physiques**, divise par \~2 si Hyper-Threading/SMT actif.
+* **RAM** ≈ `Utilisateurs × RAM_par_VM × 1,2` (20 % de marge).
+* Ajoute **4–8 GB** de RAM pour l’OS/Firecracker et \~**5–10 %** de marge CPU.
+
+## 3) Exemples concrets (capacité indicative par serveur)
+
+Hypothèse : SMT x2.
+
+| Utilisateurs simultanés | Profil                               | Threads CPU nécessaires | ≈ Cœurs physiques | RAM nécessaire |
+| ----------------------: | ------------------------------------ | ----------------------: | ----------------: | -------------: |
+|                      10 | Léger (1 vCPU / 256 MB, oversub 2,0) |                       5 |                 3 |       \~3,1 GB |
+|                      10 | Moyen (1 vCPU / 512 MB, oversub 1,5) |                       7 |                 4 |         \~6 GB |
+|                      10 | Lourd (2 vCPU / 1 GB, oversub 1,0)   |                      20 |                10 |        \~12 GB |
+|                      50 | Léger                                |                      25 |                13 |        \~15 GB |
+|                      50 | Moyen                                |                      34 |                17 |        \~30 GB |
+|                      50 | Lourd                                |                     100 |                50 |        \~60 GB |
+|                     200 | Léger                                |                     100 |                50 |        \~62 GB |
+|                     200 | Moyen                                |                     134 |                67 |       \~120 GB |
+|                     200 | Lourd                                |                     400 |               200 |       \~240 GB |
+
+### Traduction en “classes” de serveurs (ordre de grandeur)
+
+* **≤ 50 utilisateurs, profil moyen** : **24–32 cœurs physiques**, **64 GB RAM**, **NVMe** (idéalement 2× en RAID1).
+* **≈ 200 utilisateurs, profil léger** : **64 cœurs**, **128 GB RAM**, **NVMe**.
+* **≈ 200 utilisateurs, profil lourd** : vise **≥ 128 cœurs physiques** et **256–384 GB RAM**, ou **plusieurs nœuds** derrière une file de tâches.
+
+## 4) Points d’architecture qui aident beaucoup
+
+* **NVMe** obligatoire (beaucoup d’I/O petites).
+* **Snapshots Firecracker** + **microVM pré-chauffées** par langage pour réduire le cold-start.
+* **cgroups + pinning CPU** pour lisser les perfs; limite mémoire stricte.
+* **File de jobs** (ex. Redis/NATS) + **autoscaling** horizontal si tu dépasses \~70–80 % de charge CPU stable.
+* Bloque l’accès réseau sortant des microVM pour reproductibilité; monte un cache local de dépendances si nécessaire.
+
+---
+
+Si tu me donnes :
+
+* les **langages**,
+* la **durée limite** d’un run,
+* la **RAM/vCPU** que tu souhaites par microVM,
+* le **niveau attendu de simultanéité**,
+
+je te calcule une config précise (ou un plan mono-serveur vs multi-nœuds) adaptée à ton cas.
+
+sauver l'état de la VM utilisateur 
+
+
+issue with sign in maybe because of the middleware
+
+jeton ou piece d'or qui limite le nombre de run etc et rate limit
+
+run code des agents dans mon systeme firecracker et ce systeme en soit ca pourrait etre un produit comme e2b
+
+
+news
+- aggregation
+- rapport
+
+Focus sur rust / typescript / python
