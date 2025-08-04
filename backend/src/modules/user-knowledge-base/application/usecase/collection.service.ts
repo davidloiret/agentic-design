@@ -2,6 +2,7 @@ import { Injectable, NotFoundException, ForbiddenException, BadRequestException 
 import { Collection } from '../../domain/entity/collection.entity';
 import { CollectionRepository } from '../../infrastructure/persistence/collection.repository';
 import { WorkspaceRepository } from '../../infrastructure/persistence/workspace.repository';
+import { KnowledgeBaseRepository } from '../../infrastructure/persistence/knowledge-base.repository';
 import { CreateCollectionDto } from '../dto/create-collection.dto';
 import { UpdateCollectionDto } from '../dto/update-collection.dto';
 import { MoveCollectionDto } from '../dto/move-collection.dto';
@@ -12,6 +13,7 @@ export class CollectionService {
   constructor(
     private readonly collectionRepository: CollectionRepository,
     private readonly workspaceRepository: WorkspaceRepository,
+    private readonly knowledgeBaseRepository: KnowledgeBaseRepository,
   ) {}
 
   async create(
@@ -192,6 +194,13 @@ export class CollectionService {
     const children = await this.collectionRepository.findChildCollections(id);
     if (children.length > 0) {
       throw new BadRequestException('Cannot delete collection with child collections. Please move or delete children first.');
+    }
+
+    // Remove this collection from all knowledge base items
+    const itemsInCollection = await this.knowledgeBaseRepository.findByCollection(id);
+    for (const item of itemsInCollection) {
+      item.collections.remove(collection);
+      await this.knowledgeBaseRepository.update(item);
     }
 
     await this.collectionRepository.delete(id);
