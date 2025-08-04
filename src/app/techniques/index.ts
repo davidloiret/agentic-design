@@ -13,6 +13,15 @@ import { knowledgeRetrievalTechniques } from './knowledge-retrieval';
 import { knowledgeRepresentationTechniques } from './knowledge-representation';
 import { parallelizationTechniques } from './parallelization';
 import { multiAgentTechniques } from './multi-agent';
+import { resourceAwareOptimizationTechniques } from './resource-aware-optimization';
+import { cognitiveArchitecturesTechniques } from './cognitive-architectures';
+import { contextOrchestrationTechniques } from './context-orchestration';
+import { evaluationMonitoringTechniques } from './evaluation-monitoring';
+import { exceptionHandlingRecoveryTechniques } from './exception-handling-recovery';
+import { explorationDiscoveryTechniques } from './exploration-discovery';
+import { goalSettingMonitoringTechniques } from './goal-setting-monitoring';
+import { learningAdaptationTechniques } from './learning-adaptation';
+import { prioritizationTechniques } from './prioritization';
 
 export * from './types';
 
@@ -55,6 +64,15 @@ export const techniques: Technique[] = [
   ...humanAiCollaborationTechniques,
   ...knowledgeRetrievalTechniques,
   ...knowledgeRepresentationTechniques,
+  ...resourceAwareOptimizationTechniques,
+  ...cognitiveArchitecturesTechniques,
+  ...contextOrchestrationTechniques,
+  ...evaluationMonitoringTechniques,
+  ...exceptionHandlingRecoveryTechniques,
+  ...explorationDiscoveryTechniques,
+  ...goalSettingMonitoringTechniques,
+  ...learningAdaptationTechniques,
+  ...prioritizationTechniques,
   ...remainingTechniques,
 ];
 

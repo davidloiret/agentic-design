@@ -985,3 +985,5 @@ on ne refait pas un zoom
 Only user with enough XP can create workshopr
 
 plus green deploy + git action + tags
+
+integrate jitsi for remote workshop

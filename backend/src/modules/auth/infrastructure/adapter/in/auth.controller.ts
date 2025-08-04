@@ -11,7 +11,7 @@ function getCookieOptions() {
     httpOnly: true,
     secure: isProduction,
     sameSite: 'lax' as const,
-    domain: isProduction ? undefined : 'localhost',
+    domain: isProduction ? '.agentic-design.ai' : 'localhost',
     path: '/',
   };
 }
