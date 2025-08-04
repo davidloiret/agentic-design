@@ -89,7 +89,8 @@ export class AuthService {
     }
 
     return {
-      id: user.id,
+      id: user.id, // Supabase ID
+      userId: localUser?.id, // Local database ID for backend operations
       email: user.email,
       firstName: localUser?.firstName || user.user_metadata?.firstName,
       lastName: localUser?.lastName || user.user_metadata?.lastName,

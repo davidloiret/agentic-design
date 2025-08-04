@@ -206,4 +206,96 @@ export class NotificationService {
   async cleanupExpiredNotifications(): Promise<number> {
     return this.notificationRepository.deleteExpired();
   }
+
+  // Workshop-specific notifications
+  async createWorkshopAnnouncementNotification(
+    instructor: User,
+    workshop: any
+  ): Promise<void> {
+    // In a real system, you'd notify followers/subscribers
+    console.log(`[NotificationService] Workshop ${workshop.title} announced by ${instructor.name}`);
+  }
+
+  async createWorkshopUpdateNotification(
+    user: User,
+    workshop: any,
+    message: string
+  ): Promise<Notification> {
+    return this.createNotification(user, {
+      type: NotificationType.SYSTEM,
+      title: 'Workshop Updated',
+      message: `${workshop.title}: ${message}`,
+      icon: '📚',
+      priority: NotificationPriority.MEDIUM,
+      actionUrl: `/workshops/${workshop.id}`,
+      actionText: 'View Workshop',
+    });
+  }
+
+  async createEnrollmentNotification(
+    user: User,
+    workshop: any,
+    message: string
+  ): Promise<Notification> {
+    return this.createNotification(user, {
+      type: NotificationType.SUCCESS,
+      title: 'Workshop Enrollment',
+      message: `${workshop.title}: ${message}`,
+      icon: '🎓',
+      priority: NotificationPriority.HIGH,
+      actionUrl: `/workshops/${workshop.id}`,
+      actionText: 'View Workshop',
+    });
+  }
+
+  async createSessionStartNotification(
+    user: User,
+    session: any
+  ): Promise<Notification> {
+    return this.createNotification(user, {
+      type: NotificationType.INFO,
+      title: 'Session Started',
+      message: `${session.title} is now live!`,
+      icon: '🎥',
+      priority: NotificationPriority.HIGH,
+      actionUrl: `/workshops/${session.workshop.id}/session/${session.id}`,
+      actionText: 'Join Session',
+    });
+  }
+
+  async createActivityStartNotification(
+    user: User,
+    activity: any
+  ): Promise<Notification> {
+    return this.createNotification(user, {
+      type: NotificationType.INFO,
+      title: 'Activity Started',
+      message: `${activity.title} - ${activity.points} points available`,
+      icon: '⚡',
+      priority: NotificationPriority.HIGH,
+      actionUrl: `/workshops/${activity.session.workshop.id}/session/${activity.session.id}`,
+      actionText: 'Participate',
+    });
+  }
+
+  async createWorkshopCompletionNotification(
+    user: User,
+    workshop: any,
+    enrollment: any
+  ): Promise<Notification> {
+    return this.createNotification(user, {
+      type: NotificationType.SUCCESS,
+      title: 'Workshop Completed! 🏆',
+      message: `Congratulations! You've completed ${workshop.title}`,
+      icon: '🎉',
+      priority: NotificationPriority.HIGH,
+      actionUrl: enrollment.certificateUrl,
+      actionText: 'View Certificate',
+      metadata: {
+        workshopId: workshop.id,
+        finalScore: enrollment.overallScore,
+        rank: enrollment.progress.rank,
+      },
+    });
+  }
 }

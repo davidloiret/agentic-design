@@ -27,4 +27,12 @@ export class User extends BaseEntity {
     this.lastName = lastName;
     this.supabaseId = supabaseId;
   }
+
+  get name(): string {
+    return `${this.firstName} ${this.lastName}`;
+  }
+
+  get fullName(): string {
+    return this.name;
+  }
 }

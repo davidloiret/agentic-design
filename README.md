@@ -977,3 +977,11 @@ news
 Focus sur rust / typescript / python
 
 Snippet de code
+
+on ne refait pas un zoom
+-> instructeur va sur zoom partage le lien du workshop agentic-design ou alors il est sur site
+
+
+Only user with enough XP can create workshopr
+
+plus green deploy + git action + tags

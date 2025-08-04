@@ -4,7 +4,8 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { api } from '@/lib/api-client';
 
 interface User {
-  id: string;
+  id: string; // Supabase ID
+  userId?: string; // Local database ID
   email: string;
   firstName?: string;
   lastName?: string;

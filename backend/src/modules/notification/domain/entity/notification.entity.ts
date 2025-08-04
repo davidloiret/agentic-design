@@ -9,6 +9,10 @@ export enum NotificationType {
   COURSE_COMPLETED = 'course_completed',
   XP_GAINED = 'xp_gained',
   SYSTEM = 'system',
+  SUCCESS = 'success',
+  INFO = 'info',
+  WARNING = 'warning',
+  ERROR = 'error',
 }
 
 export enum NotificationPriority {

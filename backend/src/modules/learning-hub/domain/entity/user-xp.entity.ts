@@ -9,6 +9,10 @@ export enum XpSource {
   DAILY_STREAK = 'daily_streak',
   QUIZ_COMPLETION = 'quiz_completion',
   BONUS_ACTIVITY = 'bonus_activity',
+  WORKSHOP_ENROLLMENT = 'workshop_enrollment',
+  WORKSHOP_ATTENDANCE = 'workshop_attendance',
+  WORKSHOP_ACTIVITY = 'workshop_activity',
+  WORKSHOP_COMPLETION = 'workshop_completion',
 }
 
 @Entity({ tableName: 'user_xp' })

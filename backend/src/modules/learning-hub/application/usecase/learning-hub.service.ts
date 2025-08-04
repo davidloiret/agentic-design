@@ -262,7 +262,7 @@ export class LearningHubService {
   }
 
 
-  private async awardXp(
+  async awardXp(
     userId: string,
     amount: number,
     source: XpSource,

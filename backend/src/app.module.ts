@@ -12,6 +12,7 @@ import { PatternGameModule } from './modules/pattern-game/pattern-game.module';
 // import { AiRedTeamingModule } from './modules/ai-red-teaming/ai-red-teaming.module';
 import { UserKnowledgeBaseModule } from './modules/user-knowledge-base/user-knowledge-base.module';
 import { CodeExecutionModule } from './modules/code-execution/code-execution.module';
+import { WorkshopModule } from './modules/workshop/workshop.module';
 import mikroOrmConfig from './mikro-orm.config';
 
 @Module({
@@ -29,6 +30,7 @@ import mikroOrmConfig from './mikro-orm.config';
     // AiRedTeamingModule,
     UserKnowledgeBaseModule,
     CodeExecutionModule,
+    WorkshopModule,
   ],
   controllers: [AppController, HealthController],
 })
