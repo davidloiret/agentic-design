@@ -274,13 +274,8 @@ path = "src/main.rs"
         with tempfile.TemporaryDirectory() as temp_dir:
             rootfs_dir = f"{temp_dir}/rootfs"
             
-            # Create base Alpine rootfs with Node.js
-            self._create_base_rootfs(rootfs_dir, ["nodejs", "npm", "python3", "make", "g++"])
-            
-            # Install TypeScript globally
-            subprocess.run([
-                "chroot", rootfs_dir, "npm", "install", "-g", "typescript", "ts-node", "tsx"
-            ], check=True)
+            # Use Docker container approach for reliable npm package installation
+            self._create_typescript_rootfs_with_docker(rootfs_dir)
             
             # Add TypeScript-specific configurations
             init_script = f"{rootfs_dir}/init"
@@ -288,6 +283,9 @@ path = "src/main.rs"
                 # Write shebang using binary mode to avoid escaping issues
                 f.write(b'#!/bin/sh\n')
                 f.write(b'''# Firecracker VM Init Script
+
+# Set PATH to include Node.js and TypeScript tools
+export PATH="/usr/local/bin:/usr/bin:/bin:/sbin:/usr/sbin"
 
 # Mount essential filesystems (check if already mounted)
 [ ! -d /proc/sys ] && mount -t proc proc /proc 2>/dev/null || true
@@ -345,6 +343,105 @@ done
         
         logger.info("TypeScript rootfs completed")
     
+    def _create_typescript_rootfs_with_docker(self, rootfs_dir):
+        """Create TypeScript rootfs using Docker container to fix npm TLS/DNS issues"""
+        logger.info("Creating TypeScript rootfs with Docker container approach...")
+        
+        container_name = f"typescript_builder_{os.getpid()}"
+        
+        try:
+            # Create a long-lived container with all necessary packages
+            base_packages_str = " ".join(self.base_packages + ["nodejs", "npm", "python3", "make", "g++", "ca-certificates", "git"])
+            
+            subprocess.run([
+                "docker", "create", "--name", container_name,
+                "alpine:latest", "tail", "-f", "/dev/null"
+            ], check=True)
+            
+            # Start the container
+            subprocess.run(["docker", "start", container_name], check=True)
+            
+            # Update CA certificates and install packages with global TypeScript tools
+            logger.info("Installing packages and TypeScript tools in container...")
+            subprocess.run([
+                "docker", "exec", container_name, "sh", "-lc",
+                f"apk update && apk add {base_packages_str} && "
+                "update-ca-certificates && "
+                "npm config set prefix /usr/local && "
+                "npm config set registry https://registry.npmjs.org/ && "
+                "npm install -g typescript ts-node tsx @types/node && "
+                "rm -rf /var/cache/apk/* /root/.npm"
+            ], check=True)
+            
+            # Verify TypeScript installation
+            logger.info("Verifying TypeScript installation...")
+            result = subprocess.run([
+                "docker", "exec", container_name, "sh", "-c",
+                "which tsx && tsx --version && which tsc && tsc --version"
+            ], capture_output=True, text=True)
+            
+            if result.returncode == 0:
+                logger.info(f"TypeScript tools verified: {result.stdout.strip()}")
+            else:
+                logger.warning(f"TypeScript verification failed: {result.stderr}")
+            
+            # Copy the entire filesystem from container to our rootfs
+            logger.info("Copying filesystem from container...")
+            subprocess.run([
+                "docker", "cp", f"{container_name}:/.", rootfs_dir
+            ], check=True)
+            
+        except subprocess.CalledProcessError as e:
+            logger.error(f"Failed to create TypeScript rootfs with Docker: {e}")
+            # Fallback to basic approach without npm packages
+            self._create_base_rootfs(rootfs_dir, ["nodejs", "npm", "python3", "make", "g++"])
+            
+        finally:
+            # Clean up container
+            subprocess.run([
+                "docker", "rm", "-f", container_name
+            ], check=False)
+        
+        # Create necessary directories that might be missing
+        for dir_path in ["/proc", "/sys", "/tmp", "/dev"]:
+            os.makedirs(f"{rootfs_dir}{dir_path}", exist_ok=True)
+        
+        # Create basic device nodes if they don't exist
+        self._ensure_device_nodes(rootfs_dir)
+        
+        # Set up basic configuration
+        with open(f"{rootfs_dir}/etc/hostname", "w") as f:
+            f.write("firecracker-vm\n")
+        
+        with open(f"{rootfs_dir}/etc/hosts", "w") as f:
+            f.write("127.0.0.1 localhost firecracker-vm\n")
+        
+        # Install guest agent
+        self._install_guest_agent(rootfs_dir)
+        
+        logger.info("TypeScript rootfs with Docker container approach completed")
+    
+    def _ensure_device_nodes(self, rootfs_dir):
+        """Ensure basic device nodes exist"""
+        null_device = f"{rootfs_dir}/dev/null"
+        console_device = f"{rootfs_dir}/dev/console"
+        
+        if not os.path.exists(null_device):
+            try:
+                subprocess.run([
+                    "mknod", null_device, "c", "1", "3"
+                ], check=True)
+            except subprocess.CalledProcessError:
+                logger.warning("Failed to create /dev/null device node")
+        
+        if not os.path.exists(console_device):
+            try:
+                subprocess.run([
+                    "mknod", console_device, "c", "5", "1"
+                ], check=True)
+            except subprocess.CalledProcessError:
+                logger.warning("Failed to create /dev/console device node")
+    
     def _create_base_rootfs(self, rootfs_dir: str, additional_packages: list):
         """Create base Alpine Linux rootfs"""
         os.makedirs(rootfs_dir, exist_ok=True)
@@ -383,18 +480,7 @@ done
             os.makedirs(f"{rootfs_dir}{dir_path}", exist_ok=True)
         
         # Create basic device nodes if they don't exist
-        null_device = f"{rootfs_dir}/dev/null"
-        console_device = f"{rootfs_dir}/dev/console"
-        
-        if not os.path.exists(null_device):
-            subprocess.run([
-                "mknod", null_device, "c", "1", "3"
-            ], check=True)
-        
-        if not os.path.exists(console_device):
-            subprocess.run([
-                "mknod", console_device, "c", "5", "1"
-            ], check=True)
+        self._ensure_device_nodes(rootfs_dir)
         
         # Set up basic configuration
         with open(f"{rootfs_dir}/etc/hostname", "w") as f:

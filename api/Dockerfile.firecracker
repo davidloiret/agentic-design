@@ -72,7 +72,7 @@ COPY requirements.txt .
 RUN pip3 install --no-cache-dir -r requirements.txt
 
 # Copy application files
-COPY main.py firecracker_manager.py firecracker_manager_filesystem.py build_vm_images.py firecracker_docker_hybrid.py security_config.py simple_secure_executor.py guest_agent.py guest_agent_filesystem.py ./
+COPY main.py build_vm_images.py security_config.py guest_agent.py firecracker_manager.py ./
 
 # Build VM images (this will run during image build)
 RUN python3 build_vm_images.py || echo "VM image building failed, will fallback to Docker execution"

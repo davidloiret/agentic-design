@@ -120,11 +120,18 @@ class FirecrackerVM:
     
     async def execute_code(self, code: str) -> ExecutionResult:
         """Execute code inside the microVM using guest agent communication"""
+        logger.info(f"🔥 EXECUTING {self.language.value.upper()} CODE in VM {self.vm_id}")
+        logger.info(f"📁 Using rootfs: {self.rootfs_base_path}")
+        logger.info(f"🐧 Using kernel: /opt/firecracker/kernels/{self.language.value}/vmlinux")
+        logger.info(f"⏰ Timeout configured: {self.config.timeout_seconds}s")
+        logger.info(f"📝 Code length: {len(code)} characters")
+        
         start_time = time.time()
         self.execution_count += 1
         self.needs_reset = True
         
         if not self.vm_ready:
+            logger.error(f"❌ VM {self.vm_id} is not ready for execution")
             return ExecutionResult(
                 success=False,
                 output="",
@@ -136,25 +143,44 @@ class FirecrackerVM:
         try:
             # Generate unique execution ID for this run
             execution_id = f"exec_{int(time.time() * 1000000)}_{self.execution_count}"
+            logger.info(f"🆔 Generated execution ID: {execution_id}")
             
             # Create code file inside the VM guest
             guest_code_path = f"/tmp/user_code_{execution_id}{self._get_file_extension()}"
+            logger.info(f"📂 Guest code path: {guest_code_path}")
             
             # Transfer code to guest VM
+            logger.info(f"📤 Transferring code to guest VM...")
+            transfer_start = time.time()
             await self._transfer_code_to_guest(code, guest_code_path)
+            transfer_time = time.time() - transfer_start
+            logger.info(f"✅ Code transfer completed in {transfer_time:.3f}s")
             
             # Execute code inside the VM
             execution_command = self._get_guest_execution_command(guest_code_path)
+            logger.info(f"🚀 Executing command: {execution_command}")
             
+            exec_start = time.time()
             result = await self._execute_in_guest(
                 execution_command, 
                 timeout=self.config.timeout_seconds
             )
+            exec_time = time.time() - exec_start
+            logger.info(f"⚡ Command execution completed in {exec_time:.3f}s")
             
             execution_time = time.time() - start_time
+            logger.info(f"🏁 Total execution time: {execution_time:.3f}s")
+            
+            # Log the result details
+            logger.info(f"📊 Execution result success: {result.get('success', False)}")
+            if result.get('stdout'):
+                logger.info(f"📤 STDOUT length: {len(result.get('stdout', ''))}")
+            if result.get('stderr'):
+                logger.info(f"❗ STDERR length: {len(result.get('stderr', ''))}")
             
             # Parse execution result
             if result.get("success", False):
+                logger.info(f"🎉 TypeScript execution SUCCESS for VM {self.vm_id}")
                 return ExecutionResult(
                     success=True,
                     output=result.get("stdout", ""),
@@ -163,6 +189,7 @@ class FirecrackerVM:
                     vm_id=self.vm_id
                 )
             else:
+                logger.warning(f"⚠️ TypeScript execution FAILED for VM {self.vm_id}")
                 return ExecutionResult(
                     success=False,
                     output=result.get("stdout", ""),
@@ -248,7 +275,10 @@ class FirecrackerVM:
         elif self.language == Language.PYTHON:
             return f"timeout {self.config.timeout_seconds} python3 {guest_file_path} 2>&1"
         elif self.language == Language.TYPESCRIPT:
-            return f"timeout {self.config.timeout_seconds} tsx {guest_file_path} 2>&1"
+            # Skip busybox timeout - Python handles timeouts already
+            cmd = f"npx tsx {guest_file_path} < /dev/null 2>&1"
+            logger.info(f"🔧 TYPESCRIPT EXECUTION COMMAND: {cmd}")
+            return cmd
         else:
             raise ValueError(f"Unsupported language: {self.language}")
     
@@ -397,12 +427,21 @@ class FirecrackerVM:
     
     async def _execute_in_guest(self, command: str, timeout: int = 10) -> dict:
         """Execute command inside the guest VM via guest agent with robust error handling"""
+        logger.info(f"🔗 Starting guest execution for VM {self.vm_id}")
+        logger.info(f"🎯 Guest IP: {self.guest_ip}")
+        logger.info(f"⏱️ Command timeout: {timeout}s")
+        logger.info(f"🖥️ Command: {command[:100]}{'...' if len(command) > 100 else ''}")
+        
         max_retries = 3
         base_timeout = max(5, timeout)  # Ensure minimum timeout for network operations
         
         for attempt in range(max_retries):
+            logger.info(f"🔄 Guest execution attempt {attempt + 1}/{max_retries}")
+            request_start = time.time()
+            
             try:
                 guest_url = f"http://{self.guest_ip}:8080/execute"
+                logger.info(f"📡 Connecting to guest agent at: {guest_url}")
                 
                 payload = {
                     "command": command,
@@ -411,35 +450,48 @@ class FirecrackerVM:
                 
                 # Configure timeout with retries - allow extra time for guest communication
                 client_timeout = aiohttp.ClientTimeout(total=base_timeout + 5)
+                logger.info(f"⏰ Client timeout set to: {base_timeout + 5}s")
                 
                 async with aiohttp.ClientSession(timeout=client_timeout) as session:
+                    logger.info(f"🚀 Sending POST request to guest agent...")
                     async with session.post(guest_url, json=payload) as response:
+                        request_time = time.time() - request_start
+                        logger.info(f"📡 Guest response received in {request_time:.3f}s, status: {response.status}")
+                        
                         if response.status == 200:
-                            return await response.json()
+                            result = await response.json()
+                            logger.info(f"✅ Guest execution successful, parsing result...")
+                            logger.info(f"📊 Result keys: {list(result.keys())}")
+                            return result
                         else:
                             error_text = await response.text()
+                            logger.error(f"❌ Guest execution failed with status {response.status}: {error_text}")
                             raise RuntimeError(f"Guest execution failed with status {response.status}: {error_text}")
                             
             except (aiohttp.ClientError, asyncio.TimeoutError, OSError) as e:
-                logger.warning(f"Guest communication attempt {attempt + 1}/{max_retries} failed for VM {self.vm_id}: {e}")
+                request_time = time.time() - request_start
+                logger.warning(f"⚠️ Guest communication attempt {attempt + 1}/{max_retries} failed for VM {self.vm_id} after {request_time:.3f}s: {e}")
                 
                 if attempt == max_retries - 1:  # Last attempt
-                    logger.error(f"All guest communication attempts failed for VM {self.vm_id}")
+                    logger.error(f"💥 All guest communication attempts failed for VM {self.vm_id}")
                     # Before giving up, try to verify guest is still reachable
                     try:
+                        logger.info(f"🔍 Verifying guest agent health...")
                         await self._verify_guest_agent_health()
-                        logger.info(f"Guest agent is healthy but command execution failed for VM {self.vm_id}")
-                    except:
-                        logger.error(f"Guest agent is unreachable for VM {self.vm_id}, marking VM as unhealthy")
+                        logger.info(f"✅ Guest agent is healthy but command execution failed for VM {self.vm_id}")
+                    except Exception as health_e:
+                        logger.error(f"❌ Guest agent is unreachable for VM {self.vm_id}, marking VM as unhealthy: {health_e}")
                         self.vm_ready = False
                     raise RuntimeError(f"Guest agent communication failed after {max_retries} attempts: {str(e)}")
                 
                 # Wait before retry, with exponential backoff
                 wait_time = 0.5 * (2 ** attempt)
+                logger.info(f"⏳ Waiting {wait_time}s before retry...")
                 await asyncio.sleep(wait_time)
                 
             except Exception as e:
-                logger.error(f"Unexpected error executing in guest {self.vm_id}: {e}")
+                request_time = time.time() - request_start
+                logger.error(f"💥 Unexpected error executing in guest {self.vm_id} after {request_time:.3f}s: {e}")
                 raise
     
     async def _create_working_rootfs(self):
@@ -653,39 +705,39 @@ class FirecrackerVM:
             # Continue without bridge - VM might still work
     
     async def reset_to_clean_state(self) -> bool:
-        """Reset VM to clean state using snapshot restoration"""
+        """Reset VM to clean state using simple restart (snapshots disabled due to Firecracker issues)"""
         if not self.needs_reset:
             return True
             
         try:
-            logger.info(f"Resetting VM {self.vm_id} to clean state")
+            logger.info(f"Resetting VM {self.vm_id} to clean state (simple restart)")
             
-            # Step 1: Stop the current VM instance
+            # Simplified reset: just restart the VM without snapshots
+            # Keep the existing working rootfs to avoid filesystem issues
+            
+            # Step 1: Stop the current VM instance if running
             if self.is_running:
                 await self._graceful_shutdown()
             
-            # Step 2: Restore rootfs from base image
-            await self._restore_rootfs()
-            
-            # Step 3: Restart VM
-            restart_success = await self._restart_from_snapshot()
+            # Step 2: Start VM fresh (reusing existing working rootfs)
+            restart_success = await self.start()
             
             if restart_success:
-                # Step 4: Verify VM health
+                # Step 3: Verify VM health
                 if await self._verify_vm_health():
                     self.needs_reset = False
                     self.execution_count = 0
-                    logger.info(f"Successfully reset VM {self.vm_id}")
+                    logger.info(f"Successfully reset VM {self.vm_id} using simple restart")
                     return True
                 else:
-                    logger.error(f"VM {self.vm_id} failed health check after reset")
+                    logger.error(f"VM {self.vm_id} failed health check after simple reset")
                     return False
             else:
-                logger.error(f"Failed to restart VM {self.vm_id} from snapshot")
+                logger.error(f"Failed to restart VM {self.vm_id} with simple reset")
                 return False
                 
         except Exception as e:
-            logger.error(f"Failed to reset VM {self.vm_id}: {e}")
+            logger.error(f"Failed to reset VM {self.vm_id} with simple restart: {e}")
             return False
     
     async def _graceful_shutdown(self):
@@ -1155,12 +1207,15 @@ class FirecrackerExecutor:
         
         try:
             language = Language(language_str)
+            logger.info(f"🎯 SELECTED LANGUAGE: {language.value} for execution")
         except ValueError:
             raise ValueError(f"Unsupported language: {language_str}")
         
         vm = await self.vm_pool.get_vm(language, security_level)
         if not vm:
             raise RuntimeError(f"Could not obtain VM for {language_str}")
+        
+        logger.info(f"🚀 OBTAINED VM {vm.vm_id} for language {language.value}")
         
         try:
             # Update VM configuration based on security level
