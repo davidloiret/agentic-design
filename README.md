@@ -987,3 +987,5 @@ Only user with enough XP can create workshopr
 plus green deploy + git action + tags
 
 integrate jitsi for remote workshop ou https://livekit.io/
+
+use XP to earn card ? play hearthstone during workshop

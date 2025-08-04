@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { io, Socket } from 'socket.io-client'
+import io from 'socket.io-client'
 import {
   Users, MessageSquare, Trophy, Zap, Target, Brain,
   Video, VideoOff, Mic, MicOff, Monitor, Send,
@@ -79,7 +79,7 @@ const WorkshopExperience: React.FC<{ workshopId: string; sessionId?: string; ses
   sessionCode
 }) => {
   const { user } = useAuth()
-  const [socket, setSocket] = useState<Socket | null>(null)
+  const [socket, setSocket] = useState<ReturnType<typeof io> | null>(null)
   const [session, setSession] = useState<WorkshopSession | null>(null)
   const [participants, setParticipants] = useState<Participant[]>([])
   const [teams, setTeams] = useState<Team[]>([])
@@ -107,17 +107,13 @@ const WorkshopExperience: React.FC<{ workshopId: string; sessionId?: string; ses
   useEffect(() => {
     if (!sessionId || !user) return
 
-    const newSocket = io(`${process.env.NEXT_PUBLIC_API_URL}/workshop`, {
-      auth: {
-        token: user.token
-      }
-    })
+    const newSocket = io(`${process.env.NEXT_PUBLIC_API_URL}/workshop`)
 
     newSocket.on('connect', () => {
       console.log('Connected to workshop')
       newSocket.emit('session:join', {
         sessionId,
-        userName: user.name,
+        userName: `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email,
         role: 'participant'
       })
     })

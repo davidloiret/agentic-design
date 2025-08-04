@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { 
   Users, 
@@ -79,7 +80,7 @@ const WorkshopLivePage: React.FC = () => {
         
         // Mock participants and learning data
         const mockParticipants = [
-          { id: user?.id, name: user ? `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'You' : 'You', isInstructor: false, avatar: user?.avatar, score: 0 },
+          { id: user?.id, name: user ? `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'You' : 'You', isInstructor: false, avatar: undefined, score: 0 },
           { id: 'instructor', name: workshopData?.instructor?.name || 'Instructor', isInstructor: true, avatar: workshopData?.instructor?.avatar, score: 0 },
           { id: 'user1', name: 'Alice Johnson', isInstructor: false, avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b8c0?w=150&h=150&fit=crop&crop=face', score: 150 },
           { id: 'user2', name: 'Bob Smith', isInstructor: false, avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face', score: 120 },
@@ -297,7 +298,7 @@ const WorkshopLivePage: React.FC = () => {
                   const member = participants.find(p => p.id === memberId)
                   return member ? (
                     <div key={memberId} className="flex items-center gap-2 text-white">
-                      <img src={member.avatar || '/default-avatar.png'} alt={member.name} className="w-6 h-6 rounded-full" />
+                      <Image src={member.avatar || '/default-avatar.png'} alt={member.name} width={24} height={24} className="w-6 h-6 rounded-full" />
                       <span>{member.name}{member.id === user?.id ? ' (You)' : ''}</span>
                     </div>
                   ) : null
@@ -667,9 +668,11 @@ const WorkshopLivePage: React.FC = () => {
                   }`}>
                     {index + 1}
                   </div>
-                  <img
+                  <Image
                     src={participant.avatar || '/default-avatar.png'}
                     alt={participant.name}
+                    width={32}
+                    height={32}
                     className="w-8 h-8 rounded-full"
                   />
                   <div className="flex-1">
@@ -693,9 +696,11 @@ const WorkshopLivePage: React.FC = () => {
             <div className="space-y-2">
               {participants.map((participant) => (
                 <div key={participant.id} className="flex items-center gap-3 p-2 rounded-lg bg-white/5">
-                  <img
+                  <Image
                     src={participant.avatar || '/default-avatar.png'}
                     alt={participant.name}
+                    width={32}
+                    height={32}
                     className="w-8 h-8 rounded-full"
                   />
                   <div className="flex-1">

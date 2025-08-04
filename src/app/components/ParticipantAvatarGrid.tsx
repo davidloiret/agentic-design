@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import Image from 'next/image'
 import { Mic, MicOff, Video, VideoOff, Crown, Shield, Star, Zap, Brain, Trophy, Users2 } from 'lucide-react'
 
 interface Participant {
@@ -138,10 +139,11 @@ const ParticipantAvatarGrid: React.FC<ParticipantAvatarGridProps> = ({
               >
                 {/* Avatar or Initials */}
                 {participant.avatarUrl ? (
-                  <img
+                  <Image
                     src={participant.avatarUrl}
                     alt={participant.userName}
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
                   />
                 ) : (
                   <div
@@ -202,9 +204,11 @@ const ParticipantAvatarGrid: React.FC<ParticipantAvatarGridProps> = ({
                     <div className="bg-gray-900 rounded-lg shadow-xl p-3 text-white">
                       <div className="flex items-center gap-2 mb-2">
                         {participant.avatarUrl ? (
-                          <img
+                          <Image
                             src={participant.avatarUrl}
                             alt={participant.userName}
+                            width={32}
+                            height={32}
                             className="w-8 h-8 rounded-full"
                           />
                         ) : (

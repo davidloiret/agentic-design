@@ -1,13 +1,13 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Key, Loader, CheckCircle } from 'lucide-react'
 import SessionCodeModal from '@/app/components/SessionCodeModal'
 import { workshopApi } from '@/lib/workshop-api'
 
-const WorkshopJoinPage: React.FC = () => {
+const WorkshopJoinContent: React.FC = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [loading, setLoading] = useState(false)
@@ -28,7 +28,7 @@ const WorkshopJoinPage: React.FC = () => {
     setError('')
 
     try {
-      const result = await workshopApi.joinSessionByCode(code)
+      const result = await workshopApi.joinByCode(code)
       const workshop = await workshopApi.getWorkshopById(result.workshopId)
       
       setWorkshopData({ workshop, ...result })
@@ -150,6 +150,16 @@ const WorkshopJoinPage: React.FC = () => {
         }}
       />
     </div>
+  )
+}
+
+const WorkshopJoinPage: React.FC = () => {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900 flex items-center justify-center">
+      <div className="text-white">Loading...</div>
+    </div>}>
+      <WorkshopJoinContent />
+    </Suspense>
   )
 }
 

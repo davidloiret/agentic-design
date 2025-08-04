@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import Image from 'next/image'
 import {
   Calendar, Users, Globe, MapPin, Clock, DollarSign,
   Star, Trophy, Zap, Filter, Search, ChevronRight,
@@ -508,9 +509,11 @@ const FeaturedWorkshopBanner: React.FC<{ workshop: Workshop }> = ({ workshop }) 
         </div>
 
         <div className="flex items-center gap-4 mb-8">
-          <img
+          <Image
             src={workshop.instructor?.avatar || '/default-avatar.png'}
             alt={workshop.instructor?.name || 'Instructor'}
+            width={48}
+            height={48}
             className="w-12 h-12 rounded-full"
           />
           <div>
@@ -737,9 +740,11 @@ const WorkshopCard: React.FC<{ workshop: Workshop }> = ({ workshop }) => {
 
           {/* Instructor */}
           <div className="flex items-center gap-3 mb-4">
-            <img
+            <Image
               src={workshop.instructor?.avatar || '/default-avatar.png'}
               alt={workshop.instructor?.name || 'Instructor'}
+              width={40}
+              height={40}
               className="w-10 h-10 rounded-full"
             />
             <div>
