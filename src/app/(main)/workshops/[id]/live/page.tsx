@@ -79,7 +79,7 @@ const WorkshopLivePage: React.FC = () => {
         
         // Mock participants and learning data
         const mockParticipants = [
-          { id: user?.id, name: user?.name || 'You', isInstructor: false, avatar: user?.avatar, score: 0 },
+          { id: user?.id, name: user ? `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'You' : 'You', isInstructor: false, avatar: user?.avatar, score: 0 },
           { id: 'instructor', name: workshopData?.instructor?.name || 'Instructor', isInstructor: true, avatar: workshopData?.instructor?.avatar, score: 0 },
           { id: 'user1', name: 'Alice Johnson', isInstructor: false, avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b8c0?w=150&h=150&fit=crop&crop=face', score: 150 },
           { id: 'user2', name: 'Bob Smith', isInstructor: false, avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face', score: 120 },
