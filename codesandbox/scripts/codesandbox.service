@@ -1,0 +1,28 @@
+[Unit]
+Description=Code Sandbox API Service
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/data/code/agentic-design/codesandbox
+Environment="ROOTFS_PATH=/data/code/agentic-design/codesandbox/rootfs/rootfs.ext4"
+Environment="KERNEL_PATH=/data/code/agentic-design/codesandbox/kernel/vmlinux"
+Environment="API_PORT=8000"
+ExecStartPre=/bin/bash -c 'modprobe kvm_intel || modprobe kvm_amd'
+ExecStart=/data/code/agentic-design/codesandbox/cmd/api/api
+Restart=always
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=codesandbox
+
+# Security settings
+NoNewPrivileges=false
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/tmp /var/run
+
+[Install]
+WantedBy=multi-user.target

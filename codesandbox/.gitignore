@@ -1,0 +1,30 @@
+# Binaries
+/cmd/api/api
+/cmd/agent/agent
+
+# Rootfs and kernel
+/rootfs/
+/kernel/
+
+# Temporary files
+*.tmp
+*.log
+*.sock
+
+# Go build cache
+/vendor/
+go.sum
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test output
+/test-results/
+coverage.out
