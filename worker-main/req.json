@@ -1,6 +1,0 @@
-{
-  "routing_key": "jobs",
-  "properties": {},
-  "payload": "{\"id\":\"666\", \"type\": \"code\", \"code\":\"#include <stdio.h>\\r\\nint main() {\\r\\n   \\/\\/ printf() displays the string inside quotation\\r\\n   printf(\\\"Hello, World!\\\");\\r\\n   return 0;\\r\\n}\"}\r\n",
-  "payload_encoding": "string"
-}
