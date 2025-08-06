@@ -1066,3 +1066,12 @@ echo "PxwUD3uP" | sudo -S ip addr add 172.16.0.1/24 dev fcbridge
 ----
 
 limit number of use 
+
+
+Make K8s
+
+LLM that code in architetcure hexa et aide les utilisateurs
+
+Assistant de review => WTF quand c pas propre et pas archi hexa
+
+refacto agent => make it clean architecture => review => suggérer changement auto
