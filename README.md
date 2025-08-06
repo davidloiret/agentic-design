@@ -1062,3 +1062,7 @@ echo "PxwUD3uP" | sudo -S ip addr add 172.16.0.1/24 dev fcbridge
   - ... up to 172.16.0.254
 
   The /24 subnet mask means the bridge can reach any IP from 172.16.0.1 to 172.16.0.254, covering all possible VM IPs your system might assign.
+
+----
+
+limit number of use 

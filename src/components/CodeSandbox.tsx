@@ -293,7 +293,7 @@ export default function CodeSandbox({ patternId, initialCode, language, onCodeCh
       {/* API status note */}
       <div className="p-4 bg-green-50 border-t border-green-200">
         <p className="text-sm text-green-800">
-          <strong>Server-side execution:</strong> Code is executed securely in isolated containers on the server.
+          <strong>Server-side execution:</strong> Code is executed securely in microVMs on the server.
           Supports Python, TypeScript, and Rust with full language features.
         </p>
       </div>
