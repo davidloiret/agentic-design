@@ -12,31 +12,10 @@ export async function middleware(request: NextRequest) {
   const authRoutes = ['/auth/login', '/auth/register', '/auth/forgot-password', '/auth/reset-password'];
   const publicRoutes = ['/'];
   
-  // Only validate token when accessing auth pages or landing page to avoid slowing down all requests
+  // Redirect authenticated users away from auth pages without token validation
   if (hasAccessToken && (authRoutes.includes(pathname) || publicRoutes.includes(pathname))) {
-    try {
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
-      const response = await fetch(`${backendUrl}/api/v1/auth/me`, {
-        headers: {
-          'Cookie': request.headers.get('cookie') || '',
-        },
-      });
-      
-      if (response.ok) {
-        // Token is valid, redirect to learning hub
-        return NextResponse.redirect(new URL('/learning-hub', request.url));
-      } else {
-        // Token is invalid, clear it and allow access to auth pages
-        const nextResponse = NextResponse.next();
-        nextResponse.cookies.delete('access_token');
-        return nextResponse;
-      }
-    } catch (error) {
-      // If verification fails, clear invalid cookie and allow access to auth pages
-      const nextResponse = NextResponse.next();
-      nextResponse.cookies.delete('access_token');
-      return nextResponse;
-    }
+    // Token exists, redirect to learning hub
+    return NextResponse.redirect(new URL('/learning-hub', request.url));
   }
   
   // Allow all other requests to proceed without validation
