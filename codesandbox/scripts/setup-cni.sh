@@ -1,6 +1,68 @@
 #!/bin/bash
 set -e
 
+# CNI (Container Network Interface) is a standardized framework for configuring network interfaces in Linux containers and VMs.
+
+#   What CNI Does:
+
+#   Plugin Architecture:
+#   - Defines a standard API for network configuration
+#   - Uses JSON configuration files
+#   - Executes plugins as separate binaries
+#   - Chains multiple plugins together for complex networking
+
+#   Key Operations:
+#   - ADD: Create and configure network interface
+#   - DEL: Remove network interface
+#   - CHECK: Verify interface exists
+#   - VERSION: Report plugin capabilities
+
+#   How CNI Works:
+
+#   ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
+#   │   Runtime   │───▶│ CNI Manager │───▶│ CNI Plugins │
+#   │(Firecracker)│    │             │    │   (bridge,  │
+#   └─────────────┘    └─────────────┘    │  host-local)│
+#                                         └─────────────┘
+
+#   Process Flow:
+#   1. Runtime needs network for container/VM
+#   2. Reads CNI config file (/etc/cni/conf.d/)
+#   3. Executes plugin chain in order
+#   4. Each plugin configures one aspect of networking
+#   5. Returns network configuration to runtime
+
+#   Common Plugins:
+
+#   Bridge Plugin:
+#   - Creates bridge interfaces
+#   - Connects containers to bridge
+#   - Handles VLAN configuration
+
+#   IPAM (IP Address Management):
+#   - host-local: Allocates IPs from subnet
+#   - dhcp: Gets IPs from DHCP server
+#   - static: Uses fixed IP addresses
+
+#   Firewall Plugin:
+#   - Sets up iptables rules
+#   - Controls traffic flow
+
+#   In Your Codebase:
+
+#   CNI enables Firecracker VMs to get network configuration automatically:
+#   - VM starts → Firecracker calls CNI
+#   - CNI creates TAP device + assigns IP
+#   - VM gets network connectivity
+#   - When VM stops → CNI cleans up
+
+#   Benefits over manual setup:
+#   - Standardized configuration
+#   - Automatic IP management
+#   - Plugin ecosystem
+#   - Integration with container orchestrators
+
+
 # Setup CNI (Container Network Interface) for Firecracker
 
 if [ "$EUID" -ne 0 ]; then 

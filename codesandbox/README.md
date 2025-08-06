@@ -9,6 +9,7 @@ A secure code execution service using Firecracker microVMs to run untrusted code
 - **Guest Agent**: Lightweight agent inside each VM to handle code execution
 - **API Server**: RESTful API to accept code execution requests
 - **Language Support**: Python 3, TypeScript (Deno), Rust
+- Linux with KVM support (check with `ls /dev/kvm`)
 
 ## Prerequisites
 
@@ -180,3 +181,51 @@ make test
 ## License
 
 This is a demonstration project based on the architecture described in the Firecracker blog post.
+
+
+
+Create systemd 
+Can we dockerize ? does it impact perf ? 
+
+Better to use cni see blogpost
+
+https://stanislas.blog/2021/08/firecracker/
+
+
+
+## Typescript
+curl -X POST http://0.0.0.0:8000/execute -H "Content-Type: application/json" -d '{"code": "console.log(\"Hello TypeScript\")", "language": "typescript", "timeout": 10}'
+
+## Python
+curl -X POST http://0.0.0.0:8000/execute -H "Content-Type: application/json" -d '{"code": "print(\"Hello TypeScript\")", "language": "python", "timeout": 10}' 
+
+## Rust
+curl -X POST http://0.0.0.0:8000/execute -H "Content-Type: application/json" -d '{"code": " println!(\"Hello, world\");", "language": "rust", "timeout": 10}'
+
+
+
+curl -X POST http://0.0.0.0:8000/execute \
+  -H "Content-Type: application/json" \
+  -d '{"code":"fn main(){ println!(\"Hello from Rust!\"); }","language":"rust","timeout":10}'
+
+
+  Le faire en rust, redis and rabbitmq
+
+  shoild network be allowed ? or allow specific ip / url 
+
+  can we remove the sudo
+
+  curl -X POST http://0.0.0.0:8000/execute -H "Content-Type: application/json" -d '{"code": "console.log(\"Hello TypeScript\")", "language": "typescript", "timeout": 10}'
+
+
+  remove direct vm
+
+  sudo ./scripts/setup-host-network.sh bridge-setup fcbridge
+
+
+  See e2b
+
+  save snapshot states
+
+
+  run browser inside with interface feedback on a port

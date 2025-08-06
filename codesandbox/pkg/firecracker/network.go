@@ -198,15 +198,7 @@ func nextFreeTapName(prefix string) (string, error) {
 }
 
 func execCommand(name string, args ...string) error {
-	var cmd *exec.Cmd
-	if name == "sudo" {
-		cmd = exec.Command(name, args...)
-		cmd.Env = append(cmd.Env, "SUDO_ASKPASS=/data/code/agentic-design/codesandbox/askpass.sh")
-		newArgs := append([]string{"-A"}, args...)
-		cmd.Args = append([]string{name}, newArgs...)
-	} else {
-		cmd = exec.Command(name, args...)
-	}
+	cmd := exec.Command(name, args...)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("command '%s %s' failed: %v - output: %s", name, strings.Join(args, " "), err, strings.TrimSpace(string(output)))

@@ -107,7 +107,8 @@ export default function CodeSandbox({ patternId, initialCode, language, onCodeCh
         credentials: 'include', // Include cookies for authentication
         body: JSON.stringify({
           code,
-          language
+          language,
+          timeout: 30
         })
       });
 

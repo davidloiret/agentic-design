@@ -1,7 +1,63 @@
 #!/usr/bin/env bash
 set -euo pipefail
+# Creates the bridge network that VMs use to communicate with the host
+# ✅ Consistency Check Results:
 
-# Default config
+# 1. Bridge Name: Both use "fcbridge" consistently
+# 2. User/Group: Both use "dlo"/"dlo" consistently
+# 3. Current Environment: Running as dlo user (uid=1000) - matches expectations
+
+# ✅ Script Correctness:
+
+# - Proper error handling with set -euo pipefail
+# - Idempotent operations - safely handles existing devices
+# - Retry logic for "Device or resource busy" errors
+# - Comprehensive cleanup on failures
+# - Sudo handling with SUDO_ASKPASS support
+
+# ✅ Feature Completeness:
+
+# The script provides all operations the Go code needs:
+# - bridge-setup - Creates and configures fcbridge
+# - create-tap - Creates named TAP devices
+# - create-tap-unique - Creates TAP with fallback naming
+# - delete-tap - Removes TAP devices
+
+
+# ● A TAP device is a virtual network interface that operates at the data link layer (Layer 2) of the OSI model.
+
+#   Key Characteristics:
+
+#   TAP vs TUN:
+#   - TAP: Handles Ethernet frames (Layer 2) - full network stack
+#   - TUN: Handles IP packets (Layer 3) - IP-only
+
+#   Purpose in Firecracker:
+#   - Creates a virtual network cable between the VM and host
+#   - Each VM gets its own TAP device (fc-tap-0, fc-tap-1, etc.)
+#   - TAP connects to the bridge (fcbridge) for inter-VM communication
+
+#   How it Works:
+
+#   ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
+#   │ Firecracker │───▶│  TAP Device │───▶│   Bridge    │
+#   │     VM      │    │  fc-tap-0   │    │  fcbridge   │
+#   └─────────────┘    └─────────────┘    └─────────────┘
+#                             │                   │
+#                             │                   ▼
+#                      ┌─────────────┐    ┌─────────────┐
+#                      │   Host OS   │    │ Other VMs   │
+#                      │  Network    │    │   + TAPs    │
+#                      └─────────────┘    └─────────────┘
+
+#   In the codebase:
+#   - VM sends network packets → TAP receives them on host
+#   - Host applications can send packets → TAP delivers to VM
+#   - Bridge connects multiple TAPs for VM-to-VM communication
+#   - Enables the API server to communicate with guest agents via HTTP
+
+#   Security: TAP devices are isolated per-VM and controlled by the host, providing network-level isolation while allowing controlled communication.
+
 BRIDGE_DEFAULT="fcbridge"
 USER_DEFAULT="dlo"
 GROUP_DEFAULT="dlo"
@@ -36,7 +92,15 @@ ensure_bridge() {
   # Turn on STP and bring it up
   as_root ip link set "$br" type bridge stp_state 1 || true
   as_root ip link set "$br" up
-  log "Bridge $br is up"
+  
+  # Configure IP address on bridge for host-VM communication
+  # Check if the bridge already has the IP address
+  if ! ip addr show "$br" | grep -q "172.16.0.1/24"; then
+    log "Adding IP 172.16.0.1/24 to bridge $br"
+    as_root ip addr add 172.16.0.1/24 dev "$br" || true
+  fi
+  
+  log "Bridge $br is up with IP 172.16.0.1/24"
 }
 
 tap_exists() {

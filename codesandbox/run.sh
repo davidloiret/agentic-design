@@ -3,6 +3,27 @@ set -e
 
 # Run the codesandbox API server with proper setup
 
+# Signal handling for graceful shutdown
+cleanup() {
+    echo ""
+    echo "🛑 Shutting down API server..."
+    
+    # Kill the API server if it's running
+    if [ ! -z "$api_pid" ]; then
+        kill -TERM "$api_pid" 2>/dev/null || true
+        wait "$api_pid" 2>/dev/null || true
+    fi
+    
+    # Clean up any remaining processes on port 8000
+    ./kill-port-8000.sh >/dev/null 2>&1 || true
+    
+    echo "✅ API server stopped."
+    exit 0
+}
+
+# Set up signal traps
+trap cleanup SIGINT SIGTERM
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "${SCRIPT_DIR}"
 
@@ -90,5 +111,12 @@ echo '  curl -X POST http://localhost:8000/execute \'
 echo '    -H "Content-Type: application/json" \'
 echo '    -d "{\"language\": \"python\", \"code\": \"print('"'"'Hello, World!'"'"')\"}"'
 echo ""
+echo -e "${GREEN}Press Ctrl+C to stop the server${NC}"
+echo ""
 
-exec ./cmd/api/api
+# Start the API server in the background and capture its PID
+./cmd/api/api &
+api_pid=$!
+
+# Wait for the API server
+wait "$api_pid"

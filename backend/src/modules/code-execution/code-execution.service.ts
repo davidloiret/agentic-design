@@ -20,10 +20,11 @@ export class CodeExecutionService {
   private readonly firecrackerApiUrl: string;
 
   constructor(private configService: ConfigService) {
-    this.firecrackerApiUrl = this.configService.get<string>('FIRECRACKER_API_URL') || 'http://firecracker-api:8000';
+    this.firecrackerApiUrl = this.configService.get<string>('FIRECRACKER_API_URL') || 'http://host.docker.internal:8000';
   }
 
   async executeCode(dto: ExecuteCodeDto): Promise<ExecutionResult> {
+    console.log('firecrackerApiUrl', this.firecrackerApiUrl);
     try {
       const response = await fetch(`${this.firecrackerApiUrl}/execute`, {
         method: 'POST',
@@ -37,7 +38,7 @@ export class CodeExecutionService {
         }),
         signal: AbortSignal.timeout(dto.timeout * 1000 + 5000), // Add 5s buffer
       });
-
+      console.log('response', JSON.stringify(response));
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         throw new HttpException(
@@ -49,6 +50,7 @@ export class CodeExecutionService {
       const data = await response.json();
       return data;
     } catch (error) {
+      console.log('error', JSON.stringify(error));
       if (error.name === 'AbortError') {
         throw new HttpException(
           'Code execution timed out',

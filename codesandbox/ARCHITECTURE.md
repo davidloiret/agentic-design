@@ -1,4 +1,4 @@
-# Codesandbox Architecture for Claude Code
+# Codesandbox Architecture
 
 This document explains the architecture, communication patterns, and implementation details of the secure code execution system using Firecracker microVMs.
 

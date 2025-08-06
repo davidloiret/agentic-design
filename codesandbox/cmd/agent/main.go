@@ -52,7 +52,7 @@ var languageConfigs = map[string]LanguageConfig{
 	},
 	"rust": {
 		FileExtension: ".rs",
-		CompileCmd:    []string{"rustc", "-o", "%s", "%s"},
+		CompileCmd:    []string{"rustc", "--edition=2024", "-o", "%s", "%s"},
 		RunCommand:    []string{"%s"},
 		TempDir:       "/tmp/rust",
 	},
