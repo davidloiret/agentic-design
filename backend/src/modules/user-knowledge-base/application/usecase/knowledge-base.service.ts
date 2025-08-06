@@ -200,6 +200,12 @@ export class KnowledgeBaseService {
     }
 
     await this.knowledgeBaseRepository.delete(id);
+    
+    // Verify the item was actually deleted
+    const deletedItem = await this.knowledgeBaseRepository.findById(id);
+    if (deletedItem) {
+      throw new Error('Failed to delete knowledge base item');
+    }
   }
 
   async searchInCollection(

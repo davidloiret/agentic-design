@@ -215,10 +215,14 @@ export class KnowledgeBaseRepository implements KnowledgeBaseRepositoryInterface
   }
 
   async delete(id: string): Promise<void> {
-    const item = await this.repository.findOne({ id });
-    if (item) {
-      await this.repository.getEntityManager().removeAndFlush(item);
-    }
+    const em = this.repository.getEntityManager();
+    
+    await em.transactional(async (trx) => {
+      const item = await trx.findOne(KnowledgeBaseItem, { id });
+      if (item) {
+        await trx.removeAndFlush(item);
+      }
+    });
   }
 
   async searchInCollection(
