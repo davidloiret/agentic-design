@@ -21,6 +21,9 @@ if [ ! -e /dev/kvm ]; then
     exit 1
 fi
 
+# Kill any existing processes on port 8000
+./kill-port-8000.sh
+
 # Ensure scripts are executable
 chmod +x scripts/*.sh *.sh 2>/dev/null
 

@@ -12,7 +12,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/agentic-design/codesandbox/pkg/security"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 )
@@ -65,16 +64,7 @@ func main() {
 	log.SetOutput(os.Stdout)
 	log.SetLevel(log.InfoLevel)
 
-	// Apply security limits
-	limits := security.DefaultLimits()
-	if err := limits.ApplyLimits(); err != nil {
-		log.WithError(err).Error("Failed to apply resource limits")
-	}
-
-	// Set up secure environment
-	if err := security.SetupSecureEnvironment(); err != nil {
-		log.WithError(err).Error("Failed to setup secure environment")
-	}
+	// Security limits are now handled by the VM/container environment
 
 	// Create temp directories
 	for _, config := range languageConfigs {
@@ -187,6 +177,15 @@ func runCode(language, code string, config LanguageConfig, timeout int) (string,
 		var compileOut bytes.Buffer
 		cmd.Stdout = &compileOut
 		cmd.Stderr = &compileOut
+		
+		// Set Rust environment if needed
+		if language == "rust" {
+			cmd.Env = append(os.Environ(),
+				"PATH=/root/.cargo/bin:/root/.rustup/toolchains/stable-x86_64-unknown-linux-musl/bin:"+os.Getenv("PATH"),
+				"RUSTUP_HOME=/root/.rustup",
+				"CARGO_HOME=/root/.cargo",
+			)
+		}
 
 		if err := cmd.Run(); err != nil {
 			return "", fmt.Errorf("compilation failed: %s\n%s", err, compileOut.String())
@@ -206,6 +205,15 @@ func runCode(language, code string, config LanguageConfig, timeout int) (string,
 	defer cancel()
 
 	cmd := exec.CommandContext(ctx, runCmd[0], runCmd[1:]...)
+	
+	// Set Rust environment if needed (also for execution)
+	if language == "rust" {
+		cmd.Env = append(os.Environ(),
+			"PATH=/root/.cargo/bin:/root/.rustup/toolchains/stable-x86_64-unknown-linux-musl/bin:"+os.Getenv("PATH"),
+			"RUSTUP_HOME=/root/.rustup",
+			"CARGO_HOME=/root/.cargo",
+		)
+	}
 	
 	// Set up pipes for stdout and stderr
 	stdout, err := cmd.StdoutPipe()

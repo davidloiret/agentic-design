@@ -78,7 +78,7 @@ func loadConfig() *Config {
 		VMPoolSize:    3,
 		RootfsPath:    getEnvOrDefault("ROOTFS_PATH", "./rootfs/rootfs.ext4"),
 		KernelPath:    getEnvOrDefault("KERNEL_PATH", "./kernel/vmlinux"),
-		MemSizeMib:    256,
+		MemSizeMib:    2048,
 		CPUCount:      1,
 		NetworkPrefix: "172.16.0",
 	}
