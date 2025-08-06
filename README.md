@@ -989,3 +989,76 @@ plus green deploy + git action + tags
 integrate jitsi for remote workshop ou https://livekit.io/
 
 use XP to earn card ? play hearthstone during workshop
+
+
+-----
+
+https://github.com/Sandpack/nodebox-runtime/blob/main/README.md
+
+https://northflank.com/blog/how-to-spin-up-a-secure-code-sandbox-and-microvm-in-seconds-with-northflank-firecracker-gvisor-kata-clh
+
+Codesandbox Every Sandbox is backed by a Firecracker VM, and is completely isolated and persisted. Providing you with a secure environment to run untrusted code. Creating a ...
+
+
+https://stanislas.blog/2021/08/firecracker/
+
+
+## Typescript
+curl -X POST http://0.0.0.0:8000/execute -H "Content-Type: application/json" -d '{"code": "console.log(\"Hello TypeScript\")", "language": "typescript", "timeout": 10}'
+
+## Python
+curl -X POST http://0.0.0.0:8000/execute -H "Content-Type: application/json" -d '{"code": "print(\"Hello TypeScript\")", "language": "python", "timeout": 10}' 
+
+## Rust
+curl -X POST http://0.0.0.0:8000/execute -H "Content-Type: application/json" -d '{"code": " println!(\"Hello, world\");", "language": "rust", "timeout": 10}'
+
+
+
+curl -X POST http://0.0.0.0:8000/execute \
+  -H "Content-Type: application/json" \
+  -d '{"code":"fn main(){ println!(\"Hello from Rust!\"); }","language":"rust","timeout":10}'
+
+sudo ALPINE_VERSION=3.21 ./scripts/build-rootfs.sh
+
+
+make all
+sudo start
+
+sudo -A pkill firecracker
+
+
+Avoir un postgres en local ou un supabase
+
+make a blue green deploiement
+
+
+when chinging conf docker compose => --force-recreate
+
+when I restart I losr my cookie
+
+host internal connection not working
+
+```
+sudo -S ufw allow from 172.16.0.0/12 to any port 8000 comment 'Allow Docker containers to access port 8000'
+```
+
+
+---
+
+ss -tlnp | grep :8000  
+
+sudo lsof -iTCP:8000 -sTCP:LISTEN -n -P
+
+sudo kill 1108934
+
+
+echo "PxwUD3uP" | sudo -S ip addr add 172.16.0.1/24 dev fcbridge
+
+
+● The fix is complete! The bridge now automatically gets configured with IP 172.16.0.1/24, which allows it to communicate with all VMs in the range:
+  - VM 0: 172.16.0.100
+  - VM 1: 172.16.0.101
+  - VM 2: 172.16.0.102
+  - ... up to 172.16.0.254
+
+  The /24 subnet mask means the bridge can reach any IP from 172.16.0.1 to 172.16.0.254, covering all possible VM IPs your system might assign.
