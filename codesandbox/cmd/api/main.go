@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/agentic-design/codesandbox/pkg/firecracker"
@@ -78,8 +79,8 @@ func loadConfig() *Config {
 		VMPoolSize:    3,
 		RootfsPath:    getEnvOrDefault("ROOTFS_PATH", "./rootfs/rootfs.ext4"),
 		KernelPath:    getEnvOrDefault("KERNEL_PATH", "./kernel/vmlinux"),
-		MemSizeMib:    2048,
-		CPUCount:      1,
+		MemSizeMib:    8192,
+		CPUCount:      4,
 		NetworkPrefix: "172.16.0",
 	}
 
@@ -121,6 +122,66 @@ func NewServer(config *Config) (*Server, error) {
 	return server, nil
 }
 
+// runInGuest executes a shell command inside the guest by calling the agent's
+// existing /execute endpoint with a small Python wrapper that shells out.
+func runInGuest(vm *firecracker.VM, argv []string) (string, error) {
+	// Join argv into a single shell command (e.g., "sh -lc '<cmd>'")
+	cmd := strings.Join(argv, " ")
+
+	py := fmt.Sprintf(`
+import subprocess, sys
+p = subprocess.run(%q, shell=True, capture_output=True, text=True)
+# Stream stdout, then stderr; exit with the real return code
+sys.stdout.write(p.stdout)
+sys.stdout.flush()
+sys.stderr.write(p.stderr)
+sys.stderr.flush()
+sys.exit(p.returncode)
+`, cmd)
+
+	req := ExecuteRequest{
+		Language: "python",
+		Code:     py,
+		Timeout:  10, // tweak as needed
+	}
+
+	// Call the agent the same way executeInVM does
+	body, err := json.Marshal(req)
+	if err != nil {
+		return "", fmt.Errorf("marshal request: %w", err)
+	}
+
+	agentURL := fmt.Sprintf("http://%s:8080/execute", vm.IPAddr)
+	httpReq, err := http.NewRequestWithContext(context.Background(), "POST", agentURL, bytes.NewReader(body))
+	if err != nil {
+		return "", fmt.Errorf("create request: %w", err)
+	}
+	httpReq.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{Timeout: 15 * time.Second}
+	resp, err := client.Do(httpReq)
+	if err != nil {
+		return "", fmt.Errorf("agent request failed: %w", err)
+	}
+	defer resp.Body.Close()
+
+	respBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", fmt.Errorf("read response: %w", err)
+	}
+
+	var res ExecuteResponse
+	if err := json.Unmarshal(respBody, &res); err != nil {
+		return "", fmt.Errorf("parse response: %w", err)
+	}
+
+	if !res.Success {
+		// include any partial output to help debugging
+		return "", fmt.Errorf("guest command failed: %s (output: %s)", res.Error, res.Output)
+	}
+	return res.Output, nil
+}
+
 func (s *Server) setupRoutes() {
 	gin.SetMode(gin.ReleaseMode)
 	s.router = gin.New()
@@ -131,6 +192,18 @@ func (s *Server) setupRoutes() {
 	s.router.GET("/health", s.healthCheck)
 	s.router.POST("/execute", s.executeCode)
 	s.router.GET("/languages", s.getSupportedLanguages)
+
+	s.router.GET("/debug/guest", func(c *gin.Context) {
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+
+    vm, err := s.vmManager.GetVM(ctx)
+    if err != nil { c.JSON(503, gin.H{"error": err.Error()}); return }
+
+    out, err := runInGuest(vm, []string{"sh", "-lc", "nproc && grep -m1 MemTotal /proc/meminfo && cat /proc/cmdline"})
+    if err != nil { c.JSON(500, gin.H{"error": err.Error()}); return }
+    c.String(200, out)
+	})
 }
 
 // Start starts the API server
