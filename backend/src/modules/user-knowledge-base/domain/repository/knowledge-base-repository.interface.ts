@@ -1,7 +1,14 @@
 import { KnowledgeBaseItem, KnowledgeBaseItemType } from '../entity/knowledge-base-item.entity';
 
+export interface BulkCreateResult {
+  created: KnowledgeBaseItem[];
+  updated: KnowledgeBaseItem[];
+  errors: { externalId?: string; title: string; error: string }[];
+}
+
 export interface KnowledgeBaseRepositoryInterface {
   create(item: KnowledgeBaseItem): Promise<KnowledgeBaseItem>;
+  bulkCreateOrUpdate(items: KnowledgeBaseItem[], externalIds?: string[]): Promise<BulkCreateResult>;
   findById(id: string): Promise<KnowledgeBaseItem | null>;
   findByCollection(collectionId: string): Promise<KnowledgeBaseItem[]>;
   findByCollectionAndType(collectionId: string, type: KnowledgeBaseItemType): Promise<KnowledgeBaseItem[]>;
@@ -22,6 +29,10 @@ export interface KnowledgeBaseRepositoryInterface {
   findFollowedItemsByWorkspace(workspaceId: string): Promise<KnowledgeBaseItem[]>;
   findItemsNeedingCheck(lastCheckThreshold: Date): Promise<KnowledgeBaseItem[]>;
   findByUserId(userId: string): Promise<KnowledgeBaseItem[]>;
+  findByUserIdPaginated(userId: string, skip: number, limit: number): Promise<KnowledgeBaseItem[]>;
+  countByUserId(userId: string): Promise<number>;
+  findByWorkspacePaginated(workspaceId: string, skip: number, limit: number): Promise<KnowledgeBaseItem[]>;
+  countByWorkspace(workspaceId: string): Promise<number>;
   update(item: KnowledgeBaseItem): Promise<KnowledgeBaseItem>;
   delete(id: string): Promise<void>;
   searchInCollection(collectionId: string, query: string, type?: KnowledgeBaseItemType): Promise<KnowledgeBaseItem[]>;

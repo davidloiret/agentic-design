@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/core';
 import { KnowledgeBaseItem, KnowledgeBaseItemType } from '../../domain/entity/knowledge-base-item.entity';
-import { KnowledgeBaseRepositoryInterface } from '../../domain/repository/knowledge-base-repository.interface';
+import { KnowledgeBaseRepositoryInterface, BulkCreateResult } from '../../domain/repository/knowledge-base-repository.interface';
 
 @Injectable()
 export class KnowledgeBaseRepository implements KnowledgeBaseRepositoryInterface {
@@ -14,6 +14,91 @@ export class KnowledgeBaseRepository implements KnowledgeBaseRepositoryInterface
   async create(item: KnowledgeBaseItem): Promise<KnowledgeBaseItem> {
     await this.repository.getEntityManager().persistAndFlush(item);
     return item;
+  }
+
+  async bulkCreateOrUpdate(items: KnowledgeBaseItem[], externalIds?: string[]): Promise<BulkCreateResult> {
+    const result: BulkCreateResult = {
+      created: [],
+      updated: [],
+      errors: []
+    };
+
+    const em = this.repository.getEntityManager();
+
+    await em.transactional(async (trx) => {
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        const externalId = externalIds?.[i];
+
+        try {
+          // Check if item exists by external ID (for import scenarios) or by title+workspace combination
+          let existingItem: KnowledgeBaseItem | null = null;
+          
+          if (externalId) {
+            // For imports, try to find by external ID first
+            existingItem = await trx.findOne(KnowledgeBaseItem, { id: externalId });
+          }
+          
+          if (!existingItem) {
+            // Check for duplicates by title + workspace + URL combination
+            const duplicateQuery: any = {
+              user: item.user.id,
+              workspace: item.workspace.id,
+              title: item.title
+            };
+
+            // If URL exists, add it to duplicate check
+            if (item.url) {
+              duplicateQuery.url = item.url;
+            }
+
+            existingItem = await trx.findOne(KnowledgeBaseItem, duplicateQuery);
+          }
+
+          if (existingItem) {
+            // Update existing item
+            existingItem.title = item.title;
+            existingItem.updateContent(item.content);
+            existingItem.url = item.url || existingItem.url;
+            existingItem.filePath = item.filePath || existingItem.filePath;
+            existingItem.metadata = { ...existingItem.metadata, ...item.metadata };
+            existingItem.tags = item.tags || existingItem.tags;
+            
+            if (item.isFavorite !== undefined) {
+              item.isFavorite ? existingItem.markAsFavorite() : existingItem.unmarkAsFavorite();
+            }
+            if (item.isRead !== undefined) {
+              item.isRead ? existingItem.markAsRead() : existingItem.markAsUnread();
+            }
+
+            // Update collections
+            if (item.collections && item.collections.count() > 0) {
+              existingItem.collections.set(item.collections.getItems());
+            }
+
+            await trx.persistAndFlush(existingItem);
+            result.updated.push(existingItem);
+          } else {
+            // Create new item
+            // If external ID provided, use it, otherwise let DB generate new ID
+            if (externalId) {
+              (item as any).id = externalId;
+            }
+            
+            await trx.persistAndFlush(item);
+            result.created.push(item);
+          }
+        } catch (error) {
+          result.errors.push({
+            externalId,
+            title: item.title,
+            error: error instanceof Error ? error.message : 'Unknown error'
+          });
+        }
+      }
+    });
+
+    return result;
   }
 
   async findById(id: string): Promise<KnowledgeBaseItem | null> {

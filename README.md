@@ -1075,3 +1075,16 @@ LLM that code in architetcure hexa et aide les utilisateurs
 Assistant de review => WTF quand c pas propre et pas archi hexa
 
 refacto agent => make it clean architecture => review => suggérer changement auto
+
+gestion de la boite via l'app
+
+provide des trucs locaux
+
+handle multiple file sandbox
+construire sa legacy de connaissance 
+
+find connection between articles > suggestions of more to read based on actual
+idee est cde faire gagner du temps
+
+
+add analytcs

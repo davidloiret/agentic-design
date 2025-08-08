@@ -13,6 +13,7 @@ import {
 import { AuthGuard } from '../../../../auth/infrastructure/guard/auth.guard';
 import { KnowledgeBaseService } from '../../../application/usecase/knowledge-base.service';
 import { CreateKnowledgeBaseItemDto } from '../../../application/dto/create-knowledge-base-item.dto';
+import { BulkCreateRequestDto } from '../../../application/dto/bulk-create-knowledge-base-item.dto';
 import { UpdateKnowledgeBaseItemDto } from '../../../application/dto/update-knowledge-base-item.dto';
 import { KnowledgeBaseSearchDto } from '../../../application/dto/knowledge-base-search.dto';
 import { UpdateContentWithDiffDto } from '../../../application/dto/update-content-with-diff.dto';
@@ -28,6 +29,15 @@ export class KnowledgeBaseController {
   @Get()
   async findAll(@Request() req: any, @Query() paginationDto: PaginationDto) {
     return this.knowledgeBaseService.findByUserId(req.user.id, paginationDto);
+  }
+
+  // Bulk operations
+  @Post('bulk')
+  async bulkCreateOrUpdate(
+    @Request() req: any,
+    @Body() bulkCreateDto: BulkCreateRequestDto,
+  ) {
+    return this.knowledgeBaseService.bulkCreateOrUpdate(req.user, bulkCreateDto);
   }
 
   // Workspace-scoped endpoints

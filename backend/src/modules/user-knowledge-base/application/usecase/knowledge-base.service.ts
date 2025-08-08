@@ -2,12 +2,14 @@ import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/commo
 import { KnowledgeBaseItem, KnowledgeBaseItemType } from '../../domain/entity/knowledge-base-item.entity';
 import { KnowledgeBaseRepository } from '../../infrastructure/persistence/knowledge-base.repository';
 import { CreateKnowledgeBaseItemDto } from '../dto/create-knowledge-base-item.dto';
+import { BulkCreateRequestDto, BulkCreateKnowledgeBaseItemDto } from '../dto/bulk-create-knowledge-base-item.dto';
 import { UpdateKnowledgeBaseItemDto } from '../dto/update-knowledge-base-item.dto';
 import { KnowledgeBaseSearchDto } from '../dto/knowledge-base-search.dto';
 import { PaginationDto, PaginatedResponse } from '../dto/pagination.dto';
 import { User } from '../../../user/domain/entity/user.entity';
 import { WorkspaceRepository } from '../../infrastructure/persistence/workspace.repository';
 import { CollectionRepository } from '../../infrastructure/persistence/collection.repository';
+import { BulkCreateResult } from '../../domain/repository/knowledge-base-repository.interface';
 
 @Injectable()
 export class KnowledgeBaseService {
@@ -45,6 +47,97 @@ export class KnowledgeBaseService {
     );
 
     return this.knowledgeBaseRepository.create(item);
+  }
+
+  async bulkCreateOrUpdate(
+    user: User,
+    bulkCreateDto: BulkCreateRequestDto,
+  ): Promise<BulkCreateResult> {
+    const items: KnowledgeBaseItem[] = [];
+    const externalIds: string[] = [];
+    
+    // Group items by workspace for validation efficiency
+    const itemsByWorkspace = new Map<string, BulkCreateKnowledgeBaseItemDto[]>();
+    for (const itemDto of bulkCreateDto.items) {
+      const workspaceItems = itemsByWorkspace.get(itemDto.workspaceId) || [];
+      workspaceItems.push(itemDto);
+      itemsByWorkspace.set(itemDto.workspaceId, workspaceItems);
+    }
+
+    // Pre-validate all workspaces and collections
+    const workspaceMap = new Map();
+    const collectionMap = new Map();
+    
+    for (const [workspaceId, workspaceItems] of itemsByWorkspace.entries()) {
+      // Validate workspace
+      const workspace = await this.workspaceRepository.findById(workspaceId);
+      if (!workspace) {
+        throw new NotFoundException(`Workspace ${workspaceId} not found`);
+      }
+      if (workspace.user.id !== user.id) {
+        throw new ForbiddenException(`Access denied to workspace ${workspaceId}`);
+      }
+      workspaceMap.set(workspaceId, workspace);
+
+      // Collect all unique collection IDs for this workspace
+      const collectionIds = new Set<string>();
+      for (const itemDto of workspaceItems) {
+        if (itemDto.collectionIds) {
+          itemDto.collectionIds.forEach(id => collectionIds.add(id));
+        }
+      }
+
+      // Validate collections for this workspace
+      for (const collectionId of collectionIds) {
+        if (!collectionMap.has(collectionId)) {
+          const collection = await this.collectionRepository.findById(collectionId);
+          if (!collection) {
+            throw new NotFoundException(`Collection ${collectionId} not found`);
+          }
+          if (collection.workspace.id !== workspaceId) {
+            throw new ForbiddenException(`Collection ${collectionId} does not belong to workspace ${workspaceId}`);
+          }
+          collectionMap.set(collectionId, collection);
+        }
+      }
+    }
+
+    // Create KnowledgeBaseItem instances
+    for (const itemDto of bulkCreateDto.items) {
+      const workspace = workspaceMap.get(itemDto.workspaceId);
+      const collections = (itemDto.collectionIds || [])
+        .map(id => collectionMap.get(id))
+        .filter(c => c !== undefined);
+
+      const item = new KnowledgeBaseItem(
+        user,
+        workspace,
+        collections,
+        itemDto.type,
+        itemDto.title,
+        itemDto.content,
+        itemDto.url,
+        itemDto.filePath,
+        itemDto.rawContent,
+        itemDto.markdownContent,
+        itemDto.metadata,
+        itemDto.tags,
+        itemDto.shouldFollow,
+      );
+
+      // Set favorite and read status if provided
+      if (itemDto.isFavorite) {
+        item.markAsFavorite();
+      }
+      if (itemDto.isRead) {
+        item.markAsRead();
+      }
+
+      items.push(item);
+      externalIds.push(itemDto.id || '');
+    }
+
+    return this.knowledgeBaseRepository.bulkCreateOrUpdate(items, externalIds);
   }
 
   async findByUserId(userId: string, paginationDto?: PaginationDto): Promise<PaginatedResponse<KnowledgeBaseItem> | KnowledgeBaseItem[]> {
