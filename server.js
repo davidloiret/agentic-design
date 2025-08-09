@@ -32,7 +32,7 @@ function parseCookies(cookieHeader) {
 
 const dev = process.env.NODE_ENV !== 'production';
 const hostname = 'localhost';
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3002;
 const backendUrl = process.env.BACKEND_URL || 'http://localhost:3001';
 
 // Create Next.js app
