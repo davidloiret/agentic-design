@@ -168,7 +168,7 @@ export const TechniqueDetails = ({
               }`}
             >
               <Play className="w-4 h-4 inline mr-2" />
-              Interactive Demo
+              Interactive Demo1
             </button>
             <button
               onClick={() => handleTabChange('code')}

@@ -51,7 +51,7 @@ interface Workshop {
 
 
 class WorkshopAPI {
-  private baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api/v1';
+  private baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002/api/v1';
 
   private async fetchWithAuth(url: string, options: RequestInit = {}) {
     const response = await fetch(`${this.baseUrl}${url}`, {

@@ -54,7 +54,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(null);
       }
     } catch (error) {
-      console.error('[AuthContext] Error refreshing user:', error);
       setUser(null);
     } finally {
       setLoading(false);
@@ -80,12 +79,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signInWithGoogle = () => {
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001';
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+    console.log('[AuthContext] Signing in with Google...', backendUrl);
     window.location.href = `${backendUrl}/api/v1/auth/google`;
   };
 
   const signInWithGitHub = () => {
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001';
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
     window.location.href = `${backendUrl}/api/v1/auth/github`;
   };
 

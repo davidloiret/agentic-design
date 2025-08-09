@@ -37,15 +37,15 @@ The backend should start on `http://localhost:3001`
 npm run dev
 ```
 
-The frontend should start on `http://localhost:3000`
+The frontend should start on `http://localhost:3002`
 
 ### Step 3: Test Session Code Join
 
 #### Method 1: Direct URL Test
-Navigate to: `http://localhost:3000/workshops/join`
+Navigate to: `http://localhost:3002/workshops/join`
 
 #### Method 2: With Pre-filled Code
-Navigate to: `http://localhost:3000/workshops/join?code=WORKSHOP-2024-ABCD`
+Navigate to: `http://localhost:3002/workshops/join?code=WORKSHOP-2024-ABCD`
 
 ### Step 4: Use Test Session Codes
 

@@ -3,6 +3,9 @@ FROM node:20-alpine AS builder
 # Install curl for health checks
 RUN apk add --no-cache curl
 
+# Increase Node.js memory limit to prevent segfault
+ENV NODE_OPTIONS="--max-old-space-size=2048"
+
 WORKDIR /app
 
 # Copy package files
@@ -14,7 +17,7 @@ RUN npm ci
 # Copy source code
 COPY . .
 
-# Build the application
+# Build the application with increased memory
 RUN npm run build
 
 # Production stage

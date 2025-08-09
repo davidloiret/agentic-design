@@ -190,7 +190,7 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
         <div className="mx-auto px-4 sm:px-6">
           {/* Desktop Tabs */}
           <div className="hidden lg:flex items-center justify-between">
-            <div className="flex items-center">
+            <div className="flex items-center" role="tablist" aria-label="Main navigation">
               {tabGroups.map((group, groupIndex) => (
                 <div key={group.name} className="flex items-center">
                   {groupIndex > 0 && (
@@ -277,7 +277,7 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
               </button>
             </div>
             
-            <div className="p-4 overflow-y-auto h-full pb-20">
+            <div className="p-4 overflow-y-auto h-full pb-20" role="tablist" aria-label="Mobile navigation">
               {tabGroups.map((group, groupIndex) => (
                 <div key={group.name} className={groupIndex > 0 ? 'mt-6' : ''}>
                   <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">

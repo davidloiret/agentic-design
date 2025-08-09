@@ -38,7 +38,7 @@ npm run remotion:studio
 ### Step 3: Test Audio Files Directly
 ```bash
 # Test if browser can play the files directly
-open http://localhost:3000/audio/cot/cot-intro.wav
+open http://localhost:3002/audio/cot/cot-intro.wav
 # (Should download/play the file)
 ```
 
@@ -98,7 +98,7 @@ Run this to verify everything is set up correctly:
 ls -la public/audio/cot/*.wav
 
 # 2. Test first file
-curl -I http://localhost:3000/audio/cot/cot-intro.wav
+curl -I http://localhost:3002/audio/cot/cot-intro.wav
 
 # 3. Open Remotion Studio
 npm run remotion:studio

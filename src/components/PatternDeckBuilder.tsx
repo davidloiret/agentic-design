@@ -94,6 +94,7 @@ export const PatternDeckBuilder: React.FC<PatternDeckBuilderProps> = ({
                 <button
                   onClick={handleCreateNew}
                   className="p-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
+                  aria-label="Create new deck"
                 >
                   <Plus className="w-5 h-5 text-white" />
                 </button>
@@ -124,6 +125,7 @@ export const PatternDeckBuilder: React.FC<PatternDeckBuilderProps> = ({
                           onDeleteDeck(deck.id);
                         }}
                         className="p-1 hover:bg-red-600 rounded transition-colors"
+                        aria-label="Delete deck"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -190,6 +192,7 @@ export const PatternDeckBuilder: React.FC<PatternDeckBuilderProps> = ({
                           <button
                             onClick={() => handleRemoveCard(pattern.id)}
                             className="absolute top-2 right-2 p-1 bg-red-600 hover:bg-red-700 rounded-full transition-colors"
+                            aria-label="Remove card from deck"
                           >
                             <X className="w-4 h-4 text-white" />
                           </button>

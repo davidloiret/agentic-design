@@ -14,7 +14,7 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3002](http://localhost:3002) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
@@ -679,8 +679,8 @@ module se debloque tout les jours et si tu y vas pas ca se deactive (repart à z
 chapitre / unité => perte de l'unité
 Gèle de série => payer
 
-http://localhost:3000/pattern-cards
-http://localhost:3000/pattern-card-game
+http://localhost:3002/pattern-cards
+http://localhost:3002/pattern-card-game
 
 Add taunt in collection
 
@@ -1088,3 +1088,20 @@ idee est cde faire gagner du temps
 
 
 add analytcs
+
+benchmark
+
+eval tracker le model qui etait bon => trace de validation pour apres d'autre use case, aller plus vite
+compare model and techniuqes
+build bench
+
+add analitcs self hosted
+
+Rust => bindings for any language
+Building for builder => rust
+
+application not in rust
+
+Rust => python binding
+
+dont use cdn for monaco and add CSP in nginx

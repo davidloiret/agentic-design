@@ -89,7 +89,7 @@ export class MultiplayerGameAPI {
 
   private initializeSocket() {
     // Connect to the Next.js proxy server, which will handle WebSocket proxying
-    const frontendUrl = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000';
+    const frontendUrl = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3002';
     
     this.socket = io(frontendUrl, {
       autoConnect: false,
