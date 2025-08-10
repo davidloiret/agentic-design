@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  frontend-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.optimized
+      target: dev
+      cache_from:
+        - type=registry,ref=agentic-design:cache
+      cache_to:
+        - type=registry,ref=agentic-design:cache,mode=max
+    container_name: agentic-design-frontend-dev
+    volumes:
+      # Bind mount source code for hot reload
+      - ./src:/app/src:delegated
+      - ./public:/app/public:delegated
+      - ./next.config.js:/app/next.config.js:delegated
+      - ./tsconfig.json:/app/tsconfig.json:delegated
+      # Use named volumes for caches (persist between rebuilds)
+      - nextjs-cache:/app/.next/cache
+      - webpack-cache:/app/node_modules/.cache
+      - npm-cache:/root/.npm
+      # Exclude node_modules from bind mount
+      - /app/node_modules
+      - /app/.next
+    ports:
+      - "3002:3002"
+    environment:
+      - NODE_ENV=development
+      - NEXT_USE_TURBOPACK=1
+      - WATCHPACK_POLLING=true
+      - CHOKIDAR_USEPOLLING=true
+    env_file:
+      - .env
+    networks:
+      - agentic-network
+
+volumes:
+  nextjs-cache:
+    driver: local
+  webpack-cache:
+    driver: local
+  npm-cache:
+    driver: local
+
+networks:
+  agentic-network:
+    driver: bridge

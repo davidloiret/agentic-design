@@ -1,9 +1,56 @@
 #!/bin/bash
 
+# Enable BuildKit for all Docker operations
+export DOCKER_BUILDKIT=1
+export COMPOSE_DOCKER_CLI_BUILD=1
+
 # Navigate to backend directory where docker-compose files are located
 cd "$(dirname "$0")/backend"
 
 COMPOSE_FILE="docker-compose.prod.yml"
+
+# Function to display elapsed time in human-readable format
+display_time() {
+    local T=$1
+    local D=$((T/60/60/24))
+    local H=$((T/60/60%24))
+    local M=$((T/60%60))
+    local S=$((T%60))
+    
+    if [[ $D -gt 0 ]]; then
+        printf "%dd %02dh %02dm %02ds" $D $H $M $S
+    elif [[ $H -gt 0 ]]; then
+        printf "%dh %02dm %02ds" $H $M $S
+    elif [[ $M -gt 0 ]]; then
+        printf "%dm %02ds" $M $S
+    else
+        printf "%ds" $S
+    fi
+}
+
+# Function to run command with timing
+run_with_timing() {
+    local cmd_description="$1"
+    shift
+    local start_time=$(date +%s)
+    
+    echo "⏱️  Starting: $cmd_description"
+    
+    # Run the actual command
+    "$@"
+    local exit_code=$?
+    
+    local end_time=$(date +%s)
+    local elapsed=$((end_time - start_time))
+    
+    if [ $exit_code -eq 0 ]; then
+        echo "✅ Completed: $cmd_description (Time taken: $(display_time $elapsed))"
+    else
+        echo "❌ Failed: $cmd_description (Time taken: $(display_time $elapsed))"
+    fi
+    
+    return $exit_code
+}
 
 # Function to check if sudo is available and prompt for password if needed
 ensure_sudo() {
@@ -32,9 +79,8 @@ run_codesandbox_with_sudo() {
     
     case "$action" in
         "build")
-            echo "🏗️  Building CodeSandbox environment with sudo..."
             cd "$(dirname "$0")/../codesandbox"
-            sudo make all
+            run_with_timing "Building CodeSandbox environment" sudo make all
             ;;
         "start")
             echo "🚀 Starting CodeSandbox service with sudo..."
@@ -50,9 +96,8 @@ run_codesandbox_with_sudo() {
             fi
             ;;
         "rebuild")
-            echo "🏗️  Rebuilding CodeSandbox environment with sudo..."
             cd "$(dirname "$0")/../codesandbox"
-            sudo make all
+            run_with_timing "Rebuilding CodeSandbox environment" sudo make all
             if [ $? -eq 0 ]; then
                 echo "🚀 Starting CodeSandbox service in background..."
                 nohup sudo ./start.sh > ../codesandbox.log 2>&1 &
@@ -79,6 +124,7 @@ show_help() {
     echo "  stop [service]     - Stop service(s) (alias for down)"
     echo "  build [service]    - Build service(s)"
     echo "  rebuild [service]  - Rebuild service(s) with no cache"
+    echo "  force-rebuild [service] - Force complete rebuild (remove containers, images, volumes)"
     echo "  logs [service]     - Show logs for service(s)"
     echo "  restart [service]  - Restart service(s)"
     echo "  status             - Show running containers"
@@ -101,23 +147,23 @@ show_help() {
     echo "  ./manage.sh stop codesandbox         # Stop CodeSandbox service"
 }
 
+# Track overall command start time
+OVERALL_START_TIME=$(date +%s)
+
 case "$1" in
     up|start)
         if [ -z "$2" ] || [ "$2" = "all" ]; then
-            echo "🚀 Starting all services..."
-            docker compose -f $COMPOSE_FILE up -d
+            run_with_timing "Starting all Docker services" docker compose -f $COMPOSE_FILE up -d
             run_codesandbox_with_sudo "start"
         elif [ "$2" = "codesandbox" ]; then
             run_codesandbox_with_sudo "start"
         else
-            echo "🚀 Starting $2..."
-            docker compose -f $COMPOSE_FILE up -d $2
+            run_with_timing "Starting $2" docker compose -f $COMPOSE_FILE up -d $2
         fi
         ;;
     down|stop)
         if [ -z "$2" ] || [ "$2" = "all" ]; then
-            echo "📦 Stopping all services..."
-            docker compose -f $COMPOSE_FILE down
+            run_with_timing "Stopping all Docker services" docker compose -f $COMPOSE_FILE down
             echo "🛑 Stopping CodeSandbox service..."
             SCRIPT_DIR="$(dirname "$0")"
             PID_FILE="$SCRIPT_DIR/codesandbox.pid"
@@ -152,34 +198,88 @@ case "$1" in
                 echo "⚠️  No PID file found. CodeSandbox service may not be running."
             fi
         else
-            echo "📦 Stopping $2..."
-            docker compose -f $COMPOSE_FILE stop $2
+            run_with_timing "Stopping $2" docker compose -f $COMPOSE_FILE stop $2
         fi
         ;;
     build)
         if [ -z "$2" ] || [ "$2" = "all" ]; then
-            echo "🔨 Building all services..."
-            docker compose -f $COMPOSE_FILE build
+            run_with_timing "Building all Docker services" docker compose -f $COMPOSE_FILE build
             run_codesandbox_with_sudo "build"
         elif [ "$2" = "codesandbox" ]; then
             run_codesandbox_with_sudo "build"
         else
-            echo "🔨 Building $2..."
-            docker compose -f $COMPOSE_FILE build $2
+            run_with_timing "Building $2" docker compose -f $COMPOSE_FILE build $2
         fi
         ;;
     rebuild)
         if [ -z "$2" ] || [ "$2" = "all" ]; then
-            echo "🔨 Rebuilding all services..."
-            docker compose -f $COMPOSE_FILE build --no-cache
-            docker compose -f $COMPOSE_FILE up -d
+            run_with_timing "Rebuilding all Docker services (smart cache)" docker compose -f $COMPOSE_FILE build --pull
+            run_with_timing "Starting all Docker services" docker compose -f $COMPOSE_FILE up -d
             run_codesandbox_with_sudo "rebuild"
         elif [ "$2" = "codesandbox" ]; then
             run_codesandbox_with_sudo "rebuild"
         else
-            echo "🔨 Rebuilding $2 ..."
-            docker compose -f $COMPOSE_FILE build --no-cache $2
-            docker compose -f $COMPOSE_FILE up -d $2
+            echo "🔨 Rebuilding $2 with smart caching..."
+            run_with_timing "Stopping $2 container" docker compose -f $COMPOSE_FILE stop $2
+            echo "🗑️  Removing $2 container..."
+            docker compose -f $COMPOSE_FILE rm -f $2
+            
+            # For frontend, also clear nginx cache
+            if [ "$2" = "frontend" ]; then
+                echo "🧹 Clearing nginx cache for frontend..."
+                docker exec agentic-design-nginx rm -rf /var/cache/nginx/static/* 2>/dev/null || true
+            fi
+            
+            # Use smart caching with BuildKit - only rebuild what changed
+            run_with_timing "Building $2 (smart cache)" docker compose -f $COMPOSE_FILE build --pull $2
+            run_with_timing "Starting $2" docker compose -f $COMPOSE_FILE up -d $2
+            
+            # Restart nginx if frontend was rebuilt to ensure cache is cleared
+            if [ "$2" = "frontend" ]; then
+                run_with_timing "Restarting nginx to clear cache" docker compose -f $COMPOSE_FILE restart nginx
+            fi
+        fi
+        ;;
+    quick-rebuild)
+        # Quick rebuild using maximum caching
+        if [ -z "$2" ]; then
+            echo "⚡ Usage: $0 quick-rebuild <service>"
+            echo "Available services: frontend, backend, nginx, all"
+            exit 1
+        fi
+        
+        if [ "$2" = "all" ]; then
+            echo "⚡ Quick rebuilding all services with maximum caching..."
+            run_with_timing "Building all services (max cache)" docker compose -f $COMPOSE_FILE build
+            run_with_timing "Recreating containers" docker compose -f $COMPOSE_FILE up -d --force-recreate
+        else
+            echo "⚡ Quick rebuilding $2 with maximum caching..."
+            run_with_timing "Building $2 (max cache)" docker compose -f $COMPOSE_FILE build $2
+            run_with_timing "Recreating $2 container" docker compose -f $COMPOSE_FILE up -d --force-recreate $2
+        fi
+        ;;
+    force-rebuild)
+        if [ -z "$2" ] || [ "$2" = "all" ]; then
+            echo "🔨 Force rebuilding all services..."
+            run_with_timing "Stopping all services" docker compose -f $COMPOSE_FILE down
+            run_with_timing "Removing all containers, images, and volumes" docker compose -f $COMPOSE_FILE down --rmi all --volumes --remove-orphans
+            run_with_timing "Building all services (no cache)" docker compose -f $COMPOSE_FILE build --no-cache
+            run_with_timing "Starting all services" docker compose -f $COMPOSE_FILE up -d
+            run_codesandbox_with_sudo "rebuild"
+        elif [ "$2" = "codesandbox" ]; then
+            run_codesandbox_with_sudo "rebuild"
+        else
+            echo "🔨 Force rebuilding $2 ..."
+            run_with_timing "Stopping $2 container" docker compose -f $COMPOSE_FILE stop $2
+            echo "🗑️  Removing $2 container, image, and volumes..."
+            docker compose -f $COMPOSE_FILE rm -f $2
+            # Get the actual image name from compose config
+            IMAGE_NAME=$(docker compose -f $COMPOSE_FILE config --format json | jq -r ".services.$2.image // \"backend-$2\"")
+            docker rmi $IMAGE_NAME 2>/dev/null || true
+            # Remove any dangling volumes
+            docker volume prune -f
+            run_with_timing "Building $2 (no cache)" docker compose -f $COMPOSE_FILE build --no-cache $2
+            run_with_timing "Starting $2" docker compose -f $COMPOSE_FILE up -d $2
         fi
         ;;
     logs)
@@ -202,8 +302,7 @@ case "$1" in
         ;;
     restart)
         if [ -z "$2" ] || [ "$2" = "all" ]; then
-            echo "🔄 Restarting all services..."
-            docker compose -f $COMPOSE_FILE restart
+            run_with_timing "Restarting all services" docker compose -f $COMPOSE_FILE restart
         elif [ "$2" = "codesandbox" ]; then
             echo "🔄 Restarting CodeSandbox service..."
             SCRIPT_DIR="$(dirname "$0")"
@@ -220,8 +319,7 @@ case "$1" in
             # Start again with sudo
             run_codesandbox_with_sudo "start"
         else
-            echo "🔄 Restarting $2..."
-            docker compose -f $COMPOSE_FILE restart $2
+            run_with_timing "Restarting $2" docker compose -f $COMPOSE_FILE restart $2
         fi
         ;;
     status)
@@ -229,8 +327,7 @@ case "$1" in
         docker compose -f $COMPOSE_FILE ps
         ;;
     clean)
-        echo "🧹 Cleaning Docker system..."
-        docker system prune -a -f
+        run_with_timing "Cleaning Docker system" docker system prune -a -f --volumes && docker builder prune -af
         ;;
     help|--help|-h)
         show_help
@@ -242,3 +339,13 @@ case "$1" in
         exit 1
         ;;
 esac
+
+# Display overall execution time for the command
+OVERALL_END_TIME=$(date +%s)
+OVERALL_ELAPSED=$((OVERALL_END_TIME - OVERALL_START_TIME))
+
+# Only show overall time if command took more than 1 second and wasn't help/status
+if [ $OVERALL_ELAPSED -gt 1 ] && [ "$1" != "help" ] && [ "$1" != "--help" ] && [ "$1" != "-h" ] && [ "$1" != "status" ] && [ "$1" != "logs" ]; then
+    echo ""
+    echo "⏱️  Total execution time: $(display_time $OVERALL_ELAPSED)"
+fi

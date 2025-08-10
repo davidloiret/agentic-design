@@ -168,7 +168,7 @@ export const TechniqueDetails = ({
               }`}
             >
               <Play className="w-4 h-4 inline mr-2" />
-              Interactive Demo1
+              Interactive Demo
             </button>
             <button
               onClick={() => handleTabChange('code')}
@@ -491,7 +491,7 @@ export const TechniqueDetails = ({
               <div>
                 <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
                   <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
-                  Step-by-Step Flow Visualization
+                  Step-by-Step 2 Flow Visualization
                 </h2>
                 <div className="bg-gray-900/60 rounded-xl border border-gray-700/30">
                   <div className="bg-gray-900/60 px-4 py-3 border-b border-gray-700/30">

@@ -1,11 +1,11 @@
-version: '3.8'
-
 services:
   # Next.js Frontend
   frontend:
     build:
       context: ..
       dockerfile: Dockerfile
+      args:
+        BUILDKIT_INLINE_CACHE: 1
     container_name: agentic-design-frontend
     restart: always
     ports:

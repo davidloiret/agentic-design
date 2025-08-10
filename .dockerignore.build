@@ -1,0 +1,33 @@
+# Optimized dockerignore for faster builds
+# Excludes everything except what's needed for build
+
+# Ignore everything first
+**
+
+# Then explicitly include what we need
+!package.json
+!package-lock.json
+!next.config.js
+!tsconfig.json
+!next-env.d.ts
+!postcss.config.mjs
+!remotion.config.ts
+!eslint.config.mjs
+!.env
+!server.js
+
+# Include source directories
+!src/
+!public/
+!scripts/
+!examples/
+
+# Exclude build artifacts and caches even if included above
+**/.next
+**/node_modules
+**/.cache
+**/.turbo
+**/dist
+**/build
+**/.DS_Store
+**/*.log

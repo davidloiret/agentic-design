@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1.5
 # Base
 FROM node:lts-alpine AS base
 
@@ -5,36 +6,59 @@ FROM node:lts-alpine AS base
 FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
+# Only copy package files for dependency installation
 COPY package.json package-lock.json* ./
-RUN npm ci
+# Use cache mount for npm cache and separate layer for node_modules
+RUN --mount=type=cache,target=/root/.npm \
+    --mount=type=cache,target=/app/.npm \
+    npm ci --cache /app/.npm
 
 # Production deps only
 FROM base AS prod-deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
+# Only copy package files for dependency installation
 COPY package.json package-lock.json* ./
-RUN npm ci --omit=dev
+# Use cache mount for npm cache
+RUN --mount=type=cache,target=/root/.npm \
+    --mount=type=cache,target=/app/.npm \
+    npm ci --omit=dev --cache /app/.npm
 
 # Build
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
-# Copy all config files first
-COPY package.json package-lock.json* .env ./
-COPY next.config.js* ./
-COPY tsconfig.json ./
-COPY next-env.d.ts ./
-COPY postcss.config.mjs* ./
-COPY remotion.config.ts* ./
-COPY eslint.config.mjs* ./
-# Copy all source and build dependencies
-COPY src ./src
+
+# Layer 1: Copy only package files and configs (rarely change)
+COPY package.json package-lock.json* ./
+COPY next.config.js tsconfig.json next-env.d.ts ./
+COPY postcss.config.mjs* remotion.config.ts* eslint.config.mjs* ./
+
+# Layer 2: Copy public assets (change less frequently)
 COPY public ./public
+
+# Layer 3: Copy source code (changes most frequently)
+COPY .env* ./
+COPY src ./src
 COPY scripts ./scripts
 COPY examples ./examples
 COPY server.js ./server.js
+
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN npm run build
+ENV NODE_OPTIONS="--max-old-space-size=4096"
+
+# Cache mounts for multiple build caches
+# - /app/.next/cache: Next.js build cache  
+# - /app/node_modules/.cache: Webpack persistent cache
+# - /root/.npm: NPM cache
+# - /tmp: Temp directory for build artifacts
+RUN --mount=type=cache,target=/app/.next/cache \
+    --mount=type=cache,target=/app/node_modules/.cache \
+    --mount=type=cache,target=/root/.npm \
+    --mount=type=cache,target=/tmp \
+    npm run build && \
+    # Ensure .next/static exists even if empty
+    mkdir -p .next/static
 
 # Runtime
 FROM base AS runner
