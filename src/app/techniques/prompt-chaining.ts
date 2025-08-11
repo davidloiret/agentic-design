@@ -17,7 +17,7 @@ export const promptChainingTechniques: Technique[] = [
       'Reduced hallucination through focused prompts',
       'Improved accuracy on complex tasks vs monolithic prompts'
     ],
-    useCases: ['content-creation', 'data-processing', 'workflow-automation', 'multi-step-analysis', 'document-qa', 'code-generation', 'research-synthesis'],
+    useCases: ['content-creation', 'data-processing', 'workflow-automation', 'multi-step-analysis', 'complex-qa', 'code', 'research-synthesis'],
     complexity: 'low',
     example: 'Task: Generate comprehensive market analysis report\n\nSequential Chain Implementation:\n1. Data Extraction: "Extract key metrics from Q4 2024 sales data"\n   → Output: Revenue: $2.4M, Growth: 15%, Top products...\n\n2. Trend Analysis: "Analyze trends from [extracted metrics]"\n   → Output: Upward trajectory in mobile segment, seasonal patterns...\n\n3. Competitor Research: "Compare [our metrics] with industry benchmarks"\n   → Output: Above industry average growth, pricing opportunities...\n\n4. Synthesis: "Create executive summary from [trends] and [comparison]"\n   → Output: Strategic recommendations based on data-driven insights\n\n5. Polish: "Enhance clarity and add visualizations to [summary]"\n   → Final Output: Publication-ready market analysis with actionable insights\n\nResearch shows this approach achieves 15.6% better accuracy than single prompts (2024 studies)'
   },

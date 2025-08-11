@@ -266,98 +266,211 @@ export const TechniqueDetails = ({
                 </section>
               )}
 
-              {/* What is this pattern? */}
-              <section>
-                <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                  <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
-                  What is {selectedTechnique.name}?
-                </h2>
-                <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
-                  <p className="text-gray-200 text-base leading-relaxed mb-6">
-                    {selectedTechnique.description}
-                  </p>
-                  <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 mt-4">
-                    <div className="text-center p-4 bg-gray-800/30 rounded-lg">
-                      <div className="text-2xl mb-3">{selectedTechnique.icon}</div>
-                      <div className="text-sm text-gray-400 mb-1">Pattern Type</div>
-                      <div className="text-sm font-medium text-white">
-                        {categories.find(c => c.id === selectedTechnique.category)?.name || 'Design Pattern'}
-                      </div>
-                    </div>
-                    <div className="text-center p-4 bg-gray-800/30 rounded-lg">
-                      <div className="text-2xl mb-3">
-                        {selectedTechnique.complexity === 'low' ? '🟢' : 
-                         selectedTechnique.complexity === 'medium' ? '🟡' : '🔴'}
-                      </div>
-                      <div className="text-sm text-gray-400 mb-1">Complexity</div>
-                      <div className="text-sm font-medium text-white capitalize">
-                        {selectedTechnique.complexity}
-                      </div>
-                    </div>
-                    <div className="text-center p-4 bg-gray-800/30 rounded-lg">
-                      <div className="text-2xl mb-3">🎯</div>
-                      <div className="text-sm text-gray-400 mb-1">Use Cases</div>
-                      <div className="text-sm font-medium text-white">
-                        {selectedTechnique.useCases.length} scenarios
-                      </div>
-                    </div>
-                    <div className="text-center p-4 bg-gray-800/30 rounded-lg">
-                      <div className="text-2xl mb-3">⚡</div>
-                      <div className="text-sm text-gray-400 mb-1">Features</div>
-                      <div className="text-sm font-medium text-white">
-                        {selectedTechnique.features?.length || 0} features
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </section>
-
-              {/* How it Works */}
-              <section>
-                <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                  <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
-                  How it Works
-                </h2>
-                <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
-                  <p className="text-gray-200 text-base leading-relaxed mb-6">
-                    {selectedTechnique.name} works by following a structured approach that enhances reasoning and problem-solving capabilities. 
-                    This pattern is essential because it provides a systematic way to handle complex tasks that require multiple steps, 
-                    validation, or different approaches to achieve optimal results.
-                  </p>
-                  
-                  {/* Pattern Benefits */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-                    <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                      <div className="text-2xl mb-2">🧠</div>
-                      <h4 className="font-semibold text-white mb-2">Enhanced Reasoning</h4>
-                      <p className="text-sm text-gray-300">Breaks down complex problems into manageable steps</p>
-                    </div>
-                    <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                      <div className="text-2xl mb-2">🔍</div>
-                      <h4 className="font-semibold text-white mb-2">Better Accuracy</h4>
-                      <p className="text-sm text-gray-300">Reduces errors through systematic validation</p>
-                    </div>
-                    <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                      <div className="text-2xl mb-2">📊</div>
-                      <h4 className="font-semibold text-white mb-2">Transparency</h4>
-                      <p className="text-sm text-gray-300">Makes the reasoning process visible and understandable</p>
-                    </div>
-                  </div>
-
-                  {/* Why We Need This Pattern */}
-                  <div className="bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 rounded-lg p-4">
-                    <h4 className="font-semibold text-white mb-2 flex items-center gap-2">
-                      <span className="text-amber-400">💡</span>
-                      Why This Pattern Matters
-                    </h4>
-                    <p className="text-sm text-gray-200 leading-relaxed">
-                      Traditional approaches often jump directly to conclusions, missing important intermediate steps. 
-                      This pattern ensures thorough analysis, reduces hallucinations, and provides confidence in the results 
-                      by making each step of the reasoning process explicit and verifiable.
+              {/* Overview header block */}
+              {selectedTechnique.id !== 'sequential-chaining' ? (
+                <section>
+                  <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                    <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                    What is {selectedTechnique.name}?
+                  </h2>
+                  <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
+                    <p className="text-gray-200 text-base leading-relaxed mb-6">
+                      {selectedTechnique.description}
                     </p>
+                    <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 mt-4">
+                      <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                        <div className="text-2xl mb-3">{selectedTechnique.icon}</div>
+                        <div className="text-sm text-gray-400 mb-1">Pattern Type</div>
+                        <div className="text-sm font-medium text-white">
+                          {categories.find(c => c.id === selectedTechnique.category)?.name || 'Design Pattern'}
+                        </div>
+                      </div>
+                      <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                        <div className="text-2xl mb-3">
+                          {selectedTechnique.complexity === 'low' ? '🟢' : 
+                           selectedTechnique.complexity === 'medium' ? '🟡' : '🔴'}
+                        </div>
+                        <div className="text-sm text-gray-400 mb-1">Complexity</div>
+                        <div className="text-sm font-medium text-white capitalize">
+                          {selectedTechnique.complexity}
+                        </div>
+                      </div>
+                      <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                        <div className="text-2xl mb-3">🎯</div>
+                        <div className="text-sm text-gray-400 mb-1">Use Cases</div>
+                        <div className="text-sm font-medium text-white">
+                          {selectedTechnique.useCases.length} scenarios
+                        </div>
+                      </div>
+                      <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                        <div className="text-2xl mb-3">⚡</div>
+                        <div className="text-sm text-gray-400 mb-1">Features</div>
+                        <div className="text-sm font-medium text-white">
+                          {selectedTechnique.features?.length || 0} features
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </section>
+                </section>
+              ) : (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism
+                    </h2>
+                    <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed mb-4">
+                        Sequential chaining executes prompts in a linear pipeline where each step specializes in one task and passes a structured output to the next step. This isolates errors, preserves context, and improves quality compared to a single monolithic prompt.
+                      </p>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🔗</div>
+                          <div className="text-xs text-gray-400 mb-1">Flow</div>
+                          <div className="text-sm font-medium text-white">Linear pipeline</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🧩</div>
+                          <div className="text-xs text-gray-400 mb-1">Modularity</div>
+                          <div className="text-sm font-medium text-white">Step specialization</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🛡️</div>
+                          <div className="text-xs text-gray-400 mb-1">Quality</div>
+                          <div className="text-sm font-medium text-white">Error isolation</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🧭</div>
+                          <div className="text-xs text-gray-400 mb-1">Control</div>
+                          <div className="text-sm font-medium text-white">Transparent stages</div>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Decompose task into stages with clear inputs/outputs.</li>
+                        <li>Design prompts per stage with schemas for structured outputs (JSON when possible).</li>
+                        <li>Execute step N → validate/normalize output → pass to step N+1.</li>
+                        <li>Add guardrails: retries, fallbacks, and assertions per step.</li>
+                        <li>Aggregate and polish final output; log metrics for each stage.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Use strict output schemas and validate between steps',
+                        'Keep step prompts focused; avoid mixing objectives',
+                        'Annotate provenance: which step produced which field',
+                        'Implement per-step retries with jitter; cap total cost',
+                        'Cache deterministic sub-steps to reduce tokens',
+                        'Version steps independently; A/B test in isolation',
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Highly parallel tasks with minimal dependencies → prefer Parallel Chaining.</li>
+                        <li>Dynamic branching requirements → prefer Conditional Chaining or routers.</li>
+                        <li>Hard real-time latency constraints where multi-step overhead is unacceptable.</li>
+                        <li>Single-shot tasks that do not benefit from decomposition.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Context bloat from passing entire transcripts instead of distilled fields.</li>
+                        <li>Error propagation when downstream steps trust unvalidated upstream outputs.</li>
+                        <li>Over-fragmentation into too many steps causing latency and cost spikes.</li>
+                        <li>Ambiguous interfaces between steps; missing contracts and schemas.</li>
+                      </ul>
+                    </div>
+                  </section>
+                </>
+              )}
+
+              {/* How it Works (generic) or additional sections for sequential chaining */}
+              {selectedTechnique.id !== 'sequential-chaining' && (
+                <section>
+                  <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                    <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                    How it Works
+                  </h2>
+                  <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                    <p className="text-gray-200 text-base leading-relaxed mb-6">
+                      {selectedTechnique.name} works by following a structured approach that enhances reasoning and problem-solving capabilities. 
+                      This pattern is essential because it provides a systematic way to handle complex tasks that require multiple steps, 
+                      validation, or different approaches to achieve optimal results.
+                    </p>
+                    
+                    {/* Pattern Benefits */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                      <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                        <div className="text-2xl mb-2">🧠</div>
+                        <h4 className="font-semibold text-white mb-2">Enhanced Reasoning</h4>
+                        <p className="text-sm text-gray-300">Breaks down complex problems into manageable steps</p>
+                      </div>
+                      <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                        <div className="text-2xl mb-2">🔍</div>
+                        <h4 className="font-semibold text-white mb-2">Better Accuracy</h4>
+                        <p className="text-sm text-gray-300">Reduces errors through systematic validation</p>
+                      </div>
+                      <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                        <div className="text-2xl mb-2">📊</div>
+                        <h4 className="font-semibold text-white mb-2">Transparency</h4>
+                        <p className="text-sm text-gray-300">Makes the reasoning process visible and understandable</p>
+                      </div>
+                    </div>
+
+                    {/* Why We Need This Pattern */}
+                    <div className="bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 rounded-lg p-4">
+                      <h4 className="font-semibold text-white mb-2 flex items-center gap-2">
+                        <span className="text-amber-400">💡</span>
+                        Why This Pattern Matters
+                      </h4>
+                      <p className="text-sm text-gray-200 leading-relaxed">
+                        Traditional approaches often jump directly to conclusions, missing important intermediate steps. 
+                        This pattern ensures thorough analysis, reduces hallucinations, and provides confidence in the results 
+                        by making each step of the reasoning process explicit and verifiable.
+                      </p>
+                    </div>
+                  </div>
+                </section>
+              )}
 
               {/* Key Features */}
               <section>
@@ -374,6 +487,51 @@ export const TechniqueDetails = ({
                   ))}
                 </div>
               </section>
+
+              {/* KPIs / Success Metrics (sequential-chaining specific content sits well for all) */}
+              {selectedTechnique.id === 'sequential-chaining' && (
+                <section>
+                  <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                    <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                    KPIs / Success Metrics
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {[
+                      { icon: '🎯', label: 'Task success rate', desc: 'Pass/fail by acceptance tests per step and end-to-end' },
+                      { icon: '✅', label: 'Factuality/accuracy', desc: 'Human or automated evals on grounded fields' },
+                      { icon: '⏱️', label: 'Latency per step / E2E', desc: 'P50/P95 timings to identify bottlenecks' },
+                      { icon: '💲', label: 'Cost per run', desc: 'Input+output tokens × model rate across steps' },
+                      { icon: '🧱', label: 'Error containment', desc: 'Rate of failures recovered via retries/fallbacks' },
+                      { icon: '🧪', label: 'Step regression score', desc: 'A/B deltas when updating individual steps' },
+                    ].map((m) => (
+                      <div key={m.label} className="bg-gray-800/40 rounded-lg p-4 border border-gray-700/40">
+                        <div className="text-2xl mb-2">{m.icon}</div>
+                        <div className="text-sm font-semibold text-white">{m.label}</div>
+                        <div className="text-xs text-gray-400">{m.desc}</div>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              {/* Token / Resource Usage (sequential-chaining only) */}
+              {selectedTechnique.id === 'sequential-chaining' && (
+                <section>
+                  <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                    <div className="w-1 h-6 bg-teal-500 rounded-full"></div>
+                    Token / Resource Usage
+                  </h2>
+                  <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-3 text-sm text-gray-300">
+                    <p>Estimate cost as sum of per-step input/output tokens × model rates. Control growth by passing only distilled fields, not full transcripts.</p>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>Minimize carry-over: keep interfaces compact (IDs, keys, summaries).</li>
+                      <li>Use JSON mode and response formatting to avoid verbose prose.</li>
+                      <li>Cache stable intermediate results; memoize deterministic steps.</li>
+                      <li>Batch small requests where feasible; prefer smaller models upstream.</li>
+                    </ul>
+                  </div>
+                </section>
+              )}
 
               {/* Best Use Cases */}
               <section>
@@ -412,15 +570,10 @@ export const TechniqueDetails = ({
                         Academic Papers
                       </h4>
                       <div className="space-y-2 text-sm">
-                        <a href="#" className="block text-blue-400 hover:text-blue-300 transition-colors">
-                          • Chain-of-Thought Prompting Elicits Reasoning in Large Language Models
-                        </a>
-                        <a href="#" className="block text-blue-400 hover:text-blue-300 transition-colors">
-                          • Self-Consistency Improves Chain of Thought Reasoning
-                        </a>
-                        <a href="#" className="block text-blue-400 hover:text-blue-300 transition-colors">
-                          • Tree of Thoughts: Deliberate Problem Solving with Large Language Models
-                        </a>
+                        <a href="https://arxiv.org/abs/2201.11903" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• Chain-of-Thought Prompting (Wei et al., 2022)</a>
+                        <a href="https://arxiv.org/abs/2203.11171" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• Self-Consistency for CoT (Wang et al., 2022)</a>
+                        <a href="https://arxiv.org/abs/2305.10601" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• Tree of Thoughts (Yao et al., 2023)</a>
+                        <a href="https://arxiv.org/abs/2210.03629" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• ReAct: Synergizing Reasoning and Acting (2022)</a>
                       </div>
                     </div>
 
@@ -431,15 +584,9 @@ export const TechniqueDetails = ({
                         Implementation Guides
                       </h4>
                       <div className="space-y-2 text-sm">
-                        <a href="#" className="block text-blue-400 hover:text-blue-300 transition-colors">
-                          • OpenAI Cookbook - Techniques for improving reliability
-                        </a>
-                        <a href="#" className="block text-blue-400 hover:text-blue-300 transition-colors">
-                          • Anthropic Constitutional AI Research
-                        </a>
-                        <a href="#" className="block text-blue-400 hover:text-blue-300 transition-colors">
-                          • Best Practices for Prompt Engineering
-                        </a>
+                        <a href="https://cookbook.openai.com/" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• OpenAI Cookbook: Reliable LLM patterns</a>
+                        <a href="https://docs.anthropic.com/claude/docs" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• Anthropic Claude: Prompting & tooling</a>
+                        <a href="https://www.promptingguide.ai/" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• Prompting Guide: Patterns & anti-patterns</a>
                       </div>
                     </div>
 
@@ -450,15 +597,12 @@ export const TechniqueDetails = ({
                         Tools & Libraries
                       </h4>
                       <div className="space-y-2 text-sm">
-                        <a href="#" className="block text-blue-400 hover:text-blue-300 transition-colors">
-                          • LangChain - Framework for developing applications
-                        </a>
-                        <a href="#" className="block text-blue-400 hover:text-blue-300 transition-colors">
-                          • Guidance - Language model programming framework
-                        </a>
-                        <a href="#" className="block text-blue-400 hover:text-blue-300 transition-colors">
-                          • DSPy - Programming framework for LMs
-                        </a>
+                        <a href="https://python.langchain.com/" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• LangChain</a>
+                        <a href="https://www.llamaindex.ai/" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• LlamaIndex</a>
+                        <a href="https://dspy.ai/" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• DSPy</a>
+                        <a href="https://github.com/microsoft/guidance" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• Guidance</a>
+                        <a href="https://temporal.io/" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• Temporal (workflow engine)</a>
+                        <a href="https://www.prefect.io/" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• Prefect</a>
                       </div>
                     </div>
 
@@ -469,15 +613,9 @@ export const TechniqueDetails = ({
                         Community & Discussions
                       </h4>
                       <div className="space-y-2 text-sm">
-                        <a href="#" className="block text-blue-400 hover:text-blue-300 transition-colors">
-                          • r/MachineLearning - Pattern discussions
-                        </a>
-                        <a href="#" className="block text-blue-400 hover:text-blue-300 transition-colors">
-                          • AI Safety Forum - Reasoning techniques
-                        </a>
-                        <a href="#" className="block text-blue-400 hover:text-blue-300 transition-colors">
-                          • GitHub - Awesome Prompt Engineering
-                        </a>
+                        <a href="https://www.reddit.com/r/MachineLearning/" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• r/MachineLearning</a>
+                        <a href="https://discord.gg/langchain" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• LangChain Discord</a>
+                        <a href="https://github.com/f/awesome-chatgpt-prompts" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• Awesome prompts & resources</a>
                       </div>
                     </div>
                   </div>
