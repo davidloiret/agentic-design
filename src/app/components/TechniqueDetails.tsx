@@ -945,6 +945,242 @@ export const TechniqueDetails = ({
                     </div>
                   </section>
                 </>
+              ) : selectedTechnique.id === 'scatter-gather' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism
+                    </h2>
+                    <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed mb-4">
+                        Scatter-Gather executes parallel fan-out to multiple providers or services, applies per-branch timeouts and
+                        budgets, then aggregates, normalizes, and reconciles partial results into a single coherent response. It
+                        improves coverage and latency by racing sources, tolerating partial failures, and merging overlapping or
+                        conflicting answers with deterministic policies.
+                      </p>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">📡</div>
+                          <div className="text-xs text-gray-400 mb-1">Fan-out</div>
+                          <div className="text-sm font-medium text-white">Concurrent requests</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">⏱️</div>
+                          <div className="text-xs text-gray-400 mb-1">Control</div>
+                          <div className="text-sm font-medium text-white">Timeouts & budgets</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🧰</div>
+                          <div className="text-xs text-gray-400 mb-1">Aggregation</div>
+                          <div className="text-sm font-medium text-white">Normalize & merge</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🛡️</div>
+                          <div className="text-xs text-gray-400 mb-1">Resilience</div>
+                          <div className="text-sm font-medium text-white">Partial results tolerant</div>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Plan fan-out set: select providers/services and define per-branch SLAs and budgets.</li>
+                        <li>Prepare branch prompts/queries with consistent schemas; attach correlation IDs and cancellation tokens.</li>
+                        <li>Dispatch concurrently with bounded concurrency; apply per-branch deadlines and retries with jitter.</li>
+                        <li>Collect responses and errors as streams; short-circuit on confidence thresholds when applicable.</li>
+                        <li>Normalize outputs to a common schema; score sources by trust, freshness, and latency.</li>
+                        <li>Reconcile conflicts with deterministic merge policy (e.g., trust-weighted, recency-first, majority vote).</li>
+                        <li>De-duplicate overlapping entities; enrich with cached or previously known facts.</li>
+                        <li>Compose final result; include provenance and partial-result annotations when relevant.</li>
+                        <li>Emit observability: per-branch timings, timeouts, error classes, merge decisions, and quality metrics.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Cap parallelism; use bulkheads and per-target rate limits to protect upstreams.',
+                        'Set hard timeouts and budgets per branch; prefer hedged requests for tail tolerance.',
+                        'Design stable, versioned response schemas; validate at the aggregator boundary.',
+                        'Implement deterministic merge rules; log decisions and confidence for auditability.',
+                        'Return partial results with provenance rather than failing the whole request.',
+                        'Use correlation IDs and structured tracing across all branches.',
+                        'Cache invariant sub-queries and hot results; pre-warm for common intents.',
+                        'Fail fast on authentication/validation errors; retry only on transient failures with backoff + jitter.',
+                        'Continuously evaluate source quality; down-weight noisy or stale providers.',
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Tasks with strong cross-branch dependencies that require sequential coordination.</li>
+                        <li>Strict consistency requirements where conflicting sources cannot be reconciled reliably.</li>
+                        <li>Ultra-low-latency paths where fan-out overhead exceeds benefit.</li>
+                        <li>Highly rate-limited or costly providers where parallel calls would breach quotas or budgets.</li>
+                        <li>Single high-quality authoritative source already meets requirements.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Unbounded fan-out causing thundering herds, timeouts, or quota violations.</li>
+                        <li>Inconsistent schemas that break aggregation and downstream assumptions.</li>
+                        <li>Letting slowest branches dictate p95 latency due to missing per-branch deadlines.</li>
+                        <li>Retry storms without jitter/backoff; cascading failures without circuit breakers.</li>
+                        <li>Non-deterministic merge logic undermining reproducibility and evaluation.</li>
+                        <li>Missing observability: lack of per-branch metrics, traces, and provenance.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Parallel fan-out with bounded concurrency',
+                        'Per-branch timeout, budget, and retry policies',
+                        'Partial-result tolerance with provenance',
+                        'Deterministic merge and de-duplication strategies',
+                        'Source weighting by trust, freshness, performance',
+                        'Comprehensive tracing, metrics, and logging',
+                      ].map((f) => (
+                        <div key={f} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm">{f}</div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>p50/p95 end-to-end latency and aggregation window utilization.</li>
+                        <li>Completion rate, timeout rate, and partial-result ratio.</li>
+                        <li>Merge conflict rate and resolution distribution.</li>
+                        <li>Cost per request (tokens, API spend) vs. quality improvement.</li>
+                        <li>Source reliability score and contribution weighting over time.</li>
+                        <li>Quality metrics: accuracy/recall vs. single-source baseline.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-pink-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Tokens scale approximately with number of branches × average prompt/response size.</li>
+                        <li>Set per-branch token caps; prefer concise prompts and structured responses for merging.</li>
+                        <li>Use streaming and early stopping based on confidence thresholds to save tokens.</li>
+                        <li>Cache invariant sub-queries; reuse results across sessions to amortize cost.</li>
+                        <li>Monitor CPU, memory, and connection pools under peak concurrency.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Microservices orchestration: product search across inventory, pricing, reviews, recommendations.</li>
+                        <li>Meta-search and aggregation across multiple external providers/APIs.</li>
+                        <li>RAG pipelines querying multiple indices/tools and synthesizing answers.</li>
+                        <li>Price comparison, travel planning, and marketplace data federation.</li>
+                        <li>Ensemble question answering with diverse specialist models.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-yellow-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="p-4 bg-gray-800/40 rounded-lg border border-gray-700/40">
+                        <h3 className="text-white font-medium mb-2">Academic Papers</h3>
+                        <ul className="list-disc list-inside text-gray-300 text-sm space-y-1">
+                          <li>Tail at Scale (Dean & Barroso) — latency tail mitigation strategies</li>
+                          <li>Hedged and Tied Requests for Reduced Tail Latency (Dean et al.)</li>
+                          <li>Enterprise Integration Patterns — Scatter-Gather and Aggregator patterns</li>
+                        </ul>
+                      </div>
+                      <div className="p-4 bg-gray-800/40 rounded-lg border border-gray-700/40">
+                        <h3 className="text-white font-medium mb-2">Implementation Guides</h3>
+                        <ul className="list-disc list-inside text-gray-300 text-sm space-y-1">
+                          <li>Service resilience: timeouts, retries, circuit breakers, bulkheads</li>
+                          <li>Deterministic aggregation and conflict resolution playbooks</li>
+                          <li>Observability: distributed tracing, structured logging, SLOs</li>
+                        </ul>
+                      </div>
+                      <div className="p-4 bg-gray-800/40 rounded-lg border border-gray-700/40">
+                        <h3 className="text-white font-medium mb-2">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside text-gray-300 text-sm space-y-1">
+                          <li>Promise.all/asyncio.gather/RxJS forkJoin for concurrency</li>
+                          <li>Ray, Celery, Temporal for workflow orchestration</li>
+                          <li>LangChain (parallel tool calls), LlamaIndex (multi-retriever, aggregators)</li>
+                        </ul>
+                      </div>
+                      <div className="p-4 bg-gray-800/40 rounded-lg border border-gray-700/40">
+                        <h3 className="text-white font-medium mb-2">Community & Discussions</h3>
+                        <ul className="list-disc list-inside text-gray-300 text-sm space-y-1">
+                          <li>Microservices and SRE communities on tail latency and resilience</li>
+                          <li>LLM ops forums on ensemble methods and evaluation</li>
+                          <li>Architecture discussions on aggregation patterns and data federation</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                </>
               ) : selectedTechnique.id === 'content-based-routing' ? (
                 <>
                   {/* Core Mechanism (short conceptual overview) */}
