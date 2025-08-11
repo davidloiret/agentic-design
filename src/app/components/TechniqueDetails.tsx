@@ -1200,6 +1200,242 @@ export const TechniqueDetails = ({
                     </div>
                   </section>
                 </>
+              ) : selectedTechnique.id === 'capability-routing' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism
+                    </h2>
+                    <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed mb-4">
+                        Capability Routing assigns each task to the best-suited agent or compute node using a capability model
+                        (skills, tools, models, hardware) and live performance/availability signals. A router computes a
+                        multi-objective score (fit × quality × cost × SLA) and selects the assignee with safe fallbacks.
+                      </p>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🎯</div>
+                          <div className="text-xs text-gray-400 mb-1">Matching</div>
+                          <div className="text-sm font-medium text-white">Skills ⇄ Task requirements</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🧮</div>
+                          <div className="text-xs text-gray-400 mb-1">Scoring</div>
+                          <div className="text-sm font-medium text-white">Multi-objective (quality/cost/SLA)</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">⚡</div>
+                          <div className="text-xs text-gray-400 mb-1">Signals</div>
+                          <div className="text-sm font-medium text-white">Utilization & availability aware</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🛡️</div>
+                          <div className="text-xs text-gray-400 mb-1">Safety</div>
+                          <div className="text-sm font-medium text-white">Fallbacks & guardrails</div>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Define capability schema (skills/tools/models/hardware) with levels and recency.</li>
+                        <li>Extract task requirements (domain, modality, complexity, SLA, risk) into structured features.</li>
+                        <li>Score candidates using a weighted function (capability fit × historical quality × freshness).</li>
+                        <li>Apply live signals: utilization, queue length, health, cost, and data locality/compliance.</li>
+                        <li>Select primary assignee; set fallback/backup; emit rationale and confidence.</li>
+                        <li>Execute; validate outputs with schema/rubric; auto-escalate on failure or low score.</li>
+                        <li>Log decisions and outcomes; update capability profiles and weights via feedback.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Maintain a normalized skill matrix with evidence (evaluations, recency, provenance).',
+                        'Use multi-objective scoring with explicit weights for quality, cost, latency, and risk.',
+                        'Continuously calibrate using labeled tasks and post-task evaluations; retrain weights periodically.',
+                        'Incorporate availability/utilization to prevent hotspots and reduce queue time.',
+                        'Provide a safe default/fallback and escalation policy; avoid dead-ends.',
+                        'Version capability profiles; expire stale skills and penalize outdated evidence.',
+                        'Isolate sensitive tasks with compliance constraints (geo, PII, model policy).',
+                        'Log features, rationale, confidence, and outcomes for audit and drift detection.'
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Uniform tasks where a single well-tuned path performs consistently well.</li>
+                        <li>No reliable capability metadata or evaluation history to inform matching.</li>
+                        <li>Very small teams/systems where manual routing is simpler and cheaper.</li>
+                        <li>Hard real-time micro-latency contexts where scoring overhead is unacceptable.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Stale capability profiles; skills drift without decay/recency tracking.</li>
+                        <li>Ignoring utilization causing hotspots, starvation, or thrashing.</li>
+                        <li>Opaque scoring; no rationale/confidence, hard to debug misroutes.</li>
+                        <li>Bias in assignments (e.g., always routing “hard” tasks to the same agents) without fairness guards.</li>
+                        <li>No safe fallback or escalation, leading to dropped or stuck tasks.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Structured skill/capability matrix with levels and evidence',
+                        'Multi-objective matching: quality, cost, latency, risk',
+                        'Utilization-, health-, and queue-aware routing',
+                        'Compliance-aware constraints (region, policy, data class)',
+                        'Rationale and confidence per decision',
+                        'Learning loop from outcomes and evaluator scores',
+                        'Shadow/AB routing for evaluation before rollout',
+                        'Fairness and anti-starvation safeguards'
+                      ].map((f) => (
+                        <div key={f} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm">{f}</div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Assignment accuracy vs. oracle/evaluator; misroute rate.</li>
+                        <li>Task success/quality score deltas by assignee type.</li>
+                        <li>Latency impact: routing overhead and end-to-end P50/P95.</li>
+                        <li>Cost per task vs. baseline; cost-to-quality efficiency.</li>
+                        <li>Utilization balance and queue times; starvation rate.</li>
+                        <li>Fallback/escalation frequency and recovery time.</li>
+                        <li>Fairness metrics: workload distribution, diversity of assignments.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-pink-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Keep router light: rules or small model; avoid large-model gating on hot paths.</li>
+                        <li>Cache capability vectors/scores; update incrementally on events, not per-request recompute.</li>
+                        <li>Pass distilled features or IDs to router; avoid full transcripts/documents.</li>
+                        <li>Batch scoring where feasible; reuse embeddings and invariant features.</li>
+                        <li>Monitor router token share vs. task tokens; cap exploration/shadow cost.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Customer support routing to domain specialists (billing, tech, legal).</li>
+                        <li>Code tasks matched to language/framework experts or tools.</li>
+                        <li>ML/compute workloads mapped to optimal hardware (GPU, CPU, memory-optimized, edge).</li>
+                        <li>Document/data processing assigned to OCR, NLP, or analytics specialists.</li>
+                        <li>Compliance-sensitive flows routed to approved regions/models.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-yellow-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="p-4 bg-gray-800/40 rounded-lg border border-gray-700/40">
+                        <h3 className="text-white font-medium mb-2">Academic Papers</h3>
+                        <ul className="list-disc list-inside text-gray-300 text-sm space-y-1">
+                          <li>Mixture-of-Experts and router/gating (Switch Transformers; GShard; GLaM)</li>
+                          <li>Routing Transformers and conditional computation</li>
+                          <li>Mixture-of-Agents and skill routing for LLM systems (2023–2024)</li>
+                          <li>Scheduling and assignment under constraints (multi-objective optimization)</li>
+                        </ul>
+                      </div>
+                      <div className="p-4 bg-gray-800/40 rounded-lg border border-gray-700/40">
+                        <h3 className="text-white font-medium mb-2">Implementation Guides</h3>
+                        <ul className="list-disc list-inside text-gray-300 text-sm space-y-1">
+                          <li>LangGraph decision routers, selectors, and conditional edges</li>
+                          <li>LangChain RouterChain / MultiPromptRouter</li>
+                          <li>LlamaIndex RouterQueryEngine / agent selectors</li>
+                          <li>Scheduling with Kubernetes queues/priority and autoscaling hooks</li>
+                        </ul>
+                      </div>
+                      <div className="p-4 bg-gray-800/40 rounded-lg border border-gray-700/40">
+                        <h3 className="text-white font-medium mb-2">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside text-gray-300 text-sm space-y-1">
+                          <li>LangGraph, LangChain, LlamaIndex routing components</li>
+                          <li>Feature stores and evaluators (MLflow, Evidently) for calibration</li>
+                          <li>Workflow/scheduling: Temporal, Airflow, Ray, Kubernetes</li>
+                          <li>Rule engines (JSONLogic) and vector DBs for similarity matching</li>
+                        </ul>
+                      </div>
+                      <div className="p-4 bg-gray-800/40 rounded-lg border border-gray-700/40">
+                        <h3 className="text-white font-medium mb-2">Community & Discussions</h3>
+                        <ul className="list-disc list-inside text-gray-300 text-sm space-y-1">
+                          <li>Papers with Code collections on MoE and routing</li>
+                          <li>Open-source forums for multi-agent systems and orchestration</li>
+                          <li>MLOps and platform engineering communities on scheduling/SLAs</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                </>
               ) : selectedTechnique.id === 'conditional-chaining' ? (
                 <>
                   {/* Core Mechanism (short conceptual overview) */}
