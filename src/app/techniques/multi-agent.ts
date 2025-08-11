@@ -102,26 +102,6 @@ export const multiAgentTechniques: Technique[] = [
     example: 'Multi-Agent Investment Decision:\n\n5 Investment Agents vote on stock purchase:\n• Agent A: BUY (confidence: 85%)\n• Agent B: BUY (confidence: 78%)\n• Agent C: HOLD (confidence: 60%)\n• Agent D: BUY (confidence: 92%)\n• Agent E: SELL (confidence: 45%)\n\nConsensus algorithm weights by confidence → Final decision: BUY'
   },
   {
-    id: 'agent-to-agent',
-    name: 'Agent-to-Agent Communication',
-    abbr: '',
-    icon: '💬',
-    color: 'from-cyan-600 to-blue-600',
-    category: 'multi-agent',
-    description: 'Direct communication protocols between AI agents',
-    features: [
-      'Direct messaging',
-      'Protocol negotiation',
-      'Message formatting',
-      'Authentication',
-      'Error handling',
-      'State synchronization'
-    ],
-    useCases: ['peer-communication', 'data-exchange', 'coordination-protocols', 'distributed-collaboration'],
-    complexity: 'medium',
-    example: 'Agent Communication Protocol:\n\nMessage Format:\n{\n  "from": "agent-1",\n  "to": "agent-2", \n  "type": "task-request",\n  "payload": { "task": "analyze-data", "data": "..." },\n  "timestamp": "2025-01-01T00:00:00Z"\n}\n\nResponse handling, acknowledgments, and error recovery'
-  },
-  {
     id: 'message-passing',
     name: 'Message Passing',
     abbr: '',
