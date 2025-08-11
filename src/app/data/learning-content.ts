@@ -665,8 +665,8 @@ export const routingTechniquesFlashcards: Flashcard[] = [
   },
   {
     id: 'fc-geographic-routing',
-    front: 'What is Geographic Routing?',
-    back: 'Routes requests based on geographic location for compliance, localization, and latency optimization. Ensures data sovereignty compliance and culturally appropriate responses.',
+    front: 'Geographic Routing — core idea',
+    back: 'Route by user region to meet data residency/compliance, reduce latency, and localize content. Prefer in-region processing with compliant fallbacks and audited rationale.',
     difficulty: 'medium',
     topic: 'Geographic Routing',
     reviewCount: 0,

@@ -1685,6 +1685,237 @@ export const TechniqueDetails = ({
                     </div>
                   </section>
                 </>
+              ) : selectedTechnique.id === 'geographic-routing' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism
+                    </h2>
+                    <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed mb-4">
+                        Geographic Routing directs requests to regions based on user location, regulatory constraints, and performance.
+                        A policy combines geolocation, compliance/data-sovereignty, latency, capacity, and language/culture to choose an in-region
+                        or nearest-compliant endpoint with safe fallbacks and monitored failover.
+                      </p>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🌍</div>
+                          <div className="text-xs text-gray-400 mb-1">Scope</div>
+                          <div className="text-sm font-medium text-white">Region/locale aware</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🛡️</div>
+                          <div className="text-xs text-gray-400 mb-1">Compliance</div>
+                          <div className="text-sm font-medium text-white">Data residency & laws</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">⚡</div>
+                          <div className="text-xs text-gray-400 mb-1">Performance</div>
+                          <div className="text-sm font-medium text-white">Latency & capacity</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🗣️</div>
+                          <div className="text-xs text-gray-400 mb-1">Localization</div>
+                          <div className="text-sm font-medium text-white">Language & culture</div>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Detect user region via IP/geolocation, explicit locale, tenant policy, or account residency.</li>
+                        <li>Evaluate compliance: data residency, cross-border transfer rules, sector regulations (GDPR, CCPA/CPRA, LGPD, PDPA, HIPAA, FIN, etc.).</li>
+                        <li>Compute performance signals: nearest PoP/edge, regional latency, capacity/health, cost, cache proximity.</li>
+                        <li>Apply sovereignty constraints and business rules (allowed regions, model/provider allowlist, language variants).</li>
+                        <li>Select primary region; choose fallback/secondary with rationale and confidence.</li>
+                        <li>Execute in-region pipeline; localize language, formatting, and content where applicable.</li>
+                        <li>Log routing decision, signals, and outcomes; monitor compliance and tail latency; auto-failover on degradation.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Prefer in-region processing; avoid unnecessary cross-border transfers.',
+                        'Maintain an up-to-date regulation catalog and provider region capabilities; version policies.',
+                        'Separate routing policy from execution; support dry-run/shadow to validate changes.',
+                        'Localize language, date/number formats, currencies, and cultural norms.',
+                        'Use edge/CDN for static assets and cache warm paths by region.',
+                        'Encrypt in transit and at rest; minimize PII; tokenize where possible.',
+                        'Plan regional failover, health checks, and controlled degradation paths.',
+                        'Record rationales and evidence for audit (region, rules matched, signals).'
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Single-region apps without legal or performance requirements.</li>
+                        <li>Hard real-time micro-latency flows where routing checks dominate cost.</li>
+                        <li>No reliable geolocation or residency signals and low compliance risk.</li>
+                        <li>Data cannot be segmented by region and must remain globally consistent without sharding.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Stale regulation maps or provider region catalogs causing non-compliant routes.</li>
+                        <li>Ignoring language/cultural localization after routing.</li>
+                        <li>Failover loops or partial compliance when secondary regions differ in policy support.</li>
+                        <li>Leaking PII across borders via logs, traces, or caches.</li>
+                        <li>Optimizing for average latency while P95/P99 regress in some locales.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Location-aware routing with sovereignty constraints',
+                        'Compliance scoring and explainable rationale',
+                        'Latency/capacity aware selection and health-based failover',
+                        'Localization hooks (language, formatting, content rules)',
+                        'Edge/CDN integration and cache locality',
+                        'Decision logs, audits, and drift monitoring'
+                      ].map((f) => (
+                        <div key={f} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm">{f}</div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Compliance score and data residency adherence rate.</li>
+                        <li>End-to-end latency by region (P50/P95/P99) and variance across locales.</li>
+                        <li>Failover frequency, time-to-recovery, and success rate.</li>
+                        <li>Localization quality/satisfaction, language coverage, and error rate.</li>
+                        <li>Cache hit ratio and cost per request by region.</li>
+                        <li>Misroute rate and override/appeal rate.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-pink-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Router overhead is small: geolocation lookup + rules evaluation; avoid sending payloads through the router.</li>
+                        <li>Maintain a cached regulation/provider capability map; refresh periodically, not per-request.</li>
+                        <li>Leverage CDN/edge caching; avoid duplicate generation across regions by using cache keys and IDs.</li>
+                        <li>Reserve expensive models for localized execution; keep routing policies rule-based or small-model.</li>
+                        <li>Account for multi-region storage/replication costs when enforcing residency.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Global consumer apps requiring localization and low latency.</li>
+                        <li>Regulated industries: healthcare, finance, government, education.</li>
+                        <li>Multi-region SaaS with tenant residency commitments.</li>
+                        <li>CDN-backed media/content delivery with regional personalization.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-yellow-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="p-4 bg-gray-800/40 rounded-lg border border-gray-700/40">
+                        <h3 className="text-white font-medium mb-2">Academic Papers</h3>
+                        <ul className="list-disc list-inside text-gray-300 text-sm space-y-1">
+                          <li>Data sovereignty and cross-border data flow studies (2018–2024)</li>
+                          <li>Edge/geo-distributed systems and latency optimization</li>
+                          <li>Compliance-aware scheduling in distributed systems</li>
+                        </ul>
+                      </div>
+                      <div className="p-4 bg-gray-800/40 rounded-lg border border-gray-700/40">
+                        <h3 className="text-white font-medium mb-2">Implementation Guides</h3>
+                        <ul className="list-disc list-inside text-gray-300 text-sm space-y-1">
+                          <li>AWS: Multi-Region, Data Residency, CloudFront Geo restriction/geolocation</li>
+                          <li>GCP/Azure: Regional services, Sovereign/Confidential clouds</li>
+                          <li>CDN: Cloudflare Workers/Rulesets, Fastly Compute@Edge, Akamai</li>
+                          <li>Policy engines: OPA/Rego for compliance gates</li>
+                        </ul>
+                      </div>
+                      <div className="p-4 bg-gray-800/40 rounded-lg border border-gray-700/40">
+                        <h3 className="text-white font-medium mb-2">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside text-gray-300 text-sm space-y-1">
+                          <li>MaxMind/GeoIP, ipinfo.io for geolocation</li>
+                          <li>Cloud provider region/latency APIs and health checks</li>
+                          <li>OPA/Rego, JSONLogic for routing policy</li>
+                          <li>OpenTelemetry for audits/metrics/traces</li>
+                        </ul>
+                      </div>
+                      <div className="p-4 bg-gray-800/40 rounded-lg border border-gray-700/40">
+                        <h3 className="text-white font-medium mb-2">Community & Discussions</h3>
+                        <ul className="list-disc list-inside text-gray-300 text-sm space-y-1">
+                          <li>Cloud architecture blogs on multi-region/residency</li>
+                          <li>r/devops, r/kubernetes, and CDN provider communities</li>
+                          <li>Security/Privacy forums on data protection and residency</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                </>
               ) : selectedTechnique.id === 'conditional-chaining' ? (
                 <>
                   {/* Core Mechanism (short conceptual overview) */}
