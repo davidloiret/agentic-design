@@ -712,11 +712,128 @@ export const TechniqueDetails = ({
                     </div>
                   </section>
                 </>
+              ) : selectedTechnique.id === 'hierarchical-chaining' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism
+                    </h2>
+                    <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed mb-4">
+                        Hierarchical chaining decomposes a high-level goal into a tree of parent→child tasks. Parents define
+                        contracts and acceptance criteria; children inherit scoped context and produce structured outputs that
+                        roll up to their parents. Independent siblings can execute in parallel, while aggregation and validation
+                        happen at each level to ensure consistency and quality.
+                      </p>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🏗️</div>
+                          <div className="text-xs text-gray-400 mb-1">Structure</div>
+                          <div className="text-sm font-medium text-white">Tree of tasks</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🧬</div>
+                          <div className="text-xs text-gray-400 mb-1">Inheritance</div>
+                          <div className="text-sm font-medium text-white">Scoped context</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">⚖️</div>
+                          <div className="text-xs text-gray-400 mb-1">Control</div>
+                          <div className="text-sm font-medium text-white">Per-level gates</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🔀</div>
+                          <div className="text-xs text-gray-400 mb-1">Execution</div>
+                          <div className="text-sm font-medium text-white">Parallel siblings</div>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Define the root goal, constraints, and objective metrics.</li>
+                        <li>Design the task tree: levels, node responsibilities, and dependencies.</li>
+                        <li>Specify strict input/output contracts per node with JSON schemas.</li>
+                        <li>Scope context inheritance: pass distilled fields and references, not full transcripts.</li>
+                        <li>Choose execution policy: depth-first for fast verticals, breadth-first for coverage; parallelize independent siblings.</li>
+                        <li>Validate and aggregate child outputs at the parent; normalize and resolve conflicts.</li>
+                        <li>Apply per-node gates: retries, fallbacks, and escalation on validation failures.</li>
+                        <li>Emit per-level metrics and artifacts; cache reusable subtree results.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Keep node contracts stable and versioned; evolve leaves more often than trunks.',
+                        'Use schemas and validators at every boundary; reject/repair before roll-up.',
+                        'Constrain inheritance: pass IDs, summaries, and facts instead of raw text.',
+                        'Parallelize siblings with bounded fan-out; prioritize critical-path nodes.',
+                        'Design aggregation strategies per parent (rank/merge, scoring, or map-reduce).',
+                        'Cache deterministic subtrees and reuse across runs to cut cost/latency.',
+                        'Surface provenance in roll-ups: include child IDs and confidence per field.',
+                        'Automate acceptance gates with rubrics and model-as-judge where appropriate.',
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Simple tasks solvable by a single prompt or shallow sequence.</li>
+                        <li>Strict real-time SLAs where tree orchestration adds unacceptable latency.</li>
+                        <li>Highly interdependent subtasks that resist clean parent→child contracts.</li>
+                        <li>Very deep hierarchies that exceed context budgets or complicate debugging.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Context leakage by passing full transcripts down the tree.</li>
+                        <li>Inconsistent child schemas causing brittle aggregation at parents.</li>
+                        <li>Cycles or hidden dependencies that break hierarchical assumptions.</li>
+                        <li>Over-decomposition inflating cost/latency without quality gains.</li>
+                      </ul>
+                    </div>
+                  </section>
+                </>
               ) : (
                 <section>
                   <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
                     <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
-                    What is {selectedTechnique.name}?
+                    {selectedTechnique.name}
                   </h2>
                   <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
                     <p className="text-gray-200 text-base leading-relaxed mb-6">
@@ -825,7 +942,7 @@ export const TechniqueDetails = ({
               </section>
 
               {/* KPIs / Success Metrics */}
-              {(selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining' || selectedTechnique.id === 'conditional-chaining' || selectedTechnique.id === 'feedback-chaining') && (
+              {(selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining' || selectedTechnique.id === 'conditional-chaining' || selectedTechnique.id === 'feedback-chaining' || selectedTechnique.id === 'hierarchical-chaining') && (
                 <section>
                   <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
                     <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
@@ -859,6 +976,15 @@ export const TechniqueDetails = ({
                           { icon: '⏱️', label: 'Routing overhead', desc: 'Added latency from router vs direct execution' },
                           { icon: '💲', label: 'Cost per run', desc: 'Router tokens + branch tokens + optional merge' },
                         ]
+                      : selectedTechnique.id === 'hierarchical-chaining'
+                      ? [
+                          { icon: '🧩', label: 'Decomposition quality', desc: 'Rubric score for task-tree design and coverage' },
+                          { icon: '✅', label: 'Node success rate', desc: 'Share of nodes passing validation/acceptance gates' },
+                          { icon: '🔗', label: 'Aggregation consistency', desc: 'Conflict rate and repair frequency at parents' },
+                          { icon: '⚡', label: 'Critical-path latency', desc: 'P50/P95 along deepest required path' },
+                          { icon: '💸', label: 'Cost per level / total', desc: 'Token spend segmented by depth and subtree' },
+                          { icon: '♻️', label: 'Subtree reuse hit-rate', desc: 'Cache hits for deterministic nodes across runs' },
+                        ]
                       : [
                           { icon: '📈', label: 'Quality gain per iter', desc: 'Δ score per iteration until convergence' },
                           { icon: '🔁', label: 'Convergence iterations', desc: 'Avg iterations to reach target or stop' },
@@ -878,7 +1004,7 @@ export const TechniqueDetails = ({
               )}
 
               {/* Token / Resource Usage */}
-              {(selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining' || selectedTechnique.id === 'conditional-chaining' || selectedTechnique.id === 'feedback-chaining') && (
+              {(selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining' || selectedTechnique.id === 'conditional-chaining' || selectedTechnique.id === 'feedback-chaining' || selectedTechnique.id === 'hierarchical-chaining') && (
                 <section>
                   <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
                     <div className="w-1 h-6 bg-teal-500 rounded-full"></div>
@@ -915,6 +1041,18 @@ export const TechniqueDetails = ({
                         <li>Standardize branch schemas to enable efficient merging without verbose reparsing.</li>
                         <li>Cache branch-invariant artifacts (retrieved docs, profiles) and reuse across runs.</li>
                         <li>Log routing distributions to detect cost drift and rebalance thresholds.</li>
+                      </ul>
+                    </div>
+                  ) : selectedTechnique.id === 'hierarchical-chaining' ? (
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-3 text-sm text-gray-300">
+                      <p>Total cost ≈ sum over nodes on the executed tree (critical path + parallel siblings + aggregation). Control explosion by constraining inheritance and reusing deterministic subtrees.</p>
+                      <ul className="list-disc list-inside space-y-1">
+                        <li>Pass references and summaries between levels; avoid raw documents.</li>
+                        <li>Batch sibling nodes where possible; cap per-level fan-out.</li>
+                        <li>Select model tiers by level complexity; reserve strongest model for root/aggregation.</li>
+                        <li>Cache validated child outputs and roll-ups; reuse across runs and branches.</li>
+                        <li>Hoist invariant context to ancestors; keep leaf prompts minimal.</li>
+                        <li>Track per-level cost/latency to refine the tree and prune low-value nodes.</li>
                       </ul>
                     </div>
                   ) : (
