@@ -717,6 +717,249 @@ export const TechniqueDetails = ({
                     </div>
                   </section>
                 </>
+              ) : selectedTechnique.id === 'content-based-routing' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism
+                    </h2>
+                    <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed mb-4">
+                        Content-Based Routing inspects the payload itself (text, code, structured data, or media metadata) to
+                        classify intent/topic and select a specialized handler or path. The router can be rule-based, embeddings +
+                        classifier, or a lightweight LLM gate. Decisions should include confidence, rationale, and a safe default.
+                      </p>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🔀</div>
+                          <div className="text-xs text-gray-400 mb-1">Flow</div>
+                          <div className="text-sm font-medium text-white">Route by content</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🧭</div>
+                          <div className="text-xs text-gray-400 mb-1">Policy</div>
+                          <div className="text-sm font-medium text-white">Rules/Embeddings/LLM gate</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🧬</div>
+                          <div className="text-xs text-gray-400 mb-1">Modality</div>
+                          <div className="text-sm font-medium text-white">Text/Code/Data/Media</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">📉</div>
+                          <div className="text-xs text-gray-400 mb-1">Confidence</div>
+                          <div className="text-sm font-medium text-white">Thresholds & fallback</div>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Define taxonomy and handlers (e.g., Text, Code, Data, Media) with consistent I/O contracts.</li>
+                        <li>Extract routing features: modality detection, keywords, entities, embeddings, metadata, risk/sensitivity.</li>
+                        <li>Select policy: rules, embedding similarity + thresholds, classical classifier, or small LLM gate.</li>
+                        <li>Calibrate confidence per class; set thresholds and a safe default route.</li>
+                        <li>Make decision; on low confidence, default/hold for review. Optionally shadow top-2 for evaluation.</li>
+                        <li>Execute handler pipeline; validate outputs against schema; normalize for downstream.</li>
+                        <li>Log features, decision, confidence, and outcomes for audit, drift, and continuous evaluation.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Start with a clear taxonomy; avoid overlapping categories and document examples per class',
+                        'Prefer lightweight policies (rules/embeddings/small model) to minimize latency and cost',
+                        'Calibrate thresholds by class; measure precision/recall and misroute costs explicitly',
+                        'Always provide a safe default route and human-in-the-loop for ambiguous/high-risk items',
+                        'Standardize schemas across handlers so results are comparable and mergeable',
+                        'Cache invariant features (embeddings, metadata) and reuse across requests',
+                        'Continuously evaluate with labeled sets; monitor drift and re-tune thresholds',
+                        'Log rationale/features for explainability and compliance audits'
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Homogeneous workloads where one well-tuned path suffices.</li>
+                        <li>Ultra-low latency constraints that cannot afford routing overhead.</li>
+                        <li>No labeled data or feedback loop to calibrate/evaluate routing quality.</li>
+                        <li>High regulatory risk without explainability, logging, and fallback procedures.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Overlapping/ambiguous classes causing unstable decisions and thrashing.</li>
+                        <li>Uncalibrated thresholds leading to high misroute rates.</li>
+                        <li>Brittle regex/rules that break on phrasing or multilingual inputs.</li>
+                        <li>Schema sprawl across handlers; difficult to aggregate and evaluate.</li>
+                        <li>Ignoring drift; performance degrades as content distribution shifts.</li>
+                        <li>Routing on full documents instead of distilled signals → token/cost bloat.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Automatic modality and intent/topic classification',
+                        'Embeddings-based similarity with class exemplars',
+                        'Confidence scoring, thresholds, and safe defaults',
+                        'Pluggable policies: rules, ML classifiers, or LLM gate',
+                        'Explainability via features/rationale logging',
+                        'Standardized I/O contracts across handlers',
+                        'Drift detection and periodic re-calibration',
+                        'Optional shadow routing for evaluation'
+                      ].map((f) => (
+                        <div key={f} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm">{f}</div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Routing accuracy/precision/recall by class; misroute rate.</li>
+                        <li>Confusion matrix stability and top-2 agreement rate.</li>
+                        <li>Handler success/quality and downstream task completion.</li>
+                        <li>Routing latency overhead (P50/P95) and throughput.</li>
+                        <li>Cost per routed item and savings vs. single-path baseline.</li>
+                        <li>Low-confidence/default rate and human override rate.</li>
+                        <li>Drift indicators (feature/class distribution shifts).</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-pink-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Total ≈ router tokens + handler pipeline tokens; keep router lightweight.</li>
+                        <li>Prefer rules or embeddings + small model; reserve strongest models for handlers.</li>
+                        <li>Batch classification; cache embeddings and invariant features.</li>
+                        <li>Route using distilled signals (summaries, IDs) rather than raw documents.</li>
+                        <li>Reuse retrievals and pre/post-processing across handlers when possible.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Customer support email/chat triage to specialized queues.</li>
+                        <li>Content moderation and policy-specific escalation.</li>
+                        <li>Document processing: invoices vs. contracts vs. forms.</li>
+                        <li>Code vs. natural language vs. data pipeline routing.</li>
+                        <li>Query type detection for RAG/agent selection.</li>
+                        <li>Media workflows based on metadata and transcripts.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-yellow-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="p-4 bg-gray-800/40 rounded-lg border border-gray-700/40">
+                        <h3 className="text-white font-medium mb-2">Academic Papers</h3>
+                        <ul className="list-disc list-inside text-gray-300 text-sm space-y-1">
+                          <li>Enterprise Integration Patterns: Content-Based Router (Hohpe & Woolf, 2003)</li>
+                          <li>Routing Networks for Multi-Task Learning (Rosenbaum et al., 2017)</li>
+                          <li>Mixture-of-Experts and gating for conditional computation (Shazeer et al., 2017; Fedus et al., 2021)</li>
+                          <li>Routing/skill selection in LLM systems and Mixture-of-Agents (2023–2024)</li>
+                        </ul>
+                      </div>
+                      <div className="p-4 bg-gray-800/40 rounded-lg border border-gray-700/40">
+                        <h3 className="text-white font-medium mb-2">Implementation Guides</h3>
+                        <ul className="list-disc list-inside text-gray-300 text-sm space-y-1">
+                          <li>Enterprise Integration Patterns: Content-Based Router</li>
+                          <li>AWS SNS/SQS message filtering and routing patterns</li>
+                          <li>Kafka Streams/KSQL content-based routing examples</li>
+                          <li>LangGraph decision routers and conditional edges</li>
+                          <li>LangChain RouterChain / MultiPromptRouter patterns</li>
+                          <li>LlamaIndex RouterQueryEngine / selector components</li>
+                        </ul>
+                      </div>
+                      <div className="p-4 bg-gray-800/40 rounded-lg border border-gray-700/40">
+                        <h3 className="text-white font-medium mb-2">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside text-gray-300 text-sm space-y-1">
+                          <li>LangGraph, LangChain, LlamaIndex routing components</li>
+                          <li>Kafka, RabbitMQ, NATS for message routing</li>
+                          <li>JSONLogic, JSONPath/JMESPath for rule evaluation</li>
+                          <li>Vector DBs and embedding services for similarity</li>
+                          <li>Feature stores and evaluators (MLflow, Evidently)</li>
+                        </ul>
+                      </div>
+                      <div className="p-4 bg-gray-800/40 rounded-lg border border-gray-700/40">
+                        <h3 className="text-white font-medium mb-2">Community & Discussions</h3>
+                        <ul className="list-disc list-inside text-gray-300 text-sm space-y-1">
+                          <li>Enterprise Integration Patterns community resources</li>
+                          <li>Cloud provider architecture blogs on routing</li>
+                          <li>Kafka and streaming communities (meetups, forums)</li>
+                          <li>LangChain/LangGraph forums and OSS discussions</li>
+                          <li>MLOps communities on evaluation and drift</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                </>
               ) : selectedTechnique.id === 'dynamic-routing' ? (
                 <>
                   {/* Core Mechanism (short conceptual overview) */}
