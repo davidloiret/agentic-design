@@ -600,6 +600,118 @@ export const TechniqueDetails = ({
                     </div>
                   </section>
                 </>
+              ) : selectedTechnique.id === 'feedback-chaining' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism
+                    </h2>
+                    <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed mb-4">
+                        Feedback chaining runs an iterative loop: generate → evaluate → improve, repeating until a target quality threshold or stop condition is met. An evaluator (rules, rubric, or model-as-judge) produces specific feedback that drives focused revisions, enabling convergence to higher quality outputs.
+                      </p>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🔄</div>
+                          <div className="text-xs text-gray-400 mb-1">Flow</div>
+                          <div className="text-sm font-medium text-white">Looped iterations</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🧪</div>
+                          <div className="text-xs text-gray-400 mb-1">Evaluation</div>
+                          <div className="text-sm font-medium text-white">Rubrics & scoring</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🎯</div>
+                          <div className="text-xs text-gray-400 mb-1">Convergence</div>
+                          <div className="text-sm font-medium text-white">Stop when target met</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🧭</div>
+                          <div className="text-xs text-gray-400 mb-1">Control</div>
+                          <div className="text-sm font-medium text-white">Feedback-driven edits</div>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Generate initial draft/output from the task brief and constraints.</li>
+                        <li>Evaluate with a rubric: score criteria (e.g., accuracy, style, completeness) and extract actionable feedback.</li>
+                        <li>If score &lt; target: produce an improvement plan (bulleted, concrete changes).</li>
+                        <li>Revise using the plan; keep hard constraints and previous strengths.</li>
+                        <li>Track metrics per iteration (score, deltas, tokens, time); prevent regressions.</li>
+                        <li>Stop on convergence (score ≥ target, marginal gain &lt; epsilon) or max iterations.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Separate generator and judge models (or seeds) to reduce bias; use deterministic judge settings',
+                        'Use explicit rubrics with weighted criteria and structured JSON feedback',
+                        'Make feedback prescriptive (what to add/remove/clarify), not generic platitudes',
+                        'Cap iterations and implement early stopping on small score deltas',
+                        'Carry forward constraints and validated facts to avoid regressions',
+                        'Log per-iteration artifacts for auditability and offline analysis',
+                        'Occasionally inject diversity (n-best or temperature bursts) if stuck below target',
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Hard real-time latency budgets where multiple passes are unacceptable.</li>
+                        <li>No objective rubric or ground truth—risk of endless subjective polishing.</li>
+                        <li>Single-shot tasks that do not benefit from iterative refinement.</li>
+                        <li>Tasks with minimal quality gain per iteration (quickly hits diminishing returns).</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Oscillation with no convergence due to vague or conflicting feedback.</li>
+                        <li>Judge leakage: evaluator sees gold answers or overfits phrasing.</li>
+                        <li>Using the same model/config for both judge and generator causing confirmation bias.</li>
+                        <li>Token bloat by re-sending entire history instead of distilled state.</li>
+                        <li>Regression of previously correct details when revising without guardrails.</li>
+                      </ul>
+                    </div>
+                  </section>
+                </>
               ) : (
                 <section>
                   <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
@@ -648,7 +760,7 @@ export const TechniqueDetails = ({
               )}
 
               {/* How it Works (generic) */}
-              {selectedTechnique.id !== 'sequential-chaining' && selectedTechnique.id !== 'parallel-chaining' && selectedTechnique.id !== 'conditional-chaining' && (
+              {selectedTechnique.id !== 'sequential-chaining' && selectedTechnique.id !== 'parallel-chaining' && selectedTechnique.id !== 'conditional-chaining' && selectedTechnique.id !== 'feedback-chaining' && (
                 <section>
                   <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
                     <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
@@ -713,7 +825,7 @@ export const TechniqueDetails = ({
               </section>
 
               {/* KPIs / Success Metrics */}
-              {(selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining' || selectedTechnique.id === 'conditional-chaining') && (
+              {(selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining' || selectedTechnique.id === 'conditional-chaining' || selectedTechnique.id === 'feedback-chaining') && (
                 <section>
                   <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
                     <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
@@ -738,13 +850,22 @@ export const TechniqueDetails = ({
                           { icon: '⏱️', label: 'Tail latency', desc: 'P95 time-to-aggregate with partials tolerated' },
                           { icon: '💲', label: 'Cost per run', desc: 'Sum of all worker tokens + merge cost' },
                         ]
-                      : [
+                      : selectedTechnique.id === 'conditional-chaining'
+                      ? [
                           { icon: '🧭', label: 'Routing accuracy', desc: 'Agreement with oracle labels or evaluator on correct branch' },
                           { icon: '📊', label: 'Confidence calibration', desc: 'Calibration error (ECE) and threshold quality' },
                           { icon: '🧰', label: 'Fallback/default rate', desc: 'Share of low-confidence routes using default path' },
                           { icon: '🎯', label: 'Per-branch success', desc: 'Quality/acceptance metrics segmented by branch' },
                           { icon: '⏱️', label: 'Routing overhead', desc: 'Added latency from router vs direct execution' },
                           { icon: '💲', label: 'Cost per run', desc: 'Router tokens + branch tokens + optional merge' },
+                        ]
+                      : [
+                          { icon: '📈', label: 'Quality gain per iter', desc: 'Δ score per iteration until convergence' },
+                          { icon: '🔁', label: 'Convergence iterations', desc: 'Avg iterations to reach target or stop' },
+                          { icon: '🧪', label: 'Judge consistency', desc: 'Inter-rater or self-consistency of evaluator' },
+                          { icon: '🎯', label: 'Target attainment rate', desc: 'Share of runs achieving target threshold' },
+                          { icon: '💲', label: 'Cost per improvement point', desc: 'Tokens per +1 score or per acceptance' },
+                          { icon: '🛑', label: 'Early stop rate', desc: 'Runs halted due to small deltas or max-iter cap' },
                         ]).map((m) => (
                       <div key={m.label} className="bg-gray-800/40 rounded-lg p-4 border border-gray-700/40">
                         <div className="text-2xl mb-2">{m.icon}</div>
@@ -757,7 +878,7 @@ export const TechniqueDetails = ({
               )}
 
               {/* Token / Resource Usage */}
-              {(selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining' || selectedTechnique.id === 'conditional-chaining') && (
+              {(selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining' || selectedTechnique.id === 'conditional-chaining' || selectedTechnique.id === 'feedback-chaining') && (
                 <section>
                   <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
                     <div className="w-1 h-6 bg-teal-500 rounded-full"></div>
@@ -785,7 +906,7 @@ export const TechniqueDetails = ({
                         <li>Cache stable or reusable worker results across runs.</li>
                       </ul>
                     </div>
-                  ) : (
+                  ) : selectedTechnique.id === 'conditional-chaining' ? (
                     <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-3 text-sm text-gray-300">
                       <p>Total cost = router tokens + selected-branch tokens (+ optional merge). Use lightweight routing to minimize overhead and prefer cheap models for gating.</p>
                       <ul className="list-disc list-inside space-y-1">
@@ -794,6 +915,17 @@ export const TechniqueDetails = ({
                         <li>Standardize branch schemas to enable efficient merging without verbose reparsing.</li>
                         <li>Cache branch-invariant artifacts (retrieved docs, profiles) and reuse across runs.</li>
                         <li>Log routing distributions to detect cost drift and rebalance thresholds.</li>
+                      </ul>
+                    </div>
+                  ) : (
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-3 text-sm text-gray-300">
+                      <p>Total cost ≈ Σ over iterations of (generator tokens + evaluator tokens + revision tokens). Expect diminishing returns; optimize for early convergence.</p>
+                      <ul className="list-disc list-inside space-y-1">
+                        <li>Use a lightweight evaluator where possible; reserve strongest model for final acceptance.</li>
+                        <li>Truncate history aggressively: pass distilled state (facts, constraints, last diff) instead of full transcripts.</li>
+                        <li>Enable early stopping on small score deltas; cap max iterations.</li>
+                        <li>Consider n-best only when stuck; otherwise prefer single-trajectory refinement.</li>
+                        <li>Cache stable sub-artifacts (retrieved docs, validated sections) across iterations.</li>
                       </ul>
                     </div>
                   )}
