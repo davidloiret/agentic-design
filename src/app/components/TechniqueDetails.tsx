@@ -1179,7 +1179,7 @@ export const TechniqueDetails = ({
                         </ul>
                       </div>
                     </div>
-                  </section>
+                </section>
                 </>
               ) : selectedTechnique.id === 'fork-join' ? (
                 <>
@@ -1407,6 +1407,236 @@ export const TechniqueDetails = ({
                           <li>Java Concurrency in Practice and Fork/Join tuning threads</li>
                           <li>Ray, Dask, and concurrency forums on task granularity and scheduling</li>
                           <li>StackOverflow Q&A on deadlocks, work-stealing, and join barriers</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                </>
+              ) : selectedTechnique.id === 'async-await' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism
+                    </h2>
+                    <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed mb-4">
+                        Async-await provides non-blocking concurrency by suspending a task at await points while the runtime progresses
+                        other work. It builds on promises/futures to coordinate multiple I/O-bound operations with linear, readable flow
+                        and structured error handling across languages (JavaScript/TypeScript, Python asyncio, Rust tokio, C#/.NET).
+                      </p>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">⏳</div>
+                          <div className="text-xs text-gray-400 mb-1">Execution</div>
+                          <div className="text-sm font-medium text-white">Non-blocking awaits</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🤝</div>
+                          <div className="text-xs text-gray-400 mb-1">Coordination</div>
+                          <div className="text-sm font-medium text-white">Promise/Future based</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🧵</div>
+                          <div className="text-xs text-gray-400 mb-1">Model</div>
+                          <div className="text-sm font-medium text-white">Event loop + tasks</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🛡️</div>
+                          <div className="text-xs text-gray-400 mb-1">Errors</div>
+                          <div className="text-sm font-medium text-white">try/catch semantics</div>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Define async function boundaries; ensure callers are async-capable.</li>
+                        <li>Wrap I/O or long-running operations as promises/futures or async coroutines.</li>
+                        <li>Compose concurrency via Promise.all/Task.WhenAll/asyncio.gather/join handles.</li>
+                        <li>Propagate and handle errors with try/catch and per-branch guards.</li>
+                        <li>Apply timeouts, cancellation tokens, and resource limits.</li>
+                        <li>Aggregate results, normalize types, and return a single awaited value.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Prefer await for readability; fan-out using Promise.all/gather for independent I/O.',
+                        'Always bound concurrency (p-limit, semaphores, pools) to protect services.',
+                        'Use timeouts and cancellation (AbortController/.NET CancellationToken/asyncio timeouts).',
+                        'Isolate retries and fallbacks; never wrap large batches in a single try/catch.',
+                        'Surface partial results with Promise.allSettled/gather(return_exceptions=True).',
+                        'Avoid blocking calls in async contexts; keep CPU work off the event loop.',
+                        'Propagate structured errors; enrich with context and correlation IDs.',
+                        'Log p50/p95 latencies and error categories; add backoff for transient failures.'
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>CPU-bound workloads without offloading threads/workers — use worker pools instead.</li>
+                        <li>Tight low-latency loops where scheduling overhead dominates.</li>
+                        <li>Global ordering/causality requirements that conflict with concurrent execution.</li>
+                        <li>Heavy shared-state mutation leading to contention; prefer message passing.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Unbounded parallel awaits → throttling, rate-limit errors, or service overload.</li>
+                        <li>Swallowing exceptions inside Promise.all causing silent partial failures.</li>
+                        <li>Blocking synchronous APIs inside async code (e.g., fs.readFileSync / CPU loops).</li>
+                        <li>Leaking tasks on timeout/cancel; not wiring cancellation to in-flight I/O.</li>
+                        <li>Deadlocks from awaiting in wrong context (legacy sync-over-async patterns).</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Linear syntax over async control flow (try/catch/finally).',
+                        'Promise/future composition: all, allSettled, race, any; gather/join.',
+                        'Cancellation & timeouts with tokens, signals, or scopes.',
+                        'Non-blocking I/O with event loop or reactor-based runtimes.',
+                        'Backpressure via pools/semaphores; bounded concurrency.',
+                        'Cross-language availability: JS/TS, Python, C#, Rust, Swift.'
+                      ].map((f) => (
+                        <div key={f} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm">{f}</div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>End-to-end latency (p50/p95/p99) and tail amplification under concurrency.</li>
+                        <li>Throughput (req/s) vs. concurrency level; success/error rate per class.</li>
+                        <li>Queue depth and time-in-queue; timeout/cancellation ratio.</li>
+                        <li>External rate-limit/backoff events; retry success vs. cost.</li>
+                        <li>Resource usage: CPU, memory, open file/socket descriptors.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-pink-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-2 text-sm text-gray-300">
+                      <p>Async-await itself doesn’t consume model tokens; it manages concurrency. In LLM workflows, tokens scale with the number of parallel model calls and context size.</p>
+                      <ul className="list-disc list-inside space-y-1">
+                        <li>Bound parallel LLM calls to avoid burst token spikes and rate limits.</li>
+                        <li>Use streaming or pagination to cap memory; avoid retaining full responses.</li>
+                        <li>Prefer shared references/IDs over duplicating large prompts across tasks.</li>
+                        <li>Apply per-call budgets, backoff, and caching to amortize repeated queries.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Concurrent API/data fetches for dashboards or orchestration.</li>
+                        <li>Fan-out I/O tasks with independent results and aggregation.</li>
+                        <li>LLM tool calls executed in parallel with bounded concurrency.</li>
+                        <li>Background task runners that compose timeouts and cancellation.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-yellow-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="p-4 bg-gray-800/40 rounded-lg border border-gray-700/40">
+                        <h3 className="text-white font-medium mb-2">Academic Papers</h3>
+                        <ul className="list-disc list-inside text-gray-300 text-sm space-y-1">
+                          <li>Communicating Sequential Processes (Hoare, 1978)</li>
+                          <li>Structured Concurrency principles (Klabnik et al., community writings)</li>
+                          <li>Actor model and async scheduling references</li>
+                        </ul>
+                      </div>
+                      <div className="p-4 bg-gray-800/40 rounded-lg border border-gray-700/40">
+                        <h3 className="text-white font-medium mb-2">Implementation Guides</h3>
+                        <ul className="list-disc list-inside text-gray-300 text-sm space-y-1">
+                          <li><a className="text-blue-400 hover:text-blue-300" target="_blank" rel="noreferrer" href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Async_await">MDN: Async/Await</a></li>
+                          <li><a className="text-blue-400 hover:text-blue-300" target="_blank" rel="noreferrer" href="https://learn.microsoft.com/dotnet/csharp/programming-guide/concepts/async/">.NET C#: async/await</a></li>
+                          <li><a className="text-blue-400 hover:text-blue-300" target="_blank" rel="noreferrer" href="https://docs.python.org/3/library/asyncio-task.html">Python asyncio: Tasks & gather</a></li>
+                          <li><a className="text-blue-400 hover:text-blue-300" target="_blank" rel="noreferrer" href="https://rust-lang.github.io/async-book/">Rust Async Book</a></li>
+                        </ul>
+                      </div>
+                      <div className="p-4 bg-gray-800/40 rounded-lg border border-gray-700/40">
+                        <h3 className="text-white font-medium mb-2">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside text-gray-300 text-sm space-y-1">
+                          <li>JavaScript/TypeScript: p-limit, Bluebird utilities, RxJS interop</li>
+                          <li>Python: Trio, AnyIO, aiohttp, tenacity (retries)</li>
+                          <li>Rust: tokio, async-std, futures, reqwest</li>
+                          <li>.NET: Task Parallel Library, Polly (retries), IAsyncEnumerable</li>
+                        </ul>
+                      </div>
+                      <div className="p-4 bg-gray-800/40 rounded-lg border border-gray-700/40">
+                        <h3 className="text-white font-medium mb-2">Community & Discussions</h3>
+                        <ul className="list-disc list-inside text-gray-300 text-sm space-y-1">
+                          <li>StackOverflow: async/await best practices and pitfalls</li>
+                          <li>Rust Async Working Group notes and Zulip discussions</li>
+                          <li>Python asyncio and Trio discourse forums</li>
+                          <li>Node.js community notes on event loop and performance</li>
                         </ul>
                       </div>
                     </div>
