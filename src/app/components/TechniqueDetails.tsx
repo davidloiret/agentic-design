@@ -717,6 +717,234 @@ export const TechniqueDetails = ({
                     </div>
                   </section>
                 </>
+              ) : selectedTechnique.id === 'map-reduce' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism
+                    </h2>
+                    <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed mb-4">
+                        Map-Reduce executes computation in two stages over partitioned data: a mapping stage that transforms each shard
+                        into key–value pairs independently and a reducing stage that aggregates values per key. The shuffle/sort barrier
+                        groups identical keys between stages. This enables parallelism, data locality, and fault-tolerant re-execution. In
+                        LLM pipelines, the pattern often appears as per-chunk analysis (map) followed by a structured consolidation (reduce).
+                      </p>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🗺️</div>
+                          <div className="text-xs text-gray-400 mb-1">Flow</div>
+                          <div className="text-sm font-medium text-white">Map → Shuffle/Sort → Reduce</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🧩</div>
+                          <div className="text-xs text-gray-400 mb-1">Units</div>
+                          <div className="text-sm font-medium text-white">Key–value records</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🛡️</div>
+                          <div className="text-xs text-gray-400 mb-1">Reliability</div>
+                          <div className="text-sm font-medium text-white">Deterministic, retry-safe</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">📦</div>
+                          <div className="text-xs text-gray-400 mb-1">Locality</div>
+                          <div className="text-sm font-medium text-white">Compute near data</div>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Partition source data into balanced shards; assign stable IDs and boundaries.</li>
+                        <li>Map: transform each record/shard to key–value pairs; validate and emit.</li>
+                        <li>Optional combine: locally aggregate to reduce shuffle volume.</li>
+                        <li>Shuffle/Sort: group all values by key with consistent hashing/partitioning.</li>
+                        <li>Reduce: aggregate grouped values into final records; enforce schemas.</li>
+                        <li>Write outputs; record metrics, lineage, and checkpoints.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Use deterministic, idempotent mappers and reducers; enable safe retries.',
+                        'Design partitioners for even load; mitigate skew with salting or dynamic repartition.',
+                        'Add combiners for associative/commutative aggregates to cut shuffle bytes.',
+                        'Schema all emissions; validate at boundaries; prefer compact binary for IO-heavy paths.',
+                        'Cap concurrency and enable backpressure; monitor queue depths and spill-to-disk.',
+                        'Handle stragglers: speculative execution and bounded retries with jitter.',
+                        'Exploit data locality; colocate compute with storage where possible.',
+                        'For LLM map-reduce summarization, keep chunk sizes stable and aggregate with structure-aware prompts.'
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Small datasets where single-node processing is simpler and faster.</li>
+                        <li>Interactive, low-latency queries; prefer indexed stores or streaming engines.</li>
+                        <li>Algorithms with heavy cross-shard dependencies or iterative random access.</li>
+                        <li>Real-time streaming with sliding windows; prefer stream processors.</li>
+                        <li>Complex multi-stage DAGs with rich joins; prefer Spark/Beam/Ray pipelines.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Data skew creating hot reducers and long-tail stragglers.</li>
+                        <li>Exploding shuffle volume due to missing combiners or verbose keys.</li>
+                        <li>Stateful, non-deterministic mappers hindering reproducibility and retries.</li>
+                        <li>Mis-sized partitions causing underutilization or memory pressure.</li>
+                        <li>LLM summarization: token blow-up from inconsistent chunking or verbose map outputs.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Horizontal parallelism with deterministic aggregation',
+                        'Fault tolerance via retryable tasks and checkpointing',
+                        'Data locality and spill-to-disk for large shuffles',
+                        'Combiners and partitioners for IO and load efficiency',
+                        'Elastic scaling and speculative execution',
+                        'LLM adaptation: per-chunk analysis with structured reduce'
+                      ].map((f) => (
+                        <div key={f} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm">{f}</div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>End-to-end throughput and time-to-completion vs. baseline.</li>
+                        <li>Shuffle bytes per processed GB; combine effectiveness ratio.</li>
+                        <li>Skew index (p95/p50 task duration) and straggler rate.</li>
+                        <li>Failure/retry counts; speculative execution hit rate.</li>
+                        <li>For LLM: quality score of reduce output, agreement across maps, cost per accepted unit.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-pink-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Map stage: tokens scale with number of chunks × chunk size; cap concurrency to respect rate limits.</li>
+                        <li>Reduce stage: smaller token footprint with structure-aware consolidation; avoid full re-prompt of all maps.</li>
+                        <li>Infra: monitor CPU, memory, and disk during shuffle; compress intermediates where possible.</li>
+                        <li>Cache stable map outputs to amortize cost across runs.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Large-scale log processing, ETL, and analytics over massive datasets.</li>
+                        <li>Counting, aggregations, and histogram-style workloads.</li>
+                        <li>Document corpus summarization or extraction with LLM map → reduce.</li>
+                        <li>Preprocessing pipelines that benefit from per-record independence.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-yellow-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="p-4 bg-gray-800/40 rounded-lg border border-gray-700/40">
+                        <h3 className="text-white font-medium mb-2">Academic Papers</h3>
+                        <ul className="list-disc list-inside text-gray-300 text-sm space-y-1">
+                          <li>MapReduce: Simplified Data Processing on Large Clusters (Dean & Ghemawat, 2004)</li>
+                          <li>Resilient Distributed Datasets: A Fault-Tolerant Abstraction for In-Memory Clusters (Zaharia et al., 2012)</li>
+                          <li>Skew handling and speculative execution studies (various, 2010–2016)</li>
+                        </ul>
+                      </div>
+                      <div className="p-4 bg-gray-800/40 rounded-lg border border-gray-700/40">
+                        <h3 className="text-white font-medium mb-2">Implementation Guides</h3>
+                        <ul className="list-disc list-inside text-gray-300 text-sm space-y-1">
+                          <li>Hadoop MapReduce design patterns and tuning guides</li>
+                          <li>Spark map/aggregate/reduceByKey best practices</li>
+                          <li>LLM map_reduce summarization patterns (LangChain, LlamaIndex)</li>
+                        </ul>
+                      </div>
+                      <div className="p-4 bg-gray-800/40 rounded-lg border border-gray-700/40">
+                        <h3 className="text-white font-medium mb-2">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside text-gray-300 text-sm space-y-1">
+                          <li>Apache Hadoop, Apache Spark, Apache Beam</li>
+                          <li>Ray, Dask for Python-native distributed compute</li>
+                          <li>LangChain (map_reduce), LlamaIndex (tree/summary aggregators)</li>
+                        </ul>
+                      </div>
+                      <div className="p-4 bg-gray-800/40 rounded-lg border border-gray-700/40">
+                        <h3 className="text-white font-medium mb-2">Community & Discussions</h3>
+                        <ul className="list-disc list-inside text-gray-300 text-sm space-y-1">
+                          <li>Apache Hadoop and Spark user/dev mailing lists</li>
+                          <li>Ray discourse and Dask community forums</li>
+                          <li>LangChain and LlamaIndex community channels</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                </>
               ) : selectedTechnique.id === 'content-based-routing' ? (
                 <>
                   {/* Core Mechanism (short conceptual overview) */}
