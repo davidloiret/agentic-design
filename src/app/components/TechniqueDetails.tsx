@@ -469,6 +469,3127 @@ export const TechniqueDetails = ({
                     </div>
                 </section>
                 </>
+              ) : selectedTechnique.id === 'adaptive-rag' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism (short conceptual overview)
+                    </h2>
+                    <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border border-emerald-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed">
+                        Adaptive RAG uses a lightweight router to analyze each query (complexity, domain, freshness, safety) and dynamically
+                        choose the retrieval and generation strategy: no-retrieval for easy questions, single-pass hybrid retrieval for
+                        moderate ones, and multi-hop retrieval + reflection/refinement for complex tasks. It adjusts sources, filters,
+                        rerankers, and context compression based on real-time signals like uncertainty, coverage, and citation quality to
+                        balance accuracy, latency, and cost.
+                      </p>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Ingest query and context: user intent, domain, recency needs, access policy, session history.</li>
+                        <li>Route: classify complexity/freshness/domain; pick strategy (no-retrieval, single-pass, multi-hop) and components (retrievers, filters, reranker, compression).</li>
+                        <li>Retrieve: run hybrid search (semantic + lexical), apply filters (source, time), deduplicate, then cross-encode rerank.</li>
+                        <li>Prepare context: compress adaptively (extractive summaries/snippets), attach provenance, enforce token budgets.</li>
+                        <li>Generate: produce answer with instructions; assess faithfulness/uncertainty; if low-confidence or missing evidence, refine via query rewrite, scope expansion, or another hop.</li>
+                        <li>Finalize: produce answer with citations and structured output; log metrics and router decisions for evaluation.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Start with a strong static RAG baseline; add routing only where it measurably helps (A/B by query cohorts).',
+                        'Use hybrid retrieval (BM25/keyword + embeddings) and a cross-encoder reranker; cap top_k before rerank.',
+                        'Train/calibrate the router with offline labels (easy/moderate/hard, freshness needed) and monitor drift.',
+                        'Adopt adaptive compression (extractive summaries, answer-focused snippets) to control tokens.',
+                        'Bound refinement loops (max hops/turns) and implement early-exit on high confidence with adequate citations.',
+                        'Apply temporal and source filters; enforce provenance and citation coverage in prompts/outputs.',
+                        'Cache frequently hit chunks and rerank results; memoize router decisions for similar queries.',
+                        'Evaluate by slice: domain, difficulty, recency; keep an ablation of each adaptive component.',
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Workloads with homogeneous, easy questions where static RAG or model-only answers already meet SLOs.</li>
+                        <li>Tiny, high-quality corpora where routing overhead adds latency without quality gains.</li>
+                        <li>Hard real-time paths with strict p95 limits that cannot accommodate routing/reranking/refinement.</li>
+                        <li>Data governed environments without robust access controls and audit-ready provenance.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Over-routing: invoking multi-hop/reflection for queries solvable with model-only or single-pass retrieval.</li>
+                        <li>Mis-calibrated thresholds causing oscillation between strategies and unstable latency.</li>
+                        <li>Skipping reranking or deduplication → noisy context and lower faithfulness.</li>
+                        <li>Token blowups from excessive top_k and weak compression; missing caps on hop/turn counts.</li>
+                        <li>Insufficient provenance: answers without citations or with stale sources.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Query router for complexity/freshness/domain routing',
+                        'Hybrid retrieval with lexical + embedding search',
+                        'Cross-encoder reranking and duplicate suppression',
+                        'Adaptive context compression and snippet selection',
+                        'Multi-hop refinement with confidence/coverage checks',
+                        'Latency/cost-aware budgets and early-exit logic',
+                        'Provenance enforcement and citation coverage',
+                        'Observability of router choices and component KPIs',
+                      ].map((feat) => (
+                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Answer quality: exact match/F1 on QA sets; faithfulness and citation coverage (e.g., RAGAS).</li>
+                        <li>Retrieval quality: MRR/NDCG, answerable@k, reranker precision; freshness hit rate for time-sensitive queries.</li>
+                        <li>Efficiency: p50/p95 latency, tokens per answer, cost per resolved question, average hops/turns.</li>
+                        <li>Router efficacy: decision accuracy vs oracle, fallback rate, percent of queries routed to each strategy.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>No‑retrieval: minimal tokens; prefer model-only when confidence is high and recency not required.</li>
+                        <li>Single‑pass: bound top_k before rerank (e.g., 50→rerank→8); compress to target context budget.</li>
+                        <li>Multi‑hop: cap hops/turns; reuse retrieved sets across hops; stream generation and cache reranks.</li>
+                        <li>General: log token/cost budgets per strategy; apply adaptive compression ratios by query difficulty.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Multi‑domain assistants where query difficulty varies widely.</li>
+                        <li>Enterprise knowledge portals with mixed structured/unstructured sources and compliance needs.</li>
+                        <li>Support/agent copilots needing fast answers for easy cases and deeper synthesis for hard ones.</li>
+                        <li>Research workflows requiring iterative gathering, synthesis, and strong provenance.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://arxiv.org/abs/2310.11511" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection (2023)</a></li>
+                          <li><a href="https://arxiv.org/abs/2312.10997" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Retrieval‑Augmented Generation for Large Language Models: A Survey (2023)</a></li>
+                          <li><a href="https://arxiv.org/abs/2401.05856" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Seven Failure Points When Engineering a RAG System (2024)</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://learn.microsoft.com/en-us/azure/developer/ai/advanced-retrieval-augmented-generation" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Microsoft Learn: Advanced RAG systems</a></li>
+                          <li><a href="https://cookbook.openai.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">OpenAI Cookbook: RAG and evaluation patterns</a></li>
+                          <li><a href="https://docs.llamaindex.ai/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LlamaIndex Docs: Retrieval, rerankers, evaluators</a></li>
+                          <li><a href="https://python.langchain.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangChain Docs: Retrieval & reranking</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://cohere.com/rerank" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Cohere Rerank (cross‑encoder)</a></li>
+                          <li><a href="https://www.pinecone.io/learn/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Pinecone Learn: RAG techniques</a></li>
+                          <li><a href="https://weaviate.io/developers" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Weaviate: Hybrid search & rerank</a></li>
+                          <li><a href="https://www.elastic.co/enterprise-search" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Elasticsearch: Hybrid retrieval</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://www.pinecone.io/learn/advanced-rag-techniques/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Pinecone: Advanced RAG techniques</a></li>
+                          <li><a href="https://discuss.huggingface.co/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Hugging Face Forums</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                </section>
+                </>
+              ) : selectedTechnique.id === 'modular-rag' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism (short conceptual overview)
+                    </h2>
+                    <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed">
+                        Modular RAG decomposes retrieval‑augmented generation into interchangeable components—query understanding,
+                        retrieval, fusion/reranking, filtering/policy, context assembly, generation, and verification—wired by an
+                        orchestration layer. Each module exposes stable interfaces so teams can swap strategies (e.g., dense/sparse/hybrid
+                        retrievers, different rerankers, compression strategies, or verifiers) and route dynamically based on query
+                        characteristics, policies, and live telemetry.
+                      </p>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Ingestion & indexing: chunking, metadata/ACLs, embeddings; build BM25/vector/hybrid indexes.</li>
+                        <li>Query analysis: detect intent/domain; optionally reformulate/expand; choose route and budget.</li>
+                        <li>Retrieval: run chosen retriever(s) (dense, sparse, hybrid, graph, API tools) to gather candidates.</li>
+                        <li>Fusion & reranking: merge candidates (e.g., RRF) and rerank with cross‑encoder or LLM reranker.</li>
+                        <li>Filtering & policy: deduplicate, enforce recency/authority/permissions and safety constraints.</li>
+                        <li>Context assembly: compress/summarize; structure with citations; pack within token budget.</li>
+                        <li>Generation: prompt the LLM with query + curated context; format outputs (Q&A, steps, JSON).</li>
+                        <li>Verification: critique/self‑check/CoVe; citation checks; optional retrieval‑to‑generation loop.</li>
+                        <li>Feedback & logging: capture traces, costs, metrics; learn routing/ranking policies over time.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Define clear, typed interfaces for modules (request/response schemas, metadata, provenance).',
+                        'Make routing/config data‑driven (feature flags, YAML/JSON configs) and version every change.',
+                        'Evaluate modules independently and end‑to‑end (retriever recall, reranker MRR/NDCG, answer faithfulness).',
+                        'Adopt reranking and late‑fusion to balance recall and precision; cap k at each stage.',
+                        'Compress context (map‑reduce, selective quotes, extractive spans) and always include citations.',
+                        'Introduce guardrails: permissions, PII redaction, safety/brand filters, and policy‑based routing.',
+                        'Budget control: per‑stage token/latency/cost guards with early‑exit and fallbacks.',
+                        'Observability: structured traces per module with IDs, latency, cost, and cache hits.',
+                        'Continuous evaluation with regression suites and canary A/Bs before broad rollouts.',
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Simple FAQ or narrow domains where a single, fixed RAG flow already meets quality/latency/cost.</li>
+                        <li>Severe latency or cost constraints that cannot accommodate routing, reranking, and verification.</li>
+                        <li>Teams without bandwidth to operate/evaluate multiple components and configurations.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Interface drift and hidden coupling between modules, breaking swapability.</li>
+                        <li>Unbounded k and cascading modules leading to token/latency/cost blowups.</li>
+                        <li>Weak provenance or missing citations → low trust and unverifiable outputs.</li>
+                        <li>Over‑engineering for simple tasks; lack of baselines and ablations.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Interchangeable retrievers (dense, sparse, hybrid, graph, tool‑augmented)',
+                        'Learned or rules‑based routers and query reformulators',
+                        'Cross‑encoder/LLM rerankers and fusion (e.g., RRF) for precision',
+                        'Compression and packing (extractive spans, summarization, citation‑aware)',
+                        'Policy and safety filters with ACLs and provenance',
+                        'Config‑driven orchestration with tracing and A/B harness',
+                        'Feedback‑driven adaptation and continuous evaluation',
+                      ].map((feat) => (
+                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Answer accuracy/faithfulness with citation correctness; human win‑rate vs. baseline RAG.</li>
+                        <li>Retriever recall@k and reranker MRR/NDCG; context precision and duplication rate.</li>
+                        <li>Latency p50/p95 and cost per query; cache hit rate; fallback rate and guardrail violations.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Set per‑module budgets (retrieval k, rerank depth, max packed tokens) and enforce early‑exit.</li>
+                        <li>Prefer late‑fusion + reranking over massive k; cache hot queries, embeddings, and packed contexts.</li>
+                        <li>Use compression (extractive quotes, map‑reduce summaries) and structured context with citations.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Enterprise knowledge assistants spanning many sources, formats, and permission models.</li>
+                        <li>Platforms doing rapid A/B of retrievers/rerankers/routers and continuous improvement.</li>
+                        <li>Regulated domains needing provenance, policy enforcement, and configurable guardrails.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://arxiv.org/abs/2407.21059" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Modular RAG: LEGO‑like Reconfigurable RAG Frameworks (2024)</a></li>
+                          <li><a href="https://arxiv.org/abs/2312.10997" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Retrieval‑Augmented Generation for LLMs: A Survey (2023/2024)</a></li>
+                          <li><a href="https://arxiv.org/abs/2405.13576" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">FlashRAG: Modular Toolkit for Efficient RAG Research (2024)</a></li>
+                          <li><a href="https://arxiv.org/abs/2408.11381" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">RAGLAB: Modular Unified Framework for RAG (2024)</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://docs.haystack.deepset.ai/docs/pipelines" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Haystack 2: Pipelines and modular RAG</a></li>
+                          <li><a href="https://python.langchain.com/docs/expression_language/how_to/rag" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangChain: Composable RAG pipelines</a></li>
+                          <li><a href="https://docs.llamaindex.ai/en/stable/understanding/rg/rag/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LlamaIndex: RAG architecture and modules</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://github.com/Lightning-AI/FlashRAG" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">FlashRAG</a></li>
+                          <li><a href="https://github.com/RUC-NLPIR/RAGLAB" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">RAGLAB</a></li>
+                          <li><a href="https://github.com/deepset-ai/haystack" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">deepset Haystack</a></li>
+                          <li><a href="https://github.com/langchain-ai/langchain" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangChain</a></li>
+                          <li><a href="https://github.com/run-llama/llama_index" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LlamaIndex</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://aws.amazon.com/blogs/publicsector/use-modular-architecture-for-flexible-and-extensible-rag-based-generative-ai-solutions/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">AWS: Modular architecture for RAG solutions</a></li>
+                          <li><a href="https://alawiii.github.io/Rag-book/chapter5/modular-rag.html" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">RAG Book: Modular RAG overview</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                </>
+              ) : selectedTechnique.id === 'corrective-rag' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism (short conceptual overview)
+                    </h2>
+                    <div className="bg-gradient-to-br from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed">
+                        Corrective RAG (CRAG) augments standard RAG with an explicit retrieval quality evaluator and corrective actions. Given a query, CRAG retrieves candidate documents, scores their relevance/quality, and takes one of three actions: use-and-refine high-confidence context, discard-and-retrieve-again (often via broader/web search) for low confidence, or blend refined context with supplemental search for medium confidence. This reduces hallucinations by ensuring generation is grounded in vetted, up-to-date evidence.
+                      </p>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Initial retrieval: fetch top-N candidates (dense/sparse/hybrid) and optionally rerank.</li>
+                        <li>Evaluate retrieval: score relevance, timeliness, source reliability; assign confidence band (high/medium/low).</li>
+                        <li>Corrective action:
+                          <ul className="list-disc list-inside ml-5 space-y-1">
+                            <li>High: refine with deduplication and knowledge refinement (decompose-then-recompose) and proceed.</li>
+                            <li>Medium: refine and supplement via targeted web search or alternative index.</li>
+                            <li>Low: discard and re-retrieve with query rewrite, filters, or broader source set.</li>
+                          </ul>
+                        </li>
+                        <li>Grounded generation: produce answer with citations and calibrated confidence.</li>
+                        <li>Optional verification: lightweight faithfulness/groundedness check; loop if thresholds unmet.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Use retrieval-evaluator gating with explicit thresholds; log confidence and chosen action.',
+                        'Apply strong rerankers and aggressive deduplication; restrict to evidence spans to cut noise.',
+                        'Constrain query rewrites with guardrails to avoid topic drift during re-retrieval.',
+                        'Time-filter sources and encode freshness requirements for dynamic domains.',
+                        'Require citation support for factual claims; surface provenance to users.',
+                        'Cache retrieval and evaluator outputs; share across similar queries to reduce cost/latency.',
+                        'Add abstention/deferral when confidence remains low after corrections.',
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Hard real-time paths with strict SLOs; evaluator and re-retrieval loops add latency.</li>
+                        <li>Closed-book tasks where the base model reliably answers without external context.</li>
+                        <li>Homogeneous, high-quality corpora with consistently high recall/precision already.</li>
+                        <li>Environments prohibiting external/web access (compliance) without approved mirrors.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Evaluator drift or miscalibration causing over/under-correction.</li>
+                        <li>Query drift during rewrites; answers become off-topic.</li>
+                        <li>Unbounded cost from repeated web searches and long contexts.</li>
+                        <li>Combining outdated with fresh sources without temporal reconciliation.</li>
+                        <li>Weak provenance—users can’t verify claims; trust erodes.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Retrieval quality evaluation with confidence bands',
+                        'Corrective re-retrieval and targeted web supplementation',
+                        'Knowledge refinement: decompose-then-recompose evidence',
+                        'Reranking, deduplication, and noise filtering',
+                        'Grounded generation with citations and confidence',
+                        'Optional post-generation verification/abstention',
+                      ].map((f) => (
+                        <div key={f} className="p-3 bg-gray-800/40 rounded-lg border border-gray-700/40">
+                          <span className="text-gray-300 text-sm">{f}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Answer faithfulness/groundedness and hallucination rate (e.g., via LLM/Judge + spot-audit).</li>
+                        <li>Retrieval precision/recall@k and citation support rate.</li>
+                        <li>Evaluator calibration (ROC-AUC, ECE) and action distribution (use/blend/reretrieve).</li>
+                        <li>Latency budget by stage (retrieve, evaluate, correct, generate).</li>
+                        <li>Cost per query and token budget adherence.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 text-sm text-gray-300 space-y-2">
+                      <p>Drivers: retrieval tokens (search + rerank), evaluator tokens, web search API calls, and larger context windows from refinement/blending.</p>
+                      <ul className="list-disc list-inside space-y-1">
+                        <li>Control with retrieval-necessity gating, reranker-first pruning, and evidence-span clipping.</li>
+                        <li>Cache retrieval/evaluator outputs; memoize query rewrites.</li>
+                        <li>Use compression (summaries, embeddings) before generation.</li>
+                        <li>Enforce max loops and strict timeouts for corrective steps.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Regulated Q&A (legal, medical, finance) where provenance and accuracy are critical.</li>
+                        <li>Rapidly changing domains (policies, pricing, product docs, security advisories).</li>
+                        <li>Noisy or heterogeneous knowledge bases; long-tail or ambiguous queries.</li>
+                        <li>Research assistants requiring source blending and freshness controls.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://arxiv.org/abs/2401.15884" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Corrective Retrieval‑Augmented Generation (Yan et al., 2024)</a></li>
+                          <li><a href="https://arxiv.org/abs/2005.11401" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Retrieval‑Augmented Generation (RAG) (Lewis et al., 2020)</a></li>
+                          <li><a href="https://arxiv.org/abs/2310.11511" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Self‑RAG (Shinn et al., 2023)</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://docs.llamaindex.ai/en/stable/examples/workflow/corrective_rag_pack/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LlamaIndex: Corrective RAG workflow</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://docs.llamaindex.ai/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LlamaIndex (RAG components, evaluators, web search)</a></li>
+                          <li><a href="https://python.langchain.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangChain (retrievers, rerankers, evaluators)</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://discuss.huggingface.co/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Hugging Face Forums: RAG and evaluation threads</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                </>
+              ) : selectedTechnique.id === 'graph-rag' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism (short conceptual overview)
+                    </h2>
+                    <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed">
+                        Retrieval‑augmented generation over a knowledge graph. The system extracts entities/relations, retrieves a
+                        relevant subgraph via graph traversal (often 1–2 hops plus neighborhood expansion), serializes salient facts/paths,
+                        and conditions the LLM on that structured context to produce grounded, relation‑aware answers.
+                      </p>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Ingestion: NER/RE to extract entities and relations; canonicalize with ontology/schema; de‑duplicate.</li>
+                        <li>Graph construction: upsert nodes/edges; attach provenance, timestamps, and confidence scores.</li>
+                        <li>Indexing: build graph indexes (IDs, labels, adjacency), hybrid text/vector indexes for nodes/docs.</li>
+                        <li>Query understanding: detect entities/intent; map to node IDs; choose traversal strategy.</li>
+                        <li>Retrieval: bounded multi‑hop traversal + neighborhood expansion; optional hybrid re‑rank.</li>
+                        <li>Context assembly: summarize paths, merge evidence, dedupe, and format as factual statements.</li>
+                        <li>Generation: prompt LLM with query + structured graph context; optionally cite sources.</li>
+                        <li>Post‑processing: verify/critique, add citations, cache results, and update feedback signals.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Keep traversals shallow by default (1–2 hops) with explicit caps; expand only on uncertainty.',
+                        'Preserve provenance on every node/edge; make citations first‑class in prompts and outputs.',
+                        'Combine graph traversal with vector search for recall, then re‑rank on path relevance.',
+                        'Normalize schemas and entity IDs; resolve aliases; prevent node duplication at ingest.',
+                        'Continuously validate graph quality (consistency rules, temporal sanity, schema constraints).',
+                        'Introduce caching at multiple layers: entity mapping, subgraph retrieval, and context summaries.',
+                        'Monitor retrieval quality with held‑out QA sets; tune hop limits and re‑ranking thresholds.',
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Simple fact queries already answered well by baseline RAG or the model’s parametric knowledge.</li>
+                        <li>Domains without reliable entity/relationship structure or where extraction is too noisy.</li>
+                        <li>Hard real‑time SLAs where traversal and formatting overhead breach latency budgets.</li>
+                        <li>Environments unable to maintain graph freshness and provenance at acceptable cost.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Unbounded traversals returning large, low‑precision subgraphs and ballooning token costs.</li>
+                        <li>Poor entity resolution leading to duplicate or fragmented nodes and broken paths.</li>
+                        <li>Missing or weak provenance, making answers hard to verify and trust.</li>
+                        <li>Out‑of‑date graphs; no refresh pipeline or temporal reasoning for time‑sensitive facts.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Knowledge‑graph traversal with hop and neighborhood controls',
+                        'Path‑aware retrieval and multi‑hop reasoning',
+                        'Entity‑centric search and hybrid graph+vector recall',
+                        'Provenance tracking and citation generation',
+                        'Schema/ontology alignment and validation',
+                        'Optional GNN/embedding enrichment for scoring and re‑rank',
+                      ].map((feat) => (
+                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Answer accuracy and faithfulness vs. ground truth with citation correctness.</li>
+                        <li>Subgraph precision/recall; reranker MRR/NDCG; path relevance scores.</li>
+                        <li>Latency p50/p95, traversal cost, and tokens per successful answer.</li>
+                        <li>Graph freshness (data lag), entity resolution quality, and provenance coverage.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Ingest compute: NER/RE, canonicalization, and validation pipelines.</li>
+                        <li>Query compute: bounded multi‑hop traversal, hybrid re‑rank, and context summarization.</li>
+                        <li>Token controls: serialize only salient facts/paths; cap facts per entity and per hop.</li>
+                        <li>Caching: memoize entity mappings, hot subgraphs, and formatted context snippets.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Scientific/medical/legal research where multi‑document relationships matter.</li>
+                        <li>Financial analysis, risk graphs, and supply‑chain investigations.</li>
+                        <li>Enterprise knowledge exploration with strong auditability and citations.</li>
+                        <li>Recommendation, root‑cause, and threat‑intel over richly linked data.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://arxiv.org/abs/2408.08921" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Graph Retrieval‑Augmented Generation: A Survey (2024)</a></li>
+                          <li><a href="https://arxiv.org/abs/2501.00309" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Retrieval‑Augmented Generation with Graphs (GraphRAG) (2025)</a></li>
+                          <li><a href="https://arxiv.org/abs/2503.19314" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">RGL: Graph‑centric modular framework for GraphRAG (2025)</a></li>
+                          <li><a href="https://arxiv.org/abs/2506.05690" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">When to Use Graphs in RAG (2025)</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://github.com/microsoft/graphrag" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Microsoft GraphRAG (official repository)</a></li>
+                          <li><a href="https://neo4j.com/developer-blog/graphrag-field-guide-rag-patterns/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Neo4j GraphRAG Field Guide</a></li>
+                          <li><a href="https://aws.amazon.com/blogs/database/introducing-the-graphrag-toolkit/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">AWS: Introducing the GraphRAG Toolkit</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://github.com/microsoft/graphrag" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Microsoft GraphRAG</a></li>
+                          <li><a href="https://neo4j.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Neo4j Graph DB</a></li>
+                          <li><a href="https://python.langchain.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangChain: Knowledge Graph / Neo4j integrations</a></li>
+                          <li><a href="https://docs.llamaindex.ai/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LlamaIndex: Knowledge Graph Index</a></li>
+                          <li><a href="https://arxiv.org/abs/2503.19314" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">RGL framework (paper)</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://thenewstack.io/graph-rag-how-to-squeeze-more-value-from-ai/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">The New Stack: Graph RAG overview</a></li>
+                          <li><a href="https://neo4j.com/developer-blog/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Neo4j Developer Blog</a></li>
+                          <li><a href="https://github.com/microsoft/graphrag/issues" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">microsoft/graphrag issues & discussions</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                </>
+              ) : selectedTechnique.id === 'self-rag' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism (short conceptual overview)
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-indigo-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed">
+                        Self-RAG augments generation with adaptive retrieval and self-reflection. The model decides if/what to retrieve, generates an answer, then critiques both retrieved context and its own output (via reflection/critique tokens) to improve factuality and relevance, optionally re-retrieving and refining before finalizing with citations.
+                      </p>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Assess retrieval necessity (predict whether external knowledge is needed).</li>
+                        <li>Retrieve candidate passages (dense/sparse/hybrid) and optionally rerank.</li>
+                        <li>Draft answer conditioned on top-k context and parametric knowledge.</li>
+                        <li>Self-critique with reflection tokens: rate faithfulness, sufficiency, and usefulness of context and answer.</li>
+                        <li>If low confidence or inconsistencies detected: refine query, re-retrieve, and regenerate.</li>
+                        <li>Finalize answer with calibrated confidence and source attributions.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Use retrieval-necessity gating to avoid unnecessary context pulls.',
+                        'Employ strong rerankers and deduplication to improve context precision before generation.',
+                        'Constrain critique format (scores + short rationale) to limit reflection drift and token bloat.',
+                        'Enforce citation grounding: require evidence spans for factual claims.',
+                        'Cache retrieval results and use semantic compression to control context size.',
+                        'Track confidence thresholds to trigger re-retrieval vs. abstention/deferral.',
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Simple, closed-book queries where base model answers meet quality bars.</li>
+                        <li>Hard real-time paths with strict latency SLOs (reflection cycles add delay).</li>
+                        <li>Scenarios with unreliable or unavailable external knowledge sources.</li>
+                        <li>Thin or outdated indexes where re-retrieval won’t improve grounding.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Over-retrieval or low-quality passages overwhelming generation.</li>
+                        <li>Reflection hallucinations: critiques introducing unsupported claims.</li>
+                        <li>Feedback loops where low confidence repeatedly triggers redundant cycles.</li>
+                        <li>Evaluation mismatch: optimizing relevance while neglecting faithfulness.</li>
+                        <li>Stale indexes causing temporal inaccuracies.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Retrieval necessity prediction (gating)',
+                        'Critique tokens for faithfulness and sufficiency scoring',
+                        'Conditional re-retrieval and query refinement',
+                        'Citation enforcement and evidence attribution',
+                        'Confidence calibration and abstention fallback',
+                        'Hybrid retrieval with reranking and compression',
+                      ].map((feat) => (
+                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Faithfulness and answer relevancy (e.g., RAGAS) and citation coverage.</li>
+                        <li>Context precision/recall after reranking; hallucination rate.</li>
+                        <li>Latency p50/p95 and cost per answer; reflection cycle counts.</li>
+                        <li>Abstention/deferral rate when confidence is low.</li>
+                        <li>Correction rate: proportion of answers improved after critique.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Extra tokens from retrieved passages, critique prompts, and potential re-generation.</li>
+                        <li>Mitigate with retrieval gating, aggressive reranking/compression, semantic caching.</li>
+                        <li>Cap reflection iterations; early-exit on high confidence.</li>
+                        <li>Monitor per-request token budgets and apply dynamic k for retrieval.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-pink-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>High-accuracy QA and fact verification with citations.</li>
+                        <li>Regulated domains (medical, legal, finance) needing grounded outputs.</li>
+                        <li>Research assistants that cross-reference and self-check claims.</li>
+                        <li>Enterprise knowledge assistants over evolving corpora.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://arxiv.org/abs/2310.11511" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection (Asai et al., 2023)</a></li>
+                          <li><a href="https://arxiv.org/abs/2312.10997" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Retrieval-Augmented Generation for Large Language Models: A Survey (2023)</a></li>
+                          <li><a href="https://arxiv.org/abs/2401.05856" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Seven Failure Points When Engineering a RAG System (2024)</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://cookbook.openai.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">OpenAI Cookbook: RAG and evaluation patterns</a></li>
+                          <li><a href="https://docs.llamaindex.ai/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LlamaIndex: RAG pipelines, rerankers, evaluators</a></li>
+                          <li><a href="https://python.langchain.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangChain: Retrieval, reranking, evaluation</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://www.pinecone.io/learn/series/rag/ragas/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">RAGAS: Faithfulness/relevancy metrics</a></li>
+                          <li><a href="https://cohere.com/rerank" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Cohere Rerank / other cross-encoders</a></li>
+                          <li><a href="https://www.trychroma.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Chroma / pgvector / FAISS for vector search</a></li>
+                          <li><a href="https://haystack.deepset.ai/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Haystack</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://thenewstack.io/a-blueprint-for-implementing-rag-at-scale/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Blueprints for RAG at scale</a></li>
+                          <li><a href="https://github.com/olegovsyannikov/rag-patterns" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">RAG Patterns (curated)</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                </>
+              ) : selectedTechnique.id === 'circuit-breaker' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism (short conceptual overview)
+                    </h2>
+                    <div className="bg-gradient-to-br from-red-500/10 to-orange-500/10 border border-red-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed">
+                        Circuit Breaker protects callers from repeatedly invoking an unhealthy dependency by short‑circuiting calls when
+                        failure rates or timeouts exceed thresholds. It runs as a lightweight state machine with Closed → Open → Half‑Open
+                        transitions based on rolling error/timeout windows and probe results, returning fast failures or fallbacks until
+                        recovery is verified.
+                      </p>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Observe outcomes in a rolling window (timeouts, connection errors, HTTP 5xx, retriable errors).</li>
+                        <li>Evaluate trip conditions (e.g., error rate ≥ threshold with minimum calls, or consecutive failures count).</li>
+                        <li>Transition to Open and short‑circuit further calls; immediately return error or fallback.</li>
+                        <li>After a cool‑down, enter Half‑Open and allow limited concurrent probes with timeouts.</li>
+                        <li>If probes meet success criteria, Close and reset counters; on failure, return to Open.</li>
+                        <li>Emit metrics and events on every transition for monitoring and alerting.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[ 
+                        'Always set timeouts before adding retries or breakers; no timeout → thread/connection pool exhaustion.',
+                        'Use sliding windows with minimum number of calls to avoid tripping on low traffic.',
+                        'Tune thresholds from SLOs and baselines (separate read vs write, per endpoint/tenant).',
+                        'Cap Half‑Open probes and use jittered backoff to prevent stampedes.',
+                        'Provide meaningful fallbacks (cached/stale data, alternate provider, graceful degradation).',
+                        'Combine with Bulkhead isolation and bounded concurrency per dependency.',
+                        'Differentiate error classes (timeouts vs 5xx vs 4xx) and exclude caller cancellations.',
+                        'Make breaker state observable: metrics, logs, traces, and alert on flapping or prolonged Open.',
+                        'Prefer library/mesh support (Resilience4j/Polly/Envoy/Istio) for consistency and operability.',
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Local, in‑process operations where latency is microseconds and failures are not remote‑dependency related.</li>
+                        <li>Idempotent, low‑cost operations where a simple retry with backoff suffices.</li>
+                        <li>Hard real‑time paths where added checks would violate strict latency budgets.</li>
+                        <li>Critical actions that must always attempt (no safe fallback) and where Open would be worse than trying once.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>No timeout or shared unbounded pools → resource exhaustion despite breaker.</li>
+                        <li>Treating all errors equally; tripping on caller cancellations or expected 4xx.</li>
+                        <li>Low traffic without a minimum‑calls guard → noisy trips and flapping.</li>
+                        <li>Half‑Open allowing full traffic instead of limited probes.</li>
+                        <li>Breaker state not exposed to ops → silent failures, no alerts.</li>
+                        <li>Global/shared state across instances without coordination, causing inconsistent behavior.</li>
+                        <li>Retry storms combined with Open state due to upstream retries not disabled on short‑circuits.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Rolling metrics window with minimum call count',
+                        'Open/Closed/Half‑Open state machine',
+                        'Short‑circuiting with fast failure or fallback',
+                        'Probe policy in Half‑Open with capped concurrency',
+                        'Per‑endpoint configuration and tagging',
+                        'Metrics, logs, and tracing hooks for observability',
+                        'Integration with retries, timeouts, bulkheads, and backpressure',
+                        'Support via libraries and service meshes/API gateways',
+                      ].map((feat) => (
+                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Trip rate (Open events) and time spent Open; flapping frequency.</li>
+                        <li>Short‑circuited requests vs prevented downstream calls; fallback hit rate.</li>
+                        <li>Probe success ratio and time to recovery (Open → Closed).</li>
+                        <li>Downstream p95/p99 latency and error rate vs baseline.</li>
+                        <li>Caller pool utilization, queue depth, and shed/drop rate under stress.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Token usage: Not applicable (no LLM calls). Keep prompts separate from breaker logic if used by callers.</li>
+                        <li>CPU/memory: O(1) per call; small rolling window buffers/counters. Prefer ring buffers to limit memory.</li>
+                        <li>Latency overhead: Microseconds to low milliseconds for checks; ensure non‑blocking metrics I/O.</li>
+                        <li>Cardinality: Keep label dimensions (per endpoint/tenant) bounded to avoid metrics blowup.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Microservices calling unreliable downstreams (DB replicas, search, payment, email/SMS, third‑party APIs).</li>
+                        <li>Edge/API gateways protecting upstreams from dependency outages.</li>
+                        <li>Aggregator services with fan‑out where a single failing branch would otherwise block the whole request.</li>
+                        <li>Service mesh/gateway level protection with outlier detection and ejection.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li>Release It! (2nd ed.) – Michael Nygard</li>
+                          <li>Tail at Scale – Dean and Barroso</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li>Azure Architecture Center – Circuit Breaker</li>
+                          <li>AWS Prescriptive Guidance – Circuit Breaker</li>
+                          <li>Microsoft Cloud Design Patterns – Circuit Breaker</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li>Resilience4j (Java)</li>
+                          <li>Polly ( .NET )</li>
+                          <li>Envoy/Istio outlier detection (service mesh)</li>
+                          <li>Opossum (Node.js), gobreaker (Go), pybreaker (Python)</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li>Martin Fowler – Circuit Breaker bliki</li>
+                          <li>Netflix Hystrix (archived) and deprecation notes; Resilience4j migration guides</li>
+                          <li>Conference talks and SRE blogs on resilience patterns</li>
+                        </ul>
+                      </div>
+                    </div>
+                </section>
+                </>
+              ) : selectedTechnique.id === 'retry-backoff' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism (short conceptual overview)
+                    </h2>
+                    <div className="bg-gradient-to-br from-orange-500/10 to-yellow-500/10 border border-orange-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed">
+                        Intelligent Retry with Backoff handles transient faults by retrying failed operations with increasing, jittered delays.
+                        Use exponential backoff with full jitter, classify errors as retryable vs permanent, respect server hints (e.g., Retry-After),
+                        and enforce budgets (max attempts/total time). Always set timeouts first and ensure operations are idempotent or protected by
+                        idempotency keys.
+                      </p>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Execute with a strict timeout and cancellation support.</li>
+                        <li>On failure, classify the error (e.g., network timeout, 5xx, 429 with Retry-After, vs permanent 4xx).</li>
+                        <li>Decide retry eligibility based on error class, HTTP method/idempotency, and policy.</li>
+                        <li>Compute delay: exponential backoff with cap (e.g., base × 2^attempt up to max), apply full jitter; if present, obey Retry-After.</li>
+                        <li>Enforce budgets: max attempts and max total elapsed time; apply per-tenant/endpoint concurrency limits.</li>
+                        <li>Retry; on success, reset state. On exhaustion, escalate: fallback, DLQ, or user-visible error.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Set timeouts before retries; no timeout → pool/thread exhaustion.',
+                        'Use exponential backoff with full jitter to avoid synchronized retry storms.',
+                        'Respect server guidance (e.g., Retry-After, rate-limit headers); propagate backoff hints end‑to‑end.',
+                        'Retry only idempotent operations by default (HTTP GET/HEAD/PUT/DELETE) or use idempotency keys for writes.',
+                        'Classify errors: retry 408/425/429/5xx and network timeouts; avoid retrying 400/401/403/404 unless policy says otherwise.',
+                        'Bound retries: cap attempts and total time; implement a global retry budget to prevent amplification.',
+                        'Combine with circuit breakers, bulkheads, and bounded concurrency; disable nested retries across layers.',
+                        'Emit metrics, traces, and structured logs for attempts, delays, outcomes, and headers (e.g., Retry-After).',
+                        'Provide fallbacks (cached/stale, alternate provider) and dead-letter queues for exhausted retries.',
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Non-idempotent operations without idempotency protection (e.g., charges without idempotency keys).</li>
+                        <li>Permanent failures (e.g., 400 validation, 401/403 auth) where retrying cannot succeed without change.</li>
+                        <li>Hard real-time UX where additional delay budgets are unacceptable; prefer fast failure or alternate flow.</li>
+                        <li>Deeply layered systems already performing retries (client, gateway, SDK) → disable at one layer to avoid storms.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>No jitter → synchronized retries and thundering herd under outages.</li>
+                        <li>Ignoring Retry-After or provider backoff headers; treating 429 like generic 5xx.</li>
+                        <li>Retrying non-idempotent POSTs without idempotency keys → duplicates and side effects.</li>
+                        <li>Infinite or unbounded retries; no cap on attempts or total time.</li>
+                        <li>Layered retries (SDK + proxy + app) amplifying traffic during incidents.</li>
+                        <li>Retrying client-side cancellations/timeouts caused by user aborts.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Configurable base delay, multiplier, cap, max attempts, and total duration.',
+                        'Jitter strategies (full, equal, decorrelated) to desynchronize clients.',
+                        'Error classification and policy per endpoint/method/tenant.',
+                        'Header-aware behavior (Retry-After, rate-limit headers).',
+                        'Idempotency support (keys, dedupe windows) for safe writes.',
+                        'Global retry budgets and per-dependency concurrency caps.',
+                        'Observability hooks: metrics, tracing spans, structured logs.',
+                        'Integration with circuit breakers, bulkheads, queues, and DLQs.',
+                      ].map((feat) => (
+                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Retry success rate and average attempts-to-success.</li>
+                        <li>Total time-to-success vs baseline; p95/p99 latency impact.</li>
+                        <li>Error-rate reduction (429/5xx) and fallback/DLQ rates.</li>
+                        <li>Duplicate suppression rate for idempotent writes; replay incidents avoided.</li>
+                        <li>Retry amplification factor under incidents; adherence to global retry budget.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>LLM/API cost: each retry replays prompt + completion tokens; cap attempts and use caching to reduce spend.</li>
+                        <li>CPU/memory: timers and state are O(1) per call; prefer async I/O to avoid thread blocking.</li>
+                        <li>Connections: bound concurrent in-flight retries; avoid retrying long bodies/uploads.</li>
+                        <li>Network/egress: retries add traffic; enforce backoff caps and exponential spacing under outages.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Third‑party APIs that emit 429/5xx with Retry‑After (payments, email/SMS, LLM providers).</li>
+                        <li>Mobile/edge clients on unreliable networks (lossy or high‑latency links).</li>
+                        <li>Event processing with at‑least‑once semantics; transactional deadlocks and transient DB timeouts.</li>
+                        <li>Fan‑out aggregators where individual branch failures are often transient.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://arxiv.org/abs/1402.5207" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Bender et al. (2014): How to Scale Exponential Backoff</a></li>
+                          <li><a href="https://sre.google/sre-book/handling-overload/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Google SRE: Handling Overload (client-side throttling, backoff, jitter)</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/retry-backoff.html" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">AWS Prescriptive Guidance: Retry with Backoff</a></li>
+                          <li><a href="https://learn.microsoft.com/en-us/azure/architecture/patterns/retry" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Azure Architecture Center: Retry pattern</a></li>
+                          <li><a href="https://cloud.google.com/storage/docs/retry-strategy" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Google Cloud: Retry strategy (exponential backoff with jitter)</a></li>
+                          <li><a href="https://www.rfc-editor.org/rfc/rfc9110.html#name-retry-after" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">RFC 9110: Retry-After header</a></li>
+                          <li><a href="https://grpc.io/docs/guides/retry/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">gRPC: Retry policy</a></li>
+                          <li><a href="https://stripe.com/docs/idempotency" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Stripe: Idempotency keys</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://resilience4j.readme.io/docs/retry" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Resilience4j (Java): Retry</a></li>
+                          <li><a href="https://github.com/App-vNext/Polly" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Polly (.NET)</a></li>
+                          <li><a href="https://tenacity.readthedocs.io/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Tenacity (Python)</a></li>
+                          <li><a href="https://github.com/litl/backoff" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">backoff (Python)</a></li>
+                          <li><a href="https://github.com/hashicorp/go-retryablehttp" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">go-retryablehttp (Go)</a></li>
+                          <li><a href="https://github.com/softonic/axios-retry" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">axios-retry (JavaScript)</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">AWS Architecture Blog: Exponential Backoff and Jitter (Marc Brooker)</a></li>
+                          <li><a href="https://medium.com/yandex/good-retry-bad-retry-an-incident-story-648072d3cee6" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Good Retry, Bad Retry: An Incident Story (Yandex)</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                </section>
+                </>
+              ) : selectedTechnique.id === 'graceful-degradation' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism (short conceptual overview)
+                    </h2>
+                    <div className="bg-gradient-to-br from-yellow-500/10 to-green-500/10 border border-yellow-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed">
+                        Maintain core user journeys when the system faces failures or overload by proactively reducing service
+                        quality, disabling non-critical features, and reallocating resources to essentials. Prefer partial,
+                        predictable functionality over total outage; combine with load shedding, throttling, circuit breaking,
+                        caching, and feature flags.
+                      </p>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Classify features: critical, important, nice-to-have; map to business SLAs/SLOs.</li>
+                        <li>Define degradation levels (L1/L2/L3) with triggers (SLO errors, p95/p99 latency, queue depth, saturation).</li>
+                        <li>Implement controls: feature flags, QoS tiers, graceful timeouts, fallbacks, cached defaults, alternate providers.</li>
+                        <li>Detect stress/failure via observability; activate level-specific actions automatically at ingress and service tiers.</li>
+                        <li>Communicate status to users and ops; provide alternative flows and clear messaging.</li>
+                        <li>Recover gradually; verify metrics at each step; rollback on regressions; complete post-incident review.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Kill-switches and feature flags per capability; exercise them in game days.',
+                        'Serve stale/cached results over errors; precompute fallbacks for hot paths and critical pages.',
+                        'Ingress load shedding and prioritization by tenant/QoS; enforce rate limits and request budgets.',
+                        'Isolate with bulkheads and bounded pools; apply backpressure to prevent cascading failures.',
+                        'Make degradation observable: events, metrics, traces, SLO-aware alerts, and runbooks.',
+                        'Design a clean degraded UX: subtle messaging, alternative flows, and user-initiated retries.',
+                        'Layer with circuit breakers, retries, autoscaling, and CDN strategies for resilience.',
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Safety-critical flows where any reduction is unacceptable; design for fault tolerance instead.</li>
+                        <li>Regulated behaviors that must remain fully available or consistent under all conditions.</li>
+                        <li>Low-impact internal tools where added complexity outweighs resilience benefits.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Untested kill-switches that fail during incidents; lack of recovery criteria leading to flapping.</li>
+                        <li>Global toggles without tenant/priority specificity; equal impact on critical customers.</li>
+                        <li>Hidden coupling across services causing cascading degradations and unexpected side effects.</li>
+                        <li>Confusing UX under degradation (cryptic errors, no alternatives, silent failures).</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Feature flags and scoped kill-switches',
+                        'Ingress load shedding, priority queues, and rate limiting',
+                        'Fallbacks: stale cache, static content, alternate providers',
+                        'Quality knobs: reduce model/context size, sampling, or fidelity',
+                        'Isolation: bulkheads, bounded pools, and backpressure',
+                        'Observability: degradation events, dashboards, and SLO alerts',
+                      ].map((feat) => (
+                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Core journey availability during incidents (auth, add-to-cart, checkout success rates).</li>
+                        <li>p95/p99 latency and error rate in degraded vs normal modes by route/service.</li>
+                        <li>Load shed percentage; protected capacity for priority traffic; rate-limit hit rate.</li>
+                        <li>Time in degraded states; flapping frequency; mean time to recovery to normal.</li>
+                        <li>User satisfaction/CSAT and revenue preserved during incidents.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>LLM paths: shorten context, reduce tool calls, prefer cached retrieval; cap iterations and depth.</li>
+                        <li>Compute: cap concurrency; shrink pool sizes per dependency; enforce request budgets.</li>
+                        <li>Network/storage: serve from CDN/caches; pre-render critical pages; defer non-essential writes.</li>
+                        <li>Cost: track cost-per-success during incidents; disable expensive enhancements first.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>High-traffic events (launches, sales) where optional features can be scaled down.</li>
+                        <li>Third-party dependency outages where alternates or cached data sustain core flows.</li>
+                        <li>Agentic systems with external tools—preserve essential actions; pause enhancements.</li>
+                        <li>Multi-tenant SaaS with tiered QoS and customer-specific prioritization.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://dl.acm.org/doi/10.1145/1993744.1993752" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Dean & Barroso – The Tail at Scale</a></li>
+                          <li><a href="https://arxiv.org/abs/2103.03956" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Quartermaster: Modeling and Simulating System Degradation</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://sre.google/sre-book/handling-overload/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Google SRE Book: Handling Overload</a></li>
+                          <li><a href="https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/rel_design_principles.html" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">AWS Well-Architected: Reliability Design Principles</a></li>
+                          <li><a href="https://learn.microsoft.com/azure/architecture/patterns/throttling" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Azure Architecture Center: Throttling Pattern</a></li>
+                          <li><a href="https://learn.microsoft.com/azure/architecture/patterns/bulkhead" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Azure Architecture Center: Bulkhead Pattern</a></li>
+                          <li><a href="https://learn.microsoft.com/azure/architecture/patterns/circuit-breaker" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Azure Architecture Center: Circuit Breaker Pattern</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li>Resilience libraries: <a href="https://resilience4j.readme.io/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Resilience4j</a>, <a href="https://github.com/App-vNext/Polly" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Polly</a></li>
+                          <li>Traffic control: <a href="https://www.envoyproxy.io/docs/envoy/latest/intro/what_is_envoy" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Envoy</a> outlier detection, <a href="https://istio.io/latest/docs/tasks/traffic-management/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Istio</a> traffic policies, NGINX rate limiting</li>
+                          <li>Feature flags: <a href="https://www.getunleash.io/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Unleash</a>, LaunchDarkly</li>
+                          <li>Caching/CDN: Cloudflare, Fastly, CDN-backed static fallbacks</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://blog.cloudflare.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Cloudflare Engineering Blog: Load Shedding and Overload</a></li>
+                          <li>Netflix Engineering posts on resilience and fallback strategies; incident write-ups</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                </>
+              ) : selectedTechnique.id === 'health-monitoring' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism (short conceptual overview)
+                    </h2>
+                    <div className="bg-gradient-to-br from-green-500/10 to-blue-500/10 border border-green-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed">
+                        Multi-layered observability that continuously measures service, infrastructure, and model quality SLIs,
+                        combines Golden Signals with model-centric metrics, performs anomaly/predictive analysis, and drives
+                        automated remediation via runbooks and escalation policies.
+                      </p>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Define SLIs and SLOs: latency, errors, saturation, traffic; plus model quality, safety, drift.</li>
+                        <li>Instrument code and infra: OpenTelemetry traces/metrics/logs; Prometheus exporters; K8s probes.</li>
+                        <li>Collect and store: metrics TSDB, logs, trace backends; control label/cardinality and retention.</li>
+                        <li>Baseline and detect: thresholds, statistical anomaly detection, canary analysis, dependency health.</li>
+                        <li>Alert and route: low-churn alert rules bound to SLOs with on-call, paging, and silencing windows.</li>
+                        <li>Auto-remediate: safe actions (restart, scale, route failover, cache flush) via runbooks; verify recovery.</li>
+                        <li>Review and improve: incident postmortems, update dashboards/runbooks, refine SLOs and automation.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Start from user journeys → define SLIs, set SLOs, then derive alerting; avoid raw CPU-based alerts.',
+                        'Use the Golden Signals (latency, traffic, errors, saturation) and complement with RED/USE methods.',
+                        'Correlate traces, metrics, and logs via consistent IDs; adopt OpenTelemetry semantic conventions.',
+                        'Combine whitebox (internals) with blackbox/synthetic probes; monitor dependencies explicitly.',
+                        'Manage metrics cardinality (labels) and retention; budget for storage and query performance.',
+                        'Codify runbooks and safe automation; gate risky actions with safeguards and verifications.',
+                        'Use canary/blue-green with automated analysis before full rollouts; rollback criteria pre-defined.',
+                        'Track model KPIs (quality, drift, safety) alongside system KPIs; sample evaluations on a budget.',
+                        'Practice incident response (game days/chaos) and keep dashboards/runbooks version-controlled.',
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Throwaway prototypes without uptime requirements or on-call ownership.</li>
+                        <li>Single-user/offline tools where local logs suffice and paging is inappropriate.</li>
+                        <li>Environments without basic instrumentation or where metrics storage cannot be supported.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Alert fatigue: too many threshold alerts not tied to SLOs; missing silence windows and deduping.</li>
+                        <li>Ignoring saturation and p95/p99 latency; relying on averages and host-level CPU alone.</li>
+                        <li>Unbounded label cardinality causing cost/runaway time series and slow queries.</li>
+                        <li>Missing readiness/startup probes; only liveness → crash loops and cold start flapping.</li>
+                        <li>No runbooks or unsafe automation; remediation actions without verification or rollback.</li>
+                        <li>Tracking model metrics without drift/safety monitors; no human-in-the-loop for critical paths.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Unified health score across service, infra, and model dimensions',
+                        'Golden Signals + RED/USE dashboards and dependency maps',
+                        'Anomaly detection and predictive failure analysis',
+                        'Synthetic probes and blackbox checks for critical journeys',
+                        'Trace-based health and distributed causality graphs',
+                        'Automated alerting with on-call routing and escalation',
+                        'Auto-remediation hooks with verification and rollback',
+                        'Canary/blue-green analysis and SLO error budget policies',
+                      ].map((feat) => (
+                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Time to detect (TTD) and mean time to resolve (MTTR) incidents.</li>
+                        <li>Incident rate and SLO compliance; error budget burn rate.</li>
+                        <li>Alert precision/recall; pages per week per on-call and false-positive rate.</li>
+                        <li>p95/p99 latency, error rate, and saturation vs baseline by service/route.</li>
+                        <li>Model quality uptime (e.g., accuracy/Sx metrics above threshold) and drift rate.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Telemetry cost: control metrics label cardinality; set retention and downsampling policies.</li>
+                        <li>Tracing overhead: sample rates and tail-based sampling; cap spans per request.</li>
+                        <li>LLM evals: budget tokens for periodic canaries and spot checks; log minimal samples with redaction.</li>
+                        <li>Compute: anomaly detectors/canary analysis run on batch windows; isolate from hot path.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Production model serving and agentic systems with external dependencies/tools.</li>
+                        <li>Multi-tenant SaaS APIs and mission-critical customer-facing services.</li>
+                        <li>Data/feature pipelines and retrieval layers backing RAG or personalization.</li>
+                        <li>Progressive delivery (canary/blue-green) and high-change-rate teams.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li>Dean & Barroso – The Tail at Scale</li>
+                          <li>Brendan Gregg – USE method; Tom Wilkie – RED method</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li>Google SRE Book – SLIs/SLOs, Golden Signals</li>
+                          <li>Kubernetes – Liveness/Readiness/Startup Probes</li>
+                          <li>OpenTelemetry – Traces, Metrics, Logs and semantic conventions</li>
+                          <li>Prometheus – Alerting/Recording rules and label cardinality guidance</li>
+                          <li>Argo Rollouts – Automated canary analysis</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li>Prometheus, Alertmanager, Grafana (Loki/Tempo for logs/traces)</li>
+                          <li>OpenTelemetry SDK/Collector; Jaeger/Tempo; OTLP exporters</li>
+                          <li>PagerDuty/Opsgenie for on-call and incident response</li>
+                          <li>Langfuse/Evidently/Arize Phoenix for LLM monitoring and evals</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li>SRE community posts and production incident write-ups</li>
+                          <li>OpenTelemetry and Prometheus community docs/discussions</li>
+                          <li>Kubernetes SIGs on reliability/observability</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                </>
+              ) : selectedTechnique.id === 'hierarchical-planning' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism (short conceptual overview)
+                    </h2>
+                    <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed">
+                        Hierarchical Planning structures a goal into a hierarchy of tasks and sub-tasks using domain-specific
+                        decomposition methods. In Hierarchical Task Network (HTN) planning, abstract tasks are recursively
+                        refined into primitive actions via methods, producing an executable plan that respects orderings,
+                        causal preconditions, and resource constraints. In agent systems, this enables multi-level strategy →
+                        tactics → actions, and can be augmented with LLMs for hypothesis generation while a symbolic planner
+                        validates feasibility and constraints.
+                      </p>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Define initial state, goal(s), and domain model: operators/actions, methods, resources, constraints.</li>
+                        <li>Top-down decomposition: select an abstract task; choose a method; introduce ordered/partial sub-tasks.</li>
+                        <li>Constraint propagation: maintain preconditions, effects, causal links, and temporal/resource bounds.</li>
+                        <li>Refine until leaves are primitive actions; insert ordering edges and resolve dependencies.</li>
+                        <li>Scheduling and resource assignment: allocate agents/resources; detect conflicts; adjust ordering.</li>
+                        <li>Execute leaves; monitor outcomes and state; log provenance and metrics.</li>
+                        <li>Replan/repair on failure or exogenous changes (method re-selection, plan repair, or partial rollback).</li>
+                        <li>Iterate with feedback: update domain knowledge/methods; tighten constraints and heuristics.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Model domain knowledge explicitly: operators with precise preconditions/effects; methods with guard conditions.',
+                        'Keep methods small, composable, and alternatives-rich; use heuristics to guide method choice.',
+                        'Use partial-order planning when possible to enable safe parallelism and flexible scheduling.',
+                        'Instrument constraint checking early; propagate resources/time windows to detect conflicts sooner.',
+                        'Adopt plan repair policies (retry, method swap, skip, or rollback) and log failure traces.',
+                        'Separate LLM creativity (hypothesis/method suggestion) from symbolic validation and execution.',
+                        'Version domain models; run regression tests on canonical tasks; track plan optimality and stability.',
+                        'Bound search depth/branching; cache subplans; reuse templates for recurring subtrees.',
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Trivial/single-step tasks where planning overhead adds latency with no quality gain.</li>
+                        <li>Highly stochastic, adversarial, or poorly modeled domains where methods cannot encode reliable priors.</li>
+                        <li>Hard real-time control loops with microsecond budgets; prefer reactive policies/behaviors.</li>
+                        <li>Noisy LLM-only plans without downstream validation for safety/feasibility.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Overly deep hierarchies with exploding branching factor and token/cost blowups.</li>
+                        <li>Inconsistent state updates or missing preconditions/effects causing plan invalidation downstream.</li>
+                        <li>Rigid total-order plans where partial orders would allow parallelism and robustness.</li>
+                        <li>Letting LLM outputs bypass constraint checks, leading to unsafe or impossible actions.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Hierarchical Task Networks (HTN) with abstract → primitive refinement',
+                        'Method libraries with guards and alternatives',
+                        'Partial-order planning and safe parallel execution',
+                        'Constraint, resource, and temporal reasoning',
+                        'Plan repair and replanning under uncertainty',
+                        'LLM-augmented method suggestion with symbolic validation',
+                      ].map((feat) => (
+                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Plan success rate; replan/repair rate; failure recovery time.</li>
+                        <li>Plan cost/optimality (time, distance, energy) and makespan; resource utilization.</li>
+                        <li>Branching factor and average decomposition depth; search time.</li>
+                        <li>For LLM-augmented planning: tokens per plan, cost per successful execution, latency p50/p95.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Token budget scales with depth × breadth of decomposition; cache reusable subplans/templates.</li>
+                        <li>Prefer structured prompts and short method names; avoid inlining large state—pass references.</li>
+                        <li>Use symbolic planner for validation to avoid repeated LLM calls; cap turns per node and prune early.</li>
+                        <li>Batch-check constraints; log traces compactly; stream execution results to reduce memory.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Complex project/program management with interdependent workstreams.</li>
+                        <li>Robotics and embodied agents requiring long-horizon task decomposition (e.g., household or warehouse tasks).</li>
+                        <li>Workflow orchestration and multi-agent coordination with resource/temporal constraints.</li>
+                        <li>Product design, research roadmaps, and enterprise process automation.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://arxiv.org/abs/1403.7426" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Georgievski & Aiello (2014): An Overview of Hierarchical Task Network Planning</a></li>
+                          <li><a href="https://arxiv.org/abs/1911.05499" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Höller et al. (2020): HDDL — A Language to Describe Hierarchical Planning Problems</a></li>
+                          <li><a href="https://jair.org/index.php/jair/article/view/10309" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Nau et al. (2003): SHOP2: An HTN Planning System (JAIR)</a></li>
+                          <li><a href="https://arxiv.org/abs/2204.01691" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">SayCan (2022): Grounding language in robotic affordances</a></li>
+                          <li><a href="https://arxiv.org/abs/2305.10601" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Tree of Thoughts (2023): Deliberate problem solving with search</a></li>
+                          <li><a href="https://arxiv.org/abs/2307.03893" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">A Survey on Planning with Large Language Models (2023/2024)</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://panda-hddl.github.io/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">PANDA HTN Planner: Documentation</a></li>
+                          <li><a href="https://github.com/pyhop/pyhop" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">PyHOP (Python HTN): Tutorial & Examples</a></li>
+                          <li><a href="https://www.cs.umd.edu/projects/shop/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">SHOP/SHOP2 Resources</a></li>
+                          <li><a href="https://arxiv.org/abs/1911.05499" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">HDDL specification (problem/domain modeling)</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li>PANDA (HTN Planner), SHOP2/JSHOP2, PyHOP</li>
+                          <li>HDDL tooling and parsers; domain/model validators</li>
+                          <li>Agent orchestration: <a href="https://langchain-ai.github.io/langgraph/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangGraph</a> for planner–executor loops</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://icaps-conference.org/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">ICAPS: International Conference on Automated Planning and Scheduling</a></li>
+                          <li><a href="https://aaai.org/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">AAAI planning tracks and workshops</a></li>
+                          <li><a href="https://discuss.huggingface.co/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Hugging Face Forums</a> and <a href="https://www.reddit.com/r/MachineLearning/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">r/MachineLearning</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                </>
+              ) : selectedTechnique.id === 'constraint-satisfaction' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism (short conceptual overview)
+                    </h2>
+                    <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed">
+                        Formalize the problem as variables with finite domains and constraints over them. Apply constraint
+                        propagation (e.g., arc/path consistency) to prune domains, then search with heuristics such as
+                        minimum-remaining-values and least-constraining-value with backtracking/forward checking. For
+                        optimization, use CP-SAT/MILP/SMT encodings to optimize an objective under hard constraints while
+                        scoring soft preferences.
+                      </p>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Model: define variables, finite domains, hard vs soft constraints, objective (if any).</li>
+                        <li>Preprocess: normalize units; add implied and symmetry-breaking constraints.</li>
+                        <li>Propagate: enforce consistency (e.g., AC-3/MAC); reduce domains before search.</li>
+                        <li>Search: backtracking with forward checking; MRV/degree for variable order; LCV for values.</li>
+                        <li>Optimize: branch-and-bound or CP-SAT; warm starts; time/optimality-gap limits.</li>
+                        <li>Validate/Explain: verify feasibility; inspect conflicts; export solutions.</li>
+                        <li>Iterate: adjust weights, add constraints; incremental re-solve on changes.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Separate hard vs soft constraints with explicit weights/priorities.',
+                        'Use strong global constraints (all-different, cumulative) and symmetry breaking.',
+                        'Enable MAC/forward checking; MRV/degree and LCV ordering to reduce branching.',
+                        'Prefer CP-SAT for large discrete problems; MILP for linear numeric; SMT for logical/bitvector.',
+                        'Use time limits and optimality gaps; persist best-feasible solutions and solver logs.',
+                        'Warm-start from historical solutions; use incremental solving when inputs change slightly.',
+                        'Attach IDs/explanations to constraints for debuggability and user-facing justifications.',
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Purely creative generation where feasibility cannot be verified.</li>
+                        <li>Rapidly changing/undefined constraints relative to solver turnaround.</li>
+                        <li>Hard real-time microsecond control loops.</li>
+                        <li>Strongly non-linear continuous dynamics without tractable encodings.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Over-constraining (infeasible) without relaxations or soft penalties.</li>
+                        <li>Missing key limits (capacity, temporal windows) yielding invalid solutions.</li>
+                        <li>No heuristics/propagation → exponential search and timeouts.</li>
+                        <li>Omitting symmetry breaking; bloated equivalent search spaces.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Finite-domain variables; global constraints (all-different, cumulative, table).',
+                        'Propagation: arc/path consistency, MAC, forward checking.',
+                        'Heuristics: MRV/degree and LCV; restarts, nogoods, backjumping.',
+                        'Optimization: weighted soft constraints; branch-and-bound; CP-SAT.',
+                        'Explanations/conflict sets for diagnoses and user guidance.',
+                      ].map((feat) => (
+                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Feasibility rate; hard-violation count (target 0); soft-violation score.</li>
+                        <li>Objective value or optimality gap vs baseline; time-to-first-feasible; total solve time.</li>
+                        <li>Nodes/backtracks; propagation efficiency; SLA adherence; resource utilization.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Tokens: modeling/explanations if using LLM; solving cost is CPU/RAM-heavy.</li>
+                        <li>Set time limits/gaps; cache models; reuse warm starts and incremental states.</li>
+                        <li>Track peak memory, conflicts, and propagation stats from solver logs.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Scheduling/rostering; resource and fleet routing; deployment planning.</li>
+                        <li>Product/cloud/network configuration with compatibility/capacity rules.</li>
+                        <li>Multi-agent coordination under compliance, locality, or safety constraints.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li>Dechter, R. Constraint Processing. Morgan Kaufmann. <a href="https://www.elsevier.com/books/constraint-processing/dechter/978-1-55860-890-0" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Publisher</a></li>
+                          <li>Rossi, van Beek, Walsh. Handbook of Constraint Programming. <a href="https://www.elsevier.com/books/handbook-of-constraint-programming/rossi/978-0-444-52726-4" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Publisher</a></li>
+                          <li>Mackworth, A.K. Arc consistency foundations. <a href="https://en.wikipedia.org/wiki/Arc_consistency" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Overview</a></li>
+                          <li>Minton, S. et al. Min-Conflicts heuristic for CSPs.</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://developers.google.com/optimization" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Google OR-Tools CP-SAT guides</a></li>
+                          <li><a href="https://www.minizinc.org/doc-latest/en/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">MiniZinc Tutorial</a> and <a href="https://sofdem.github.io/gccat/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Global Constraint Catalogue</a></li>
+                          <li><a href="https://choco-solver.org/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Choco-solver docs</a>, <a href="https://www.gecode.org/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Gecode</a></li>
+                          <li><a href="https://github.com/Z3Prover/z3" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Z3 SMT solver</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li>OR-Tools (CP-SAT), MiniZinc, Choco, Gecode, OptaPlanner, python-constraint.</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://cp-conference.org/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Principles and Practice of Constraint Programming (CP)</a></li>
+                          <li><a href="https://stackoverflow.com/questions/tagged/constraint-programming" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Stack Overflow: constraint-programming</a> and <a href="https://groups.google.com/g/or-tools-discuss" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">OR-Tools Discuss</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                </>
+              ) : selectedTechnique.id === 'goal-decomposition' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism (short conceptual overview)
+                    </h2>
+                    <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed">
+                        Goal Decomposition turns an ambitious objective into SMART sub-goals and executable tasks, maps
+                        dependencies as a DAG, prioritizes via impact/urgency, and executes iteratively with feedback.
+                        In agent systems, LLMs propose sub-goals while symbolic schedulers/validators ensure feasibility,
+                        safety, and resource alignment.
+                      </p>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Define goal, scope, constraints, and success criteria (SMART, guardrails, deadlines).</li>
+                        <li>Generate candidate sub-goals; cluster and deduplicate; validate coverage vs. goal.</li>
+                        <li>Break sub-goals into tasks with owners, estimates, acceptance criteria, and risks.</li>
+                        <li>Construct a dependency graph (DAG); identify critical path and parallelizable work.</li>
+                        <li>Prioritize (impact × urgency × risk); stage into milestones with buffers.</li>
+                        <li>Allocate resources; set SLOs; define stop conditions and rollback/repair policies.</li>
+                        <li>Execute–measure–learn loop: monitor metrics; replan on deviations; retire or merge tasks.</li>
+                        <li>Finalize and retrospect: compare outcomes to goals; capture templates for reuse.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Write goals as SMART with explicit out-of-scope items; keep decomposition tree shallow but complete.',
+                        'Model dependencies explicitly; prefer partial orders to unlock safe parallelism.',
+                        'Define acceptance criteria per task; add quality gates and automated checks where possible.',
+                        'Bound recursion depth and branching factor; cap iterations and enforce stop criteria.',
+                        'Use evidence-driven reprioritization (metrics, risks, blockers) at a fixed cadence.',
+                        'Separate LLM ideation from symbolic validation/scheduling; log provenance and decisions.',
+                        'Version goal trees; reuse proven subtrees/templates; cache recurring prompts/results.',
+                        'Track risks/assumptions; maintain mitigation tasks on the same board as delivery tasks.',
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Trivial or one-step tasks where planning overhead adds latency without benefit.</li>
+                        <li>Ill-posed or shifting goals without stakeholder alignment and measurable outcomes.</li>
+                        <li>Hard real-time paths with microsecond budgets; use reactive policies instead.</li>
+                        <li>Safety-critical actions without human review or formal verification.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Over-decomposition causing cost/latency blowups with little quality gain.</li>
+                        <li>Missing prerequisites or hidden coupling leading to plan invalidation downstream.</li>
+                        <li>Unbounded iteration or lack of stop criteria; goal drift and scope creep.</li>
+                        <li>Metrics misalignment (activity vs. outcome) obscuring true progress.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'SMART sub-goals with owners and acceptance criteria',
+                        'Dependency graph (DAG) with critical-path analysis',
+                        'Parallelizable task groups and milestone staging',
+                        'Risk register, buffers, and plan-repair policies',
+                        'Progress tracking with status roll-ups and audits',
+                        'LLM-assisted ideation + symbolic validation/scheduling',
+                      ].map((feat) => (
+                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Goal attainment rate; variance to target (time, cost, quality).</li>
+                        <li>Critical-path length and on-time milestone rate; replan/repair frequency.</li>
+                        <li>Sub-goal coverage and decomposition quality (rubric/peer review).</li>
+                        <li>Throughput and lead time; blocked-time percentage.</li>
+                        <li>For LLM-augmented planning: tokens per plan, cost per successful execution, latency p50/p95.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Token budget grows with depth × breadth; prune and cache reusable subtrees/templates.</li>
+                        <li>Prefer concise structured prompts; pass state by reference; cap turns per node.</li>
+                        <li>Batch validations; stream progress updates; use retrieval instead of re-sending large context.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Product launches, research roadmaps, and multi-workstream programs.</li>
+                        <li>Incident response and reliability engineering with parallel tasking.</li>
+                        <li>Operational excellence: process improvements with measurable targets.</li>
+                        <li>Education/personal productivity: study plans, career plans, habit systems.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://arxiv.org/abs/1403.7426" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">HTN Planning Overview (2014)</a></li>
+                          <li><a href="https://arxiv.org/abs/1911.05499" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">HDDL: Language for Hierarchical Planning (2020)</a></li>
+                          <li><a href="https://arxiv.org/abs/2305.10601" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Tree of Thoughts (2023)</a></li>
+                          <li><a href="https://arxiv.org/abs/2212.14052" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Chain-of-Thought &amp; Self-Consistency (2023)</a></li>
+                          <li><a href="https://jair.org/index.php/jair/article/view/10309" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">SHOP2 HTN Planner (2003)</a></li>
+                          <li><a href="https://www.jair.org/index.php/jair/article/view/1037" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Options Framework for HRL (1999)</a></li>
+                          <li><a href="https://arxiv.org/abs/2307.03893" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Survey: Planning with LLMs (2023/2024)</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://langchain-ai.github.io/langgraph/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangGraph: Planner–Executor Patterns</a></li>
+                          <li><a href="https://docs.prefect.io/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Prefect: DAG-based Orchestration</a></li>
+                          <li><a href="https://airflow.apache.org/docs/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Apache Airflow: DAG Scheduling</a></li>
+                          <li><a href="https://panda-hddl.github.io/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">PANDA HTN Planner</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Tools &amp; Libraries</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li>LangChain, LlamaIndex, <a href="https://dspy.ai/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">DSPy</a></li>
+                          <li><a href="https://networkx.org/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">NetworkX</a> for dependency DAGs; graph UIs (Mermaid, React Flow)</li>
+                          <li>Planning toolkits: PANDA, SHOP2/JSHOP2, PyHOP</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Community &amp; Discussions</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://icaps-conference.org/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">ICAPS</a> and <a href="https://aaai.org/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">AAAI</a> planning tracks</li>
+                          <li><a href="https://discuss.huggingface.co/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Hugging Face Forums</a> and <a href="https://www.reddit.com/r/MachineLearning/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">r/MachineLearning</a></li>
+                          <li>Engineering blogs on program management, DAG orchestration, and LLM planning</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                </>
+              ) : selectedTechnique.id === 'scenario-planning' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism (short conceptual overview)
+                    </h2>
+                    <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed">
+                        Scenario Planning develops robust strategies for agentic AI systems by exploring multiple plausible futures under uncertainty. 
+                        Teams identify key drivers and critical uncertainties, construct a small set of contrasting yet plausible scenarios, 
+                        stress-test plans against each scenario, and define early-warning indicators and decision triggers for timely adaptation.
+                      </p>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Frame the decision: clarify scope, planning horizon, stakeholders, constraints, and success criteria.</li>
+                        <li>Environmental scanning: collect signals and trends; identify key drivers and critical uncertainties.</li>
+                        <li>Scenario construction: craft 3–4 plausible, internally consistent scenarios covering the uncertainty space.</li>
+                        <li>Implications analysis: derive risks, opportunities, and operational constraints for each scenario.</li>
+                        <li>Strategy design: specify core strategies that work across scenarios and options specific to each.</li>
+                        <li>Decision triggers: define leading indicators, thresholds, and playbooks for scenario shifts.</li>
+                        <li>Pilot and portfolio: stage investments, build optionality, and run controlled experiments.</li>
+                        <li>Monitoring and refresh: track indicators, review quarterly/biannually, and update scenarios/strategies.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Limit to 3–4 contrasting, plausible scenarios; avoid probability debates early; ensure internal consistency.',
+                        'Represent heterogeneous perspectives (product, safety, legal, ops, finance, user research) to reduce bias.',
+                        'Make scenarios decision-useful: quantify ranges, surface constraints, and tie to concrete actions.',
+                        'Define a robust core strategy plus option-specific hedges; pre-approve playbooks for fast pivots.',
+                        'Instrument early-warning indicators and automate ingestion where possible (dashboards, alerts).',
+                        'Rehearse transitions with tabletop exercises; maintain a living scenario log and postmortems.',
+                        'Integrate with AI risk frameworks (NIST AI RMF, ISO/IEC 23894) and regulatory watch (e.g., EU AI Act).',
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Immediate, tactical decisions with tight real-time SLOs where foresight workshops add latency.</li>
+                        <li>Domains with low uncertainty and stable, well-understood dynamics where standard forecasting suffices.</li>
+                        <li>Situations lacking the organizational will to act on outcomes (no appetite for portfolio options).</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Over-indexing on a “most likely” scenario and underinvesting in hedges and leading indicators.</li>
+                        <li>Producing narrative-only scenarios without quantitative bounds, triggers, or executable playbooks.</li>
+                        <li>Too many scenarios causing analysis paralysis; or scenarios that are not mutually distinct.</li>
+                        <li>Failure to refresh scenarios as the environment and model capabilities change.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Plausible, internally consistent futures (3–4)',
+                        'Explicit critical uncertainties and key drivers',
+                        'Core strategy + scenario-specific options',
+                        'Leading indicators and decision triggers',
+                        'Playbooks for fast transitions',
+                        'Portfolio and staged investments',
+                      ].map((feat) => (
+                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Decision readiness: coverage of critical uncertainties; playbook completeness and time-to-pivot.</li>
+                        <li>Adaptation speed: detection-to-action latency when indicators cross thresholds.</li>
+                        <li>Outcome resilience: performance variance across scenarios (cost, safety, compliance, quality).</li>
+                        <li>Review cadence adherence and scenario refresh rate.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>LLM budgeting: 3–4 scenarios × (drivers + uncertainties + narrative + implications + strategy) tokens.</li>
+                        <li>Prefer structured prompts and tables; summarize background (10–20%) and reference sources by link/id.</li>
+                        <li>Automate indicator monitoring to reduce manual analysis; cache canonical scenario templates.</li>
+                        <li>Estimate cost per review cycle; cap depth of exploration per session and batch long reports.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>AI product roadmaps under regulatory and capability uncertainty (e.g., EU AI Act timelines, model advances).</li>
+                        <li>Risk management for safety-critical deployments (healthcare, finance, autonomous systems).</li>
+                        <li>Go-to-market and pricing under macro uncertainty; data residency/compliance strategies.</li>
+                        <li>Org capability building and investment portfolio planning for agentic platforms.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://sloanreview.mit.edu/article/scenario-planning-a-tool-for-strategic-thinking/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Schoemaker (1995): Scenario Planning — A Tool for Strategic Thinking</a></li>
+                          <li><a href="https://hbr.org/1985/09/scenarios-uncharted-waters-ahead" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Wack (1985): Scenarios — Uncharted Waters Ahead</a></li>
+                          <li><a href="https://link.springer.com/article/10.1007/s00146-020-00982-1" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Bradfield et al.: Evolution of scenario planning (review)</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://www.shell.com/energy-and-innovation/the-energy-future/scenarios.html" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Shell Scenarios: Practitioner materials</a></li>
+                          <li><a href="https://www.sbs.ox.ac.uk/research/oxford-scenario-planning-approach" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Oxford Scenario Planning Approach</a></li>
+                          <li><a href="https://www.nist.gov/itl/ai-risk-management-framework" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">NIST AI Risk Management Framework</a></li>
+                          <li><a href="https://www.iso.org/standard/77304.html" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">ISO/IEC 23894:2023 — AI Risk Management</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://emaworkbench.readthedocs.io/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">EMA Workbench (Exploratory Modeling & Analysis)</a></li>
+                          <li><a href="https://salib.readthedocs.io/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">SALib (Sensitivity Analysis)</a> / <a href="https://mesa.readthedocs.io/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Mesa (Agent‑Based Modeling)</a></li>
+                          <li><a href="https://vensim.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Vensim / System Dynamics</a> and <a href="https://www.anylogic.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">AnyLogic</a> for simulation</li>
+                          <li><a href="https://langchain-ai.github.io/langgraph/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangGraph</a> and orchestration frameworks for planner–executor loops</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://www.apf.org/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Association of Professional Futurists (APF)</a> and <a href="https://www.oecd.ai/en" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">OECD.AI</a></li>
+                          <li><a href="https://www.weforum.org/centre-for-the-fourth-industrial-revolution/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">WEF C4IR</a> policy/foresight resources</li>
+                          <li><a href="https://discuss.huggingface.co/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Hugging Face Forums</a> (AI governance and deployment threads)</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                </>
+              ) : selectedTechnique.id === 'memory-consolidation' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism (short conceptual overview)
+                    </h2>
+                    <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed">
+                        Consolidates episodic interaction logs into compact, structured long‑term memory via semantic pattern extraction, redundancy removal, importance
+                        weighting, schema/graph formation, and integration with provenance. Optionally uses scheduled replay to reinforce salient knowledge while controlling
+                        drift and token/cost budgets.
+                      </p>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Collect raw memories (events, messages, metadata) with timestamps and sources.</li>
+                        <li>Pattern extraction: cluster by semantic similarity; detect topics/tasks/entities.</li>
+                        <li>Redundancy removal: merge near‑duplicates and roll up repetitive details.</li>
+                        <li>Importance weighting: score by recency, frequency, utility, user pinning, and impact.</li>
+                        <li>Schema formation: summarize into facts, FAQs, graphs, or notebooks with citations.</li>
+                        <li>Integration: index into vector/graph stores with retrieval hints and access policies.</li>
+                        <li>Validation & feedback: evaluate retrieval quality, drift, and safety; schedule re‑consolidation.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Batch on a cadence (e.g., hourly/nightly) with strict token/cost budgets and backoff.',
+                        'Combine abstractive summaries with a small set of representative exemplars per theme.',
+                        'Deduplicate with semantic similarity thresholds (e.g., cosine ≥ 0.85) plus MinHash/SimHash for robustness.',
+                        'Preserve provenance: timestamps, authors, source ids, and links; never drop citations in summaries.',
+                        'Version consolidated artifacts; keep reversible edits and a quarantine for risky merges.',
+                        'Guardrails: PII/PHI redaction, compliance tags, and access controls on read/write paths.',
+                        'Continuously evaluate: retrieval precision/recall and citation correctness on a fixed benchmark.',
+                        'Mitigate embedding drift with periodic re‑embedding windows and stable model/version pinning.',
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Short‑lived tasks where session context suffices and long‑term storage adds cost/risk.</li>
+                        <li>Highly volatile data where aggressive summarization risks staleness or harmful drift.</li>
+                        <li>Strict compliance regimes that forbid retention beyond session without explicit consent.</li>
+                        <li>Tight latency budgets that cannot absorb consolidation/retrieval overhead.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Over‑compression that discards edge cases and decision rationales (catastrophic forgetting).</li>
+                        <li>Feedback loops: model summarizes its own prior summaries, compounding bias.</li>
+                        <li>Embedding/model drift causing retrieval mismatches across time.</li>
+                        <li>Unbounded growth of stores → rising cost, slower retrieval, and token blow‑ups.</li>
+                        <li>Missing provenance and access control → unverifiable claims or data leaks.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Semantic clustering and topic detection',
+                        'Deduplication and merge with conflict handling',
+                        'Importance scoring (recency/frequency/utility/user pins)',
+                        'Schema/graph formation with citations and provenance',
+                        'Replay scheduling and freshness management',
+                        'Policy & safety filters (PII redaction, retention windows)',
+                        'Versioning, rollback, and audit trails',
+                        'Hybrid retrieval over vectors + symbols/graphs',
+                      ].map((feat) => (
+                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Compression ratio vs. baseline corpus; storage growth rate.</li>
+                        <li>Retrieval precision/recall and citation correctness on a fixed benchmark.</li>
+                        <li>Answer quality uplift and hallucination reduction vs. no‑memory baseline.</li>
+                        <li>Freshness lag (time from event → consolidated availability).</li>
+                        <li>Latency p50/p95 for retrieval‑augmented answers; cost per consolidated token.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Summarization passes: prompt + chunk tokens × batches; prefer map‑reduce and cache partials.</li>
+                        <li>Embeddings: cost per item × re‑embed cadence; batch requests and pin model/version.</li>
+                        <li>Storage: vector/graph DB footprint + metadata; enforce TTLs and retention classes.</li>
+                        <li>Scheduling: run during off‑peak; cap concurrent jobs to protect SLOs.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Personal/enterprise assistants that build durable knowledge over weeks to months.</li>
+                        <li>Customer support, CRM, and success teams accumulating case wisdom and SOPs.</li>
+                        <li>Research and analyst workspaces consolidating literature notes and findings.</li>
+                        <li>Education/tutoring systems tracking learner progress, misconceptions, and goals.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://www.nature.com/articles/nrn1607" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Frankland & Bontempi. The organization of recent and remote memories (2005)</a></li>
+                          <li><a href="https://www.nature.com/articles/nrn2762" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Diekelmann & Born. The memory function of sleep (2010)</a></li>
+                          <li><a href="https://arxiv.org/abs/2310.08580" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">MemGPT: Towards LLMs with Long‑Term Memory (2023)</a></li>
+                          <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6972576/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Systems consolidation and cortico‑hippocampal interactions (review)</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://python.langchain.com/docs/modules/memory/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangChain: Memory Modules</a></li>
+                          <li><a href="https://langchain-ai.github.io/langgraph/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangGraph: Stateful Agents & Memory</a></li>
+                          <li><a href="https://docs.llamaindex.ai/en/stable/examples/agent/agent_memory/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LlamaIndex: Agent Memory</a></li>
+                          <li><a href="https://platform.openai.com/docs/guides/embeddings" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Embeddings: Retrieval Foundations</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://weaviate.io/developers/weaviate" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Weaviate</a> / <a href="https://milvus.io/docs/overview.md" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Milvus</a> / <a href="https://www.pinecone.io/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Pinecone</a> (vector stores)</li>
+                          <li><a href="https://neo4j.com/docs/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Neo4j</a> (knowledge graphs) and <a href="https://qdrant.tech/documentation/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Qdrant</a></li>
+                          <li>Similarity tooling: MinHash/SimHash libraries; semantic clustering utilities</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://github.com/cpacker/MemGPT" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">MemGPT (GitHub)</a></li>
+                          <li><a href="https://discuss.huggingface.co/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Hugging Face Forums</a></li>
+                          <li><a href="https://www.reddit.com/r/MachineLearning/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">r/MachineLearning</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                </section>
+                </>
+              ) : selectedTechnique.id === 'working-memory-patterns' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism (short conceptual overview)
+                    </h2>
+                    <div className="bg-gradient-to-br from-amber-500/10 to-orange-500/10 border border-amber-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed">
+                        Short-term, limited-capacity active memory for ongoing cognition. Information is selectively attended, admitted under a strict capacity cap (≈4±1 items per Cowan; historically 7±2), actively maintained via attention/rehearsal, protected from interference, and rapidly updated or replaced as task goals evolve. Canonical components include a central executive with modality-specific stores (phonological loop, visuospatial sketchpad) and an episodic buffer for multimodal binding.
+                      </p>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Attend & encode: filter inputs; extract task-relevant items.</li>
+                        <li>Admit under capacity: apply priority scoring and a strict cap.</li>
+                        <li>Maintain: rehearsal/refresh cycles; bind items to context pointers.</li>
+                        <li>Update/replace: evict via policy (priority, recency, utility) when new items arrive.</li>
+                        <li>Protect: suppress interference; separate modalities to reduce cross-talk.</li>
+                        <li>Offload: compress or consolidate to long-term memory/external store when appropriate.</li>
+                        <li>Monitor: track load, decay risk, and task progress; adapt cadence and policies.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Enforce a small, explicit capacity (default 4–7 items) with deterministic eviction.',
+                        'Prioritize by goal relevance, temporal recency, and uncertainty; store pointers not payloads when possible.',
+                        'Use chunking to aggregate related facts into a single unit to save slots.',
+                        'Schedule refresh/rehearsal for critical items; decay or demote stale items.',
+                        'Isolate modalities (verbal vs. visuospatial) and namespaces to limit interference.',
+                        'Continuously summarize/offload scratch state to durable memory to prevent window bloat.',
+                        'Instrument load, churn, and hit rates; adjust policies per task phase.',
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Long-term retention or exact archival; use long-term memory or retrieval systems instead.</li>
+                        <li>Contexts that exceed capacity where lossy compression would harm correctness.</li>
+                        <li>High-throughput pipelines where constant refreshing adds unacceptable latency/cost.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Overfilling the window without an eviction policy → thrash and interference.</li>
+                        <li>Not chunking related items; wasting slots on granular facts.</li>
+                        <li>Mixing modalities in one buffer causing cross-modal interference.</li>
+                        <li>Failing to offload; excessive token bloat and degraded reasoning focus.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Limited capacity with explicit cap',
+                        'Active maintenance via attention/rehearsal',
+                        'Priority- and goal-driven retention',
+                        'Rapid context updating and replacement',
+                        'Interference suppression and separation',
+                        'Context binding (episodic buffer) across modalities',
+                      ].map((feat) => (
+                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Working-memory hit rate (needed items present when referenced).</li>
+                        <li>Churn/eviction rate and average residency time per item.</li>
+                        <li>Task accuracy/quality under multitask or context-switch load.</li>
+                        <li>Latency overhead from refresh/updating; cost per turn.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Prompt tokens: slots consumed by active items and scratch state.</li>
+                        <li>Compression: summarization ratio and information retention when offloading.</li>
+                        <li>Refresh/update cadence vs. latency/cost trade-offs; cap turns per step.</li>
+                        <li>External memory I/O (vector store or DB) when offloading pointers.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Multi-step reasoning and planning with evolving sub-goals.</li>
+                        <li>Real-time assistants that must track short-lived facts and instructions.</li>
+                        <li>Context switching and juggling small sets of task-relevant items.</li>
+                        <li>Interactive UIs with transient state and focus-of-attention control.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9832367/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Working Memory Is Complex and Dynamic, Like Your Thoughts (2023)</a></li>
+                          <li><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8112390/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Working Memory 2.0 (2021)</a></li>
+                          <li><a href="https://pubmed.ncbi.nlm.nih.gov/11058819/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Baddeley (2000): The episodic buffer in working memory</a></li>
+                          <li><a href="https://www.cambridge.org/core/journals/behavioral-and-brain-sciences/article/magical-number-4-in-shortterm-memory/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Cowan (2001): The magical number 4 in short-term memory</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://www.w3.org/WAI/WCAG2/supplemental/patterns/o6p05-low-cognition/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">W3C: Do not rely on users’ memorizing information</a></li>
+                          <li><a href="https://cookbook.openai.com/examples/how_to_handle_conversation_history" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">OpenAI Cookbook: Conversation memory patterns</a></li>
+                          <li><a href="https://python.langchain.com/docs/modules/memory/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangChain: Memory modules</a></li>
+                          <li><a href="https://docs.llamaindex.ai/en/stable/examples/agent/memory/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LlamaIndex: Agent memory</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li>LangChain ConversationalBufferMemory / SummaryMemory</li>
+                          <li>LlamaIndex conversation memory and state management</li>
+                          <li>Vector stores for offloading pointers (FAISS, Milvus, PGVector)</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://www.nimh.nih.gov/research/research-funded-by-nimh/rdoc/working-memory-workshop-proceedings" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">NIMH: Working Memory Workshop Proceedings</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                </>
               ) : selectedTechnique.id === 'multimodal-context-integration' ? (
                 <>
                   {/* Core Mechanism (short conceptual overview) */}
@@ -897,6 +4018,204 @@ export const TechniqueDetails = ({
                     </div>
                   </section>
                 </>
+              ) : selectedTechnique.id === 'hierarchical-memory' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism (short conceptual overview)
+                    </h2>
+                    <div className="bg-gradient-to-br from-blue-500/10 to-orange-500/10 border border-blue-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed">
+                        Multi-tier memory with explicit retention policies and automatic promotion/demotion. Queries first consult
+                        higher-level summaries and indices, then drill down to detailed items. This mirrors hierarchical memory designs
+                        in modern LLM systems (e.g., hierarchical chunk attention and hierarchical memory transformers) to balance
+                        recall, latency, and cost.
+                      </p>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-orange-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li><span className="font-medium">Ingest & encode</span>: chunk inputs; embed and/or summarize; attach metadata (source, time, topic, sensitivity).</li>
+                        <li><span className="font-medium">Score</span>: compute importance, recency, frequency, novelty; deduplicate and sanitize (safety/PII).</li>
+                        <li><span className="font-medium">Place</span>: write to working memory; promote to short/medium/long-term based on thresholds.</li>
+                        <li><span className="font-medium">Consolidate</span>: periodically summarize lower tiers into higher-level abstracts; link summaries to originals.</li>
+                        <li><span className="font-medium">Retrieve</span>: route queries via summaries/indices first; then vector/keyword search within targeted tiers.</li>
+                        <li><span className="font-medium">Demote/Evict</span>: apply TTLs and decay; demote low-utility items; evict stale data; maintain deduplication.</li>
+                        <li><span className="font-medium">Audit & observe</span>: log promotions, retrieval hits, evictions; track latency, cost, and quality metrics.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Define tier policies: capacities, TTLs, promotion/demotion thresholds, deduplication.',
+                        'Use hybrid indices: vector + keyword + metadata filters; rerank with cross-encoders when needed.',
+                        'Summarize aggressively at higher tiers; keep pointers to originals for drill-down and citations.',
+                        'Protect against prompt injection/memory poisoning; verify and sanitize before storage; track provenance.',
+                        'Respect privacy: redact or encrypt sensitive fields; implement consent, retention, and deletion workflows.',
+                        'Continuously evaluate retrieval precision/recall@K and answer quality vs. baselines.',
+                        'Bound growth with quotas; background compaction; periodic consolidation and pruning.',
+                        'Cache retrieval results per session; minimize prompt tokens via summaries and references.'
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 text-sm text-gray-300 space-y-2">
+                      <p>Short-lived, stateless tasks where a sliding window or simple retrieval suffices.</p>
+                      <p>Hard real-time paths intolerant of multi-stage retrieval or consolidation latency.</p>
+                      <p>Strict compliance contexts without strong privacy/deletion controls and auditability.</p>
+                      <p>Deterministic pipelines requiring exact reproducibility without adaptive memory.</p>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 text-sm text-gray-300 space-y-2">
+                      <p>Storing unverified inputs → memory poisoning; lack of provenance for critical facts.</p>
+                      <p>Unbounded growth and duplication across tiers → slow retrieval and rising costs.</p>
+                      <p>Over-promotion causing parroting of prior outputs or lock-in of outdated information.</p>
+                      <p>Stale/contradictory memories from missing consolidation and conflict resolution.</p>
+                      <p>Leaking sensitive data via retrieval prompts or weak metadata filtering.</p>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Multi-tier retention with automatic promotion/demotion and TTLs',
+                        'Hierarchical summaries linked to source items for drill-down',
+                        'Hybrid search and tier-aware routing (vector, lexical, metadata)',
+                        'Deduplication and novelty detection',
+                        'Safety filters, provenance tracking, and PII-aware storage',
+                        'Tier-aware caching to minimize token/context overhead'
+                      ].map((feat) => (
+                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 text-sm text-gray-300 grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div>Retrieval precision/recall@K by tier; relevant-memory usage rate in answers.</div>
+                      <div>End-to-end latency (p50/p95) for retrieval and responses; cache hit rate.</div>
+                      <div>Token savings from summaries; average context length per response.</div>
+                      <div>Forgetting/decay rate for obsolete items; duplication rate across tiers.</div>
+                      <div>Incidents of unsafe retrieval blocked by filters (PII/toxicity/injection).</div>
+                      <div>Human-rated answer quality delta with vs. without hierarchical memory.</div>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 text-sm text-gray-300 space-y-2">
+                      <p>Upper tiers store summaries/indices to cap prompt tokens; fetch detailed items on demand.</p>
+                      <p>Vector search and reranking add compute; scope queries to predicted tiers to control cost.</p>
+                      <p>Apply TTLs/quotas per user/task; batch consolidation off-peak; prefer compact embeddings.</p>
+                      <p>Track storage growth and QPS per tier; tune promotion thresholds to balance recall and spend.</p>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 text-sm text-gray-300 space-y-2">
+                      <p>Personal and enterprise assistants with long histories and evolving preferences.</p>
+                      <p>Knowledge bases/helpdesks consolidating policies, FAQs, and change logs.</p>
+                      <p>Learning/tutoring systems tracking competencies and longitudinal progress.</p>
+                      <p>Research copilots aggregating literature notes with hierarchical summaries and citations.</p>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://arxiv.org/abs/2405.06067" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Hierarchical Memory Transformer (HMT) — He et al., 2024</a></li>
+                          <li><a href="https://arxiv.org/abs/2105.14039" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Hierarchical Chunk Attention / Mental Time Travel — Lampinen et al., 2021</a></li>
+                          <li><a href="https://arxiv.org/abs/1901.02860" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Transformer-XL — Dai et al., 2019</a></li>
+                          <li><a href="https://arxiv.org/abs/2310.08560" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">MemGPT: LLMs with a Programmable Memory — 2023</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://python.langchain.com/docs/modules/memory/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangChain Memory (buffer, summary, vector)</a></li>
+                          <li><a href="https://docs.llamaindex.ai/en/stable/module_guides/indexing/using_memory/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LlamaIndex Memory & Contextual Retrieval</a></li>
+                          <li><a href="https://platform.openai.com/docs/assistants/tools/memory" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">OpenAI Assistants: Memory</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://github.com/facebookresearch/faiss" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">FAISS</a>, <a href="https://milvus.io/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Milvus</a>, <a href="https://weaviate.io/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Weaviate</a>, <a href="https://www.pinecone.io/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Pinecone</a> (vector stores; metadata/TTL).</li>
+                          <li><a href="https://github.com/chroma-core/chroma" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Chroma</a>; <a href="https://www.elastic.co/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Elastic</a>/<a href="https://opensearch.org/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">OpenSearch</a> (hybrid lexical/vector search).</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://huggingface.co/blog" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Hugging Face Blog: memory in agents & retrieval</a></li>
+                          <li><a href="https://discuss.langchain.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangChain Community</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                </>
               ) : selectedTechnique.id === 'attention-mechanisms' ? (
                 <>
                   {/* Core Mechanism (short conceptual overview) */}
@@ -1105,6 +4424,209 @@ export const TechniqueDetails = ({
                       </div>
                     </div>
                 </section>
+                </>
+              ) : selectedTechnique.id === 'context-compression' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism (short conceptual overview)
+                    </h2>
+                    <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed">
+                        Context Compression reduces input tokens by distilling and encoding salient information while preserving
+                        task-critical semantics. Practical systems combine extractive pruning and abstractive summarization with
+                        query-aware selection to fit within model context windows, lowering latency and cost without materially
+                        degrading answer quality. Supports lossy, lossless, and hybrid strategies.
+                      </p>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Analyze query and input to identify task intent and preservation constraints.</li>
+                        <li>Retrieve candidates (if using RAG) and score with embedding/reranking and query-aware signals.</li>
+                        <li>Select compression policy (lossy/lossless/hybrid) and target ratio based on risk and length.</li>
+                        <li>Apply compression: deduplicate, prune redundancy, and summarize hierarchically; keep atomic spans verbatim.</li>
+                        <li>Assemble prompt with compressed evidence, citations/anchors, and brief provenance.</li>
+                        <li>Run quality gates (coverage/answerability checks); relax compression if quality drops.</li>
+                        <li>Log metrics (tokens saved, latency, quality) for continuous tuning.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Use query-aware compression; condition summaries on the actual question.',
+                        'Preserve atomic data verbatim (numbers, code, API parameters, citations).',
+                        'Prefer two-stage pipelines: extract relevant spans first, then summarize over them.',
+                        'Tune adaptive compression ratios with quality gates and safe fallbacks.',
+                        'Compress after retrieval in RAG; avoid mutating the user query intent.',
+                        'Instrument offline/online evals with a no-compression control.',
+                        'Maintain provenance (doc ids/anchors) for auditability and verification.',
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Inputs already fit comfortably within the model context window.</li>
+                        <li>Tasks requiring verbatim fidelity (legal contracts, code diffs, compliance text).</li>
+                        <li>Ultra-low-latency paths where compression overhead outweighs savings.</li>
+                        <li>Low-quality retrieval where compression could hide upstream errors.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Over-compression that drops key evidence or numeric details.</li>
+                        <li>Summarization drift that changes meaning or introduces hallucinations.</li>
+                        <li>Ignoring query intent, producing concise but irrelevant context.</li>
+                        <li>Missing provenance, making answers hard to verify.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Lossy, lossless, and hybrid strategies',
+                        'Query-aware relevance and retention scoring',
+                        'Hierarchical summarization (doc → section → span)',
+                        'Deduplication and overlap removal',
+                        'Preservation of atomic spans (figures, code, identifiers)',
+                        'Provenance retention for auditability',
+                      ].map((feat) => (
+                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Token reduction ratio and cost-per-query savings.</li>
+                        <li>Answer quality delta vs. no-compression baseline (accuracy/F1/ROUGE where applicable).</li>
+                        <li>Latency p50/p95 improvement and throughput uplift.</li>
+                        <li>Coverage/recall of critical facts and citation integrity.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Aim for 40–80% token reduction with negligible quality loss; auto-relax on gate failures.</li>
+                        <li>Account for compression compute; batch/cache for hot content and reuse summaries.</li>
+                        <li>Prefer lightweight extractive pruning before heavier abstractive summarization.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Retrieval-Augmented Generation over large corpora.</li>
+                        <li>Long-document QA and synthesis (reports, papers, logs).</li>
+                        <li>Tool-using LLMs requiring concise API/manual snippets.</li>
+                        <li>Multi-agent systems sharing a constrained context budget.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://arxiv.org/abs/2305.14788" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Adapting Language Models to Compress Contexts (Chevalier et al., 2023)</a></li>
+                          <li><a href="https://arxiv.org/abs/2307.06945" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">In-context Autoencoder for Context Compression (Ge et al., 2023)</a></li>
+                          <li><a href="https://aclanthology.org/2024.findings-acl.974/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Concise and Precise Context Compression for Tool-Using LMs (Findings of ACL 2024)</a></li>
+                          <li><a href="https://arxiv.org/abs/2409.01579" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">AdaComp: Extractive Context Compression with Adaptive Predictor (2024)</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://python.langchain.com/docs/modules/data_connection/retrievers/contextual_compression/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangChain: Contextual Compression Retriever</a></li>
+                          <li><a href="https://docs.llamaindex.ai/en/stable/examples/retrievers/contextual_compression/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LlamaIndex: Contextual Compression</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://github.com/microsoft/LLMLingua" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LLMLingua (prompt/context compression)</a></li>
+                          <li><a href="https://python.langchain.com/docs/modules/data_connection/retrievers/contextual_compression/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangChain: ContextualCompressionRetriever</a></li>
+                          <li><a href="https://docs.llamaindex.ai/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LlamaIndex retrievers (context compression)</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://www.reddit.com/r/MachineLearning/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">r/MachineLearning discussions on context compression</a></li>
+                          <li><a href="https://discord.gg/langchain" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangChain Discord</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
                 </>
               ) : selectedTechnique.id === 'context-compression-advanced' ? (
                 <>
@@ -1729,6 +5251,216 @@ export const TechniqueDetails = ({
                     </div>
                   </section>
                 </>
+              ) : selectedTechnique.id === 'meta-reasoning-orchestration' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism (short conceptual overview)
+                    </h2>
+                    <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed">
+                        Meta-level control that monitors, evaluates, and adapts object-level reasoning. The controller selects among
+                        strategies (e.g., Chain-of-Thought, Tree-of-Thoughts, tool use, retrieval, self-consistency, backtracking),
+                        allocates budget, and switches when progress stalls. Practical implementations use contextual bandits or
+                        reinforcement learning for strategy selection, uncertainty-aware gating, and bounded compute.
+                      </p>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Characterize task: domain, difficulty, constraints, risk, and target quality/latency/cost.</li>
+                        <li>Initialize policy and budgets: token/time caps, iteration limits, stopping criteria.</li>
+                        <li>Plan candidate strategies: CoT/ToT depth, self-consistency samples, retrieval/tool plan.</li>
+                        <li>Execute a step: run chosen strategy; capture trace, uncertainty, cost, and intermediate results.</li>
+                        <li>Meta-evaluate: check progress vs rubric; detect stall, drift, or contradiction.</li>
+                        <li>Adapt: switch strategy, adjust depth, request clarification, or invoke tools/retrieval.</li>
+                        <li>Terminate: meet success criteria or safe-abort when budgets or guardrails trigger.</li>
+                        <li>Learn: update selection policy with outcomes, regret, and calibration data.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Separate meta-control from object-level reasoning; pass typed state and metrics between layers.',
+                        'Use uncertainty and confidence thresholds to gate deeper search or tool escalation.',
+                        'Prefer small, fast models for routing, critique, and selection; reserve large models for hard steps.',
+                        'Bound loops with iteration/time/token caps; add watchdogs and abort conditions.',
+                        'Instrument traces: strategy chosen, switches, tokens, latency, failure taxonomy, and outcomes.',
+                        'Offline-evaluate policies with scenario suites and counterfactual replays before production.',
+                        'Add human-in-the-loop for high‑risk actions; require provenance and audit trails.'
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Simple, single-step tasks where a direct prompt or tool call meets quality and SLOs.</li>
+                        <li>Strict real-time paths with tight latency budgets that meta-control would exceed.</li>
+                        <li>Compliance-critical flows requiring fixed, auditable procedures without adaptive search.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Unbounded search loops and over-sampling leading to token/cost blowups.</li>
+                        <li>Miscalibrated confidence scores causing premature stop or excessive depth.</li>
+                        <li>Reward hacking or proxy-metric overfitting; policies don’t generalize to production.</li>
+                        <li>Missing cancellation/idempotency when switching strategies or retrying tools.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Strategy selection via bandits/RL and rule-based guards',
+                        'Confidence- and risk-aware depth control',
+                        'Cost/latency budgets with backpressure',
+                        'Self-consistency, backtracking, and debate/judge patterns',
+                        'Traceability: reasoning graphs, decisions, and provenance',
+                        'Learning from outcomes to improve future selection'
+                      ].map((feat) => (
+                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>End-to-end task success vs strong single-strategy baselines.</li>
+                        <li>Cost and tokens per successful task; time-to-quality (p50/p95).</li>
+                        <li>Policy regret and switch efficacy (improvement after a switch).</li>
+                        <li>Calibration metrics: ECE/Brier for confidence and abort rates within budget.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Run meta-control with smaller models; cap samples and tree width; early-exit on high confidence.</li>
+                        <li>Cache intermediate summaries; reuse KV cache; avoid duplicating context across branches.</li>
+                        <li>Parallelize independent probes sparingly with strict concurrency and token budgets.</li>
+                        <li>Amortize policy learning across batches; replay traces offline to refine selection.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Complex multi-step problem solving: math, planning, code generation with tests/tools.</li>
+                        <li>Open-domain QA and research with retrieval, verification, and synthesis.</li>
+                        <li>Autonomous operations runbooks with adaptive depth and human escalation.</li>
+                        <li>Multi-agent teams requiring a supervisor to allocate tasks and adapt strategies.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://arxiv.org/abs/2406.11698" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Meta Reasoning for Large Language Models (2024)</a></li>
+                          <li><a href="https://arxiv.org/abs/2502.19918" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Meta-Reasoner: Dynamic Guidance for Optimized Inference-time Reasoning (2025)</a></li>
+                          <li><a href="https://aclanthology.org/2025.findings-naacl.440/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Meta-Reasoning Improves Tool Use in LLMs (Findings NAACL 2025)</a></li>
+                          <li><a href="https://arxiv.org/abs/2305.10601" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Tree of Thoughts: Deliberate Problem Solving with LLMs (2023)</a></li>
+                          <li><a href="https://arxiv.org/abs/2210.03350" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Self-Consistency Improves Chain of Thought (2022)</a></li>
+                          <li><a href="https://link.springer.com/book/10.1007/978-3-642-24288-5" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Metareasoning: Thinking about Thinking in AI (Cox & Raja, 2011)</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://learn.microsoft.com/en-us/azure/architecture/ai-ml/guide/ai-agent-design-patterns" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Microsoft Azure: AI Agent Design Patterns</a></li>
+                          <li><a href="https://docs.langchain.com/docs/langgraph" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangGraph Documentation: Supervisor/Graph Orchestration</a></li>
+                          <li><a href="https://gpt-index.readthedocs.io/en/stable/getting_started/agents.html" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LlamaIndex: Agents and Supervisors</a></li>
+                          <li><a href="https://dspy.ai/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">DSPy: Programmatic Optimization of LLM Pipelines</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://github.com/langchain-ai/langgraph" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangGraph</a></li>
+                          <li><a href="https://github.com/microsoft/autogen" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">AutoGen</a></li>
+                          <li><a href="https://www.crewai.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">CrewAI</a></li>
+                          <li><a href="https://github.com/openai/swarm" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">OpenAI Swarm</a></li>
+                          <li><a href="https://github.com/geekan/MetaGPT" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">MetaGPT</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://www.computer.org/publications/tech-news/trends/meta-reasoning/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">IEEE Computer Society: Meta‑reasoning in Agents (2024–2025 coverage)</a></li>
+                          <li><a href="https://aws.amazon.com/blogs/machine-learning/design-multi-agent-orchestration-with-reasoning-using-amazon-bedrock-and-open-source-frameworks/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">AWS Blog: Multi‑Agent Orchestration with Reasoning (2024/2025)</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                </>
               ) : selectedTechnique.id === 'peer-collaboration' ? (
                 <>
                   {/* Core Mechanism (short conceptual overview) */}
@@ -2158,6 +5890,217 @@ export const TechniqueDetails = ({
                     </div>
                   </section>
                 </>
+              ) : selectedTechnique.id === 'adaptive-complexity-scaling' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism (short conceptual overview)
+                    </h2>
+                    <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed">
+                        Dynamically adjusts inference complexity in real time based on task difficulty, uncertainty, and resource budgets.
+                        Uses early-exit halting, cascaded routing (small→large models), dynamic width/depth, sparse Mixture-of-Experts gating,
+                        and speculative decoding to trade off quality, latency, and cost under explicit SLOs.
+                      </p>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Estimate difficulty/uncertainty and read time/cost budgets (SLOs).</li>
+                        <li>Select path: fast path (cheap model/early-exit) vs. deep path (bigger model/extra steps).</li>
+                        <li>Allocate compute: max tokens, max thinking steps, halting thresholds, MoE expert budget.</li>
+                        <li>Generate with online monitors (toxicity, uncertainty, self-consistency signals).</li>
+                        <li>Early‑exit if confidence ≥ threshold; otherwise escalate (speculative decode, larger model, more steps).</li>
+                        <li>Apply guardrails and verification when actions/claims are high‑risk; retry or fallback if needed.</li>
+                        <li>Cache and reuse KV/prefix/context; record routing, costs, and outcomes.</li>
+                        <li>Continuously learn thresholds/policies from evals and production telemetry.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Calibrate uncertainty/confidence (e.g., temperature scaling) before using it for halting/routing.',
+                        'Define hard budgets: max tokens, max steps, max escalations; always have a safe fallback.',
+                        'Use cascades: small model for triage; escalate only when needed; verify selectively.',
+                        'Exploit sparsity: MoE (top‑k experts) and structured pruning/quantization to keep latency predictable.',
+                        'Instrument everything: per‑request cost/latency, escalation rate, quality deltas vs. baseline.',
+                        'Cache aggressively (prompt/prefix/KV) and share across requests when safe.',
+                        'A/B evaluate new thresholds/policies offline on curated suites before production rollout.',
+                        'Align policies to product SLOs (p95 latency, cost caps) rather than global averages.'
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Uniform, low‑variance tasks where a fixed small model meets quality and SLOs.</li>
+                        <li>Hard real‑time or safety‑critical actions that cannot tolerate variable compute or routing risk.</li>
+                        <li>Compliance‑critical flows requiring deterministic, fully auditable fixed pipelines.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Miscalibrated thresholds → too many escalations or premature exits hurting quality.</li>
+                        <li>Cost blow‑ups from recursive retries or unbounded test‑time compute.</li>
+                        <li>QoS regressions under load when routing policies ignore backpressure/SLOs.</li>
+                        <li>Speculative decoding mismatches causing frequent fallbacks and lost speedup.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Early‑exit halting (layer‑wise exits, patience‑based exiting).',
+                        'Cascaded routing across models (small → medium → large) with verification.',
+                        'Dynamic width/depth (e.g., DynaBERT) and adaptive thinking time.',
+                        'Sparse Mixture‑of‑Experts with learned/top‑k gating (Switch/SG‑MoE).',
+                        'Speculative/assisted decoding for faster generation.',
+                        'Budget‑aware policies: token, latency, energy, and cost caps.'
+                      ].map((feat) => (
+                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Quality vs. fixed‑compute baseline (accuracy/win‑rate/human preference).</li>
+                        <li>Latency p50/p95 and SLO‑breach rate; escalation rate and retry rate.</li>
+                        <li>Cost per successful task; tokens saved (%) and compute utilization.</li>
+                        <li>Stability of policies over time (drift of thresholds, variance under load).</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-3 text-sm text-gray-300">
+                      <p>
+                        Control average tokens via early‑exit halting and cascades; reuse KV cache and prefix/context where possible.
+                        Set per‑turn token budgets and cap speculative lookahead. Prefer sparse MoE to dense scale‑ups when latency‑bound.
+                      </p>
+                      <ul className="list-disc list-inside space-y-1">
+                        <li>Budgets: max input tokens, max generated tokens, max model hops, max verify calls.</li>
+                        <li>Throughput: coalesce small requests; batch where safe; prioritize short prompts for tail‑latency.</li>
+                        <li>Caching: prompt/prefix/KV caches; retrieval/result caches to avoid recomputation.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>High‑volume assistants with strict latency/cost SLOs (support, chat, search).</li>
+                        <li>On‑device/edge scenarios with tight memory/energy budgets.</li>
+                        <li>Coding/analysis agents using fast triage + selective deep verification.</li>
+                        <li>Routing gateways serving heterogeneous prompts and difficulty distributions.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://arxiv.org/abs/1603.08983" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Adaptive Computation Time (Graves, 2016)</a></li>
+                          <li><a href="https://arxiv.org/abs/2004.04037" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">DynaBERT: Dynamic Width/Depth (2020)</a></li>
+                          <li><a href="https://arxiv.org/abs/2207.07061" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Confident Adaptive Language Modeling (CALM, 2022)</a></li>
+                          <li><a href="https://arxiv.org/abs/1701.06538" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Sparsely‑Gated Mixture‑of‑Experts (Shazeer et al., 2017)</a></li>
+                          <li><a href="https://arxiv.org/abs/2101.03961" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Switch Transformer (Fedus et al., 2021)</a></li>
+                          <li>Early‑exit for Transformers (e.g., DeeBERT, PABEE); cascaded LLMs (e.g., FrugalGPT).</li>
+                          <li>Speculative decoding and Medusa‑style assisted decoding for faster generation.</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://docs.vllm.ai/en/latest/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">vLLM: Inference & speculative decoding</a></li>
+                          <li><a href="https://huggingface.co/docs/text-generation-inference" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Hugging Face TGI: Inference features</a></li>
+                          <li><a href="https://www.deepspeed.ai/tutorials/mixture-of-experts/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">DeepSpeed‑MoE tutorial</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li>vLLM, TGI, TensorRT‑LLM for high‑throughput serving.</li>
+                          <li>DeepSpeed‑MoE/Switch‑style MoE, Megatron‑LM MoE.</li>
+                          <li>Routing frameworks (e.g., RouteLLM) and feature stores for policy signals.</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li>Engineering blogs on test‑time compute, routing, MoE serving, and latency SLOs.</li>
+                          <li>Conference talks/tutorials on speculative decoding and early‑exit.</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                </>
               ) : selectedTechnique.id === 'adaptive-context-depth' ? (
                 <>
                   {/* Core Mechanism (short conceptual overview) */}
@@ -2364,6 +6307,219 @@ export const TechniqueDetails = ({
                           <li><a href="https://community.openai.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">OpenAI developer community discussions</a></li>
                           <li><a href="https://www.anthropic.com/news" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Anthropic updates and guidance</a></li>
                           <li><a href="https://github.com/vllm-project/vllm" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">vLLM GitHub issues/discussions</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                </>
+              ) : selectedTechnique.id === 'self-regulating-depth-control' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism (short conceptual overview)
+                    </h2>
+                    <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed">
+                        Dynamically regulates reasoning depth based on uncertainty, verifier feedback, and compute budgets.
+                        The agent starts shallow, estimates confidence and difficulty, and only expands depth (more steps,
+                        samples, tool calls, or layers) when expected quality gains justify the extra cost. Foundations
+                        include adaptive computation time and early-exit transformers, as well as verifier-guided halting
+                        in agent loops (e.g., ReAct/ToT with budgeted search).
+                      </p>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Initialize budgets/thresholds: max tokens, max depth/iterations, p95 latency, target quality.</li>
+                        <li>Shallow pass: quick solve using small model or few-shot; compute uncertainty/score.</li>
+                        <li>Assess: verifier/critic, logprobs, self-consistency variance, or tests determine sufficiency.</li>
+                        <li>Expand if needed: increase steps/samples, enable tools/RAG, or unlock deeper model/layers.</li>
+                        <li>Early-exit: halt when calibrated confidence ≥ threshold or marginal gain per token is low.</li>
+                        <li>Guardrails: cap recursion/tool loops; enforce per-call/token ceilings; record traces.</li>
+                        <li>Learn: log depth vs. outcome; auto-tune thresholds and routing for future tasks.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Use calibrated confidence: verifier or cross-encoder scoring; track Expected Calibration Error (ECE).',
+                        'Separate generator and verifier models; small router/verifier, larger generator only on demand.',
+                        'Start with k small samples + self-consistency; expand k or depth only if disagreement remains.',
+                        'Integrate retrieval/tools progressively; avoid immediate deep chains when simple lookups suffice.',
+                        'Set hard ceilings: max depth/iterations/tool calls; timeouts with graceful fallback answers.',
+                        'Attribute cost to successful tasks; measure marginal quality gain per extra token/second.',
+                        'A/B thresholds per task family; auto-tune based on success, latency, and cost targets.'
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Hard real-time SLAs where any iterative deepening would break latency guarantees.</li>
+                        <li>Strictly deterministic/audited flows requiring fixed prompts and fixed execution paths.</li>
+                        <li>Simple single-hop queries already solved by a small model or cached retrieval.</li>
+                        <li>Safety-critical domains where autonomous recursion is disallowed without human-in-the-loop.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Uncalibrated stopping: using raw logprob as confidence without calibration/evaluators.</li>
+                        <li>Runaway recursion/tool loops due to missing ceilings or missing convergence checks.</li>
+                        <li>Over-expansion: large k or deep chains where marginal quality gain is negligible.</li>
+                        <li>Ignoring task heterogeneity: one-size thresholds for coding, QA, planning, and RAG.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Confidence- and verifier‑based early exit',
+                        'Budget‑aware depth planning (tokens, time, tools)',
+                        'Adaptive sampling (k) and step expansion with self‑consistency',
+                        'Depth/layer early‑exit on transformers where supported',
+                        'Traceability of depth decisions and halting reasons',
+                        'Auto‑tuning thresholds per task family'
+                      ].map((feat) => (
+                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Task success/quality vs fixed-depth baseline; evaluator pass rate.</li>
+                        <li>Tokens and cost per successful task; marginal quality gain per 1k tokens.</li>
+                        <li>Latency p50/p95 with/without deepening; throughput under load.</li>
+                        <li>Verifier calibration (ECE), over‑/under‑depth rate, recursion abort rate.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Depth budgets: cap tokens/steps/samples; escalate only on uncertainty or verifier fail.</li>
+                        <li>Use small routers/verifiers; reserve large models for deep passes.</li>
+                        <li>Prefer early‑exit/mixture‑of‑depths and efficient serving (Paged/Flash Attention) where available.</li>
+                        <li>Track and attribute compute to final successful output; cache intermediate artifacts.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Code assistants and evaluators that deepen on test failures or low confidence.</li>
+                        <li>Multi‑hop QA, planning, and research that benefit from verifier‑guided deepening.</li>
+                        <li>Tool‑use workflows (ReAct) with budgeted search and halting on sufficient evidence.</li>
+                        <li>Customer support and triage systems with variable difficulty and SLAs.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://arxiv.org/abs/1603.08983" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Adaptive Computation Time (Graves, 2016)</a></li>
+                          <li><a href="https://arxiv.org/abs/1807.03819" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Universal Transformers with ACT (Dehghani et al., 2018)</a></li>
+                          <li><a href="https://arxiv.org/abs/1910.10073" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Depth‑Adaptive Transformer (Elbayad et al., 2019)</a></li>
+                          <li><a href="https://arxiv.org/abs/2004.12993" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">DeeBERT: Dynamic Early Exit (Xin et al., 2020)</a></li>
+                          <li><a href="https://arxiv.org/abs/2004.04037" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">DynaBERT: Adaptive Width and Depth (Hou et al., 2020)</a></li>
+                          <li><a href="https://arxiv.org/abs/2211.09066" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">CALM: Confident Adaptive Language Modeling (Schuster et al., 2022)</a></li>
+                          <li><a href="https://arxiv.org/abs/2305.10601" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Tree of Thoughts (Yao et al., 2023)</a></li>
+                          <li><a href="https://arxiv.org/abs/2210.03629" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">ReAct: Reason + Act (Yao et al., 2022)</a></li>
+                          <li><a href="https://arxiv.org/abs/2203.11171" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Self‑Consistency Improves CoT (Wang et al., 2023)</a></li>
+                          <li><a href="https://arxiv.org/abs/2211.17192" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Speculative Decoding (Chen et al., 2023)</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://cookbook.openai.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">OpenAI Cookbook: evaluation, token accounting, cost controls</a></li>
+                          <li><a href="https://docs.anthropic.com/claude/docs" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Anthropic docs: prompt, context, and safety best practices</a></li>
+                          <li><a href="https://python.langchain.com/docs/guides/evaluation/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangChain: evaluators and guardrails for halting/quality</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://vllm.ai/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">vLLM</a> and <a href="https://github.com/Dao-AILab/flash-attention" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">FlashAttention</a> for efficient serving</li>
+                          <li><a href="https://huggingface.co/docs/transformers/index" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Transformers</a> (community implementations of early‑exit/branchy models)</li>
+                          <li><a href="https://www.llamaindex.ai/docs" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LlamaIndex</a> / <a href="https://python.langchain.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangChain</a> for verifier‑guided loops</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://community.openai.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">OpenAI developer forum</a></li>
+                          <li><a href="https://discuss.huggingface.co/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Hugging Face forums</a></li>
+                          <li><a href="https://paperswithcode.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Papers with Code</a> pages for ACT, early‑exit, and CALM</li>
                         </ul>
                       </div>
                     </div>
@@ -3054,6 +7210,627 @@ export const TechniqueDetails = ({
                           <li><a href="https://ethresear.ch/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Ethereum Research Forum (finality, fork choice)</a></li>
                           <li><a href="https://groups.google.com/g/raft-dev" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">raft-dev Google Group</a></li>
                           <li><a href="https://forum.cosmos.network/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Cosmos/CometBFT Forum</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                </section>
+                </>
+              ) : selectedTechnique.id === 'reinforcement-learning-adaptation' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism (short conceptual overview)
+                    </h2>
+                    <div className="bg-gradient-to-br from-blue-500/10 to-emerald-500/10 border border-blue-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed">
+                        Optimize a policy to maximize expected cumulative reward from sequential interactions. Use exploration to
+                        discover improvements, learn from trajectories (online or offline), and deploy a stable policy with safety
+                        constraints. In LLM agents, adaptation often uses bandits/RL on top of a frozen model (e.g., RLHF/RLAIF,
+                        reward modeling) to refine behaviors without full retraining.
+                      </p>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>
+                          Problem framing: define state/observation, action space, reward signal, horizons, and constraints; prefer
+                          offline evaluation proxies when online risk exists.
+                        </li>
+                        <li>
+                          Algorithm selection: value-based (e.g., DQN variants) for discrete actions; policy gradient/actor–critic (PPO,
+                          SAC) for continuous or stochastic policies; contextual bandits for single-step feedback; offline RL for
+                          logged data only.
+                        </li>
+                        <li>
+                          Data collection: simulate where possible; otherwise gated online traffic, shadow modes, or replay buffers.
+                          In LLMs, collect human/model preferences to train a reward model.
+                        </li>
+                        <li>
+                          Training/updates: perform stable updates (clipping, target networks, entropy regularization), reward
+                          normalization/shaping, and early stopping on off-policy evaluation.
+                        </li>
+                        <li>
+                          Evaluation: use A/B tests, counterfactual/off-policy estimators, safety checks, and regression suites;
+                          measure regret, success rate, and business KPIs.
+                        </li>
+                        <li>
+                          Deployment: start with small traffic, safety constraints, rollback, and continual monitoring; schedule
+                          re-training and drift detection.
+                        </li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Start simple: use contextual bandits before full RL when feedback is single-step.',
+                        'Constrain policies with guardrails, action filters, and reward penalties for unsafe behavior.',
+                        'Use robust baselines: PPO with clipping for stability; SAC for continuous control and entropy tuning.',
+                        'Curate rewards: combine outcome metrics, proxy rewards, and penalties; monitor for specification gaming.',
+                        'Prefer offline RL, simulation, or gated rollouts before broad online exploration in high-risk domains.',
+                        'Log everything: seeds, configs, datasets, environment versions, and evaluation protocols for reproducibility.',
+                        'Apply off-policy evaluation (IPS, doubly robust, DM) before shipping; validate reward model calibration.',
+                        'Use checkpoints and rollback plans; deploy gradually with guardrails and traffic caps.',
+                        'For LLM agents, use preference modeling (RLHF/RLAIF) and conservative updates to avoid capability regression.'
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 text-sm text-gray-300 space-y-2">
+                      <p>No reliable or timely feedback signal; purely supervised mapping suffices.</p>
+                      <p>High-risk domains without safe simulation, guardrails, or rollback (e.g., safety-critical operations).</p>
+                      <p>Severe reward sparsity and no feasible shaping or curriculum; infeasible sample budgets.</p>
+                      <p>Short-lived products where exploration costs outweigh potential long-term gains.</p>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 text-sm text-gray-300 space-y-2">
+                      <p>Reward misspecification and gaming; misaligned proxies yielding unintended behaviors.</p>
+                      <p>Instability and high variance from large learning rates, unbounded updates, or poor normalization.</p>
+                      <p>Distribution shift between training logs and deployment; offline RL without sufficient coverage.</p>
+                      <p>Inadequate evaluation: relying solely on in-sample returns; no safety checks or long-horizon metrics.</p>
+                      <p>For LLMs: over-optimization to the reward model leading to loss of helpfulness or diversity.</p>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Exploration–exploitation trade-off with adaptive strategies (epsilon decay, UCB, Thompson sampling).',
+                        'Policy evaluation and improvement loops; actor–critic methods with variance reduction.',
+                        'Offline, off-policy learning with replay buffers; counterfactual estimators for safety.',
+                        'Reward modeling and preference learning (RLHF/RLAIF) for alignment with human goals.',
+                        'Safety constraints and risk-sensitive objectives; conservative updates (KL/clipping).',
+                        'Continuous monitoring, drift detection, and automated rollback.'
+                      ].map((feat) => (
+                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 text-sm text-gray-300 grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div>Cumulative reward/return; regret vs. baseline; success/goal completion rate.</div>
+                      <div>Sample efficiency: environment steps to reach target; wall-clock training time.</div>
+                      <div>Safety metrics: violation rate, blocked actions, and rollback frequency.</div>
+                      <div>Stability: variance of returns, update ratio health, and catastrophic divergence incidents.</div>
+                      <div>Business outcomes: retention, conversion, cost per improvement, and revenue lift.</div>
+                      <div>For LLMs: preference win-rate, helpfulness/harmlessness scores, diversity/coverage.</div>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 text-sm text-gray-300 space-y-2">
+                      <p>Compute: GPU hours scale with environment complexity and batch size; prioritize sample-efficient algorithms and simulators.</p>
+                      <p>Memory: replay buffers and large models increase VRAM; cap buffer size and use prioritized replay judiciously.</p>
+                      <p>LLM agents: tokens for preference data and online rollouts; reduce with distilled feedback, smaller evaluators, and caching.</p>
+                      <p>Operational: monitoring/telemetry overhead; use lightweight summaries and periodic evaluations.</p>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 text-sm text-gray-300 space-y-2">
+                      <p>Personalization and recommendations (bandits → RL for long-term value).</p>
+                      <p>Dialog policy optimization and assistant behavior tuning with RLHF/RLAIF.</p>
+                      <p>Robotics/control with simulation-to-real transfer; operations and resource allocation.</p>
+                      <p>Marketplace and bidding strategies; dynamic pricing; sequential decision analytics.</p>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://www.andrew.cmu.edu/course/10-703/textbook/BartoSutton.pdf" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Sutton & Barto — Reinforcement Learning: An Introduction (2nd ed.)</a></li>
+                          <li><a href="https://www.nature.com/articles/nature14236" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Mnih et al. — Human-level control through deep RL (DQN, Nature 2015)</a></li>
+                          <li><a href="https://arxiv.org/abs/1707.06347" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Schulman et al. — Proximal Policy Optimization (PPO, 2017)</a></li>
+                          <li><a href="https://arxiv.org/abs/1801.01290" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Haarnoja et al. — Soft Actor-Critic (SAC, 2018)</a></li>
+                          <li><a href="https://arxiv.org/abs/2005.01643" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Levine et al. — Offline Reinforcement Learning: Tutorial and Review (2020)</a></li>
+                          <li><a href="https://arxiv.org/abs/2203.02155" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Ouyang et al. — Training language models to follow instructions with human feedback (RLHF, 2022)</a></li>
+                          <li><a href="https://arxiv.org/abs/2302.08582" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Bai et al. — Constitutional AI: Harmlessness from AI feedback (2022)</a></li>
+                          <li><a href="https://arxiv.org/abs/2106.01345" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Chen et al. — Decision Transformer: Reinforcement Learning via Sequence Modeling (2021)</a></li>
+                          <li><a href="https://arxiv.org/abs/1606.01540" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Amodei et al. — Concrete Problems in AI Safety (2016)</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://spinningup.openai.com/en/latest/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">OpenAI Spinning Up in Deep RL</a></li>
+                          <li><a href="https://docs.ray.io/en/latest/rllib/index.html" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Ray RLlib Documentation</a></li>
+                          <li><a href="https://stable-baselines3.readthedocs.io/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Stable-Baselines3 Docs</a></li>
+                          <li><a href="https://github.com/vwxyzjn/cleanrl" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">CleanRL</a></li>
+                          <li><a href="https://farama.org/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Farama Foundation (Gymnasium, PettingZoo, Minigrid)</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://github.com/ray-project/ray" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Ray RLlib</a>, <a href="https://github.com/DLR-RM/stable-baselines3" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Stable-Baselines3</a>, <a href="https://github.com/google-deepmind/acme" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">DeepMind Acme</a></li>
+                          <li><a href="https://github.com/rail-berkeley/d4rl" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">D4RL</a> (offline RL datasets), <a href="https://github.com/Farama-Foundation/Datasets" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Farama Datasets</a></li>
+                          <li><a href="https://github.com/Farama-Foundation/Gymnasium" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Gymnasium</a>, <a href="https://github.com/Farama-Foundation/PettingZoo" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">PettingZoo</a>, <a href="https://github.com/deepmind/dm_control" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">DM Control</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://www.reddit.com/r/reinforcementlearning/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">r/reinforcementlearning</a> and <a href="https://discord.gg/farama" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Farama Discord</a></li>
+                          <li><a href="https://sites.google.com/view/deep-rl-bootcamp/lectures" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Deep RL Bootcamp Lectures</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                </>
+              ) : selectedTechnique.id === 'continuous-learning' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism (short conceptual overview)
+                    </h2>
+                    <div className="bg-gradient-to-br from-blue-500/10 to-rose-500/10 border border-blue-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed">
+                        Continual/continuous learning maintains a balance between stability (retaining prior knowledge)
+                        and plasticity (integrating new information) while models learn over streams of non-stationary
+                        data. Systems mitigate catastrophic forgetting via regularization (e.g., EWC, LwF), rehearsal
+                        and experience replay, parameter-efficient updates (LoRA/adapters), or dynamic architectures
+                        (e.g., Progressive Networks), with periodic evaluation on old and new tasks.
+                      </p>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Define learning regime: class/task incremental, domain incremental, or streaming online; choose metrics (retention, BWT/FWT).</li>
+                        <li>Data ingestion: buffer streaming data; deduplicate; label or generate weak labels; detect drift/shifts.</li>
+                        <li>Stability–plasticity controls: pick strategy (replay, regularization, parameter-efficient finetuning, dynamic expansion).</li>
+                        <li>Update loop: schedule micro-batches; interleave replay exemplars; checkpoint and gate releases.</li>
+                        <li>Evaluation: track performance on historical tasks/slices and new data; run regression and safety suites.</li>
+                        <li>Deployment & rollback: progressive rollout; guardrails; monitor drift/forgetting and auto-retrain triggers.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Prefer replay + regularization baselines (ER, DER++, EWC/LwF) before complex methods.',
+                        'Bound replay memory; use class-balanced reservoir sampling; store embeddings when raw data retention is constrained.',
+                        'Use parameter-efficient finetuning (LoRA/adapters) for frequent small updates; periodically consolidate via full finetune or distillation.',
+                        'Evaluate retention with task-specific held-out sets; report backward/forward transfer and forgetting metrics.',
+                        'Detect and label distribution shifts; split by time, domain, and task to avoid leakage.',
+                        'Isolate safety-critical capabilities; add guardrails and post-training safety checks for updated behaviors.',
+                        'Automate drift detection, update cadence, and rollback; keep immutable baselines for A/B comparisons.'
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 text-sm text-gray-300 space-y-2">
+                      <p>Static domains with infrequent change where periodic batch retraining is simpler and safer.</p>
+                      <p>Severely resource-constrained deployments where storage for replay or frequent updates is infeasible.</p>
+                      <p>High-stakes settings without safe evaluation sandboxes, guardrails, or instant rollback paths.</p>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 text-sm text-gray-300 space-y-2">
+                      <p>Catastrophic forgetting from unbalanced online updates without rehearsal or regularization.</p>
+                      <p>Data leakage across time/task splits; evaluation that ignores long‑term retention.</p>
+                      <p>Unbounded model growth with dynamic expansion; latency and cost regressions.</p>
+                      <p>Overfitting to the latest slice; loss of diversity and coverage in LLM behaviors.</p>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Rehearsal/replay buffers and generative replay for retention.',
+                        'Regularization: Elastic Weight Consolidation, Synaptic Intelligence, Learning without Forgetting.',
+                        'Dynamic architectures: Progressive Networks, expandable adapters/experts.',
+                        'Parameter‑efficient finetuning: LoRA/QLoRA, adapters, prefix-tuning.',
+                        'Drift detection and evaluation harness for long‑term retention.',
+                        'Privacy‑aware replay via embeddings or distillation when raw data cannot be stored.'
+                      ].map((feat) => (
+                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 text-sm text-gray-300 grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div>Retention/forgetting: backward transfer (BWT), average accuracy on past tasks over time.</div>
+                      <div>Forward transfer (FWT) and sample efficiency on new tasks/slices.</div>
+                      <div>Latency and cost: time and $ per successful update; tokens/steps per adaptation for LLMs.</div>
+                      <div>Resource footprint: replay memory size, VRAM/CPU usage, model parameter growth.</div>
+                      <div>Business outcomes: regression rate, incident count, user satisfaction, revenue/engagement deltas.</div>
+                      <div>Safety metrics: violation rate, blocked actions, rollback frequency post‑update.</div>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 text-sm text-gray-300 space-y-2">
+                      <p>LLM updates: prefer PEFT (LoRA/QLoRA) to cap tokens, VRAM, and wall‑clock; cache exemplars and use small evaluators.</p>
+                      <p>Replay: cap memory with reservoir sampling; compress or store embeddings when raw retention is restricted.</p>
+                      <p>Dynamic growth: budget parameter expansion; periodically distill to a compact backbone to avoid unbounded costs.</p>
+                      <p>Ops: schedule updates during off‑peak; incremental evaluations over full re-runs; aggressive result caching.</p>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 text-sm text-gray-300 space-y-2">
+                      <p>Personalization and recommendations with drifting preferences.</p>
+                      <p>Fraud/anomaly detection under adversarial drift and emerging patterns.</p>
+                      <p>Conversational assistants learning products/policies with retention guarantees.</p>
+                      <p>Robotics/operations in evolving environments and non‑stationary dynamics.</p>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://www.pnas.org/doi/10.1073/pnas.1611835114" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Kirkpatrick et al. — Elastic Weight Consolidation (PNAS 2017)</a></li>
+                          <li><a href="https://arxiv.org/abs/1606.09282" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Rusu et al. — Progressive Neural Networks (2016)</a></li>
+                          <li><a href="https://arxiv.org/abs/1612.00796" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Li & Hoiem — Learning without Forgetting (2016)</a></li>
+                          <li><a href="https://arxiv.org/abs/1706.08840" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Rebuffi et al. — iCaRL (CVPR 2017)</a></li>
+                          <li><a href="https://arxiv.org/abs/1706.08840" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Lopez-Paz & Ranzato — Gradient Episodic Memory (2017)</a></li>
+                          <li><a href="https://arxiv.org/abs/1909.07888" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Chaudhry et al. — A-GEM: Efficient Continual Learning (2019)</a></li>
+                          <li><a href="https://arxiv.org/abs/2302.00487" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Wang et al. — A Comprehensive Survey of Continual Learning (2023)</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://avalanche.continualai.org/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Avalanche: Continual Learning Library Docs</a></li>
+                          <li><a href="https://huggingface.co/docs/peft/index" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Hugging Face PEFT (LoRA/adapters)</a></li>
+                          <li><a href="https://github.com/online-ml/river" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">River: Online machine learning</a></li>
+                          <li><a href="https://scikit-multiflow.github.io/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">scikit-multiflow: Data stream learning</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://github.com/ContinualAI/avalanche" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">ContinualAI/Avalanche</a>, <a href="https://github.com/Continvvm/continuum" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Continvvm/continuum</a>, <a href="https://github.com/lebrice/Sequoia" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Sequoia</a></li>
+                          <li><a href="https://github.com/huggingface/peft" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">huggingface/peft</a>, <a href="https://github.com/huggingface/trl" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">huggingface/trl</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://www.continualai.org/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">ContinualAI community</a></li>
+                          <li><a href="https://github.com/ContinualAI/awesome-continual-learning" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Awesome Continual Learning (curated list)</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                </section>
+                </>
+              ) : selectedTechnique.id === 'meta-learning' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism (short conceptual overview)
+                    </h2>
+                    <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6 text-gray-200 text-base leading-relaxed space-y-2">
+                      <p>Meta-learning trains a system across many tasks so it learns priors and update rules that enable rapid adaptation to a new task with few examples.</p>
+                      <ul className="list-disc list-inside text-sm text-gray-300 space-y-1">
+                        <li><span className="font-medium">Optimization-based</span>: learn an initialization or update rule (e.g., MAML, First-Order MAML, Reptile).</li>
+                        <li><span className="font-medium">Metric-based</span>: learn embeddings and a distance metric for fast nearest-prototype decisions (e.g., Matching Nets, Prototypical Networks, Relation Nets).</li>
+                        <li><span className="font-medium">Model-based</span>: use fast-updating controllers/memory (e.g., RNN meta-learners, memory-augmented networks).</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Define a <span className="font-medium">task distribution</span> and episodic datasets; split each task into support (adapt) and query (evaluate).</li>
+                        <li><span className="font-medium">Inner loop</span>: adapt model on a task's support set for K steps (or via a learned optimizer).</li>
+                        <li><span className="font-medium">Outer loop</span>: update meta-parameters to improve post-adaptation performance on query sets.</li>
+                        <li><span className="font-medium">Meta-validation</span>: tune hyperparameters (inner steps, lrs, regularization) on held-out tasks.</li>
+                        <li><span className="font-medium">Meta-testing</span>: measure few-shot performance and adaptation speed on unseen tasks.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Ensure broad task diversity; match meta-train to expected meta-test domains to avoid distribution shift.',
+                        'Use strict episodic splits (no leakage between support/query or between tasks).',
+                        'Prefer first-order variants (FOMAML/Reptile) if second-order gradients are unstable or memory-heavy.',
+                        'Tune adaptation steps and inner/outer learning rates; consider cosine decay or per-parameter lrs.',
+                        'Normalize embeddings for metric-based methods; use temperature-scaled softmax for prototypes.',
+                        'Benchmark on standardized suites (e.g., MiniImageNet, Meta-Dataset, Meta-World, Omniglot) with consistent protocols.',
+                        'Log seeds/configs and report confidence intervals over many sampled tasks for reproducibility.'
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 text-sm text-gray-300 space-y-2">
+                      <p>Each task has abundant labeled data and conventional training is simpler and cheaper.</p>
+                      <p>Tasks are extremely heterogeneous with little shared structure, leading to negative transfer.</p>
+                      <p>Severe compute/memory constraints make episodic meta-training impractical.</p>
+                      <p>Strict latency/SLOs preclude multi-step adaptation at inference time.</p>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 text-sm text-gray-300 space-y-2">
+                      <p>Meta-overfitting: excellent on meta-train tasks but weak on novel tasks; address with task diversity and regularization.</p>
+                      <p>Leakage between support/query or between tasks inflates reported accuracy.</p>
+                      <p>Unstable higher-order gradients in MAML; mitigate with gradient clipping, lower inner steps, or first-order variants.</p>
+                      <p>Inadequate evaluation: too few meta-test tasks or missing confidence intervals.</p>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Rapid few-shot adaptation with minimal labeled data.',
+                        'Task-conditioned initialization and/or learned optimizers.',
+                        'Representation reuse and metric learning for robust generalization.',
+                        'Compatible with vision, NLP, RL; model-agnostic in optimization-based methods.',
+                        'Warm-starts for HPO/NAS via meta-features and prior runs.'
+                      ].map((feat) => (
+                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 text-sm text-gray-300 grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div>N-way K-shot accuracy (mean ± 95% CI) on unseen tasks.</div>
+                      <div>Adaptation speed: steps or wall-clock to reach target accuracy.</div>
+                      <div>Sample efficiency: performance vs. number of support examples.</div>
+                      <div>Generalization gap: meta-train vs. meta-test performance.</div>
+                      <div>Negative transfer rate: performance drop on out-of-domain tasks.</div>
+                      <div>Stability: variance across task samples and seeds.</div>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 text-sm text-gray-300 space-y-2">
+                      <p>Compute: episodic meta-training scales with tasks × inner steps × outer steps; second-order gradients increase memory/compute.</p>
+                      <p>Efficiency levers: first-order methods (FOMAML/Reptile), gradient checkpointing, smaller inner steps, and mixed precision.</p>
+                      <p>LLM agents: in-context meta-adaptation consumes tokens for demonstrations; cap K, cache exemplars, and compress context.</p>
+                      <p>Storage: maintain per-task splits and metadata; consider sharded datasets and lazy loading.</p>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 text-sm text-gray-300 space-y-2">
+                      <p>Few-shot classification and detection across domains (vision, NLP).</p>
+                      <p>Personalization with scarce per-user data; rapid domain adaptation.</p>
+                      <p>Warm-start hyperparameter optimization and neural architecture search.</p>
+                      <p>Robotics skill adaptation and sim-to-real transfer (e.g., Meta-World tasks).</p>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://arxiv.org/abs/1703.03400" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Finn et al. — Model-Agnostic Meta-Learning (MAML, 2017)</a></li>
+                          <li><a href="https://arxiv.org/abs/1803.02999" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Nichol et al. — Reptile: A Scalable Meta-Learning Algorithm (2018)</a></li>
+                          <li><a href="https://arxiv.org/abs/1606.04080" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Vinyals et al. — Matching Networks for One Shot Learning (2016)</a></li>
+                          <li><a href="https://arxiv.org/abs/1703.05175" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Snell et al. — Prototypical Networks (2017)</a></li>
+                          <li><a href="https://arxiv.org/abs/2004.05439" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Hospedales et al. — Meta-Learning in Neural Networks: A Survey (TPAMI 2021)</a></li>
+                          <li><a href="https://arxiv.org/abs/1909.02790" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Raghu et al. — Rapid Learning or Feature Reuse? (2019)</a></li>
+                          <li><a href="https://arxiv.org/abs/1903.03096" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Triantafillou et al. — Meta-Dataset: A Dataset of Datasets (2019)</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://arxiv.org/abs/2008.12284" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">learn2learn: A Library for Meta-Learning Research (2020)</a></li>
+                          <li><a href="https://arxiv.org/abs/1909.06576" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Torchmeta: A Meta-Learning library for PyTorch (2019)</a></li>
+                          <li><a href="https://github.com/facebookresearch/higher" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">PyTorch higher: differentiable optimizers</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://github.com/learnables/learn2learn" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">learn2learn</a>, <a href="https://github.com/tristandeleu/torchmeta" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Torchmeta</a>, <a href="https://github.com/facebookresearch/higher" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">higher</a></li>
+                          <li><a href="https://github.com/google-research/meta-dataset" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Meta-Dataset</a>, <a href="https://github.com/rlworkgroup/metaworld" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Meta-World</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://paperswithcode.com/task/few-shot-image-classification" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Papers with Code — Few-shot benchmarks</a></li>
+                          <li><a href="https://meta-learning.ml/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">NeurIPS Meta-Learning Workshop</a></li>
+                          <li><a href="https://github.com/sudharsan13296/Awesome-Meta-Learning" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Awesome Meta-Learning (curated resources)</a></li>
                         </ul>
                       </div>
                     </div>
