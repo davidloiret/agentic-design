@@ -1436,6 +1436,255 @@ export const TechniqueDetails = ({
                     </div>
                   </section>
                 </>
+              ) : selectedTechnique.id === 'load-balancing' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism
+                    </h2>
+                    <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed mb-4">
+                        Load Balancing continuously distributes incoming requests across a pool of workers based on live signals
+                        such as utilization, queue length, health, latency, error rate, and cost. It selects a routing strategy
+                        (e.g., round-robin, least-loaded, weighted, power-of-two choices, consistent hashing) and enforces
+                        backpressure, retries with jitter, circuit breakers, and graceful draining for resilient traffic shaping.
+                      </p>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">⚖️</div>
+                          <div className="text-xs text-gray-400 mb-1">Goal</div>
+                          <div className="text-sm font-medium text-white">Even distribution & SLOs</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">📊</div>
+                          <div className="text-xs text-gray-400 mb-1">Signals</div>
+                          <div className="text-sm font-medium text-white">Utilization, queues, health</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🧮</div>
+                          <div className="text-xs text-gray-400 mb-1">Strategy</div>
+                          <div className="text-sm font-medium text-white">Least-load, P2C, weighted</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🛡️</div>
+                          <div className="text-xs text-gray-400 mb-1">Resilience</div>
+                          <div className="text-sm font-medium text-white">Retries, CBs, shedding</div>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Ingest request with metadata (tenant, affinity key, SLA, size).</li>
+                        <li>Fetch live signals: health, utilization, queue depth, recent latency/error rates.</li>
+                        <li>Classify workload if needed (CPU/GPU/IO heavy; stateful vs stateless; stickiness).</li>
+                        <li>Select strategy and candidate pool (filters by capability/region/policy).</li>
+                        <li>Choose target: least-loaded or power-of-two sampling; respect weights and stickiness.</li>
+                        <li>Enforce backpressure: queue caps, request shedding, timeouts, and hedged requests if appropriate.</li>
+                        <li>Monitor execution; retry with jitter on safe/idempotent operations; avoid retry storms.</li>
+                        <li>Continuously rebalance and scale: slow-start new nodes; drain unhealthy nodes gracefully.</li>
+                        <li>Emit metrics, traces, and decision rationale for observability and tuning.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Prefer power-of-two choices or least-loaded over naive round-robin for hot-spot avoidance.',
+                        'Use active + passive health checks; treat signals as stale quickly and decay aggressively.',
+                        'Implement backpressure: bounded queues, request shedding, and circuit breakers.',
+                        'Apply retries with jitter and caps; only retry idempotent operations.',
+                        'Enable slow-start/warmup for new nodes to prevent instant saturation.',
+                        'Align autoscaling signals with balancing signals (utilization, queue time, P95 latency).',
+                        'Use sticky sessions only when necessary; bound stickiness duration to avoid hotspots.',
+                        'Segment pools by capability/region/compliance; use consistent hashing for cache locality.',
+                        'Continuously watch tails (P95/P99); optimize for tail at scale, not just averages.',
+                        'Record decision features and outcomes; run shadow/AB routing to validate changes.'
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Single-worker or trivially small deployments where static routing is simpler.</li>
+                        <li>Strong state affinity without session persistence; prefer capability/state routing.</li>
+                        <li>Strictly ordered or transactional workflows that require in-order processing.</li>
+                        <li>Offline batch pipelines where a scheduler is more appropriate than online balancing.</li>
+                        <li>Regulatory/data-locality constraints that dominate over distribution fairness.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Optimizing for averages while P99 latency breaches SLAs (tail blindness).</li>
+                        <li>Thrashing due to over-reactive rebalancing or stale health metrics.</li>
+                        <li>Unbounded retries creating retry storms and cascading failures.</li>
+                        <li>Sticky sessions pinning traffic to unhealthy nodes causing hotspots.</li>
+                        <li>No slow-start; instantly flooding newly scaled instances.</li>
+                        <li>Inconsistent hashing keys causing poor cache locality or skew.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Real-time health and utilization aware routing',
+                        'Weighted policies, least-connections/latency, power-of-two choices',
+                        'Sticky sessions and consistent hashing for cache/data locality',
+                        'Backpressure: bounded queues, shedding, circuit breakers',
+                        'Slow-start, graceful drain, and autoscaling integration',
+                        'Observability: decision logs, traces, and SLO dashboards'
+                      ].map((f) => (
+                        <div key={f} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm">{f}</div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Latency: P50/P95/P99 end-to-end and per-tier.</li>
+                        <li>Throughput and saturation point at target SLOs.</li>
+                        <li>Error rate and retry rate; circuit-breaker open frequency.</li>
+                        <li>Utilization balance: standard deviation across nodes/pools.</li>
+                        <li>Queue wait time and shed/drop rate under load.</li>
+                        <li>Failover time to recovery and success of hedged requests.</li>
+                        <li>Cost per request vs. baseline; scale event efficiency.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-pink-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-3 text-sm text-gray-300">
+                      <p>Keep the router lightweight. Prefer metrics/rules or small models for gating. Avoid passing full payloads through the router; use IDs/features.</p>
+                      <ul className="list-disc list-inside space-y-1">
+                        <li>Batch and sample health signals; bound telemetry cost with histograms/sketches.</li>
+                        <li>Cache node stats; refresh on intervals/events rather than per-request.</li>
+                        <li>Use consistent keys for stickiness; cap session duration and memory overhead.</li>
+                        <li>Record minimal decision features for analytics; ship full traces only on sampled requests.</li>
+                        <li>In AI inference, route with cheap heuristics; reserve strong models for execution, not gating.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>High-traffic APIs and microservices with variable load.</li>
+                        <li>Multi-model inference and GPU/CPU pools (Ray Serve, vLLM, Triton, KServe).</li>
+                        <li>Background job processing across workers (Celery, Sidekiq, Arq, RQ).</li>
+                        <li>Event streaming consumers with partition rebalancing.</li>
+                        <li>Multi-region/zone deployments with zone-aware balancing.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-yellow-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="p-4 bg-gray-800/40 rounded-lg border border-gray-700/40">
+                        <h3 className="text-white font-medium mb-2">Academic Papers</h3>
+                        <ul className="list-disc list-inside text-gray-300 text-sm space-y-1">
+                          <li><a href="https://research.google/pubs/pub40801/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">The Tail at Scale (Dean & Barroso, 2013)</a></li>
+                          <li><a href="https://www.eecs.harvard.edu/~michaelm/NEWWORK/postscripts/handbook2001.pdf" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">The Power of Two Choices in Randomized Load Balancing</a></li>
+                          <li><a href="https://research.google/pubs/pub44824/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Maglev: A Fast and Reliable Software Network Load Balancer (2016)</a></li>
+                          <li><a href="https://dl.acm.org/doi/10.1145/258533.258660" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Consistent Hashing and Random Trees (Karger et al., 1997)</a></li>
+                          <li><a href="https://dl.acm.org/doi/10.1145/1101779.1101781" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Join-Shortest-Queue with Limited Sampling</a></li>
+                        </ul>
+                      </div>
+                      <div className="p-4 bg-gray-800/40 rounded-lg border border-gray-700/40">
+                        <h3 className="text-white font-medium mb-2">Implementation Guides</h3>
+                        <ul className="list-disc list-inside text-gray-300 text-sm space-y-1">
+                          <li><a href="https://docs.nginx.com/nginx/admin-guide/load-balancer/http-load-balancer/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">NGINX: HTTP Load Balancing</a></li>
+                          <li><a href="https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/upstream/load_balancing/overview" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Envoy: Load Balancing Overview</a></li>
+                          <li><a href="https://www.haproxy.com/documentation/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">HAProxy: Configuration & Tuning Guide</a></li>
+                          <li><a href="https://kubernetes.io/docs/concepts/services-networking/service/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Kubernetes: Services and Load Balancing</a></li>
+                          <li><a href="https://istio.io/latest/docs/tasks/traffic-management/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Istio: Traffic Management</a></li>
+                          <li><a href="https://docs.ray.io/en/latest/serve/index.html" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Ray Serve: Scalable Model Serving</a></li>
+                          <li><a href="https://docs.vllm.ai/en/latest/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">vLLM: High-throughput LLM Serving</a></li>
+                          <li><a href="https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">NVIDIA Triton Inference Server</a></li>
+                        </ul>
+                      </div>
+                      <div className="p-4 bg-gray-800/40 rounded-lg border border-gray-700/40">
+                        <h3 className="text-white font-medium mb-2">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside text-gray-300 text-sm space-y-1">
+                          <li>NGINX, Envoy, HAProxy, Traefik</li>
+                          <li>Kubernetes, Istio, Linkerd</li>
+                          <li>Ray Serve, vLLM, Triton, KServe/Seldon</li>
+                          <li>OpenTelemetry for metrics/traces</li>
+                        </ul>
+                      </div>
+                      <div className="p-4 bg-gray-800/40 rounded-lg border border-gray-700/40">
+                        <h3 className="text-white font-medium mb-2">Community & Discussions</h3>
+                        <ul className="list-disc list-inside text-gray-300 text-sm space-y-1">
+                          <li><a href="https://discuss.kubernetes.io/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Kubernetes Discuss</a></li>
+                          <li><a href="https://www.reddit.com/r/devops/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">r/devops</a></li>
+                          <li><a href="https://www.reddit.com/r/kubernetes/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">r/kubernetes</a></li>
+                          <li><a href="https://cloud-native.slack.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">CNCF Slack</a></li>
+                          <li><a href="https://discuss.istio.io/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Istio Discuss</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                </>
               ) : selectedTechnique.id === 'conditional-chaining' ? (
                 <>
                   {/* Core Mechanism (short conceptual overview) */}
@@ -1942,7 +2191,7 @@ export const TechniqueDetails = ({
               )}
 
               {/* How it Works (generic) */}
-              {selectedTechnique.id !== 'sequential-chaining' && selectedTechnique.id !== 'parallel-chaining' && selectedTechnique.id !== 'conditional-chaining' && selectedTechnique.id !== 'feedback-chaining' && (
+              {selectedTechnique.id !== 'sequential-chaining' && selectedTechnique.id !== 'parallel-chaining' && selectedTechnique.id !== 'conditional-chaining' && selectedTechnique.id !== 'feedback-chaining' && selectedTechnique.id !== 'load-balancing' && (
                 <section>
                   <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
                     <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
@@ -1991,6 +2240,7 @@ export const TechniqueDetails = ({
               )}
 
               {/* Key Features */}
+              {selectedTechnique.id !== 'load-balancing' && (
               <section>
                 <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
                   <div className="w-1 h-6 bg-green-500 rounded-full"></div>
@@ -2005,6 +2255,7 @@ export const TechniqueDetails = ({
                   ))}
                 </div>
               </section>
+              )}
 
               {/* KPIs / Success Metrics */}
               {(selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining' || selectedTechnique.id === 'conditional-chaining' || selectedTechnique.id === 'feedback-chaining' || selectedTechnique.id === 'hierarchical-chaining' || selectedTechnique.id === 'iterative-refinement') && (
@@ -2136,6 +2387,7 @@ export const TechniqueDetails = ({
               )}
 
               {/* Best Use Cases */}
+              {selectedTechnique.id !== 'load-balancing' && (
               <section>
                 <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
                   <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
@@ -2156,8 +2408,10 @@ export const TechniqueDetails = ({
                   })}
                 </div>
               </section>
+              )}
 
               {/* References & Further Reading */}
+              {selectedTechnique.id !== 'load-balancing' && (
               <section>
                 <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
                   <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
@@ -2248,6 +2502,7 @@ export const TechniqueDetails = ({
                   </div>
                 </div>
               </section>
+              )}
 
             </div>
           ) : detailsTab === 'flow' ? (
