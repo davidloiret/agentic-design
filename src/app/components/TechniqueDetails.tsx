@@ -1181,6 +1181,237 @@ export const TechniqueDetails = ({
                     </div>
                   </section>
                 </>
+              ) : selectedTechnique.id === 'fork-join' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism
+                    </h2>
+                    <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed mb-4">
+                        Fork-Join recursively decomposes a problem into independent subtasks (fork), executes them in parallel on a
+                        bounded worker pool with work-stealing for load balance, then synchronizes and combines partial results (join)
+                        bottom-up. Ideal for divide-and-conquer algorithms where results compose deterministically.
+                      </p>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🍴</div>
+                          <div className="text-xs text-gray-400 mb-1">Flow</div>
+                          <div className="text-sm font-medium text-white">Fork → Process → Join</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🌳</div>
+                          <div className="text-xs text-gray-400 mb-1">Structure</div>
+                          <div className="text-sm font-medium text-white">Task tree (DAG)</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🧮</div>
+                          <div className="text-xs text-gray-400 mb-1">Merge</div>
+                          <div className="text-sm font-medium text-white">Deterministic combine</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">⚖️</div>
+                          <div className="text-xs text-gray-400 mb-1">Scheduling</div>
+                          <div className="text-sm font-medium text-white">Work-stealing</div>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Choose a divide-and-conquer strategy and define base case and merge function.</li>
+                        <li>Set a granularity threshold (cut-off) where tasks switch to sequential processing.</li>
+                        <li>Fork: split input into independent subtasks and submit to a bounded worker pool.</li>
+                        <li>Process: execute subtasks in parallel; prefer immutable inputs to avoid shared state.</li>
+                        <li>Join: wait for child tasks; deterministically merge partial results bottom-up.</li>
+                        <li>Handle timeouts/cancellation; propagate failures with context and fallbacks.</li>
+                        <li>Collect metrics (speedup, efficiency) and validate output against invariants.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Pick a task size that amortizes scheduling overhead; use an adaptive cut-off (e.g., size ≤ K).',
+                        'Use work-stealing pools to minimize idle time and mitigate skew/hotspots.',
+                        'Keep child tasks independent; avoid shared mutable state and global locks.',
+                        'Make merges associative/commutative when possible to simplify joins and retries.',
+                        'Bound parallelism; cap queue depth; apply backpressure under load.',
+                        'Prefer immutable inputs and pure functions; copy-on-write for large structures.',
+                        'Short-circuit on early termination conditions; propagate cancellation promptly.',
+                        'Record provenance of partials for debuggability and test merges with property-based checks.'
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Strong inter-task dependencies or shared evolving state makes joins ill-defined.</li>
+                        <li>Very small problem sizes where fork/scheduling overhead dominates compute.</li>
+                        <li>Workloads dominated by a single serial bottleneck (Amdahl-limited).</li>
+                        <li>Heavy I/O contention on a single resource (disk/network) without parallel lanes.</li>
+                        <li>Strict order/causality requirements that conflict with parallel execution.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Oversplitting into too many tiny tasks → scheduler/queue overhead and GC pressure.</li>
+                        <li>Unbalanced partitions causing stragglers; no work-stealing or poor cut-off.</li>
+                        <li>Hidden shared state causing contention, deadlocks, or non-deterministic results.</li>
+                        <li>Blocking joins on the main/UI thread; missing timeouts and cancellation.</li>
+                        <li>Memory blow-up from retaining full intermediates instead of streaming merges.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Recursive task decomposition with deterministic merge semantics',
+                        'Work-stealing scheduler for dynamic load balancing',
+                        'Bounded parallelism with backpressure and queue caps',
+                        'Cancellation/timeout-aware joins and failure propagation',
+                        'Immutability-first design to minimize contention',
+                        'Traceable task tree with provenance for debugging'
+                      ].map((f) => (
+                        <div key={f} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm">{f}</div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Speedup vs. sequential baseline and parallel efficiency (% of ideal).</li>
+                        <li>Thread/worker utilization and steal rate; p95 task queue wait.</li>
+                        <li>Load imbalance index (p95/p50 task duration) and straggler rate.</li>
+                        <li>Join wait time p95/p99 and failure/cancellation propagation latency.</li>
+                        <li>Memory/GC overhead from intermediates; tasks created per unit of work.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-pink-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>In LLM workflows, tokens scale with fan-out breadth × per-branch context; cap concurrency.</li>
+                        <li>Prefer small/fast models for leaf subtasks; reserve strongest model for the final merge.</li>
+                        <li>Pass distilled context to children (IDs/summaries) rather than full transcripts.</li>
+                        <li>Cache stable sub-results; reuse intermediates to amortize cost across runs.</li>
+                        <li>Monitor CPU, memory, and queue depths; apply backpressure and adaptive cut-offs.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Parallel sorting/search (merge sort, quicksort, k-ary search trees).</li>
+                        <li>Divide-and-conquer math (FFT, Strassen-like block ops, parallel reductions).</li>
+                        <li>Graph/tree traversals and hierarchical computations.</li>
+                        <li>Batch document or chunk processing with deterministic synthesis/merge.</li>
+                        <li>Simulation/Monte Carlo tasks with independent trials and aggregate metrics.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-yellow-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="p-4 bg-gray-800/40 rounded-lg border border-gray-700/40">
+                        <h3 className="text-white font-medium mb-2">Academic Papers</h3>
+                        <ul className="list-disc list-inside text-gray-300 text-sm space-y-1">
+                          <li>Cilk and Work-Stealing Scheduling (Blumofe & Leiserson, 1999)</li>
+                          <li>The Java Fork/Join Framework (Lea, 2000–2011)</li>
+                          <li>Parallelism in Practice: Amdahl and Gustafson considerations</li>
+                        </ul>
+                      </div>
+                      <div className="p-4 bg-gray-800/40 rounded-lg border border-gray-700/40">
+                        <h3 className="text-white font-medium mb-2">Implementation Guides</h3>
+                        <ul className="list-disc list-inside text-gray-300 text-sm space-y-1">
+                          <li>Java `ForkJoinPool` design and tuning (common pool vs. custom pools)</li>
+                          <li>.NET Task Parallel Library: Parallel.Invoke/Tasks with work-stealing schedulers</li>
+                          <li>Python `concurrent.futures` and `multiprocessing` pools with chunking</li>
+                          <li>Ray/Dask: task graphs with actor pools and backpressure</li>
+                        </ul>
+                      </div>
+                      <div className="p-4 bg-gray-800/40 rounded-lg border border-gray-700/40">
+                        <h3 className="text-white font-medium mb-2">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside text-gray-300 text-sm space-y-1">
+                          <li>Java Fork/Join, Cilk/TBB, OpenMP tasks</li>
+                          <li>Python Ray, Dask; Node.js Promise.all/RxJS forkJoin</li>
+                          <li>Workflow engines: Temporal, Airflow (task DAGs)</li>
+                        </ul>
+                      </div>
+                      <div className="p-4 bg-gray-800/40 rounded-lg border border-gray-700/40">
+                        <h3 className="text-white font-medium mb-2">Community & Discussions</h3>
+                        <ul className="list-disc list-inside text-gray-300 text-sm space-y-1">
+                          <li>Java Concurrency in Practice and Fork/Join tuning threads</li>
+                          <li>Ray, Dask, and concurrency forums on task granularity and scheduling</li>
+                          <li>StackOverflow Q&A on deadlocks, work-stealing, and join barriers</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                </>
               ) : selectedTechnique.id === 'content-based-routing' ? (
                 <>
                   {/* Core Mechanism (short conceptual overview) */}
@@ -3128,54 +3359,7 @@ export const TechniqueDetails = ({
                 </section>
               )}
 
-              {/* How it Works (generic) */}
-              {selectedTechnique.id !== 'sequential-chaining' && selectedTechnique.id !== 'parallel-chaining' && selectedTechnique.id !== 'conditional-chaining' && selectedTechnique.id !== 'feedback-chaining' && selectedTechnique.id !== 'load-balancing' && (
-                <section>
-                  <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                    <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
-                    How it Works
-                  </h2>
-                  <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
-                    <p className="text-gray-200 text-base leading-relaxed mb-6">
-                      {selectedTechnique.name} works by following a structured approach that enhances reasoning and problem-solving capabilities. 
-                      This pattern is essential because it provides a systematic way to handle complex tasks that require multiple steps, 
-                      validation, or different approaches to achieve optimal results.
-                    </p>
-                    
-                    {/* Pattern Benefits */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-                      <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                        <div className="text-2xl mb-2">🧠</div>
-                        <h4 className="font-semibold text-white mb-2">Enhanced Reasoning</h4>
-                        <p className="text-sm text-gray-300">Breaks down complex problems into manageable steps</p>
-                      </div>
-                      <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                        <div className="text-2xl mb-2">🔍</div>
-                        <h4 className="font-semibold text-white mb-2">Better Accuracy</h4>
-                        <p className="text-sm text-gray-300">Reduces errors through systematic validation</p>
-                      </div>
-                      <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                        <div className="text-2xl mb-2">📊</div>
-                        <h4 className="font-semibold text-white mb-2">Transparency</h4>
-                        <p className="text-sm text-gray-300">Makes the reasoning process visible and understandable</p>
-                      </div>
-                    </div>
-
-                    {/* Why We Need This Pattern */}
-                    <div className="bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 rounded-lg p-4">
-                      <h4 className="font-semibold text-white mb-2 flex items-center gap-2">
-                        <span className="text-amber-400">💡</span>
-                        Why This Pattern Matters
-                      </h4>
-                      <p className="text-sm text-gray-200 leading-relaxed">
-                        Traditional approaches often jump directly to conclusions, missing important intermediate steps. 
-                        This pattern ensures thorough analysis, reduces hallucinations, and provides confidence in the results 
-                        by making each step of the reasoning process explicit and verifiable.
-                      </p>
-                    </div>
-                  </div>
-                </section>
-              )}
+              {/* How it Works (generic) - removed globally per spec */}
 
               {/* Key Features */}
               {selectedTechnique.id !== 'load-balancing' && (
