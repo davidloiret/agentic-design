@@ -1111,3 +1111,5 @@ dont use cdn for monaco and add CSP in nginx
 ajoute le nom des gens
 
 Look at each technique of prompt-chaining, and make sure all information are correct and all references are good related to the technique. Reference should be papers, not frameworks or other bullshit
+
+LLM as judge
