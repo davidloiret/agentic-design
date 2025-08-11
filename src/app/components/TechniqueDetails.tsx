@@ -266,53 +266,8 @@ export const TechniqueDetails = ({
                 </section>
               )}
 
-              {/* Overview header block */}
-              {selectedTechnique.id !== 'sequential-chaining' ? (
-                <section>
-                  <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                    <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
-                    What is {selectedTechnique.name}?
-                  </h2>
-                  <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
-                    <p className="text-gray-200 text-base leading-relaxed mb-6">
-                      {selectedTechnique.description}
-                    </p>
-                    <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 mt-4">
-                      <div className="text-center p-4 bg-gray-800/30 rounded-lg">
-                        <div className="text-2xl mb-3">{selectedTechnique.icon}</div>
-                        <div className="text-sm text-gray-400 mb-1">Pattern Type</div>
-                        <div className="text-sm font-medium text-white">
-                          {categories.find(c => c.id === selectedTechnique.category)?.name || 'Design Pattern'}
-                        </div>
-                      </div>
-                      <div className="text-center p-4 bg-gray-800/30 rounded-lg">
-                        <div className="text-2xl mb-3">
-                          {selectedTechnique.complexity === 'low' ? '🟢' : 
-                           selectedTechnique.complexity === 'medium' ? '🟡' : '🔴'}
-                        </div>
-                        <div className="text-sm text-gray-400 mb-1">Complexity</div>
-                        <div className="text-sm font-medium text-white capitalize">
-                          {selectedTechnique.complexity}
-                        </div>
-                      </div>
-                      <div className="text-center p-4 bg-gray-800/30 rounded-lg">
-                        <div className="text-2xl mb-3">🎯</div>
-                        <div className="text-sm text-gray-400 mb-1">Use Cases</div>
-                        <div className="text-sm font-medium text-white">
-                          {selectedTechnique.useCases.length} scenarios
-                        </div>
-                      </div>
-                      <div className="text-center p-4 bg-gray-800/30 rounded-lg">
-                        <div className="text-2xl mb-3">⚡</div>
-                        <div className="text-sm text-gray-400 mb-1">Features</div>
-                        <div className="text-sm font-medium text-white">
-                          {selectedTechnique.features?.length || 0} features
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </section>
-              ) : (
+              {/* Overview header block (technique-specific) */}
+              {selectedTechnique.id === 'sequential-chaining' ? (
                 <>
                   {/* Core Mechanism (short conceptual overview) */}
                   <section>
@@ -421,10 +376,168 @@ export const TechniqueDetails = ({
                     </div>
                   </section>
                 </>
+              ) : selectedTechnique.id === 'parallel-chaining' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism
+                    </h2>
+                    <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed mb-4">
+                        Parallel chaining executes multiple independent prompts concurrently, then merges results via aggregation strategies (e.g., majority vote, weighted scoring, map-reduce, or heuristic merge). It trades higher burst resource usage for lower wall-clock latency and broader coverage.
+                      </p>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">⚡</div>
+                          <div className="text-xs text-gray-400 mb-1">Flow</div>
+                          <div className="text-sm font-medium text-white">Concurrent fan-out/fan-in</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🧮</div>
+                          <div className="text-xs text-gray-400 mb-1">Aggregation</div>
+                          <div className="text-sm font-medium text-white">Voting/merging strategies</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">⏱️</div>
+                          <div className="text-xs text-gray-400 mb-1">Latency</div>
+                          <div className="text-sm font-medium text-white">Lower wall-clock time</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">💸</div>
+                          <div className="text-xs text-gray-400 mb-1">Cost</div>
+                          <div className="text-sm font-medium text-white">Higher burst tokens</div>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Decompose into independent subproblems with minimal shared state.</li>
+                        <li>Define schemas and quality criteria per worker; set timeouts and budgets.</li>
+                        <li>Dispatch workers concurrently with capped fan-out and backpressure.</li>
+                        <li>Collect partials as they finish; validate and score each result.</li>
+                        <li>Aggregate via majority vote, weighted scoring, merge heuristics, or map-reduce.</li>
+                        <li>Resolve conflicts, deduplicate, and synthesize final output.</li>
+                        <li>Emit metrics (speedup, agreement, cost) and persist artifacts for audit.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Maximize independence; avoid hidden cross-step dependencies',
+                        'Cap concurrency and implement rate-limit-aware backoff',
+                        'Use strict schemas and quality scoring per worker output',
+                        'Set timeouts and circuit breakers; tolerate partial completion',
+                        'Choose aggregation strategy aligned to task (vote, rank, merge)',
+                        'Deduplicate and contradiction-check before synthesis',
+                        'Use smaller/cheaper models for breadth; reserve strongest model for final merge',
+                        'Cache and reuse stable results across runs',
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Tasks with strong sequential dependencies or shared evolving state.</li>
+                        <li>Strict ordering/causality requirements where merge is ill-defined.</li>
+                        <li>Very small tasks where fan-out overhead exceeds benefit.</li>
+                        <li>Severe rate-limit or budget constraints that preclude burst concurrency.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Unbounded fan-out causing cost spikes and rate-limit errors.</li>
+                        <li>Naive aggregation that amplifies hallucinations or duplicates.</li>
+                        <li>Hidden coupling between workers leading to inconsistent outputs.</li>
+                        <li>Missing timeouts or backpressure creating head-of-line blocking.</li>
+                      </ul>
+                    </div>
+                  </section>
+                </>
+              ) : (
+                <section>
+                  <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                    <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                    What is {selectedTechnique.name}?
+                  </h2>
+                  <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
+                    <p className="text-gray-200 text-base leading-relaxed mb-6">
+                      {selectedTechnique.description}
+                    </p>
+                    <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 mt-4">
+                      <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                        <div className="text-2xl mb-3">{selectedTechnique.icon}</div>
+                        <div className="text-sm text-gray-400 mb-1">Pattern Type</div>
+                        <div className="text-sm font-medium text-white">
+                          {categories.find(c => c.id === selectedTechnique.category)?.name || 'Design Pattern'}
+                        </div>
+                      </div>
+                      <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                        <div className="text-2xl mb-3">
+                          {selectedTechnique.complexity === 'low' ? '🟢' : 
+                           selectedTechnique.complexity === 'medium' ? '🟡' : '🔴'}
+                        </div>
+                        <div className="text-sm text-gray-400 mb-1">Complexity</div>
+                        <div className="text-sm font-medium text-white capitalize">
+                          {selectedTechnique.complexity}
+                        </div>
+                      </div>
+                      <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                        <div className="text-2xl mb-3">🎯</div>
+                        <div className="text-sm text-gray-400 mb-1">Use Cases</div>
+                        <div className="text-sm font-medium text-white">
+                          {selectedTechnique.useCases.length} scenarios
+                        </div>
+                      </div>
+                      <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                        <div className="text-2xl mb-3">⚡</div>
+                        <div className="text-sm text-gray-400 mb-1">Features</div>
+                        <div className="text-sm font-medium text-white">
+                          {selectedTechnique.features?.length || 0} features
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </section>
               )}
 
-              {/* How it Works (generic) or additional sections for sequential chaining */}
-              {selectedTechnique.id !== 'sequential-chaining' && (
+              {/* How it Works (generic) */}
+              {selectedTechnique.id !== 'sequential-chaining' && selectedTechnique.id !== 'parallel-chaining' && (
                 <section>
                   <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
                     <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
@@ -488,22 +601,31 @@ export const TechniqueDetails = ({
                 </div>
               </section>
 
-              {/* KPIs / Success Metrics (sequential-chaining specific content sits well for all) */}
-              {selectedTechnique.id === 'sequential-chaining' && (
+              {/* KPIs / Success Metrics */}
+              {(selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining') && (
                 <section>
                   <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
                     <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
                     KPIs / Success Metrics
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {[
-                      { icon: '🎯', label: 'Task success rate', desc: 'Pass/fail by acceptance tests per step and end-to-end' },
-                      { icon: '✅', label: 'Factuality/accuracy', desc: 'Human or automated evals on grounded fields' },
-                      { icon: '⏱️', label: 'Latency per step / E2E', desc: 'P50/P95 timings to identify bottlenecks' },
-                      { icon: '💲', label: 'Cost per run', desc: 'Input+output tokens × model rate across steps' },
-                      { icon: '🧱', label: 'Error containment', desc: 'Rate of failures recovered via retries/fallbacks' },
-                      { icon: '🧪', label: 'Step regression score', desc: 'A/B deltas when updating individual steps' },
-                    ].map((m) => (
+                    {(selectedTechnique.id === 'sequential-chaining'
+                      ? [
+                          { icon: '🎯', label: 'Task success rate', desc: 'Pass/fail by acceptance tests per step and end-to-end' },
+                          { icon: '✅', label: 'Factuality/accuracy', desc: 'Human or automated evals on grounded fields' },
+                          { icon: '⏱️', label: 'Latency per step / E2E', desc: 'P50/P95 timings to identify bottlenecks' },
+                          { icon: '💲', label: 'Cost per run', desc: 'Input+output tokens × model rate across steps' },
+                          { icon: '🧱', label: 'Error containment', desc: 'Rate of failures recovered via retries/fallbacks' },
+                          { icon: '🧪', label: 'Step regression score', desc: 'A/B deltas when updating individual steps' },
+                        ]
+                      : [
+                          { icon: '⚡', label: 'Wall-clock speedup', desc: 'Speedup vs sequential baseline for same task quality' },
+                          { icon: '📈', label: 'Throughput', desc: 'Tasks per minute at target concurrency (P50/P95)' },
+                          { icon: '🤝', label: 'Agreement score', desc: 'Consensus/majority agreement or pairwise similarity' },
+                          { icon: '✅', label: 'Useful-result ratio', desc: 'Valid/non-empty worker outputs divided by total' },
+                          { icon: '⏱️', label: 'Tail latency', desc: 'P95 time-to-aggregate with partials tolerated' },
+                          { icon: '💲', label: 'Cost per run', desc: 'Sum of all worker tokens + merge cost' },
+                        ]).map((m) => (
                       <div key={m.label} className="bg-gray-800/40 rounded-lg p-4 border border-gray-700/40">
                         <div className="text-2xl mb-2">{m.icon}</div>
                         <div className="text-sm font-semibold text-white">{m.label}</div>
@@ -514,22 +636,36 @@ export const TechniqueDetails = ({
                 </section>
               )}
 
-              {/* Token / Resource Usage (sequential-chaining only) */}
-              {selectedTechnique.id === 'sequential-chaining' && (
+              {/* Token / Resource Usage */}
+              {(selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining') && (
                 <section>
                   <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
                     <div className="w-1 h-6 bg-teal-500 rounded-full"></div>
                     Token / Resource Usage
                   </h2>
-                  <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-3 text-sm text-gray-300">
-                    <p>Estimate cost as sum of per-step input/output tokens × model rates. Control growth by passing only distilled fields, not full transcripts.</p>
-                    <ul className="list-disc list-inside space-y-1">
-                      <li>Minimize carry-over: keep interfaces compact (IDs, keys, summaries).</li>
-                      <li>Use JSON mode and response formatting to avoid verbose prose.</li>
-                      <li>Cache stable intermediate results; memoize deterministic steps.</li>
-                      <li>Batch small requests where feasible; prefer smaller models upstream.</li>
-                    </ul>
-                  </div>
+                  {selectedTechnique.id === 'sequential-chaining' ? (
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-3 text-sm text-gray-300">
+                      <p>Estimate cost as sum of per-step input/output tokens × model rates. Control growth by passing only distilled fields, not full transcripts.</p>
+                      <ul className="list-disc list-inside space-y-1">
+                        <li>Minimize carry-over: keep interfaces compact (IDs, keys, summaries).</li>
+                        <li>Use JSON mode and response formatting to avoid verbose prose.</li>
+                        <li>Cache stable intermediate results; memoize deterministic steps.</li>
+                        <li>Batch small requests where feasible; prefer smaller models upstream.</li>
+                      </ul>
+                    </div>
+                  ) : (
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-3 text-sm text-gray-300">
+                      <p>Total tokens scale with fan-out: sum of all parallel worker inputs/outputs plus aggregation. Plan for burst concurrency within rate limits and budgets.</p>
+                      <ul className="list-disc list-inside space-y-1">
+                        <li>Cap fan-out and enforce per-run token budgets with guardrails.</li>
+                        <li>Use timeouts and accept partial results to bound cost and latency.</li>
+                        <li>Prefer smaller/cheaper models for parallel legs; reserve strongest model for final merge.</li>
+                        <li>Batch where supported; deduplicate prompts; share context via IDs rather than full text.</li>
+                        <li>Implement backoff for rate limits and use queuing/backpressure.</li>
+                        <li>Cache stable or reusable worker results across runs.</li>
+                      </ul>
+                    </div>
+                  )}
                 </section>
               )}
 
