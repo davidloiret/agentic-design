@@ -829,6 +829,124 @@ export const TechniqueDetails = ({
                     </div>
                   </section>
                 </>
+              ) : selectedTechnique.id === 'iterative-refinement' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism
+                    </h2>
+                    <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed mb-4">
+                        Iterative refinement improves an output through multiple focused passes: generate a baseline, evaluate against a rubric, plan targeted changes, and revise. Each cycle concentrates on a specific dimension (e.g., structure, content, style, correctness), with early stopping when gains diminish or targets are reached.
+                      </p>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🔁</div>
+                          <div className="text-xs text-gray-400 mb-1">Flow</div>
+                          <div className="text-sm font-medium text-white">Generate → Evaluate → Revise</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🎯</div>
+                          <div className="text-xs text-gray-400 mb-1">Focus</div>
+                          <div className="text-sm font-medium text-white">One quality axis per pass</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">📏</div>
+                          <div className="text-xs text-gray-400 mb-1">Control</div>
+                          <div className="text-sm font-medium text-white">Rubrics & thresholds</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🛑</div>
+                          <div className="text-xs text-gray-400 mb-1">End</div>
+                          <div className="text-sm font-medium text-white">Convergence/stop rules</div>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Create an initial draft/output from the task brief and constraints.</li>
+                        <li>Define an explicit rubric with weighted criteria and target thresholds.</li>
+                        <li>Evaluate the output and extract actionable, prescriptive feedback.</li>
+                        <li>Formulate a concise improvement plan (diffs/edits, not generic advice).</li>
+                        <li>Revise with constraints preserved; avoid regressing validated facts.</li>
+                        <li>Track per-iteration metrics (score, deltas, tokens, time).</li>
+                        <li>Early stop on small deltas or when target is met; cap max iterations.</li>
+                        <li>Optionally inject diversity (n-best) only when stuck below target.</li>
+                        <li>Finalize and record provenance of changes and acceptance artifacts.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Separate generator and judge (or use different seeds) to reduce confirmation bias.',
+                        'Use structured rubrics and JSON feedback; include rationale and suggested edits.',
+                        'Prefer diff-based edits and carry forward validated facts and constraints.',
+                        'Truncate history aggressively; pass distilled state instead of full transcripts.',
+                        'Implement early stopping and max-iteration caps to avoid diminishing returns.',
+                        'Guard against regressions with checks, acceptance tests, or fact locks.',
+                        'Use cheaper models for judging when possible; reserve strongest model for final pass.',
+                        'Log artifacts per iteration for audit and offline analysis.'
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Hard real-time SLAs where multi-pass latency is unacceptable.</li>
+                        <li>No objective rubric or ground truth; risk of endless subjective polishing.</li>
+                        <li>Tasks with minimal quality gain after a single revision.</li>
+                        <li>Deterministic transformations better handled by tools or rules.</li>
+                        <li>Strict cost ceilings that preclude multiple evaluation passes.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Oscillation with no convergence due to vague or conflicting feedback.</li>
+                        <li>Regressions of previously correct details when revising without guards.</li>
+                        <li>Token bloat from passing full history rather than distilled state.</li>
+                        <li>Judge/generator coupling causing biased evaluations.</li>
+                        <li>Optimizing to the rubric while neglecting holistic quality.</li>
+                        <li>Undefined or weak stop conditions leading to cost creep.</li>
+                      </ul>
+                    </div>
+                  </section>
+                </>
               ) : (
                 <section>
                   <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
@@ -942,7 +1060,7 @@ export const TechniqueDetails = ({
               </section>
 
               {/* KPIs / Success Metrics */}
-              {(selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining' || selectedTechnique.id === 'conditional-chaining' || selectedTechnique.id === 'feedback-chaining' || selectedTechnique.id === 'hierarchical-chaining') && (
+              {(selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining' || selectedTechnique.id === 'conditional-chaining' || selectedTechnique.id === 'feedback-chaining' || selectedTechnique.id === 'hierarchical-chaining' || selectedTechnique.id === 'iterative-refinement') && (
                 <section>
                   <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
                     <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
@@ -1004,7 +1122,7 @@ export const TechniqueDetails = ({
               )}
 
               {/* Token / Resource Usage */}
-              {(selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining' || selectedTechnique.id === 'conditional-chaining' || selectedTechnique.id === 'feedback-chaining' || selectedTechnique.id === 'hierarchical-chaining') && (
+              {(selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining' || selectedTechnique.id === 'conditional-chaining' || selectedTechnique.id === 'feedback-chaining' || selectedTechnique.id === 'hierarchical-chaining' || selectedTechnique.id === 'iterative-refinement') && (
                 <section>
                   <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
                     <div className="w-1 h-6 bg-teal-500 rounded-full"></div>
@@ -1111,6 +1229,13 @@ export const TechniqueDetails = ({
                         <a href="https://arxiv.org/abs/2203.11171" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• Self-Consistency for CoT (Wang et al., 2022)</a>
                         <a href="https://arxiv.org/abs/2305.10601" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• Tree of Thoughts (Yao et al., 2023)</a>
                         <a href="https://arxiv.org/abs/2210.03629" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• ReAct: Synergizing Reasoning and Acting (2022)</a>
+                        {selectedTechnique.id === 'iterative-refinement' && (
+                          <>
+                            <a href="https://arxiv.org/abs/2303.17651" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• Self-Refine: Iterative Refinement with Feedback (Shinn et al., 2023)</a>
+                            <a href="https://arxiv.org/abs/2310.04406" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• RLAIF: Reinforcement Learning from AI Feedback (2023)</a>
+                            <a href="https://arxiv.org/abs/2402.14972" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• DERA: Deliberate Reasoning with Iterative Improvement (2024)</a>
+                          </>
+                        )}
                       </div>
                     </div>
 
@@ -1124,6 +1249,12 @@ export const TechniqueDetails = ({
                         <a href="https://cookbook.openai.com/" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• OpenAI Cookbook: Reliable LLM patterns</a>
                         <a href="https://docs.anthropic.com/claude/docs" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• Anthropic Claude: Prompting & tooling</a>
                         <a href="https://www.promptingguide.ai/" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• Prompting Guide: Patterns & anti-patterns</a>
+                        {selectedTechnique.id === 'iterative-refinement' && (
+                          <>
+                            <a href="https://dspy.ai/" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• DSPy: Programmatic optimization and refinement loops</a>
+                            <a href="https://langchain-ai.github.io/langgraph/" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• LangGraph: Iterative agent workflows</a>
+                          </>
+                        )}
                       </div>
                     </div>
 
@@ -1140,6 +1271,12 @@ export const TechniqueDetails = ({
                         <a href="https://github.com/microsoft/guidance" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• Guidance</a>
                         <a href="https://temporal.io/" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• Temporal (workflow engine)</a>
                         <a href="https://www.prefect.io/" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• Prefect</a>
+                        {selectedTechnique.id === 'iterative-refinement' && (
+                          <>
+                            <a href="https://github.com/stanfordnlp/dspy" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• DSPy optimize: Iterative program search</a>
+                            <a href="https://github.com/langchain-ai/langgraph" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• LangGraph iterative controllers</a>
+                          </>
+                        )}
                       </div>
                     </div>
 
@@ -1153,6 +1290,12 @@ export const TechniqueDetails = ({
                         <a href="https://www.reddit.com/r/MachineLearning/" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• r/MachineLearning</a>
                         <a href="https://discord.gg/langchain" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• LangChain Discord</a>
                         <a href="https://github.com/f/awesome-chatgpt-prompts" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• Awesome prompts & resources</a>
+                        {selectedTechnique.id === 'iterative-refinement' && (
+                          <>
+                            <a href="https://discord.gg/dspy" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• DSPy Community</a>
+                            <a href="https://community.openai.com/" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• OpenAI Community: Prompting and evaluation</a>
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>
