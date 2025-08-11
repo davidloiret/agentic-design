@@ -489,6 +489,117 @@ export const TechniqueDetails = ({
                     </div>
                   </section>
                 </>
+              ) : selectedTechnique.id === 'conditional-chaining' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism
+                    </h2>
+                    <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed mb-4">
+                        Conditional chaining evaluates context to dynamically select the most appropriate prompt path. A lightweight router (classifier, rules, or scoring function) chooses a specialized branch; results may optionally merge downstream. This enables personalization, decision trees, and adaptive workflows while conserving resources.
+                      </p>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🔀</div>
+                          <div className="text-xs text-gray-400 mb-1">Flow</div>
+                          <div className="text-sm font-medium text-white">Branch on conditions</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🎯</div>
+                          <div className="text-xs text-gray-400 mb-1">Specialization</div>
+                          <div className="text-sm font-medium text-white">Targeted prompts per path</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🧭</div>
+                          <div className="text-xs text-gray-400 mb-1">Control</div>
+                          <div className="text-sm font-medium text-white">Explicit routing policy</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🧩</div>
+                          <div className="text-xs text-gray-400 mb-1">Merging</div>
+                          <div className="text-sm font-medium text-white">Optional merge/rejoin</div>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Define routing objectives and branches with consistent I/O schemas.</li>
+                        <li>Implement router: rules, heuristic scores, or LLM classifier with confidence.</li>
+                        <li>Evaluate conditions and select branch (with default/fallback on low confidence).</li>
+                        <li>Execute specialized branch prompts; validate outputs against schema.</li>
+                        <li>Optionally merge/rejoin branches with normalization and conflict checks.</li>
+                        <li>Emit decision logs, confidence, and per-branch metrics for monitoring.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Decouple router policy from branch implementations; version and test independently',
+                        'Calibrate router confidence; define thresholds and safe default branch',
+                        'Standardize output schemas across branches to enable merging and analytics',
+                        'Add guardrails: low-confidence fallback, human-in-the-loop, and retries',
+                        'Keep branches minimal and specialized; avoid redundant logic',
+                        'Log routing features/decisions for auditability and drift detection',
+                        'Regularly evaluate routing accuracy and branch health with labeled samples',
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Homogeneous tasks where a single well-crafted prompt performs well.</li>
+                        <li>Hard real-time SLAs where routing overhead jeopardizes latency budgets.</li>
+                        <li>Insufficient data to train/calibrate a reliable router or thresholds.</li>
+                        <li>High maintenance cost from many branches outweighs benefit.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Inconsistent branch outputs and missing normalization across paths.</li>
+                        <li>No safe default or fallback, causing drops or poor UX on low confidence.</li>
+                        <li>Overfitting router prompts that don’t generalize; routing drift over time.</li>
+                        <li>Thrashing between branches due to unstable conditions or thresholds.</li>
+                      </ul>
+                    </div>
+                  </section>
+                </>
               ) : (
                 <section>
                   <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
@@ -537,7 +648,7 @@ export const TechniqueDetails = ({
               )}
 
               {/* How it Works (generic) */}
-              {selectedTechnique.id !== 'sequential-chaining' && selectedTechnique.id !== 'parallel-chaining' && (
+              {selectedTechnique.id !== 'sequential-chaining' && selectedTechnique.id !== 'parallel-chaining' && selectedTechnique.id !== 'conditional-chaining' && (
                 <section>
                   <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
                     <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
@@ -602,7 +713,7 @@ export const TechniqueDetails = ({
               </section>
 
               {/* KPIs / Success Metrics */}
-              {(selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining') && (
+              {(selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining' || selectedTechnique.id === 'conditional-chaining') && (
                 <section>
                   <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
                     <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
@@ -618,13 +729,22 @@ export const TechniqueDetails = ({
                           { icon: '🧱', label: 'Error containment', desc: 'Rate of failures recovered via retries/fallbacks' },
                           { icon: '🧪', label: 'Step regression score', desc: 'A/B deltas when updating individual steps' },
                         ]
-                      : [
+                      : selectedTechnique.id === 'parallel-chaining'
+                      ? [
                           { icon: '⚡', label: 'Wall-clock speedup', desc: 'Speedup vs sequential baseline for same task quality' },
                           { icon: '📈', label: 'Throughput', desc: 'Tasks per minute at target concurrency (P50/P95)' },
                           { icon: '🤝', label: 'Agreement score', desc: 'Consensus/majority agreement or pairwise similarity' },
                           { icon: '✅', label: 'Useful-result ratio', desc: 'Valid/non-empty worker outputs divided by total' },
                           { icon: '⏱️', label: 'Tail latency', desc: 'P95 time-to-aggregate with partials tolerated' },
                           { icon: '💲', label: 'Cost per run', desc: 'Sum of all worker tokens + merge cost' },
+                        ]
+                      : [
+                          { icon: '🧭', label: 'Routing accuracy', desc: 'Agreement with oracle labels or evaluator on correct branch' },
+                          { icon: '📊', label: 'Confidence calibration', desc: 'Calibration error (ECE) and threshold quality' },
+                          { icon: '🧰', label: 'Fallback/default rate', desc: 'Share of low-confidence routes using default path' },
+                          { icon: '🎯', label: 'Per-branch success', desc: 'Quality/acceptance metrics segmented by branch' },
+                          { icon: '⏱️', label: 'Routing overhead', desc: 'Added latency from router vs direct execution' },
+                          { icon: '💲', label: 'Cost per run', desc: 'Router tokens + branch tokens + optional merge' },
                         ]).map((m) => (
                       <div key={m.label} className="bg-gray-800/40 rounded-lg p-4 border border-gray-700/40">
                         <div className="text-2xl mb-2">{m.icon}</div>
@@ -637,7 +757,7 @@ export const TechniqueDetails = ({
               )}
 
               {/* Token / Resource Usage */}
-              {(selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining') && (
+              {(selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining' || selectedTechnique.id === 'conditional-chaining') && (
                 <section>
                   <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
                     <div className="w-1 h-6 bg-teal-500 rounded-full"></div>
@@ -653,7 +773,7 @@ export const TechniqueDetails = ({
                         <li>Batch small requests where feasible; prefer smaller models upstream.</li>
                       </ul>
                     </div>
-                  ) : (
+                  ) : selectedTechnique.id === 'parallel-chaining' ? (
                     <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-3 text-sm text-gray-300">
                       <p>Total tokens scale with fan-out: sum of all parallel worker inputs/outputs plus aggregation. Plan for burst concurrency within rate limits and budgets.</p>
                       <ul className="list-disc list-inside space-y-1">
@@ -663,6 +783,17 @@ export const TechniqueDetails = ({
                         <li>Batch where supported; deduplicate prompts; share context via IDs rather than full text.</li>
                         <li>Implement backoff for rate limits and use queuing/backpressure.</li>
                         <li>Cache stable or reusable worker results across runs.</li>
+                      </ul>
+                    </div>
+                  ) : (
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-3 text-sm text-gray-300">
+                      <p>Total cost = router tokens + selected-branch tokens (+ optional merge). Use lightweight routing to minimize overhead and prefer cheap models for gating.</p>
+                      <ul className="list-disc list-inside space-y-1">
+                        <li>Use small/cheap model or rules for routing; reserve strong model for complex branches.</li>
+                        <li>Define a safe default branch for low-confidence cases; avoid exploring multiple branches unless top-k is justified.</li>
+                        <li>Standardize branch schemas to enable efficient merging without verbose reparsing.</li>
+                        <li>Cache branch-invariant artifacts (retrieved docs, profiles) and reuse across runs.</li>
+                        <li>Log routing distributions to detect cost drift and rebalance thresholds.</li>
                       </ul>
                     </div>
                   )}
