@@ -268,7 +268,7 @@ export const TechniqueDetails = ({
 
               {/* Overview header block (technique-specific) */}
               {selectedTechnique.id === 'sequential-chaining' ? (
-                <>
+                <> 
                   {/* Core Mechanism (short conceptual overview) */}
                   <section>
                     <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
@@ -3542,6 +3542,271 @@ export const TechniqueDetails = ({
                     </div>
                   </section>
                 </>
+              ) : selectedTechnique.id === 'self-critique' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism
+                    </h2>
+                    <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed mb-4">
+                        Self-critique is a deliberate loop where the model generates an initial answer, evaluates it against an explicit rubric, identifies issues with evidence, proposes concrete edits, and produces a refined answer with calibrated confidence. Separating the generator and the judge (or using different seeds) reduces confirmation bias.
+                      </p>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🧪</div>
+                          <div className="text-xs text-gray-400 mb-1">Evaluation</div>
+                          <div className="text-sm font-medium text-white">Rubric-based judging</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🛠️</div>
+                          <div className="text-xs text-gray-400 mb-1">Editing</div>
+                          <div className="text-sm font-medium text-white">Diff/instruction edits</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">🔍</div>
+                          <div className="text-xs text-gray-400 mb-1">Quality</div>
+                          <div className="text-sm font-medium text-white">Error + gap detection</div>
+                        </div>
+                        <div className="text-center p-4 bg-gray-800/30 rounded-lg">
+                          <div className="text-2xl mb-2">📊</div>
+                          <div className="text-xs text-gray-400 mb-1">Confidence</div>
+                          <div className="text-sm font-medium text-white">Calibration & stop rules</div>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Produce a baseline answer from the task brief and constraints.</li>
+                        <li>Define or load a rubric with weighted criteria (accuracy, completeness, clarity, relevance, safety, etc.).</li>
+                        <li>Judge the answer: cite issues with evidence, rate each criterion, and compute an overall score.</li>
+                        <li>Propose a concise improvement plan (diffs/instructions) tied to rubric findings.</li>
+                        <li>Revise, preserving validated facts and constraints; avoid regressions.</li>
+                        <li>Calibrate confidence; decide to stop based on thresholds or small deltas.</li>
+                        <li>Emit artifacts: scores, rationale, applied edits, and provenance.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Separate generator and judge (different model/tier, or different seed/settings).',
+                        'Use structured rubrics with weights; return JSON scores + rationales.',
+                        'Prefer diff/instruction-style edits; lock validated facts to prevent regressions.',
+                        'Aggressively truncate history; pass distilled state (facts, constraints, last diff).',
+                        'Enable early stopping; cap max iterations; log deltas per pass.',
+                        'Use retrieval/grounding when judging factual claims; flag unverifiable statements.',
+                        'Track calibration (confidence vs. actual success) and re-tune thresholds.',
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Hard real-time tasks where multi-pass latency is unacceptable.</li>
+                        <li>No objective rubric or ground truth (risk of endless subjective polishing).</li>
+                        <li>Deterministic transformations better handled by tools/compilers/linters.</li>
+                        <li>Tasks with minimal quality gain after a single revision.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Judge/generator coupling causing confirmation bias.</li>
+                        <li>Overfitting to the rubric while degrading holistic quality.</li>
+                        <li>Token bloat from verbose rationales and full-history resends.</li>
+                        <li>Regression of previously correct details due to unguarded edits.</li>
+                        <li>Oscillation without convergence from vague/conflicting feedback.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Rubric-based multi-criteria evaluation with weighted scoring.',
+                        'Evidence-linked critiques and actionable edit plans.',
+                        'Diff/instruction-style revisions with fact locking.',
+                        'Confidence scoring and calibration tracking.',
+                        'Early stopping and iteration caps to control cost.',
+                        'Optional retrieval/grounding for factual verification.',
+                      ].map((feature) => (
+                        <div key={feature} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {[
+                        { icon: '📈', label: 'Quality gain per iter', desc: 'Δ rubric score per iteration until convergence' },
+                        { icon: '🔁', label: 'Convergence iterations', desc: 'Average iterations to hit target or stop' },
+                        { icon: '🧪', label: 'Judge consistency', desc: 'Inter-rater/self-consistency across runs' },
+                        { icon: '🎯', label: 'Target attainment rate', desc: 'Share of runs ≥ target threshold' },
+                        { icon: '💲', label: 'Cost per improvement point', desc: 'Tokens per +1 rubric point or acceptance' },
+                        { icon: '🛑', label: 'Early stop rate', desc: 'Runs halted due to small deltas or caps' },
+                      ].map((m) => (
+                        <div key={m.label} className="bg-gray-800/40 rounded-lg p-4 border border-gray-700/40">
+                          <div className="text-2xl mb-2">{m.icon}</div>
+                          <div className="text-sm font-semibold text-white">{m.label}</div>
+                          <div className="text-xs text-gray-400">{m.desc}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-teal-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-3 text-sm text-gray-300">
+                      <p>Total cost ≈ Σ over iterations of (generator tokens + evaluator tokens + revision tokens). Optimize for early convergence and lightweight judges.</p>
+                      <ul className="list-disc list-inside space-y-1">
+                        <li>Use small/cheap model for judging when feasible; reserve strongest model for final acceptance.</li>
+                        <li>Truncate history; pass distilled state (facts, constraints, last diff).</li>
+                        <li>Enable early stopping on small score deltas; cap max iterations.</li>
+                        <li>Cache stable sub-artifacts (retrieved docs, validated sections) across iterations.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
+                      {[
+                        'Content QA and editing',
+                        'Code review and reasoning trace checks',
+                        'Safety/robustness evaluation and red-team hardening',
+                        'Academic and analytical writing improvement',
+                        'Data pipeline/report validation',
+                        'Policy/criteria compliance checks',
+                      ].map((uc) => (
+                        <div key={uc} className="flex items-center gap-2 px-3 py-2 bg-gray-800/50 rounded-lg text-sm">
+                          <span className="text-base">✅</span>
+                          <span className="text-gray-300 font-medium">{uc}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="bg-gradient-to-br from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-xl p-6">
+                      <div className="grid gap-4 md:grid-cols-2">
+                        {/* Academic Papers */}
+                        <div className="bg-white/5 rounded-lg p-4">
+                          <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
+                            <span className="text-orange-400">📚</span>
+                            Academic Papers
+                          </h4>
+                          <div className="space-y-2 text-sm">
+                            <a href="https://arxiv.org/abs/2303.17651" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• Self-Refine: Iterative Refinement with Feedback (Shinn et al., 2023)</a>
+                            <a href="https://arxiv.org/abs/2310.04406" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• RLAIF: Reinforcement Learning from AI Feedback (2023)</a>
+                            <a href="https://arxiv.org/abs/2402.14972" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• DERA: Deliberate Reasoning with Iterative Improvement (2024)</a>
+                            <a href="https://arxiv.org/abs/2212.08073" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• Constitutional AI: Self-critique & principle-based revision (Anthropic, 2022)</a>
+                          </div>
+                        </div>
+
+                        {/* Implementation Guides */}
+                        <div className="bg-white/5 rounded-lg p-4">
+                          <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
+                            <span className="text-green-400">🛠️</span>
+                            Implementation Guides
+                          </h4>
+                          <div className="space-y-2 text-sm">
+                            <a href="https://cookbook.openai.com/" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• OpenAI Cookbook: Reliable LLM patterns</a>
+                            <a href="https://docs.anthropic.com/claude/docs" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• Anthropic Claude: Prompting & tooling</a>
+                            <a href="https://www.promptingguide.ai/" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• Prompting Guide: Patterns & anti-patterns</a>
+                          </div>
+                        </div>
+
+                        {/* Tools & Libraries */}
+                        <div className="bg-white/5 rounded-lg p-4">
+                          <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
+                            <span className="text-purple-400">⚙️</span>
+                            Tools & Libraries
+                          </h4>
+                          <div className="space-y-2 text-sm">
+                            <a href="https://python.langchain.com/" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• LangChain</a>
+                            <a href="https://www.llamaindex.ai/" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• LlamaIndex</a>
+                            <a href="https://dspy.ai/" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• DSPy</a>
+                            <a href="https://github.com/microsoft/guidance" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• Guidance</a>
+                          </div>
+                        </div>
+
+                        {/* Community & Discussions */}
+                        <div className="bg-white/5 rounded-lg p-4">
+                          <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
+                            <span className="text-cyan-400">👥</span>
+                            Community & Discussions
+                          </h4>
+                          <div className="space-y-2 text-sm">
+                            <a href="https://www.reddit.com/r/MachineLearning/" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• r/MachineLearning</a>
+                            <a href="https://discord.gg/langchain" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• LangChain Discord</a>
+                            <a href="https://github.com/f/awesome-chatgpt-prompts" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• Awesome prompts & resources</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+                </>
               ) : (
                 <section>
                   <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
@@ -3592,7 +3857,7 @@ export const TechniqueDetails = ({
               {/* How it Works (generic) - removed globally per spec */}
 
               {/* Key Features */}
-              {selectedTechnique.id !== 'load-balancing' && (
+              {selectedTechnique.id !== 'load-balancing' && selectedTechnique.id !== 'self-critique' && (
               <section>
                 <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
                   <div className="w-1 h-6 bg-green-500 rounded-full"></div>
@@ -3739,7 +4004,7 @@ export const TechniqueDetails = ({
               )}
 
               {/* Best Use Cases */}
-              {selectedTechnique.id !== 'load-balancing' && (
+              {selectedTechnique.id !== 'load-balancing' && selectedTechnique.id !== 'self-critique' && (
               <section>
                 <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
                   <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
@@ -3763,7 +4028,7 @@ export const TechniqueDetails = ({
               )}
 
               {/* References & Further Reading */}
-              {selectedTechnique.id !== 'load-balancing' && (
+              {selectedTechnique.id !== 'load-balancing' && selectedTechnique.id !== 'self-critique' && (
               <section>
                 <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
                   <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
