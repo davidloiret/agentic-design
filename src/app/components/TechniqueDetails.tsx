@@ -238,8 +238,8 @@ export const TechniqueDetails = ({
         <div className="p-6 lg:p-6">
           {detailsTab === 'overview' ? (
             <div className="space-y-8">
-              {/* Video Explanation - For Chain of Thought, Chain of Debates, and Sequential Chaining */}
-              {(selectedTechnique.id === 'cot' || selectedTechnique.id === 'cod' || selectedTechnique.id === 'sequential-chaining') && (
+              {/* Video Explanation - For Chain of Thought and Sequential Chaining (exclude CoD to keep only requested sections) */}
+              {(selectedTechnique.id === 'cot' || selectedTechnique.id === 'sequential-chaining') && (
                 <section>
                   <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
                     <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
@@ -250,14 +250,12 @@ export const TechniqueDetails = ({
                       key={selectedTechnique.id}
                       compositionId={
                         selectedTechnique.id === 'cot' ? "ChainOfThoughtWithAudio" : 
-                        selectedTechnique.id === 'cod' ? "ChainOfDebatesWithAudio" :
                         selectedTechnique.id === 'sequential-chaining' ? "ProfessionalSequentialChaining" :
                         "SequentialChainingWithAudio"
                       } 
                       className="w-full"
                       audioPath={
                         selectedTechnique.id === 'cot' ? "/audio/cot/" : 
-                        selectedTechnique.id === 'cod' ? "/audio/cod/" :
                         selectedTechnique.id === 'sequential-chaining' ? "/audio/sequential-chaining/" :
                         "/audio/sequential-chaining/"
                       }
@@ -469,6 +467,1631 @@ export const TechniqueDetails = ({
 
                           <li><a href="https://discord.gg/langchain" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangChain Community</a></li>
                           <li><a href="https://discuss.huggingface.co/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Hugging Face Forums: Retrieval & reasoning</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                </section>
+                </>
+              ) : selectedTechnique.id === 'cod' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism (short conceptual overview)
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-indigo-500/10 border border-indigo-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed">
+                        Chain of Debates (CoD) orchestrates multiple AI agents with distinct perspectives (e.g., advocate, skeptic,
+                        analyst) to engage in structured argumentation over several rounds. Arguments and counterarguments are
+                        synthesized by a moderator/judge agent into a final, balanced conclusion. This reduces individual model bias and
+                        improves robustness through dialectical reasoning.
+                      </p>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-indigo-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Define roles and objectives: assign complementary agent personas and a moderator/judge.</li>
+                        <li>Seed the debate: present the problem, constraints, and evaluation criteria.</li>
+                        <li>Round-based argumentation: agents produce arguments; peers critique and refine.</li>
+                        <li>Evidence grounding: optionally retrieve sources/tools; track citations and assumptions.</li>
+                        <li>Judge synthesis: a judge aggregates strongest arguments; flags unresolved conflicts.</li>
+                        <li>Convergence check: stop on consensus, confidence threshold, or max rounds.</li>
+                        <li>Final report: produce rationale, trade-offs, and decision with references.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Diversity by design: make roles orthogonal (optimist/pessimist/analyst/constraints).',
+                        'Use a separate judge model/prompt; avoid the same agent evaluating its own claims.',
+                        'Constrain format: structured claims, evidence, rebuttals, and confidence scores.',
+                        'Ground with tools/retrieval; attach citations and highlight uncertainty.',
+                        'Cap rounds and token budgets; early-stop when arguments repeat.',
+                        'Cache intermediate arguments; deduplicate to reduce cost and drift.',
+                        'Log debate trees for auditability and offline evaluation.',
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Low-stakes or simple tasks where single-agent output suffices.</li>
+                        <li>Hard real-time constraints where multi-round interaction exceeds latency budgets.</li>
+                        <li>Severely resource-constrained settings without cost controls or caching.</li>
+                        <li>Domains lacking verifiable ground truth or tools to arbitrate disagreements.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Echo chambers: agents collapse to agreement without real critique (mitigate with role prompts).</li>
+                        <li>Judge leakage: using the same prompt/model for both debater and judge roles.</li>
+                        <li>Token bloat: repetitive arguments across rounds; enforce novelty constraints.</li>
+                        <li>Unverifiable claims: missing citations/tool checks; require evidence fields.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Multi-agent, role-driven argumentation',
+                        'Round-based rebuttal and refinement',
+                        'Independent judge/moderator synthesis',
+                        'Evidence-grounded decisions with citations',
+                        'Configurable stop rules and budgets',
+                      ].map((feat) => (
+                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Task accuracy/quality vs. baselines (single-agent, self-critique).</li>
+                        <li>Judge agreement rate and inter-rater reliability (if human judges present).</li>
+                        <li>Consensus rate within N rounds; repetition/novelty ratio across rounds.</li>
+                        <li>Evidence coverage and citation correctness.</li>
+                        <li>Latency and cost per resolved debate (p50/p95; $/debate).</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Cost scales with (num_agents × rounds × tokens_per_turn) + judge synthesis.</li>
+                        <li>Mitigate via caching, deduplication, shorter turn formats, and selective tool calls.</li>
+                        <li>Prefer compact judge prompts and summarization between rounds.</li>
+                        <li>Track token budgets and enforce hard caps to avoid runaway debates.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Complex decisions with trade-offs (policy, strategy, architecture).</li>
+                        <li>Safety-sensitive analyses requiring rigorous challenge and evidence.</li>
+                        <li>Research synthesis and literature review with conflicting findings.</li>
+                        <li>Ethical deliberation and risk assessment with stakeholder perspectives.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://arxiv.org/abs/1805.00899" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">AI Safety via Debate (Irving, Christiano, Amodei, 2018)</a></li>
+                          <li><a href="https://arxiv.org/abs/2312.01703" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Neuro-Symbolic AI: Trends and debates context (2023)</a></li>
+                          <li><a href="https://arxiv.org/abs/2306.05685" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LLM-as-a-Judge: Reliable Evaluation via LLMs (2023)</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://microsoft.github.io/autogen/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">AutoGen: Multi-agent and GroupChat patterns</a></li>
+                          <li><a href="https://python.langchain.com/docs/langgraph" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangGraph: Graph-based multi-agent orchestration</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://github.com/microsoft/autogen" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Microsoft AutoGen</a>, <a href="https://github.com/langchain-ai/langgraph" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangGraph</a>, <a href="https://github.com/joaomdmoura/crewAI" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">CrewAI</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://discord.gg/langchain" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangChain Community</a></li>
+                          <li><a href="https://github.com/microsoft/autogen/discussions" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">AutoGen Discussions</a></li>
+                          <li><a href="https://discuss.huggingface.co/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Hugging Face Forums (multi-agent & debate)</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                </section>
+                </>
+              ) : selectedTechnique.id === 'god' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism (short conceptual overview)
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-indigo-500/10 border border-indigo-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed">
+                        Graph of Debates models a debate as a directed graph where nodes are claims, evidence, or sub-issues
+                        and edges encode relations such as support, attack, rebuttal, undercut, and question. Multiple debaters
+                        iteratively add and refine nodes/edges across rounds, while a judge or aggregation mechanism evaluates
+                        argument strength to converge on a decision. This combines multi-agent debate with formal argumentation
+                        structures for transparency and coverage.
+                      </p>
+                    </div>
+                  </section>
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-indigo-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Define the proposition, success criteria, and judge rubric (correctness, relevance, evidence, clarity).</li>
+                        <li>Spawn debaters with complementary roles (pro, con, fact-checker, devil’s advocate, synthesizer).</li>
+                        <li>Round-based argumentation: debaters add claims/evidence and link them with typed edges (support/attack/etc.).</li>
+                        <li>Cross-examination: require citations, challenge weak links, and prune contradicted or duplicate nodes.</li>
+                        <li>Scoring: judge model(s) or voting aggregate score nodes/edges; update weights/credibility.</li>
+                        <li>Expansion: explore uncovered sub-issues using search, retrieval, or expert tools.</li>
+                        <li>Convergence: extract winning thesis or Pareto set; generate rationale with cited nodes.</li>
+                        <li>Validation: independent judge review and, when applicable, external verification/tests.</li>
+                      </ol>
+                    </div>
+                  </section>
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Use typed relations from argumentation theory (support, attack, rebut, undercut) and require citations for factual claims.',
+                        'Separate debater roles and provide private scratchpads to reduce conformity and collusion.',
+                        'Employ calibrated judges (fine-tuned or ensemble) and report inter-judge agreement.',
+                        'Control for verbosity: fixed token budgets per round; penalize redundancy; summarize between rounds.',
+                        'Instrument coverage: track which sub-issues are argued; prompt for uncovered branches.',
+                        'Persist the graph with provenance (sources, timestamps) for auditability and later reuse.',
+                        'Auto-prune low-signal or contradicted nodes; deduplicate semantically equivalent claims.',
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Trivial questions where single-pass answers suffice or gold labels exist cheaply.</li>
+                        <li>Hard real-time/low-latency paths that cannot afford multi-round, multi-agent cost.</li>
+                        <li>Tasks requiring deterministic, rule-bound outputs without subjective trade-offs.</li>
+                        <li>Settings with unreliable judges or incentive to game the judge without safeguards.</li>
+                      </ul>
+                    </div>
+                  </section>
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Judge bias and position sensitivity; over-weighting verbosity or rhetorical flair.</li>
+                        <li>Debater collusion or mode collapse causing superficial consensus.</li>
+                        <li>Unbounded graphs with duplicate or low-signal nodes increasing cost without value.</li>
+                        <li>Insufficient evidence grounding leading to hallucinated support/attack edges.</li>
+                      </ul>
+                    </div>
+                  </section>
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Non-linear, typed argument graphs (support/attack/rebut/undercut/question).',
+                        'Round-based multi-agent debate with cross-examination and summarization.',
+                        'Judge or ensemble adjudication with agreement tracking and rationales.',
+                        'Evidence-grounded edges with citations, provenance, and timestamps.',
+                        'Coverage and redundancy controls with auto-pruning/deduplication.',
+                      ].map((feat) => (
+                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Judge agreement rate (Krippendorff’s alpha, Cohen’s kappa) and win-rate stability.</li>
+                        <li>Factuality/grounding score: proportion of claims with valid citations; error rate post-fact-check.</li>
+                        <li>Coverage: fraction of identified sub-issues addressed in the final rationale.</li>
+                        <li>Cost and latency per resolved question; tokens per resolved claim/edge.</li>
+                        <li>Outcome quality vs. strong baselines (single-agent, self-consistency, ToT).</li>
+                      </ul>
+                    </div>
+                  </section>
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Rough cost ≈ debaters × rounds × tokens_per_turn + judges × tokens_per_eval.</li>
+                        <li>Mitigate with fixed per-round budgets, summarization checkpoints, and caching of verified nodes.</li>
+                        <li>Prefer retrieval/tool outputs and compact citations over verbose narrative to save tokens.</li>
+                        <li>Batch judge evaluations and use smaller but calibrated judges when acceptable.</li>
+                      </ul>
+                    </div>
+                  </section>
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Complex policy, legal, or ethical analysis requiring competing viewpoints and evidence.</li>
+                        <li>Research synthesis and peer-review style critique with explicit argument trails.</li>
+                        <li>Product/architecture decision records where trade-offs must be justified and auditable.</li>
+                        <li>Curriculum or debate training tools emphasizing argument structure and reasoning.</li>
+                      </ul>
+                    </div>
+                  </section>
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://arxiv.org/abs/1805.00899" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">AI Safety via Debate (Irving, Christiano et al., 2018)</a></li>
+                          <li><a href="https://arxiv.org/abs/2305.14387" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LLMs as Judges: Rethinking Evaluation (2023)</a></li>
+                          <li><a href="https://arxiv.org/abs/2409.11374" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Multi-Agent Debate improves reasoning: recent evidence (2024)</a></li>
+                          <li><a href="https://link.springer.com/article/10.1007/s11787-019-00218-5" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Abstract Argumentation (Dung-style) and semantics – survey</a></li>
+                          <li><a href="https://hal.science/hal-00372812/document" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Bipolar Argumentation Frameworks (Cayrol & Lagasquie-Schiex)</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://argdown.org/guide/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Argdown Guide (argument mapping)</a></li>
+                          <li><a href="https://www.arg-tech.org/index.php/tools/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">AIF/OVA tools (Argument Interchange Format)</a></li>
+                          <li><a href="https://python.langchain.com/docs/langgraph" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangGraph (agent control flow)</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://kialo.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Kialo</a>, <a href="https://debategraph.org/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">DebateGraph</a>, <a href="https://aifdb.org/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">AIFdb</a></li>
+                          <li>Neo4j/Graph databases, NetworkX, Cytoscape/React Flow for visual graph editing</li>
+                          <li>Evaluation: pairwise preference eval, Elo rating for debaters, judge agreement metrics</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://discuss.openai.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">OpenAI community: debate/judging threads</a></li>
+                          <li><a href="https://discord.gg/langchain" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangChain Discord (multi-agent workflows)</a></li>
+                          <li><a href="https://www.arg-tech.org/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">ARG-Tech (argumentation research community)</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                </>
+              ) : selectedTechnique.id === 'self-correction' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism (short conceptual overview)
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-indigo-500/10 border border-indigo-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed">
+                        Self-Correction runs an inference-time loop that generates an initial answer, critiques or verifies it, and
+                        then revises the answer based on identified issues. It can be intrinsic (model reflects on its own output)
+                        or extrinsic (uses tools, retrieval, tests, or another model as a judge). This improves reliability by
+                        catching factual errors, faulty reasoning, and formatting issues before presenting the final result.
+                      </p>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-indigo-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Draft: produce an initial answer with reasoning hidden or shown as appropriate.</li>
+                        <li>Critique: request a structured self-critique or use an external judge/verifier to identify issues.</li>
+                        <li>Verify: call tools/tests (retrieval, unit tests, calculators, linters, schema validators) where applicable.</li>
+                        <li>Revise: generate a corrected answer that addresses each identified issue explicitly.</li>
+                        <li>Re-evaluate: optionally re-run critique/verification to confirm fixes.</li>
+                        <li>Stop criteria: cap iterations on token/latency budgets or when no new issues are found.</li>
+                        <li>Emit: return the final corrected output with citations or confidence as needed.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Separate roles: one prompt for draft, one for critique/judge, one for revision to reduce confirmation bias.',
+                        'Use structured critique checklists (factuality, logic, coverage, safety, format) rather than free-form text.',
+                        'Prefer extrinsic checks when possible: retrieval with citations, tests, calculators, or type/schema validators.',
+                        'Bound the loop: set max correction rounds, token/latency budgets, and early-stop on no new issues.',
+                        'Seed with few-shot critique examples and exemplars of good vs poor revisions for calibration.',
+                        'Track confidence and abstain/escalate to human when uncertainty is high or verifiers disagree.',
+                        'Log all critiques and decisions for offline evaluation; use held-out tasks to measure real uplift.',
+                        'Combine with guardrails (policies, PII/PHI detection, allowlists) before final emission in production.',
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Hard real-time paths with strict latency/compute budgets that cannot afford extra iterations.</li>
+                        <li>Domains without reliable verifiers or ground truths where critiques won’t converge.</li>
+                        <li>Safety-critical decisions without human-in-the-loop or governance for overrides and audits.</li>
+                        <li>Adversarial settings where an attacker can steer the critique loop or spoof verification signals.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Confirmation bias: the same model that wrote the answer “rubber-stamps” it without strong guidance.</li>
+                        <li>Degenerate loops: repeated edits that change style but not correctness; set stop rules and checks.</li>
+                        <li>Hallucinated verification: the model invents citations/tests; prefer tool-based or retrieval-backed checks.</li>
+                        <li>Over-correction: losing task intent or violating constraints during revision; re-validate against the task spec.</li>
+                        <li>Evaluation mismatch: offline win but no online uplift due to domain shift; run AB tests on real traffic.</li>
+                        <li>Cost creep: excessive tokens and retries; enforce budgets and decay exploration over time.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Iterative draft → critique/judge → revise loop',
+                        'Intrinsic and extrinsic verification pathways',
+                        'Structured checklists and scoring rubrics',
+                        'Tool-integrated fact, math, and schema validation',
+                        'Budgeted control of thinking time and retries',
+                        'Auditability via logged critiques and decisions',
+                      ].map((feat) => (
+                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Accuracy uplift vs. no-correction baseline on held-out tasks.</li>
+                        <li>Correction helpful rate: share of critiques that yield measurable improvements.</li>
+                        <li>Hallucination/factual error rate reduction; citation coverage where applicable.</li>
+                        <li>Calibration metrics (e.g., Brier score) and abstain/escalation rate.</li>
+                        <li>Latency and cost overhead per task; capped within SLOs.</li>
+                        <li>Human override rate and post-deployment incident rate.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Overhead from critiques, verification calls, and revisions; plan budgets per task.</li>
+                        <li>Mitigate via critique compression, lightweight judges, capped iterations, and caching.</li>
+                        <li>Use retrieval filters and schema validation to reduce retries; prefer tools for precise checks.</li>
+                        <li>Profile p50/p95 latency and token usage; gate expensive loops behind confidence thresholds.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Fact-heavy QA and summarization with citations and verification.</li>
+                        <li>Code generation with unit tests, linters, type-checkers, and runtime sandboxes.</li>
+                        <li>Data transformation/validation pipelines with schema and policy checks.</li>
+                        <li>Agent workflows that can call calculators, search/retrieval, or domain checkers.</li>
+                        <li>RAG variants with answer verification and corrective retrieval (e.g., re-query on conflicts).</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://arxiv.org/abs/2308.03188" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Pan et al., 2023 — Automatically Correcting Large Language Models: Surveying the Landscape of Diverse Self-Correction Strategies</a></li>
+                          <li><a href="https://arxiv.org/abs/2406.01297" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Kamoi et al., 2024 — When Can LLMs Actually Correct Their Own Mistakes? A Critical Survey of Self-Correction of LLMs</a></li>
+                          <li><a href="https://arxiv.org/abs/2305.11738" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Gou et al., 2023 — CRITIC: LLMs Can Self-Correct with Tool-Interactive Critiquing</a></li>
+                          <li><a href="https://arxiv.org/abs/2402.13035" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Zhang et al., 2024 — Learning to Check: Unleashing Potentials for Self-Correction in LLMs</a></li>
+                          <li><a href="https://arxiv.org/abs/2405.14092" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Wu et al., 2024 — Large Language Models Can Self-Correct with Key Condition Verification (ProCo)</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://dspy.ai" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">DSPy — Programmatic prompting and optimization (supports critique/revise loops)</a></li>
+                          <li><a href="https://python.langchain.com/docs/langgraph" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangGraph — Control-flow for agent loops and verifiers</a></li>
+                          <li><a href="https://www.guardrailsai.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Guardrails — Validation, policies, and schema enforcement</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li>DSPy, LangChain/LangGraph, LlamaIndex, Guardrails</li>
+                          <li>Evaluators: unit tests/linters/type-checkers; retrieval + rerankers for factual checks</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://discord.gg/langchain" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangChain Community</a></li>
+                          <li><a href="https://discuss.huggingface.co/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Hugging Face Forums</a></li>
+                          <li><a href="https://github.com/dongxiangjue/Awesome-LLM-Self-Improvement" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Awesome LLM Self-Improvement (curated resources)</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                </section>
+                </>
+              ) : selectedTechnique.id === 'palm' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism (short conceptual overview)
+                    </h2>
+                    <div className="bg-gradient-to-br from-indigo-500/10 to-blue-500/10 border border-indigo-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed">
+                        Program-Aided LMs (PAL) delegate precise computation to an external interpreter. The model
+                        reads a natural-language problem, writes minimal executable code (e.g., Python), executes it
+                        in a sandbox, and returns the computed result. This separates natural-language understanding
+                        from exact calculation, reducing arithmetic and logical errors and producing an auditable trace
+                        of how the answer was derived.
+                      </p>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-indigo-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Choose execution toolchain and sandbox (e.g., Python runner with strict time/memory limits).</li>
+                        <li>Prompt the model to produce concise, self-contained code with a clear I/O contract and printed result.</li>
+                        <li>Execute in an isolated environment; capture stdout/stderr, exit code, and timing; enforce timeouts.</li>
+                        <li>Parse outputs with stable delimiters; validate against expected schema/types and constraints.</li>
+                        <li>Optionally re-run with corrections or tests if validation fails; limit retries with budgets.</li>
+                        <li>Return the final result with a computation trace (code, inputs, outputs) for auditability.</li>
+                        <li>Fallback gracefully (e.g., direct answer or alternative tool) when execution is unavailable or unsafe.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[ 
+                        'Sandbox aggressively: disable network and filesystem writes; set CPU/memory/time budgets; whitelist packages.',
+                        'Constrain prompts: require a small function or script that prints only the final answer with an explicit marker.',
+                        'Make parsing robust: use fixed tokens (e.g., "ANSWER:"), JSON, or schema-validated outputs to avoid brittle regex.',
+                        'Pin environments: lock interpreter and library versions; prefer deterministic ops and seeded randomness.',
+                        'Add verification: unit tests, duplicate calculations, range checks, or alternative solvers for critical paths.',
+                        'Handle failures: timeouts, non-zero exits, or empty outputs should trigger bounded retries or safe fallbacks.',
+                        'Log traces securely: retain code, runtime stats, and outputs for debugging and offline evaluation.',
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Purely linguistic tasks (style, opinion, narrative) where code adds no benefit.</li>
+                        <li>Strict real-time constraints where interpreter startup/execution exceeds latency budgets.</li>
+                        <li>Environments that cannot guarantee safe sandboxing of model-written code.</li>
+                        <li>Highly restricted platforms without interpreter access or with prohibitive governance rules.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Code or prompt injection via user input; mitigate with strict input sanitization and isolated execution.</li>
+                        <li>Non-deterministic or environment-dependent behavior (e.g., time, randomness, locale); enforce determinism.</li>
+                        <li>Brittle output parsing when the model prints extra text; require structured or delimited outputs.</li>
+                        <li>Infinite loops or heavy computation; set timeouts and instruction limits, and kill long-running jobs.</li>
+                        <li>Library/version drift between development and production; pin and verify environments.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[ 
+                        'Exact computation via external interpreters (e.g., Python, SQL, calculators)',
+                        'Auditable reasoning trace (code + outputs) and reproducibility',
+                        'Lower hallucination rates on math/logic tasks vs. free-form reasoning',
+                        'Composable with tool-calling, retrieval, and verification frameworks',
+                        'Graceful failure handling with retries and fallbacks',
+                      ].map((feat) => (
+                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Task accuracy on math/algorithmic benchmarks (e.g., GSM8K, MATH) vs. non-PAL baselines.</li>
+                        <li>Execution success rate (no timeouts, no runtime errors) and retry counts.</li>
+                        <li>Sandbox violation rate and security incident rate (must be near-zero).</li>
+                        <li>Latency p50/p95 including interpreter time; cost per task; token usage for code vs. CoT.</li>
+                        <li>Audit coverage: share of responses with valid traces and verifiable outputs.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Often fewer reasoning tokens than verbose CoT; adds interpreter CPU/memory and startup overhead.</li>
+                        <li>Amortize with warm pools or serverless sandboxes; cache successful code for similar queries.</li>
+                        <li>Prefer concise, single-pass scripts over multi-round dialogues to cap token and runtime costs.</li>
+                        <li>Profile cold vs. warm execution; enforce strict time/memory limits and cap retries.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Quantitative reasoning: arithmetic, algebra, date/time math, unit conversion.</li>
+                        <li>Data wrangling and analysis: CSV/JSON transforms, simple statistics, small-scale ETL.</li>
+                        <li>Algorithmic puzzles and coding exercises where correctness is testable.</li>
+                        <li>Finance, science, and engineering tasks needing exact numeric outputs.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://arxiv.org/abs/2211.10435" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Gao et al., 2022 — PAL: Program-Aided Language Models</a></li>
+                          <li><a href="https://arxiv.org/abs/2211.12588" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Chen et al., 2022 — Program of Thoughts Prompting: Disentangle Reasoning from Inference</a></li>
+                          <li><a href="https://arxiv.org/abs/2305.09656" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Ye et al., 2023 — SatLM: Satisfiability-Aided Language Models</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://github.com/reasoning-machines/pal" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Official PAL repository (reasoning-machines/pal)</a></li>
+                          <li><a href="https://python.langchain.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangChain docs: PAL-style chains and tool calling</a></li>
+                          <li><a href="https://platform.openai.com/docs/assistants/tools/code-interpreter" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">OpenAI Code Interpreter (Assistants) — secure code execution</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li>Execution/Sandbox: Docker, Firecracker microVMs, <a href="https://e2b.dev" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">E2B</a>, Pyodide (browser)</li>
+                          <li>Orchestration: LangChain/LangGraph, LlamaIndex; Validation: Guardrails, Pydantic/JSON Schema</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://discord.gg/langchain" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangChain Community</a></li>
+                          <li><a href="https://discuss.huggingface.co/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Hugging Face Forums: Tool use and reasoning</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                </>
+              ) : selectedTechnique.id === 'lrt' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism (short conceptual overview)
+                    </h2>
+                    <div className="bg-gradient-to-br from-violet-500/10 to-purple-500/10 border border-violet-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed">
+                        Performs iterative reasoning inside the model’s continuous latent space using a depth-recurrent
+                        computation block. At inference, the model can unroll this latent recurrence for a variable number
+                        of cycles to refine hidden states before decoding a final answer. This scales test-time compute
+                        without emitting intermediate tokens, improving efficiency on reasoning tasks while keeping external
+                        token usage low.
+                      </p>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-violet-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Encode input into a high-dimensional latent representation.</li>
+                        <li>Iterate latent recurrence K times (adaptive at inference) to refine hidden states.</li>
+                        <li>Assess halting criteria (confidence/score/compute budget) to stop latent iteration.</li>
+                        <li>Decode refined latent state into the final output.</li>
+                        <li>Optionally log metrics vs. K to calibrate future depth schedules.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Use adaptive depth: grow K with uncertainty/difficulty; cap by latency/cost SLOs.',
+                        'Define robust halting: confidence thresholds, verifier scores, or plateau detection.',
+                        'Stability tuning: normalization, careful learning rates, and gradient clipping for recurrent blocks.',
+                        'Calibrate with curves: measure accuracy/latency vs. K to find sweet spots per task/domain.',
+                        'Pair with lightweight verification or self-consistency checks at the end output stage.',
+                        'Monitor drift: periodically re-evaluate depth schedules as data and tasks change.'
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Strict real-time paths where any added recurrence violates latency budgets.</li>
+                        <li>Tasks that require transparent, step-by-step intermediate outputs for auditability.</li>
+                        <li>Simple queries where direct decoding or short CoT already meets quality/cost targets.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Overthinking: excessive K with diminishing returns; lack of proper stopping criteria.</li>
+                        <li>Instability from poorly tuned recurrent blocks (vanishing/exploding gradients).</li>
+                        <li>Ignoring interpretability: no tooling to inspect or validate latent trajectories.</li>
+                        <li>One-size-fits-all depth schedules that waste compute on easy tasks.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Token-free intermediate reasoning within latent space',
+                        'Scalable test-time compute via depth recurrence (adjustable K)',
+                        'Improved device utilization by shifting cost from tokens to FLOPs',
+                        'Composable with verification and routing strategies',
+                        'Works without specialized CoT training data'
+                      ].map((feat) => (
+                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Accuracy/Pass@k on reasoning benchmarks as a function of K.</li>
+                        <li>Latency and cost per solved instance at target quality.</li>
+                        <li>Stability metrics across depths (no divergence/oscillation).</li>
+                        <li>Calibration of confidence vs. correctness after latent refinement.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Low intermediate token usage; primary cost shifts to latent FLOPs.</li>
+                        <li>Higher device utilization and reduced interconnect pressure at scale.</li>
+                        <li>Cost scales with chosen depth K; tune per use case and SLO.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Mathematical and logical reasoning, program analysis, and theorem-style tasks.</li>
+                        <li>Planning/optimization where iterative refinement improves solution quality.</li>
+                        <li>Large-scale serving where token bandwidth is costly but FLOPs are available.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li>
+                            <a href="https://arxiv.org/abs/2502.05171" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Geiping et al. (2025): Scaling up Test-Time Compute with Latent Reasoning (Recurrent Depth)</a>
+                          </li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://lilianweng.github.io/posts/2025-05-01-thinking/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Lilian Weng (2025): Thinking at Inference Time</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://github.com/seal-rg/recurrent-pretraining" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Recurrent Pretraining (reference code)</a></li>
+                          <li><a href="https://huggingface.co/tomg-group-umd/huginn-0125" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Huginn (Hugging Face) model with recurrent depth</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://discuss.huggingface.co/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Hugging Face Forums: Reasoning and test-time compute</a></li>
+                          <li><a href="https://discord.gg/langchain" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangChain Community</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                </>
+              ) : selectedTechnique.id === 'long-cot' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism (short conceptual overview)
+                    </h2>
+                    <div className="bg-gradient-to-br from-blue-600/10 to-purple-600/10 border border-blue-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed">
+                        Long Chain of Thought extends standard step-by-step reasoning with deeper, dynamically allocated thinking time at inference.
+                        Practically, it generates longer reasoning traces, samples multiple chains (self-consistency), verifies intermediate steps,
+                        and selectively allocates more compute to hard instances. This improves reliability on complex tasks at the cost of more
+                        tokens and latency.
+                      </p>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Prompt scaffolding: define clear goals, constraints, and step format; prepare verifier or rubric if applicable.</li>
+                        <li>Adaptive thinking budget: set max steps, temperature, and optional multi-sample count (self-consistency).</li>
+                        <li>Reasoning generation: produce chain(s) with explicit intermediate calculations, assumptions, and checks.</li>
+                        <li>Verification and selection: validate intermediate results, discard inconsistent chains, select majority/score-best.</li>
+                        <li>Distill and finalize: compress to a concise, verifiable answer; log telemetry (tokens, latency, success).</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Use structured step templates (Given → Plan → Steps → Check → Answer) to prevent meandering.',
+                        'Prefer multiple short chains + selection over a single ultra-long chain for robustness.',
+                        'Introduce lightweight verifiers (unit checks, dimensional analysis, constraint checks).',
+                        'Route by difficulty: allocate more samples/steps only when uncertainty is high.',
+                        'Cap depth and summarize periodically to control token growth and maintain coherence.',
+                        'Cache intermediate computations and reuse context across retries to reduce cost.',
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Simple lookups or routine tasks where direct answers meet accuracy and latency goals.</li>
+                        <li>Strict real-time systems with tight SLOs where extra steps or sampling breaks latency budgets.</li>
+                        <li>Domains lacking verifiable intermediate checks, making long chains hard to validate.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Overlong, drifting chains without checkpoints or periodic summaries.</li>
+                        <li>Error propagation from early mistakes; lack of verification leads to confident wrong answers.</li>
+                        <li>Unbounded token spend from high sampling counts without early stopping or routing.</li>
+                        <li>Selection bias if majority voting is used without diversity or quality scoring.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Extended step-by-step reasoning depth with dynamic budgets',
+                        'Multi-sample self-consistency and chain selection',
+                        'Intermediate verification and constraint checking',
+                        'Difficulty-aware routing and adaptive compute allocation',
+                        'Periodic summarization to maintain context quality',
+                        'Telemetry for cost/latency/accuracy at the chain level',
+                      ].map((feat) => (
+                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Task accuracy/pass-rate on reasoning benchmarks and internal evals.</li>
+                        <li>Compute efficiency: tokens, wall-clock, and cost per solved instance.</li>
+                        <li>Chain quality: verifier pass-rate, consistency across samples, error rate after verification.</li>
+                        <li>Budget adherence: proportion of runs within target token/latency caps.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Cost scales with reasoning length (L) × number of samples (S) + verification overhead.</li>
+                        <li>Use routing to long chains only for hard cases; cap S and apply early stopping.</li>
+                        <li>Summarize periodically; cache reusable context; compress traces when feasible.</li>
+                        <li>Track per-step tokens/latency to prevent regressions; prefer short, diverse chains over one very long chain.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Complex math/logic problems, scientific reasoning, and program analysis.</li>
+                        <li>Strategic planning and multi-constraint decision-making requiring lookahead.</li>
+                        <li>High-stakes domains where transparency and verifiable steps are required.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://arxiv.org/abs/2201.11903" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Wei et al. (2022): Chain-of-Thought Prompting Elicits Reasoning</a></li>
+                          <li><a href="https://arxiv.org/abs/2203.11171" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Wang et al. (2022): Self-Consistency Improves Chain of Thought</a></li>
+                          <li><a href="https://arxiv.org/abs/2205.11916" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Kojima et al. (2022): Large Language Models are Zero-Shot Reasoners</a></li>
+                          <li><a href="https://arxiv.org/abs/2502.05171" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Geiping et al. (2025): Scaling up Test-Time Compute with Latent Reasoning (Recurrent Depth)</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://lilianweng.github.io/posts/2025-05-01-thinking/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Lilian Weng (2025): Thinking at Inference Time</a></li>
+                          <li><a href="https://www.promptingguide.ai/techniques/chain-of-thought" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Prompt Engineering Guide: Chain-of-Thought</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://python.langchain.com/docs/expression_language/how_to/self_consistency" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangChain: Self-Consistency and reasoning utilities</a></li>
+                          <li><a href="https://github.com/microsoft/guidance" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Microsoft Guidance: Structured generation</a></li>
+                          <li><a href="https://github.com/stanfordnlp/dspy" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">DSPy (Stanford): Programmatic prompting and tracing</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://discuss.huggingface.co/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Hugging Face Forums: Reasoning and prompting</a></li>
+                          <li><a href="https://discord.gg/langchain" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangChain Community</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                </>
+              ) : selectedTechnique.id === 'tot' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism (short conceptual overview)
+                    </h2>
+                    <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border border-green-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed">
+                        Structures reasoning as a branching tree of coherent thoughts. From each state, the model generates multiple
+                        candidate thoughts, evaluates them, prunes weak paths, and continues expanding promising ones with
+                        lookahead and backtracking as needed. Generalizes linear Chain-of-Thought by enabling exploration of
+                        alternatives under a search policy (e.g., breadth-first, depth-first, beam).
+                      </p>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Define thought granularity and goal state; set width/depth, budget, and stopping criteria.</li>
+                        <li>Generate K candidate thoughts at each state (diverse sampling or guided templates).</li>
+                        <li>Score/evaluate states using rubrics, verifiers, or value prompts; retain top candidates.</li>
+                        <li>Expand according to a search policy (BFS/DFS/beam); deduplicate and avoid loops.</li>
+                        <li>Backtrack if progress stalls; continue until solution, max depth, or budget reached.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Right-size thought steps; avoid too coarse (miss lookahead) or too fine (token blow-up).',
+                        'Use explicit evaluation rubrics or verifier prompts; separate generation vs. evaluation roles.',
+                        'Limit branching factor and depth; prefer beam search with small K and early stopping.',
+                        'Encourage diversity with temperature, nucleus sampling, or paraphrased thought prompts.',
+                        'Cache evaluated states; deduplicate equivalent states to prevent cycles.',
+                        'Set budget-aware halting (token/time caps) and fail-safe fallbacks to linear CoT.',
+                        'For factual tasks, ground evaluation with retrieval or external verifiers when possible.',
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Simple queries where linear CoT or direct answering meets quality and latency goals.</li>
+                        <li>Strict real-time or tight SLO paths where branching overhead violates latency/cost budgets.</li>
+                        <li>Tasks lacking reliable evaluation criteria or verifiable intermediate states.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Combinatorial explosion from large K/depth without pruning or halting policies.</li>
+                        <li>Mode collapse: insufficient diversity causing repeated or redundant branches.</li>
+                        <li>Over-pruning early: discarding viable paths due to weak or biased evaluators.</li>
+                        <li>Looping states and circular reasoning without deduplication or cycle checks.</li>
+                        <li>Unverified claims when evaluation lacks grounding or external checks.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Branching exploration of alternative reasoning paths',
+                        'Backtracking and lookahead for global decision quality',
+                        'Evaluator-guided pruning and selection',
+                        'Search-policy control (BFS/DFS/beam) and budgets',
+                        'Separation of generation and evaluation prompts',
+                        'Compatibility with self-consistency and verification',
+                      ].map((feat) => (
+                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Task success/accuracy on reasoning benchmarks (e.g., puzzles, math, planning).</li>
+                        <li>Compute efficiency: tokens, steps, and wall-clock per solved instance.</li>
+                        <li>Diversity/coverage of explored paths vs. redundancy rate.</li>
+                        <li>Verifier agreement/consistency across branches (if using judges/verifiers).</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Cost scales with branching factor (K), depth (D), and evaluation overhead.</li>
+                        <li>Use beam search, early stopping, and evaluator filters to cap expansion.</li>
+                        <li>Cache intermediate thoughts and scores; dedupe states to reduce waste.</li>
+                        <li>Adopt budget-aware routing: fall back to CoT when uncertainty/budget is low.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Combinatorial puzzles and math word problems with pivotal early choices.</li>
+                        <li>Strategic planning and multi-step decision-making with lookahead.</li>
+                        <li>Creative ideation where exploring alternatives improves quality.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li>
+                            <a href="https://arxiv.org/abs/2305.10601" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Yao et al. (2023): Tree of Thoughts — Deliberate Problem Solving with LLMs</a>
+                          </li>
+                          <li>
+                            <a href="https://arxiv.org/abs/2201.11903" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Wei et al. (2022): Chain-of-Thought Prompting Elicits Reasoning</a>
+                          </li>
+                          <li>
+                            <a href="https://arxiv.org/abs/2410.17820" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Chen et al. (2024): When ToT Succeeds — Larger Models Excel in Generation</a>
+                          </li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://huggingface.co/blog/sadhaklal/tree-of-thoughts" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Hugging Face Blog: Understanding and Implementing ToT</a></li>
+                          <li><a href="https://deepgram.com/learn/tree-of-thoughts-prompting" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Deepgram: Tree-of-Thoughts Prompting</a></li>
+                          <li><a href="https://www.geeksforgeeks.org/artificial-intelligence/tree-of-thought-tot-prompting/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">GeeksforGeeks: Tree-of-Thought Prompting</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://github.com/princeton-nlp/tree-of-thought-llm" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Princeton NLP: tree-of-thought-llm (reference implementation)</a></li>
+                          <li><a href="https://python.langchain.com/docs/expression_language/how_to/graph" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangChain/LangGraph: Graph workflows for branching reasoning</a></li>
+                          <li><a href="https://github.com/microsoft/guidance" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Microsoft Guidance: Structured generation to orchestrate search</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://discuss.huggingface.co/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Hugging Face Forums: Reasoning & prompting</a></li>
+                          <li><a href="https://discord.gg/langchain" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangChain Community</a></li>
+                          <li><a href="https://www.reddit.com/r/MachineLearning/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">r/MachineLearning discussions on ToT</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                </>
+              ) : selectedTechnique.id === 'got' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism (short conceptual overview)
+                    </h2>
+                    <div className="bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed">
+                        Represents reasoning as a graph where nodes are thoughts (hypotheses, sub-goals, critiques, verifications)
+                        and edges are dependencies between them. Unlike linear Chain‑of‑Thought or strictly hierarchical Tree‑of‑Thought,
+                        Graph‑of‑Thought enables non‑linear exploration, backtracking, merging of parallel lines, and iterative refinement
+                        with scoring/selection over candidate subgraphs. This supports complex, interdependent problem solving and
+                        synthesis across multiple reasoning paths.
+                      </p>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Problem framing and decomposition: define goal, constraints, and initial thought templates.</li>
+                        <li>Graph initialization: generate multiple seed thoughts and explicit dependencies/assumptions.</li>
+                        <li>Expansion policy: iteratively propose successor thoughts (diverse sampling/templates) from frontier nodes.</li>
+                        <li>Evaluation and scoring: score thoughts/subgraphs using rubrics, verifiers, retrieval‑grounded checks.</li>
+                        <li>Pruning and deduplication: remove dominated/duplicate nodes; maintain visited states to avoid loops.</li>
+                        <li>Cross‑path synthesis: merge compatible branches; reconcile conflicts with critique/repair nodes.</li>
+                        <li>Distillation and verification: compress the winning subgraph into a coherent solution and verify claims.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Right-size thought granularity; prefer concise, testable thoughts with explicit assumptions.',
+                        'Use explicit evaluators: rubric prompts, unit checks, retrieval-grounded verifiers, or external tools.',
+                        'Control growth: cap branching factor/steps; use beam policies and early stopping with quality thresholds.',
+                        'Cache intermediate thoughts/scores; aggressively deduplicate semantically equivalent nodes.',
+                        'Encourage diversity (temperature, templates) early; tighten evaluation later for convergence.',
+                        'Instrument tokens, cost, and latency per expansion step; enforce budgets and fallbacks to simpler flows.',
+                        'Log edges with rationales to preserve interpretability and enable post-hoc audits.'
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Straightforward tasks where linear CoT or direct answering meets quality and latency targets.</li>
+                        <li>Strict real‑time SLOs or hard cost caps that cannot tolerate branching/evaluation overhead.</li>
+                        <li>Domains lacking reliable evaluators or ground truth to score/verify intermediate thoughts.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Combinatorial blow‑up from too‑large branching/depth without pruning or early stopping.</li>
+                        <li>Cycles and circular reasoning when visited states and deduplication are missing.</li>
+                        <li>Low‑quality or biased evaluators mis‑ranking paths; insufficient grounding/verification.</li>
+                        <li>Over‑merging incompatible branches leading to incoherent synthesis.</li>
+                        <li>Poor observability of token/cost budgets per step; hidden spend regressions.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Non‑linear reasoning with backtracking and cross‑path merging',
+                        'Explicit dependency tracking between thoughts and sub‑goals',
+                        'Evaluator‑guided expansion and pruning of candidate subgraphs',
+                        'Conflict detection with critique/repair nodes and reconciliation',
+                        'Graph distillation into concise, verifiable solutions',
+                        'Compatibility with retrieval/tools and multi‑agent critiques'
+                      ].map((feat) => (
+                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Task quality: accuracy/pass‑rate on reasoning benchmarks or human‑rated quality.</li>
+                        <li>Search efficiency: explored nodes vs. unique useful nodes; average branching and depth.</li>
+                        <li>Cost/latency: input/output tokens, evaluator calls, wall‑clock per solved instance.</li>
+                        <li>Verifier agreement/consistency and post‑verification error rate.</li>
+                        <li>Interpretability: proportion of edges with rationales; reproducibility of solutions.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Cost roughly scales with explored thoughts × prompt/context size + evaluator overhead.</li>
+                        <li>Mitigate using beam limits, early stopping, caching, and semantic deduplication.</li>
+                        <li>Prefer retrieval‑grounded, short prompts for evaluators; summarize context between steps.</li>
+                        <li>Track per‑step budgets and fall back to CoT when uncertainty and difficulty are low.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Research synthesis and literature reviews with conflicting evidence.</li>
+                        <li>Strategic planning and multi‑constraint decision‑making with trade‑offs.</li>
+                        <li>Complex analysis, root‑cause investigation, and policy/argument mapping.</li>
+                        <li>Creative ideation that benefits from exploring and merging alternatives.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://arxiv.org/abs/2308.09687" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Besta et al. (2023): Graph of Thoughts — Solving Elaborate Problems with LLMs</a></li>
+                          <li><a href="https://arxiv.org/abs/2401.06801" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Li (2024): Graph‑of‑Thought for Complex and Dynamic Business Problems</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://github.com/spcl/graph-of-thoughts" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">SPCL: graph-of-thoughts (reference code)</a></li>
+                          <li><a href="https://python.langchain.com/docs/langgraph" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangGraph: control‑flow graphs for LLM workflows</a></li>
+                          <li><a href="https://dspy.ai" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">DSPy: programmatic prompting pipelines (supports graph‑like compositions)</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li>LangChain/LangGraph, LlamaIndex Workflows, NetworkX for graph ops</li>
+                          <li>Evaluators/verifiers: unit tests, retrieval+rERankers, Guardrails for schema/policy checks</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://discuss.huggingface.co/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Hugging Face Forums</a>, <a href="https://discord.gg/langchain" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangChain Discord</a></li>
+                          <li><a href="https://github.com/spcl/graph-of-thoughts/issues" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">SPCL graph‑of‑thoughts: Issues/Discussions</a></li>
                         </ul>
                       </div>
                     </div>
@@ -1088,6 +2711,639 @@ export const TechniqueDetails = ({
                           <li><a href="https://github.com/vllm-project/vllm/discussions" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">vLLM Discussions</a>, <a href="https://ray.io/slack" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Ray Slack</a></li>
                           <li><a href="https://github.com/kserve/kserve/discussions" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">KServe Discussions</a>, <a href="https://discuss.kubernetes.io/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Kubernetes Forum</a></li>
                           <li><a href="https://forums.developer.nvidia.com/c/accelerated-computing/triton-inference-server/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">NVIDIA Triton Forums</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                </>
+              ) : selectedTechnique.id === 'cost-aware-model-selection' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism (short conceptual overview)
+                    </h2>
+                    <div className="bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed">
+                        Cost-Aware Model Selection dynamically routes requests across multiple models (and providers) to optimize
+                        the cost–quality–latency trade-off per task. It typically combines lightweight heuristics or learned
+                        routers with cascades: attempt a low-cost model first, escalate to higher-capability models only when
+                        confidence is low, quality thresholds are not met, or SLAs require it. Budgets, quality gates,
+                        and per-tenant policies govern real-time decisions with continuous feedback from evaluation data.
+                      </p>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Define objectives: target quality (e.g., pass rate on a golden set), latency SLOs, and budget caps.</li>
+                        <li>Inventory models: capabilities, pricing per 1K tokens (input/output), context limits, regions, reliability.</li>
+                        <li>Build an evaluation set: representative prompts with ground truth or human-rated quality rubrics.</li>
+                        <li>Design routing policy: rules or ML router using features (task type, length, uncertainty/confidence, user tier).</li>
+                        <li>Implement cascades: start with cheaper/faster models; escalate on low confidence, safety triggers, or quality shortfall.</li>
+                        <li>Add governance: per-tenant budgets, regional/compliance routing, allow/deny lists, kill switches.</li>
+                        <li>Monitor and learn: log tokens, cost, latency, quality; periodically retrain routers and refresh pricing tables.</li>
+                        <li>Release safely: canary new routes/models, run A/B against baseline, roll back on KPI regression.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Segment traffic by priority/tier; reserve premium models for high-value or strict-SLA requests.',
+                        'Maintain up-to-date pricing and tokenization differences per provider; verify input vs. output token costs.',
+                        'Use measurable quality thresholds (rubrics, automated checks) and confidence/uncertainty gating.',
+                        'Cache frequent results and partial reasoning; reuse embeddings/summaries to reduce repeated tokens.',
+                        'Design for graceful degradation and explicit fallbacks across providers/regions.',
+                        'Continuously evaluate with a golden set; monitor drift and re-tune router thresholds regularly.',
+                        'Log granular telemetry: tokens, cost, latency percentiles, route decisions and reasons.',
+                        'Isolate tenants with per-tenant budgets/quotas; protect critical paths with strict SLAs.'
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Single-model deployments that already meet cost, quality, and latency targets with low variance.</li>
+                        <li>Regulatory/contractual constraints forbidding cross-region/provider routing or quality variance.</li>
+                        <li>Very low traffic where router complexity and observability overhead outweigh cost savings.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Stale pricing/capabilities tables leading to suboptimal or non-compliant routing.</li>
+                        <li>Missing fallbacks and budget guards; outages or spikes cause failures and runaway spend.</li>
+                        <li>Quality regressions from uncalibrated confidence thresholds or evaluation drift.</li>
+                        <li>Ignoring tokenization differences (providers count tokens differently) and output token multipliers.</li>
+                        <li>Mixing sensitive data with cheaper models that lack regional/compliance guarantees.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Multi-model pool with provider failover and regional routing',
+                        'Quality gates with confidence/uncertainty thresholds and automated checks',
+                        'Budget caps per tenant/route with real-time enforcement and alerts',
+                        'Dynamic cascades and progressive escalation',
+                        'Offline evaluation sets and continuous learning routers',
+                        'Canary releases, policy-based overrides, and kill switches'
+                      ].map((feat) => (
+                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Cost efficiency: $/request, tokens per dollar, budget adherence rate.</li>
+                        <li>Quality: pass rate vs. golden set, human rating uplift, escalation rate.</li>
+                        <li>Routing accuracy: agreement with oracle/baseline router; avoidable escalations avoided.</li>
+                        <li>Latency: p50/p95 end-to-end and per-route; escalation overhead.</li>
+                        <li>Reliability: timeout/error rate, failover success, on-call incidents avoided.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Track input/output tokens separately; many providers price them differently.</li>
+                        <li>Measure cascade overhead (multiple calls on one request); gate by confidence to avoid unnecessary escalations.</li>
+                        <li>Constrain context length; apply compression/summarization and retrieval planning to control tokens.</li>
+                        <li>Use caching for frequent prompts/intermediates; persist embeddings/summaries for reuse.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>High-volume support automation with strict budgets and variable difficulty.</li>
+                        <li>Summarization, extraction, and Q&A where many requests are easy but some need escalation.</li>
+                        <li>Multi-tenant platforms offering cost/quality tiers and enterprise SLAs.</li>
+                        <li>Global deployments requiring regional routing and compliance-aware fallback.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://arxiv.org/abs/2305.16515" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">FrugalGPT: How to Use Large Language Models While Reducing Cost and Improving Performance (2023)</a></li>
+                          <li><a href="https://arxiv.org/abs/2207.07061" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Confident Adaptive Language Modeling (CALM) for Early-Exit Cascades</a></li>
+                          <li><a href="https://arxiv.org/abs/2302.01318" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Speculative Decoding for Faster/Lower-Cost Inference</a></li>
+                          <li><a href="https://arxiv.org/abs/1603.08983" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">BranchyNet: Early Exits for Deep Networks (general early-exit concept)</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://docs.litellm.ai/docs/routing" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LiteLLM Router: Cost/Quality-aware Routing</a></li>
+                          <li><a href="https://python.langchain.com/docs/use_cases/model_selectors/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangChain RouterChain: Model Selection</a></li>
+                          <li><a href="https://docs.llamaindex.ai/en/stable/module_guides/querying/router/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LlamaIndex Router: Query Routing</a></li>
+                          <li><a href="https://openrouter.ai/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">OpenRouter: Unified Access to Multiple Providers</a></li>
+                          <li><a href="https://platform.openai.com/docs/pricing" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">OpenAI: Pricing</a>, <a href="https://www.anthropic.com/pricing#api" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Anthropic: Pricing</a>, <a href="https://ai.google.dev/pricing" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Google AI: Pricing</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li>LiteLLM Router, OpenRouter, LangChain RouterChain, LlamaIndex Router</li>
+                          <li>Ray Serve, vLLM, NVIDIA Triton for serving and observability</li>
+                          <li>Langfuse, Phoenix (Arize) for evaluation and telemetry</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://discord.gg/litellm" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LiteLLM Discord</a>, <a href="https://discord.gg/openrouter" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">OpenRouter Discord</a></li>
+                          <li><a href="https://discuss.huggingface.co/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Hugging Face Forum</a>, <a href="https://mlops.community/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">MLOps Community</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                </>
+              ) : selectedTechnique.id === 'energy-efficient-inference' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism (short conceptual overview)
+                    </h2>
+                    <div className="bg-gradient-to-br from-teal-500/10 to-cyan-500/10 border border-teal-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed">
+                        Energy‑Efficient Inference minimizes joules per output while maintaining accuracy and latency by combining
+                        model compression (quantization, pruning, distillation), adaptive computation (early exit, dynamic depth,
+                        token and attention sparsity), optimized kernels (e.g., FlashAttention), and hardware‑aware serving
+                        (continuous/dynamic batching, KV‑cache policies, and power/thermal limits). The goal is to deliver required
+                        quality using the least energy per request or token on the target device or cluster.
+                      </p>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Baseline and targets: measure latency, throughput, accuracy, and energy (J/request or J/token).</li>
+                        <li>Compress the model: apply PTQ/QAT (INT8/INT4, activation‑aware), pruning (structured), and distillation.</li>
+                        <li>Enable adaptive compute: early‑exit or dynamic depth; selective compute for hard spans; speculative decoding.</li>
+                        <li>Optimize kernels/memory: use efficient attention, KV‑cache paging/quantization, and operator fusion.</li>
+                        <li>Serving & batching: use continuous/dynamic batching within SLO; right‑size concurrency and placement.</li>
+                        <li>Hardware tuning: prefer low‑precision tensor cores/NPU; cap clocks/boost by SLO; manage thermal throttling.</li>
+                        <li>Monitor & iterate: track energy, tokens/s, accuracy drift; rollback if energy savings hurt SLOs/quality.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Start with PTQ on weights and activations (INT8/INT4); use activation‑aware or smooth quantization to preserve accuracy.',
+                        'Combine structured pruning with distillation; validate on downstream tasks, not only pretraining metrics.',
+                        'Adopt efficient attention kernels (e.g., FlashAttention) and paged/quantized KV cache to cut memory traffic.',
+                        'Use early‑exit/dynamic depth and token/attention sparsity to reduce compute on easy inputs.',
+                        'Batch aggressively when latency budgets allow; otherwise use micro‑batches and streaming.',
+                        'Pin models to hardware that supports low‑precision acceleration; avoid precision up/down casts in hot paths.',
+                        'Continuously profile power (NVML/DCGM, RAPL) alongside p95 latency and accuracy to avoid regressions.'
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Applications requiring strict numerical fidelity or determinism incompatible with low precision.</li>
+                        <li>Hard real‑time deadlines where batching/verification (e.g., speculative decoding) violates SLOs.</li>
+                        <li>Compliance‑critical domains where model changes (quantization/pruning) need lengthy re‑validation.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Over‑quantization or uncalibrated activations causing large accuracy drops on downstream tasks.</li>
+                        <li>Unstructured pruning that yields sparse tensors unsupported by the target hardware kernels.</li>
+                        <li>Ignoring memory bandwidth/KV‑cache pressure; FLOP reductions alone may not save energy.</li>
+                        <li>Measuring only watts, not energy per useful output (J/request, J/token) and user‑perceived latency.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Low‑precision execution (INT8/INT4) with activation‑aware calibration',
+                        'Structured pruning and knowledge distillation to smaller students',
+                        'Efficient attention kernels and KV‑cache optimization',
+                        'Adaptive computation: early exit, dynamic depth, token/attention sparsity',
+                        'Continuous/dynamic batching and streaming for utilization',
+                        'Power/thermal‑aware scheduling and placement'
+                      ].map((feat) => (
+                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Energy: joules per request and per output token; average and p95 watts under load.</li>
+                        <li>Latency/TTFT/TPOT: p50/p95 latency and time‑to‑first‑token/time‑per‑output‑token.</li>
+                        <li>Throughput/utilization: tokens per second; GPU SM and memory utilization; batch effectiveness.</li>
+                        <li>Quality: task accuracy/human ratings vs. baseline; drift post‑compression.</li>
+                        <li>Stability: OOM/retry rate, thermal throttling incidence, autoscale convergence time.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Quantize weights/activations and optionally KV cache; track memory footprint per concurrent stream.</li>
+                        <li>Adopt efficient attention and cache paging to reduce DRAM traffic (often dominant energy component).</li>
+                        <li>Cap context length and use compression/summarization; prefer streaming to avoid long stalls.</li>
+                        <li>Tune batch size/concurrency to maximize tokens/s within SLO and thermal/power envelopes.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Edge/mobile inference with battery and thermal limits; intermittent connectivity.</li>
+                        <li>High‑volume serving where energy and cost per token dominate (contact center, summarization).</li>
+                        <li>On‑prem/colo deployments with fixed power caps; sustainability‑driven SLAs.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://arxiv.org/abs/2211.10438" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">SmoothQuant: Accurate and Efficient Post‑Training Quantization for LLMs (2022)</a></li>
+                          <li><a href="https://arxiv.org/abs/2306.00978" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">AWQ: Activation‑Aware Weight Quantization for LLMs (2023)</a></li>
+                          <li><a href="https://arxiv.org/abs/2208.07339" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LLM.int8(): 8‑bit Matrix Multiplication for Transformers (2022)</a></li>
+                          <li><a href="https://arxiv.org/abs/2206.01861" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">ZeroQuant: Efficient Low‑Bit Quantization for Large‑Scale Transformers (2022)</a></li>
+                          <li><a href="https://arxiv.org/abs/2004.12903" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">DeeBERT: Dynamic Early Exiting for Efficient BERT Inference (2020)</a></li>
+                          <li><a href="https://arxiv.org/abs/2302.01318" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Speculative Decoding (2023)</a></li>
+                          <li><a href="https://arxiv.org/abs/2205.14135" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">FlashAttention: Fast and Memory‑Efficient Exact Attention (2022/2023)</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://docs.nvidia.com/deeplearning/tensorrt/developer-guide/index.html#int8-calibration" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">NVIDIA TensorRT: INT8 Calibration</a></li>
+                          <li><a href="https://onnxruntime.ai/docs/performance/quantization.html" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">ONNX Runtime: Quantization</a></li>
+                          <li><a href="https://pytorch.org/docs/stable/quantization.html" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">PyTorch: torch.ao.quantization</a></li>
+                          <li><a href="https://www.tensorflow.org/model_optimization/guide/quantization" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">TensorFlow Model Optimization Toolkit: Quantization</a></li>
+                          <li><a href="https://docs.openvino.ai/latest/openvino_docs_OV_UG_Quantization_overview.html" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">OpenVINO: Post‑Training Quantization</a></li>
+                          <li><a href="https://tvm.apache.org/docs/how_to/tune_with_autoscheduler/index.html" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Apache TVM: Auto‑scheduler Tuning</a></li>
+                          <li><a href="https://docs.nvidia.com/datacenter/dcgm/latest/user-guide/dcgm-user-guide/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">NVIDIA DCGM: GPU Telemetry & Power</a></li>
+                          <li><a href="https://developer.nvidia.com/nvidia-management-library-nvml" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">NVIDIA NVML: Power Measurement API</a></li>
+                          <li><a href="https://www.kernel.org/doc/Documentation/power/intel_rapl.txt" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Intel RAPL: Power Measurement</a></li>
+                          <li><a href="https://mlcommons.org/en/inference-power/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">MLPerf Inference: Power Measurement</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://github.com/NVIDIA/TensorRT" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">TensorRT</a>, <a href="https://onnxruntime.ai/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">ONNX Runtime</a>, <a href="https://pytorch.org/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">PyTorch</a>, <a href="https://www.tensorflow.org/lite" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">TensorFlow Lite</a>, <a href="https://github.com/apple/coremltools" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Core ML Tools</a>, <a href="https://www.openvino.ai/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">OpenVINO</a>, <a href="https://tvm.apache.org/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">TVM</a></li>
+                          <li><a href="https://github.com/vllm-project/vllm" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">vLLM</a> (continuous batching, paged attention)</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://github.com/vllm-project/vllm/discussions" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">vLLM Discussions</a>, <a href="https://mlcommons.org/en/groups/inference/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">MLCommons Inference</a></li>
+                          <li><a href="https://github.com/withhaotian/awesome-efficient-LLM-inference-papers" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Awesome Efficient LLM Inference Papers</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                </>
+              ) : selectedTechnique.id === 'memory-optimization' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism (short conceptual overview)
+                    </h2>
+                    <div className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed">
+                        Memory Optimization for LLMs reduces peak and steady-state memory by combining quantization (weights/KV cache),
+                        efficient attention (paged KV cache), activation/gradient checkpointing, sharding/offloading, and context
+                        compression. The goal is to fit larger models and longer sequences on limited hardware while maintaining
+                        throughput, latency, and accuracy targets.
+                      </p>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Profile memory: weights, optimizer states, activations, and KV cache growth vs. sequence length and batch size.</li>
+                        <li>Right-size precision: apply weight quantization (e.g., 8-bit/4-bit) and mixed precision for compute.</li>
+                        <li>Optimize attention memory: enable paged KV cache and sliding windows; cap max generation/context.</li>
+                        <li>Shard and offload: use ZeRO/FSDP, tensor/pipeline parallelism; offload weights/optimizer/KV to CPU/NVMe when needed.</li>
+                        <li>Reduce activation pressure: gradient checkpointing, recomputation, micro-batching.</li>
+                        <li>Compress context: deduplicate, rerank, summarize; prefer retrieval of spans over full documents.</li>
+                        <li>Validate accuracy and latency; tune batch size, draft length (if speculative), and cache policies.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Use paged KV cache for near-zero waste memory and stable throughput at long sequence lengths.',
+                        'Prefer 4-bit/8-bit quantization for weights; test AWQ/GPTQ for inference; QLoRA for fine-tuning.',
+                        'Quantize KV cache where supported (TensorRT-LLM, vLLM options) when quality impact is acceptable.',
+                        'Enable gradient checkpointing and activation recomputation for training/fine-tuning.',
+                        'Adopt FSDP/ZeRO to shard weights, gradients, and optimizer state; overlap comms with compute.',
+                        'Bound sequence lengths; apply sliding windows and summaries for context growth control.',
+                        'Instrument GPU memory, fragmentation, and cache hit rates; alert on OOM and page thrash.',
+                        'Store large blobs outside messages; pass references; stream outputs for tight latency budgets.'
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Ultra-high-accuracy scenarios where aggressive quantization harms quality beyond acceptable thresholds.</li>
+                        <li>Hard real-time systems where recomputation/offloading introduces unacceptable latency jitter.</li>
+                        <li>Simple/small models already fitting with ample headroom, where added complexity yields little benefit.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Ignoring KV cache growth with long generations → OOM despite small batch sizes.</li>
+                        <li>Applying quantization without calibration/evaluation → silent accuracy regression.</li>
+                        <li>Over-aggressive offloading causing PCIe/NVMe bottlenecks and latency spikes.</li>
+                        <li>Fragmentation from frequent alloc/free of variable-length KV blocks without paging.</li>
+                        <li>Under-instrumented systems: no visibility into per-request memory budgets or cache hit/miss.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Paged KV cache with block-level reuse and eviction',
+                        'Weight and KV quantization (8-bit / 4-bit options)',
+                        'Activation/gradient checkpointing and recomputation',
+                        'Model sharding: tensor, pipeline, and ZeRO/FSDP',
+                        'Context compression and sliding-window attention',
+                        'CPU/NVMe offload with prefetch and overlap'
+                      ].map((feat) => (
+                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Peak and average GPU memory usage; fragmentation and headroom.</li>
+                        <li>Tokens per second at target context lengths; p50/p95 TTFT and latency.</li>
+                        <li>OOM/restart rate; cache hit rate; paging/eviction rate.</li>
+                        <li>Quality delta vs. FP16/BF16 baselines after quantization/compression.</li>
+                        <li>Cost efficiency: tokens per dollar; energy per token.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Budget max input and output tokens; enforce sliding windows and truncation policies.</li>
+                        <li>Track KV cache bytes/token; prefer paged allocations to avoid large contiguous blocks.</li>
+                        <li>Use continuous batching and context packing to raise utilization with bounded memory.</li>
+                        <li>Favor streaming responses to reduce peak memory and improve perceived latency.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>LLM serving with long contexts and high concurrency on limited-GPU fleets.</li>
+                        <li>On-prem/edge deployments with strict VRAM limits requiring quantization and paging.</li>
+                        <li>Fine-tuning/LoRA on consumer GPUs using QLoRA, checkpointing, and micro-batching.</li>
+                        <li>Multi-tenant platforms balancing cost, quality, and latency via memory-aware scheduling.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://arxiv.org/abs/2309.06180" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">vLLM: Efficient Memory Management for LLM Serving with PagedAttention (2023)</a></li>
+                          <li><a href="https://arxiv.org/abs/2305.14314" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">QLoRA: Efficient Finetuning of Quantized LLMs (2023)</a></li>
+                          <li><a href="https://arxiv.org/abs/1910.02054" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">ZeRO: Memory Optimizations Toward Training Trillion-Parameter Models (2019)</a></li>
+                          <li><a href="https://arxiv.org/abs/2307.08691" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">FlashAttention-2: Faster Attention with Better Memory Utilization (2023)</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://docs.vllm.ai/en/latest/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">vLLM Documentation: PagedAttention and KV Cache</a></li>
+                          <li><a href="https://pytorch.org/docs/stable/fsdp.html" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">PyTorch FSDP: Fully Sharded Data Parallel</a></li>
+                          <li><a href="https://www.deepspeed.ai/tutorials/zero/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">DeepSpeed ZeRO Tutorials</a></li>
+                          <li><a href="https://nvidia.github.io/TensorRT-LLM/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">TensorRT-LLM: Inference Optimization and KV Cache Quantization</a></li>
+                          <li><a href="https://huggingface.co/docs/text-generation-inference/index" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Hugging Face TGI: Memory and Throughput Tuning</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://github.com/vllm-project/vllm" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">vLLM</a>, <a href="https://github.com/huggingface/text-generation-inference" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Text Generation Inference</a>, <a href="https://github.com/NVIDIA/TensorRT-LLM" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">TensorRT-LLM</a></li>
+                          <li><a href="https://github.com/TimDettmers/bitsandbytes" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">bitsandbytes (4-bit/8-bit quantization)</a>, <a href="https://github.com/mit-han-lab/llm-awq" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">AWQ</a>, <a href="https://github.com/IST-DASLab/gptq" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">GPTQ</a>, <a href="https://github.com/turboderp/exllamav2" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">ExLlamaV2</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://github.com/vllm-project/vllm/discussions" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">vLLM Discussions</a> · <a href="https://discuss.huggingface.co/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Hugging Face Forums</a></li>
+                          <li><a href="https://discuss.pytorch.org/c/distributed/32" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">PyTorch Distributed/FSDP Forum</a> · <a href="https://forums.developer.nvidia.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">NVIDIA Developer Forums</a></li>
                         </ul>
                       </div>
                     </div>
@@ -1765,6 +4021,253 @@ export const TechniqueDetails = ({
                             <a href="https://stackoverflow.com/questions/tagged/workflow" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• Stack Overflow: workflow orchestration</a>
                             <a href="https://discord.gg/langchain" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• LangChain / LangGraph Discord</a>
                             <a href="https://www.reddit.com/r/devops/" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• r/devops: orchestration threads</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+                </>
+              ) : selectedTechnique.id === 'edge-ai-optimization' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism (short conceptual overview)
+                    </h2>
+                    <div className="bg-gradient-to-br from-blue-500/10 to-emerald-500/10 border border-blue-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed">
+                        Optimize models and inference pipelines to run within edge device constraints (CPU/GPU/NPU, memory, battery, thermals) using
+                        compression (quantization, pruning, distillation), hardware-specific compilation, and system techniques (operator fusion,
+                        memory planning, scheduling). Targets include Android NNAPI, Apple Core ML/Metal, NVIDIA TensorRT (Jetson), Intel OpenVINO,
+                        ONNX Runtime Mobile, TensorFlow Lite, TVM, and specialized NPUs (Google Edge TPU, Arm Ethos‑U).
+                      </p>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Define device targets and budgets (p95 latency, energy per inference, RAM peak, binary size, accuracy floor).</li>
+                        <li>Choose an edge-suitable baseline (MobileNet/EfficientNet-Lite, MobileViT, tiny transformer/CRNN; quant-friendly layers).</li>
+                        <li>Compress the model:
+                          <ul className="list-disc list-inside ml-5 mt-1 space-y-1">
+                            <li>Post-training quantization (INT8/FP16) with proper calibration; use QAT when PTQ drop is high.</li>
+                            <li>Structured pruning/sparsity to reduce MACs; leverage hardware sparsity where available.</li>
+                            <li>Knowledge distillation to transfer from a large teacher to a compact student.</li>
+                          </ul>
+                        </li>
+                        <li>Convert/compile for target: export to ONNX/TFLite/Core ML; compile with TensorRT/OpenVINO/TVM or NNAPI/Core ML backends.</li>
+                        <li>Integrate runtime: ExecuTorch/TFLite/ONNX Runtime Mobile/Core ML; enable accelerators/delegates and preferred precisions.</li>
+                        <li>Tune pipeline: fuse ops, minimize copies, pin buffers, batch where safe, and align pre/post-processing with training.</li>
+                        <li>On-device evaluation: measure p50/p95 latency, energy, RAM peak, accuracy deltas under thermal load.</li>
+                        <li>Deploy with OTA, feature flags, telemetry, and safe fallbacks (degrade quality or offload when needed).</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Start with PTQ INT8/FP16; adopt QAT selectively to recover accuracy for sensitive tasks.',
+                        'Validate operator/kernel support to avoid CPU fallbacks; align opset with accelerator capabilities.',
+                        'Benchmark on real devices; capture tail latency and thermal throttling over sustained runs.',
+                        'Minimize memory traffic: fused ops, in-place tensors, arena allocators, zero-copy pre/post-processing.',
+                        'Use execution providers/delegates (NNAPI, Core ML, TensorRT, OpenVINO) and enable FP16/INT8 kernels.',
+                        'Thermal-aware scheduling: cap concurrency, dynamically adjust resolution/frame-rate.',
+                        'Keep data transforms identical between training and inference; validate numerics across toolchains.',
+                        'Version compiled artifacts per device/OS; include rollback and A/B canaries for OTA updates.',
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Accuracy floors cannot be achieved post-compression within latency/power budgets.</li>
+                        <li>Frequent large model updates exceed feasible OTA bandwidth or device storage.</li>
+                        <li>Deterministic/precision-critical workloads unsupported by mobile accelerators.</li>
+                        <li>Hard real-time constraints beyond device capability without unacceptable thermal impact.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Non-representative INT8 calibration → large accuracy loss in production.</li>
+                        <li>Silent CPU fallbacks due to unsupported ops → severe latency regressions.</li>
+                        <li>Layout/precision mismatches between stages → extra copies and fragmentation.</li>
+                        <li>Ignoring big.LITTLE scheduling and thread affinity → jitter under load.</li>
+                        <li>Short synthetic benchmarks masking thermal throttling and GC pauses.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'On-device, low-latency inference with offline capability',
+                        'INT8/FP16 quantization, pruning/sparsity, and knowledge distillation',
+                        'Accelerated execution via NNAPI/Core ML/Metal, TensorRT, OpenVINO, TVM',
+                        'Memory- and power-aware scheduling and buffer planning',
+                        'Adaptive quality: early-exit, conditional compute, resolution/frame-rate scaling',
+                      ].map((feat) => (
+                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Latency p50/p95 and throughput (FPS/inferences/s).</li>
+                        <li>Energy per inference (mJ) and average power (mW); thermal headroom.</li>
+                        <li>Peak RAM and model binary size; storage footprint.</li>
+                        <li>Accuracy delta vs. FP32 baseline on representative datasets.</li>
+                        <li>Rate of accelerator coverage vs. CPU fallback; offline success rate.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-3 text-sm text-gray-300">
+                      <p>Prioritize compute, memory, and energy budgets. For non-LLM models, focus on MACs and bandwidth; for on-device LLMs,
+                        track context length, KV-cache footprint, precision (fp16/int8), and batch effects.</p>
+                      <ul className="list-disc list-inside space-y-1">
+                        <li>Enable INT8/FP16 kernels and fused ops to reduce memory traffic.</li>
+                        <li>Use lightweight gating to avoid invoking heavy models unnecessarily.</li>
+                        <li>Adapt concurrency/frame-rate to maintain thermal and battery limits.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+                      {[
+                        'Smart cameras and video analytics (detection, tracking, analytics)',
+                        'On-device speech/keyword spotting and offline ASR/TTS',
+                        'Mobile AR and real-time segmentation/classification',
+                        'Industrial predictive maintenance and anomaly detection',
+                        'Wearables health monitoring with privacy preservation',
+                        'Retail edge analytics in bandwidth-constrained sites',
+                      ].map((uc) => (
+                        <div key={uc} className="flex items-center gap-2 px-3 py-2 bg-gray-800/50 rounded-lg text-sm">
+                          <span className="text-base">✅</span>
+                          <span className="text-gray-300 font-medium">{uc}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="bg-gradient-to-br from-orange-500/10 to-amber-500/10 border border-orange-500/20 rounded-xl p-6">
+                      <div className="grid gap-4 md:grid-cols-2">
+                        <div className="bg-white/5 rounded-lg p-4">
+                          <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
+                            <span className="text-orange-400">📚</span>
+                            Academic Papers
+                          </h4>
+                          <div className="space-y-2 text-sm">
+                            <a href="https://arxiv.org/abs/1511.06434" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• Distillation (Hinton et al.)</a>
+                            <a href="https://arxiv.org/abs/1905.11946" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• MobileNetV3</a>
+                            <a href="https://arxiv.org/abs/1905.11932" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• EfficientNet</a>
+                            <a href="https://arxiv.org/abs/1905.00546" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• MnasNet</a>
+                          </div>
+                        </div>
+                        <div className="bg-white/5 rounded-lg p-4">
+                          <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
+                            <span className="text-green-400">🛠️</span>
+                            Implementation Guides
+                          </h4>
+                          <div className="space-y-2 text-sm">
+                            <a href="https://www.tensorflow.org/lite/performance/post_training_quantization" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• TensorFlow Lite: Post-training quantization</a>
+                            <a href="https://www.tensorflow.org/model_optimization/guide/quantization/training" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• TensorFlow Model Optimization: QAT</a>
+                            <a href="https://pytorch.org/executorch/stable/" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• PyTorch ExecuTorch</a>
+                            <a href="https://onnxruntime.ai/docs/tutorials/mobile/" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• ONNX Runtime Mobile</a>
+                            <a href="https://onnxruntime.ai/docs/performance/quantization.html" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• ONNX Runtime Quantization</a>
+                            <a href="https://docs.nvidia.com/deeplearning/tensorrt/developer-guide/index.html" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• NVIDIA TensorRT Guide</a>
+                            <a href="https://docs.openvino.ai/latest/index.html" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• Intel OpenVINO Docs</a>
+                            <a href="https://coremltools.readme.io/" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• Core ML Tools</a>
+                            <a href="https://developer.android.com/ndk/guides/neuralnetworks" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• Android NNAPI</a>
+                            <a href="https://developer.apple.com/documentation/metalperformanceshadersgraph" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• Apple MPSGraph</a>
+                            <a href="https://tvm.apache.org/docs/" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• Apache TVM Docs</a>
+                            <a href="https://coral.ai/docs/edgetpu/models-intro/" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• Google Coral Edge TPU</a>
+                            <a href="https://developer.arm.com/Processors/ethos-u" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• Arm Ethos‑U</a>
+                          </div>
+                        </div>
+                        <div className="bg-white/5 rounded-lg p-4">
+                          <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
+                            <span className="text-purple-400">⚙️</span>
+                            Tools & Libraries
+                          </h4>
+                          <div className="space-y-2 text-sm">
+                            <div className="text-gray-300">TensorFlow Lite, PyTorch ExecuTorch, ONNX Runtime Mobile, Core ML, OpenVINO, TensorRT, TVM</div>
+                            <div className="text-gray-300">Android NNAPI, Apple Neural Engine/Core ML, NVIDIA Jetson, Google Edge TPU, Arm Ethos‑U, CMSIS‑NN</div>
+                          </div>
+                        </div>
+                        <div className="bg-white/5 rounded-lg p-4">
+                          <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
+                            <span className="text-cyan-400">👥</span>
+                            Community & Discussions
+                          </h4>
+                          <div className="space-y-2 text-sm">
+                            <a href="https://discuss.tvm.apache.org/" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• TVM Discuss</a>
+                            <a href="https://github.com/microsoft/onnxruntime/discussions" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• ONNX Runtime Discussions</a>
+                            <a href="https://forums.developer.nvidia.com/c/ai-data-science/tensorrt/136/" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• NVIDIA TensorRT Forum</a>
+                            <a href="https://discuss.tensorflow.org/c/tflite/20" target="_blank" rel="noreferrer" className="block text-blue-400 hover:text-blue-300 transition-colors">• TensorFlow Lite Forum</a>
                           </div>
                         </div>
                       </div>
@@ -9932,6 +12435,221 @@ export const TechniqueDetails = ({
                           <li><a href="https://github.com/kubernetes/autoscaler/issues" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Kubernetes SIG Autoscaling (issues)</a></li>
                           <li><a href="https://www.youtube.com/@AWSCompute" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">AWS Compute Talks/Blogs</a></li>
                           <li><a href="https://discuss.ray.io/c/ray-serve/6" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Ray Serve Forum</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+                </>
+              ) : selectedTechnique.id === 'latency-optimization' ? (
+                <>
+                  {/* Core Mechanism (short conceptual overview) */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                      Core Mechanism (short conceptual overview)
+                    </h2>
+                    <div className="bg-gradient-to-br from-blue-500/10 to-indigo-500/10 border border-blue-500/20 rounded-xl p-6">
+                      <p className="text-gray-200 text-base leading-relaxed">
+                        Latency Optimization reduces perceived and absolute response time across the end-to-end path: network, admission/queue,
+                        batching, model execution, and post-processing. Core levers include connection reuse and streaming, deadline-aware dynamic
+                        batching, speculative/draft decoding with verification, KV/prefix cache reuse, prompt/context minimization, geo/edge
+                        placement, and hot-start strategies to keep time-to-first-token and tail latencies within SLOs.
+                      </p>
+                    </div>
+                  </section>
+
+                  {/* Workflow / Steps */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                      Workflow / Steps
+                    </h2>
+                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
+                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
+                        <li>Set SLOs: TTFT, TTUA, p95/p99 end-to-end latency, and error/timeout budgets per tier.</li>
+                        <li>Instrument breakdown: DNS/TLS/connect, server time (queue, batch, infer, post-process), and client render.</li>
+                        <li>Optimize transport: keep-alive HTTP/2 or gRPC, connection pooling, request coalescing, and streaming.</li>
+                        <li>Apply server tactics: deadline-aware batching, speculative decoding, caching (KV/prefix/response), and warm pools.</li>
+                        <li>Reduce tokens: prompt trimming, compression/summarization, retrieval caps, structured tool I/O.</li>
+                        <li>Place smartly: geo/edge routing, CDN for static, regional failover; avoid cross-region hops on hot paths.</li>
+                        <li>Validate and iterate: A/B measure deltas; tune batch size, speculative thresholds, and cache policies.</li>
+                      </ol>
+                    </div>
+                  </section>
+
+                  {/* Best Practices */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Best Practices
+                    </h2>
+                    <div className="grid gap-3">
+                      {[
+                        'Stream tokens/results to cut perceived latency; render incrementally on the client.',
+                        'Use deadline-aware batching with max queue time; separate low-latency from best-effort traffic.',
+                        'Warm critical models and maintain small warm pools to avoid cold starts; lazy-load rarely used paths.',
+                        'Reuse KV/prefix caches for conversational turns; cache verified responses and frequent tool outputs.',
+                        'Adopt speculative/draft decoding with verification to accelerate decoding while preserving quality.',
+                        'Prefer HTTP/2 or gRPC with connection pooling; avoid per-request TLS/DNS costs on hot paths.',
+                        'Minimize prompt/context: deduplicate, compress, or summarize; favor IDs/refs over raw blobs.',
+                        'Use edge/region affinity for interactive UX; avoid cross-region calls inside tight loops.',
+                        'Bound max tokens and apply early-exit policies; fail fast with retries and circuit breakers.',
+                        'Continuously profile p95/p99 and TTFT; alert on SLO breaches with stage-level attribution.'
+                      ].map((tip) => (
+                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* When NOT to Use */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                      When NOT to Use
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Offline/batch analytics where throughput or unit cost dominates over interactivity.</li>
+                        <li>Compliance-critical pipelines that require fixed, deterministic processing (no speculative paths).</li>
+                        <li>Extremely simple/low-traffic services where added complexity outweighs gains.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Common Pitfalls */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                      Common Pitfalls
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Over-batching or large max tokens causing p95/p99 regressions and timeouts.</li>
+                        <li>Cold starts from scale-to-zero or heavy model loads on the critical path.</li>
+                        <li>Ignoring TTFT and queue time breakdowns; tuning only total latency.</li>
+                        <li>Unbounded prompts/context growth; KV cache OOMs and thrashing.</li>
+                        <li>Cross-region calls in interactive loops; high DNS/TLS/handshake overheads.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Key Features */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
+                      Key Features
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[
+                        'Token streaming and incremental rendering.',
+                        'Deadline-aware dynamic batching with per-tier budgets.',
+                        'Speculative/draft decoding with verification/acceptance.',
+                        'KV/prefix cache reuse and response/result caching.',
+                        'Geo/edge-aware routing and warm capacity pools.',
+                        'Connection pooling (HTTP/2/gRPC) and efficient serialization.'
+                      ].map((feat) => (
+                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* KPIs / Success Metrics */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
+                      KPIs / Success Metrics
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>TTFT (time-to-first-token) and TTUA (time-to-usable-answer).</li>
+                        <li>p50/p95/p99 end-to-end latency and stage breakdown (queue, batch, infer).</li>
+                        <li>Speculative acceptance ratio; cache hit rates (KV/prefix/response).</li>
+                        <li>Throughput (RPS, tokens/sec) under latency SLO; timeout/error rate.</li>
+                        <li>SLO attainment rate and cost per successful request.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Token / Resource Usage */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
+                      Token / Resource Usage
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-3 text-sm text-gray-300">
+                      <p>
+                        Bound prompt and generation budgets per tier. Prefer continuous/dynamic batching (e.g., vLLM/TGI) and memory-savvy attention
+                        (PagedAttention/FlashAttention). Track KV cache memory growth with sequence length and batch size to avoid OOMs. Quantization
+                        (INT8/INT4/FP8) and early-exit policies can reduce compute while preserving acceptable quality.
+                      </p>
+                      <ul className="list-disc list-inside space-y-1">
+                        <li>Controls: max input/output tokens, summarization/compression, retrieval caps, early-exit thresholds.</li>
+                        <li>Efficiency: reuse KV/prefix; speculative decoding to cut decoder steps; coalesce small requests.</li>
+                        <li>Placement: co-locate data and models; avoid cross-region hot paths; use warm pools for burst.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* Best Use Cases */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
+                      Best Use Cases
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
+                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Interactive chat/assistants and copilots where responsiveness drives UX.</li>
+                        <li>Voice agents and real-time multimodal interfaces with strict TTFT targets.</li>
+                        <li>Real-time RAG/search with streaming answers and progressive refinement.</li>
+                        <li>Mobile/edge experiences with limited bandwidth, battery, and compute.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  {/* References & Further Reading */}
+                  <section>
+                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
+                      References & Further Reading
+                    </h2>
+                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://arxiv.org/abs/2311.10461" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">On Speculative Decoding for Accelerating LLM Inference (2023)</a></li>
+                          <li><a href="https://arxiv.org/abs/2309.06131" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">PagedAttention: Efficient Memory Management for LLM Serving (vLLM, 2023/2024)</a></li>
+                          <li><a href="https://arxiv.org/abs/2307.08691" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">FlashAttention-2: Faster Attention with Better Parallelism (2023)</a></li>
+                          <li><a href="https://arxiv.org/abs/2305.11206" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">AWQ: Activation-aware Weight Quantization for LLMs (2023)</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://docs.vllm.ai/en/latest/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">vLLM: Continuous Batching and Serving Guide</a></li>
+                          <li><a href="https://huggingface.co/docs/text-generation-inference/index" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Hugging Face TGI: High-throughput/low-latency serving</a></li>
+                          <li><a href="https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">NVIDIA Triton: Scheduling & Dynamic Batching</a></li>
+                          <li><a href="https://kserve.github.io/website/latest/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">KServe: Model Serving on Kubernetes</a></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li>vLLM, Text Generation Inference (TGI), NVIDIA Triton, TensorRT-LLM/FasterTransformer</li>
+                          <li>FlashAttention, bitsandbytes, llama.cpp (ggml/gguf)</li>
+                          <li>Ray Serve, KServe, Kubernetes HPA/KEDA for scaling and warm pools</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
+                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
+                          <li><a href="https://github.com/vllm-project/vllm/discussions" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">vLLM Discussions</a></li>
+                          <li><a href="https://github.com/huggingface/text-generation-inference/discussions" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Hugging Face TGI Discussions</a></li>
+                          <li><a href="https://forums.developer.nvidia.com/c/ai-data-science/deep-learning-inference/125" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">NVIDIA Inference Forums</a></li>
                         </ul>
                       </div>
                     </div>
