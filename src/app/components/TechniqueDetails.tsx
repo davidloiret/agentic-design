@@ -54,6 +54,10 @@ import TreeOfThoughtDetails from './technique-details/TreeOfThoughtDetails';
 import VideoExplanationSection from './technique-details/VideoExplanationSection';
 import AdaptiveRAGDetails from './technique-details/AdaptiveRAGDetails';
 import SelfRAGDetails from './technique-details/SelfRAGDetails';
+import GraphRAGDetails from './technique-details/GraphRAGDetails';
+import HierarchicalRAGDetails from './technique-details/HierarchicalRAGDetails';
+import SequentialChainingDetails from './technique-details/SequentialChainingDetails';
+import ParallelChainingDetails from './technique-details/ParallelChainingDetails';
 import PalmDetails from './technique-details/PalmDetails';
 import LrtDetails from './technique-details/LrtDetails';
 
@@ -265,6 +269,14 @@ export const TechniqueDetails = ({
                 <AdaptiveRAGDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'self-rag' ? (
                 <SelfRAGDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'graph-rag' ? (
+                <GraphRAGDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'hierarchical-rag' ? (
+                <HierarchicalRAGDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'sequential-chaining' ? (
+                <SequentialChainingDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'parallel-chaining' ? (
+                <ParallelChainingDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'cod' ? (
                 <>
                   {/* Core Mechanism (short conceptual overview) */}
@@ -3249,216 +3261,6 @@ export const TechniqueDetails = ({
                     </div>
                   </section>
                 </>
-              ) : selectedTechnique.id === 'adaptive-rag' ? (
-                <>
-                  {/* Core Mechanism (short conceptual overview) */}
-                  <section>
-                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
-                      Core Mechanism (short conceptual overview)
-                    </h2>
-                    <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border border-emerald-500/20 rounded-xl p-6">
-                      <p className="text-gray-200 text-base leading-relaxed">
-                        Adaptive RAG uses a lightweight router to analyze each query (complexity, domain, freshness, safety) and dynamically
-                        choose the retrieval and generation strategy: no-retrieval for easy questions, single-pass hybrid retrieval for
-                        moderate ones, and multi-hop retrieval + reflection/refinement for complex tasks. It adjusts sources, filters,
-                        rerankers, and context compression based on real-time signals like uncertainty, coverage, and citation quality to
-                        balance accuracy, latency, and cost.
-                      </p>
-                    </div>
-                  </section>
-
-                  {/* Workflow / Steps */}
-                  <section>
-                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
-                      Workflow / Steps
-                    </h2>
-                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
-                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
-                        <li>Ingest query and context: user intent, domain, recency needs, access policy, session history.</li>
-                        <li>Route: classify complexity/freshness/domain; pick strategy (no-retrieval, single-pass, multi-hop) and components (retrievers, filters, reranker, compression).</li>
-                        <li>Retrieve: run hybrid search (semantic + lexical), apply filters (source, time), deduplicate, then cross-encode rerank.</li>
-                        <li>Prepare context: compress adaptively (extractive summaries/snippets), attach provenance, enforce token budgets.</li>
-                        <li>Generate: produce answer with instructions; assess faithfulness/uncertainty; if low-confidence or missing evidence, refine via query rewrite, scope expansion, or another hop.</li>
-                        <li>Finalize: produce answer with citations and structured output; log metrics and router decisions for evaluation.</li>
-                      </ol>
-                    </div>
-                  </section>
-
-                  {/* Best Practices */}
-                  <section>
-                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
-                      Best Practices
-                    </h2>
-                    <div className="grid gap-3">
-                      {[
-                        'Start with a strong static RAG baseline; add routing only where it measurably helps (A/B by query cohorts).',
-                        'Use hybrid retrieval (BM25/keyword + embeddings) and a cross-encoder reranker; cap top_k before rerank.',
-                        'Train/calibrate the router with offline labels (easy/moderate/hard, freshness needed) and monitor drift.',
-                        'Adopt adaptive compression (extractive summaries, answer-focused snippets) to control tokens.',
-                        'Bound refinement loops (max hops/turns) and implement early-exit on high confidence with adequate citations.',
-                        'Apply temporal and source filters; enforce provenance and citation coverage in prompts/outputs.',
-                        'Cache frequently hit chunks and rerank results; memoize router decisions for similar queries.',
-                        'Evaluate by slice: domain, difficulty, recency; keep an ablation of each adaptive component.',
-                      ].map((tip) => (
-                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
-                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
-                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </section>
-
-                  {/* When NOT to Use */}
-                  <section>
-                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
-                      When NOT to Use
-                    </h2>
-                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-                        <li>Workloads with homogeneous, easy questions where static RAG or model-only answers already meet SLOs.</li>
-                        <li>Tiny, high-quality corpora where routing overhead adds latency without quality gains.</li>
-                        <li>Hard real-time paths with strict p95 limits that cannot accommodate routing/reranking/refinement.</li>
-                        <li>Data governed environments without robust access controls and audit-ready provenance.</li>
-                      </ul>
-                    </div>
-                  </section>
-
-                  {/* Common Pitfalls */}
-                  <section>
-                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
-                      Common Pitfalls
-                    </h2>
-                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-                        <li>Over-routing: invoking multi-hop/reflection for queries solvable with model-only or single-pass retrieval.</li>
-                        <li>Mis-calibrated thresholds causing oscillation between strategies and unstable latency.</li>
-                        <li>Skipping reranking or deduplication → noisy context and lower faithfulness.</li>
-                        <li>Token blowups from excessive top_k and weak compression; missing caps on hop/turn counts.</li>
-                        <li>Insufficient provenance: answers without citations or with stale sources.</li>
-                      </ul>
-                    </div>
-                  </section>
-
-                  {/* Key Features */}
-                  <section>
-                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
-                      Key Features
-                    </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {[
-                        'Query router for complexity/freshness/domain routing',
-                        'Hybrid retrieval with lexical + embedding search',
-                        'Cross-encoder reranking and duplicate suppression',
-                        'Adaptive context compression and snippet selection',
-                        'Multi-hop refinement with confidence/coverage checks',
-                        'Latency/cost-aware budgets and early-exit logic',
-                        'Provenance enforcement and citation coverage',
-                        'Observability of router choices and component KPIs',
-                      ].map((feat) => (
-                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
-                          {feat}
-                        </div>
-                      ))}
-                    </div>
-                  </section>
-
-                  {/* KPIs / Success Metrics */}
-                  <section>
-                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
-                      KPIs / Success Metrics
-                    </h2>
-                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-                        <li>Answer quality: exact match/F1 on QA sets; faithfulness and citation coverage (e.g., RAGAS).</li>
-                        <li>Retrieval quality: MRR/NDCG, answerable@k, reranker precision; freshness hit rate for time-sensitive queries.</li>
-                        <li>Efficiency: p50/p95 latency, tokens per answer, cost per resolved question, average hops/turns.</li>
-                        <li>Router efficacy: decision accuracy vs oracle, fallback rate, percent of queries routed to each strategy.</li>
-                      </ul>
-                    </div>
-                  </section>
-
-                  {/* Token / Resource Usage */}
-                  <section>
-                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
-                      Token / Resource Usage
-                    </h2>
-                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-                        <li>No‑retrieval: minimal tokens; prefer model-only when confidence is high and recency not required.</li>
-                        <li>Single‑pass: bound top_k before rerank (e.g., 50→rerank→8); compress to target context budget.</li>
-                        <li>Multi‑hop: cap hops/turns; reuse retrieved sets across hops; stream generation and cache reranks.</li>
-                        <li>General: log token/cost budgets per strategy; apply adaptive compression ratios by query difficulty.</li>
-                      </ul>
-                    </div>
-                  </section>
-
-                  {/* Best Use Cases */}
-                  <section>
-                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
-                      Best Use Cases
-                    </h2>
-                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-                        <li>Multi‑domain assistants where query difficulty varies widely.</li>
-                        <li>Enterprise knowledge portals with mixed structured/unstructured sources and compliance needs.</li>
-                        <li>Support/agent copilots needing fast answers for easy cases and deeper synthesis for hard ones.</li>
-                        <li>Research workflows requiring iterative gathering, synthesis, and strong provenance.</li>
-                      </ul>
-                    </div>
-                  </section>
-
-                  {/* References & Further Reading */}
-                  <section>
-                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
-                      References & Further Reading
-                    </h2>
-                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
-                      <div>
-                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
-                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
-                          <li><a href="https://arxiv.org/abs/2310.11511" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection (2023)</a></li>
-                          <li><a href="https://arxiv.org/abs/2312.10997" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Retrieval‑Augmented Generation for Large Language Models: A Survey (2023)</a></li>
-                          <li><a href="https://arxiv.org/abs/2401.05856" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Seven Failure Points When Engineering a RAG System (2024)</a></li>
-                        </ul>
-                      </div>
-                      <div>
-                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
-                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
-                          <li><a href="https://learn.microsoft.com/en-us/azure/developer/ai/advanced-retrieval-augmented-generation" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Microsoft Learn: Advanced RAG systems</a></li>
-                          <li><a href="https://cookbook.openai.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">OpenAI Cookbook: RAG and evaluation patterns</a></li>
-                          <li><a href="https://docs.llamaindex.ai/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LlamaIndex Docs: Retrieval, rerankers, evaluators</a></li>
-                          <li><a href="https://python.langchain.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangChain Docs: Retrieval & reranking</a></li>
-                        </ul>
-                      </div>
-                      <div>
-                        <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
-                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
-                          <li><a href="https://cohere.com/rerank" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Cohere Rerank (cross‑encoder)</a></li>
-                          <li><a href="https://www.pinecone.io/learn/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Pinecone Learn: RAG techniques</a></li>
-                          <li><a href="https://weaviate.io/developers" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Weaviate: Hybrid search & rerank</a></li>
-                          <li><a href="https://www.elastic.co/enterprise-search" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Elasticsearch: Hybrid retrieval</a></li>
-                        </ul>
-                      </div>
-                      <div>
-                        <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
-                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
-                          <li><a href="https://www.pinecone.io/learn/advanced-rag-techniques/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Pinecone: Advanced RAG techniques</a></li>
-                          <li><a href="https://discuss.huggingface.co/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Hugging Face Forums</a></li>
-                        </ul>
-                      </div>
-                    </div>
-                </section>
-                </>
               ) : selectedTechnique.id === 'agentic-rag-systems' ? (
                 <>
                   {/* Core Mechanism (short conceptual overview) */}
@@ -3880,211 +3682,6 @@ export const TechniqueDetails = ({
                       </div>
                     </div>
                 </section>
-                </>
-              ) : selectedTechnique.id === 'hierarchical-rag' ? (
-                <>
-                  {/* Core Mechanism (short conceptual overview) */}
-                  <section>
-                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
-                      Core Mechanism (short conceptual overview)
-                    </h2>
-                    <div className="bg-gradient-to-br from-amber-500/10 to-orange-500/10 border border-amber-500/20 rounded-xl p-6">
-                      <p className="text-gray-200 text-base leading-relaxed">
-                        Hierarchical RAG organizes knowledge into multiple granularity levels (document → section → paragraph → sentence).
-                        Queries first retrieve coarse summaries at higher levels, then drill down into finer nodes to assemble compact,
-                        citation-ready context. Parent–child metadata and level-aware reranking preserve structure and improve faithfulness
-                        while controlling token budgets.
-                      </p>
-                    </div>
-                  </section>
-
-                  {/* Workflow / Steps */}
-                  <section>
-                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
-                      Workflow / Steps
-                    </h2>
-                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
-                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
-                        <li>Ingest & structure: parse documents into a tree (headings → sections → paragraphs/sentences); attach provenance and timestamps.</li>
-                        <li>Index per level: compute embeddings and optional summaries for each node; store parent–child links and section titles.</li>
-                        <li>Coarse retrieval: retrieve top parent nodes (documents/sections) using hybrid search; ensure coverage of major facets.</li>
-                        <li>Drill-down: within selected parents, retrieve child nodes (paragraphs/sentences) and re‑rank locally with cross‑encoders.</li>
-                        <li>Context assembly: deduplicate and pack evidence with citations; prefer extractive spans and concise summaries.</li>
-                        <li>Generate: prompt the LLM with the curated context; enforce citation and formatting requirements.</li>
-                        <li>Optional verify/refine: assess faithfulness/coverage; if low confidence, expand breadth/depth or reformulate query.</li>
-                      </ol>
-                    </div>
-                  </section>
-
-                  {/* Best Practices */}
-                  <section>
-                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
-                      Best Practices
-                    </h2>
-                    <div className="grid gap-3">
-                      {[
-                        'Use structural chunking aligned to headings; include section titles and hierarchy metadata.',
-                        'Summarize parent nodes (short, information-dense) to improve coarse recall and reduce drill‑down breadth.',
-                        'Combine hybrid retrieval (BM25 + vectors) with cross‑encoder/LLM rerankers; cap k before rerank.',
-                        'Enforce provenance and citation coverage; prefer extractive spans over long free‑text summaries.',
-                        'Bound depth and children-per-parent; adopt early‑exit on high confidence to control tokens/latency.',
-                        'Incremental indexing and freshness policies; track data lag and invalidate stale nodes.',
-                        'Cache hot parents and child sets; memoize reranks and packed contexts by query signature.',
-                        'Evaluate by level (parent/child) and end‑to‑end; keep baselines (flat RAG) for ablations.',
-                      ].map((tip) => (
-                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
-                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
-                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </section>
-
-                  {/* When NOT to Use */}
-                  <section>
-                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
-                      When NOT to Use
-                    </h2>
-                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-                        <li>Small, homogeneous corpora where flat RAG already meets quality/latency/cost goals.</li>
-                        <li>Flat or weakly structured content without meaningful headings/sections.</li>
-                        <li>Strict real‑time SLAs or tight budgets that cannot absorb multi‑stage retrieval/rerank.</li>
-                        <li>Teams unable to operate hierarchical indexes (freshness, provenance, evals) reliably.</li>
-                      </ul>
-                    </div>
-                  </section>
-
-                  {/* Common Pitfalls */}
-                  <section>
-                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
-                      Common Pitfalls
-                    </h2>
-                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-                        <li>Inconsistent chunking that breaks logical units; missing parent–child metadata.</li>
-                        <li>Token blowups from retrieving both parents and many children without deduplication.</li>
-                        <li>Deep, unconstrained drill‑down causing latency spikes and diminishing returns.</li>
-                        <li>Stale indexes and summaries; mixing outdated with fresh content without temporal controls.</li>
-                        <li>Weak provenance/citations, reducing trust and auditability.</li>
-                      </ul>
-                    </div>
-                  </section>
-
-                  {/* Key Features */}
-                  <section>
-                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
-                      Key Features
-                    </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {[
-                        'Hierarchical indexing with parent–child relationships',
-                        'Coarse‑to‑fine retrieval and level‑aware reranking',
-                        'Parent summary + child evidence fusion',
-                        'Context inheritance and citation‑first packing',
-                        'Depth/breadth controls and early‑exit policies',
-                        'Freshness tracking and incremental updates',
-                      ].map((feat) => (
-                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
-                          {feat}
-                        </div>
-                      ))}
-                    </div>
-                  </section>
-
-                  {/* KPIs / Success Metrics */}
-                  <section>
-                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
-                      KPIs / Success Metrics
-                    </h2>
-                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-                        <li>Answer faithfulness and citation coverage/correctness (e.g., RAG‑focused evals).</li>
-                        <li>Parent recall@k and child precision after rerank; MRR/NDCG by level.</li>
-                        <li>Latency p50/p95 and tokens per answer; average depth and children-per-parent.</li>
-                        <li>Cost per resolved query; cache hit rate; freshness/data‑lag metrics.</li>
-                      </ul>
-                    </div>
-                  </section>
-
-                  {/* Token / Resource Usage */}
-                  <section>
-                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
-                      Token / Resource Usage
-                    </h2>
-                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-                        <li>Extra tokens for parent summaries and multi‑stage retrieval/rerank; mitigate with strict k caps and caching.</li>
-                        <li>Prefer extractive spans and compact summaries; pack within hard context budgets per query cohort.</li>
-                        <li>Precompute embeddings/summaries offline; reuse hot parent/child sets; log per‑level budgets.</li>
-                      </ul>
-                    </div>
-                  </section>
-
-                  {/* Best Use Cases */}
-                  <section>
-                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
-                      Best Use Cases
-                    </h2>
-                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-                        <li>Legal/medical/technical manuals and academic papers with strong document structure.</li>
-                        <li>Policy/procedure portals and enterprise KBs spanning long, multi‑section content.</li>
-                        <li>Research copilots needing coarse coverage and fine‑grained, cited evidence.</li>
-                      </ul>
-                    </div>
-                  </section>
-
-                  {/* References & Further Reading */}
-                  <section>
-                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
-                      References & Further Reading
-                    </h2>
-                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
-                      <div>
-                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
-                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
-                          <li><a href="https://arxiv.org/abs/2503.10150" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Retrieval‑Augmented Generation with Hierarchical Knowledge (2025)</a></li>
-                          <li><a href="https://arxiv.org/abs/2504.12330" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">HM‑RAG: Hierarchical Multi‑Agent Multimodal RAG (2025)</a></li>
-                          <li><a href="https://arxiv.org/abs/2312.10997" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">RAG for LLMs: A Survey (2023/2024)</a></li>
-                        </ul>
-                      </div>
-                      <div>
-                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
-                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
-                          <li><a href="https://learn.microsoft.com/azure/developer/ai/advanced-retrieval-augmented-generation" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Microsoft Learn: Advanced RAG</a></li>
-                          <li><a href="https://docs.llamaindex.ai/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LlamaIndex Docs: Hierarchical nodes & packs</a></li>
-                          <li><a href="https://python.langchain.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangChain Docs: ParentDocumentRetriever</a></li>
-                        </ul>
-                      </div>
-                      <div>
-                        <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
-                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
-                          <li><a href="https://github.com/run-llama/llama_index" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LlamaIndex</a> (HierarchicalNodeParser, evaluators)</li>
-                          <li><a href="https://github.com/langchain-ai/langchain" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangChain</a> (ParentDocumentRetriever, rerankers)</li>
-                          <li><a href="https://weaviate.io/developers" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Weaviate</a> / <a href="https://www.pinecone.io/learn/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Pinecone Learn</a> (vector DBs, hybrid search)</li>
-                        </ul>
-                      </div>
-                      <div>
-                        <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
-                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
-                          <li><a href="https://wandb.ai/site/articles/rag-techniques/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Weights & Biases: RAG techniques</a></li>
-                          <li><a href="https://pixion.co/blog/rag-strategies-hierarchical-index-retrieval" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">PIXION: Hierarchical index retrieval</a></li>
-                          <li><a href="https://discuss.huggingface.co/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Hugging Face Forums</a></li>
-                        </ul>
-                      </div>
-                    </div>
-                  </section>
                 </>
               ) : selectedTechnique.id === 'modular-rag' ? (
                 <>
@@ -4923,7 +4520,7 @@ export const TechniqueDetails = ({
                     </div>
                   </section>
                 </>
-              ) : selectedTechnique.id === 'graph-rag' ? (
+              ) : selectedTechnique.id === 'chain-of-verification-rag' ? (
                 <>
                   {/* Core Mechanism (short conceptual overview) */}
                   <section>
@@ -4931,11 +4528,11 @@ export const TechniqueDetails = ({
                       <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
                       Core Mechanism (short conceptual overview)
                     </h2>
-                    <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
+                    <div className="bg-gradient-to-br from-teal-500/10 to-emerald-500/10 border border-teal-500/20 rounded-xl p-6">
                       <p className="text-gray-200 text-base leading-relaxed">
-                        Retrieval‑augmented generation over a knowledge graph. The system extracts entities/relations, retrieves a
-                        relevant subgraph via graph traversal (often 1–2 hops plus neighborhood expansion), serializes salient facts/paths,
-                        and conditions the LLM on that structured context to produce grounded, relation‑aware answers.
+                        Chain-of-Verification RAG generates factual claims, then subjects them to systematic verification via
+                        independent retrieval and critique loops. Each claim is fact-checked against authoritative sources,
+                        contradictions flagged, and the final answer grounded only on verified statements with citations.
                       </p>
                     </div>
                   </section>
@@ -4948,14 +4545,12 @@ export const TechniqueDetails = ({
                     </h2>
                     <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
                       <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
-                        <li>Ingestion: NER/RE to extract entities and relations; canonicalize with ontology/schema; de‑duplicate.</li>
-                        <li>Graph construction: upsert nodes/edges; attach provenance, timestamps, and confidence scores.</li>
-                        <li>Indexing: build graph indexes (IDs, labels, adjacency), hybrid text/vector indexes for nodes/docs.</li>
-                        <li>Query understanding: detect entities/intent; map to node IDs; choose traversal strategy.</li>
-                        <li>Retrieval: bounded multi‑hop traversal + neighborhood expansion; optional hybrid re‑rank.</li>
-                        <li>Context assembly: summarize paths, merge evidence, dedupe, and format as factual statements.</li>
-                        <li>Generation: prompt LLM with query + structured graph context; optionally cite sources.</li>
-                        <li>Post‑processing: verify/critique, add citations, cache results, and update feedback signals.</li>
+                        <li>Generate initial answer: produce a response with specific, factual claims.</li>
+                        <li>Extract verifiable statements: identify atomic claims (facts, numbers, dates, entities).</li>
+                        <li>Independent verification: for each claim, retrieve supporting evidence via keyword/semantic search.</li>
+                        <li>Cross‑reference and critique: check consistency across sources, flag contradictions or missing evidence.</li>
+                        <li>Update and re‑rank: revise/remove unsupported claims; strengthen supported ones with citations.</li>
+                        <li>Final synthesis: produce verified answer with confidence scores and source attributions.</li>
                       </ol>
                     </div>
                   </section>
@@ -4968,13 +4563,14 @@ export const TechniqueDetails = ({
                     </h2>
                     <div className="grid gap-3">
                       {[
-                        'Keep traversals shallow by default (1–2 hops) with explicit caps; expand only on uncertainty.',
-                        'Preserve provenance on every node/edge; make citations first‑class in prompts and outputs.',
-                        'Combine graph traversal with vector search for recall, then re‑rank on path relevance.',
-                        'Normalize schemas and entity IDs; resolve aliases; prevent node duplication at ingest.',
-                        'Continuously validate graph quality (consistency rules, temporal sanity, schema constraints).',
-                        'Introduce caching at multiple layers: entity mapping, subgraph retrieval, and context summaries.',
-                        'Monitor retrieval quality with held‑out QA sets; tune hop limits and re‑ranking thresholds.',
+                        'Start with baseline question answering to identify claims that need verification.',
+                        'Use claim decomposition: break complex statements into atomic, verifiable facts.',
+                        'Design verification queries to be specific and keyword‑rich for precise retrieval.',
+                        'Implement cross‑source consistency checks and flag conflicting evidence.',
+                        'Apply confidence thresholds: only include verified claims above a certainty threshold.',
+                        'Cache verification results to avoid re‑checking identical claims.',
+                        'Instrument with claim‑level evaluation to measure verification accuracy and coverage.',
+                        'Balance thoroughness with latency: cap verification rounds and fallback to partial answers.',
                       ].map((tip) => (
                         <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
                           <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
@@ -4992,10 +4588,10 @@ export const TechniqueDetails = ({
                     </h2>
                     <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
                       <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-                        <li>Simple fact queries already answered well by baseline RAG or the model’s parametric knowledge.</li>
-                        <li>Domains without reliable entity/relationship structure or where extraction is too noisy.</li>
-                        <li>Hard real‑time SLAs where traversal and formatting overhead breach latency budgets.</li>
-                        <li>Environments unable to maintain graph freshness and provenance at acceptable cost.</li>
+                        <li>Simple queries with mostly subjective or opinion‑based content that doesn't need fact verification.</li>
+                        <li>Real‑time applications with tight latency constraints where verification loops are too expensive.</li>
+                        <li>Domains with sparse/unreliable sources where fact‑checking is impractical.</li>
+                        <li>High‑trust scenarios where the base model's accuracy is already sufficient and verified.</li>
                       </ul>
                     </div>
                   </section>
@@ -5008,214 +4604,11 @@ export const TechniqueDetails = ({
                     </h2>
                     <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
                       <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-                        <li>Unbounded traversals returning large, low‑precision subgraphs and ballooning token costs.</li>
-                        <li>Poor entity resolution leading to duplicate or fragmented nodes and broken paths.</li>
-                        <li>Missing or weak provenance, making answers hard to verify and trust.</li>
-                        <li>Out‑of‑date graphs; no refresh pipeline or temporal reasoning for time‑sensitive facts.</li>
-                      </ul>
-                    </div>
-                  </section>
-
-                  {/* Key Features */}
-                  <section>
-                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                      <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
-                      Key Features
-                    </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {[
-                        'Knowledge‑graph traversal with hop and neighborhood controls',
-                        'Path‑aware retrieval and multi‑hop reasoning',
-                        'Entity‑centric search and hybrid graph+vector recall',
-                        'Provenance tracking and citation generation',
-                        'Schema/ontology alignment and validation',
-                        'Optional GNN/embedding enrichment for scoring and re‑rank',
-                      ].map((feat) => (
-                        <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
-                          {feat}
-                        </div>
-                      ))}
-                    </div>
-                  </section>
-
-                  {/* KPIs / Success Metrics */}
-                  <section>
-                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                      <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
-                      KPIs / Success Metrics
-                    </h2>
-                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-                        <li>Answer accuracy and faithfulness vs. ground truth with citation correctness.</li>
-                        <li>Subgraph precision/recall; reranker MRR/NDCG; path relevance scores.</li>
-                        <li>Latency p50/p95, traversal cost, and tokens per successful answer.</li>
-                        <li>Graph freshness (data lag), entity resolution quality, and provenance coverage.</li>
-                      </ul>
-                    </div>
-                  </section>
-
-                  {/* Token / Resource Usage */}
-                  <section>
-                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                      <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
-                      Token / Resource Usage
-                    </h2>
-                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-                        <li>Ingest compute: NER/RE, canonicalization, and validation pipelines.</li>
-                        <li>Query compute: bounded multi‑hop traversal, hybrid re‑rank, and context summarization.</li>
-                        <li>Token controls: serialize only salient facts/paths; cap facts per entity and per hop.</li>
-                        <li>Caching: memoize entity mappings, hot subgraphs, and formatted context snippets.</li>
-                      </ul>
-                    </div>
-                  </section>
-
-                  {/* Best Use Cases */}
-                  <section>
-                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                      <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
-                      Best Use Cases
-                    </h2>
-                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-                        <li>Scientific/medical/legal research where multi‑document relationships matter.</li>
-                        <li>Financial analysis, risk graphs, and supply‑chain investigations.</li>
-                        <li>Enterprise knowledge exploration with strong auditability and citations.</li>
-                        <li>Recommendation, root‑cause, and threat‑intel over richly linked data.</li>
-                      </ul>
-                    </div>
-                  </section>
-
-                  {/* References & Further Reading */}
-                  <section>
-                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                      <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
-                      References & Further Reading
-                    </h2>
-                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
-                      <div>
-                        <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
-                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
-                          <li><a href="https://arxiv.org/abs/2408.08921" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Graph Retrieval‑Augmented Generation: A Survey (2024)</a></li>
-                          <li><a href="https://arxiv.org/abs/2501.00309" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Retrieval‑Augmented Generation with Graphs (GraphRAG) (2025)</a></li>
-                          <li><a href="https://arxiv.org/abs/2503.19314" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">RGL: Graph‑centric modular framework for GraphRAG (2025)</a></li>
-                          <li><a href="https://arxiv.org/abs/2506.05690" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">When to Use Graphs in RAG (2025)</a></li>
-                        </ul>
-                      </div>
-                      <div>
-                        <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
-                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
-                          <li><a href="https://github.com/microsoft/graphrag" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Microsoft GraphRAG (official repository)</a></li>
-                          <li><a href="https://neo4j.com/developer-blog/graphrag-field-guide-rag-patterns/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Neo4j GraphRAG Field Guide</a></li>
-                          <li><a href="https://aws.amazon.com/blogs/database/introducing-the-graphrag-toolkit/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">AWS: Introducing the GraphRAG Toolkit</a></li>
-                        </ul>
-                      </div>
-                      <div>
-                        <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
-                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
-                          <li><a href="https://github.com/microsoft/graphrag" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Microsoft GraphRAG</a></li>
-                          <li><a href="https://neo4j.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Neo4j Graph DB</a></li>
-                          <li><a href="https://python.langchain.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangChain: Knowledge Graph / Neo4j integrations</a></li>
-                          <li><a href="https://docs.llamaindex.ai/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LlamaIndex: Knowledge Graph Index</a></li>
-                          <li><a href="https://arxiv.org/abs/2503.19314" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">RGL framework (paper)</a></li>
-                        </ul>
-                      </div>
-                      <div>
-                        <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
-                        <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
-                          <li><a href="https://thenewstack.io/graph-rag-how-to-squeeze-more-value-from-ai/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">The New Stack: Graph RAG overview</a></li>
-                          <li><a href="https://neo4j.com/developer-blog/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Neo4j Developer Blog</a></li>
-                          <li><a href="https://github.com/microsoft/graphrag/issues" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">microsoft/graphrag issues & discussions</a></li>
-                        </ul>
-                      </div>
-                    </div>
-                  </section>
-                </>
-              ) : selectedTechnique.id === 'self-rag' ? (
-                <>
-                  {/* Core Mechanism (short conceptual overview) */}
-                  <section>
-                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                      <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
-                      Core Mechanism (short conceptual overview)
-                    </h2>
-                    <div className="bg-gradient-to-br from-purple-500/10 to-indigo-500/10 border border-purple-500/20 rounded-xl p-6">
-                      <p className="text-gray-200 text-base leading-relaxed">
-                        Self-RAG augments generation with adaptive retrieval and self-reflection. The model decides if/what to retrieve, generates an answer, then critiques both retrieved context and its own output (via reflection/critique tokens) to improve factuality and relevance, optionally re-retrieving and refining before finalizing with citations.
-                      </p>
-                    </div>
-                  </section>
-
-                  {/* Workflow / Steps */}
-                  <section>
-                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                      <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
-                      Workflow / Steps
-                    </h2>
-                    <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
-                      <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
-                        <li>Assess retrieval necessity (predict whether external knowledge is needed).</li>
-                        <li>Retrieve candidate passages (dense/sparse/hybrid) and optionally rerank.</li>
-                        <li>Draft answer conditioned on top-k context and parametric knowledge.</li>
-                        <li>Self-critique with reflection tokens: rate faithfulness, sufficiency, and usefulness of context and answer.</li>
-                        <li>If low confidence or inconsistencies detected: refine query, re-retrieve, and regenerate.</li>
-                        <li>Finalize answer with calibrated confidence and source attributions.</li>
-                      </ol>
-                    </div>
-                  </section>
-
-                  {/* Best Practices */}
-                  <section>
-                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
-                      Best Practices
-                    </h2>
-                    <div className="grid gap-3">
-                      {[
-                        'Use retrieval-necessity gating to avoid unnecessary context pulls.',
-                        'Employ strong rerankers and deduplication to improve context precision before generation.',
-                        'Constrain critique format (scores + short rationale) to limit reflection drift and token bloat.',
-                        'Enforce citation grounding: require evidence spans for factual claims.',
-                        'Cache retrieval results and use semantic compression to control context size.',
-                        'Track confidence thresholds to trigger re-retrieval vs. abstention/deferral.',
-                      ].map((tip) => (
-                        <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
-                          <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
-                          <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </section>
-
-                  {/* When NOT to Use */}
-                  <section>
-                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                      <div className="w-1 h-6 bg-red-500 rounded-full"></div>
-                      When NOT to Use
-                    </h2>
-                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-                        <li>Simple, closed-book queries where base model answers meet quality bars.</li>
-                        <li>Hard real-time paths with strict latency SLOs (reflection cycles add delay).</li>
-                        <li>Scenarios with unreliable or unavailable external knowledge sources.</li>
-                        <li>Thin or outdated indexes where re-retrieval won’t improve grounding.</li>
-                      </ul>
-                    </div>
-                  </section>
-
-                  {/* Common Pitfalls */}
-                  <section>
-                    <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                      <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
-                      Common Pitfalls
-                    </h2>
-                    <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-                      <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-                        <li>Over-retrieval or low-quality passages overwhelming generation.</li>
-                        <li>Reflection hallucinations: critiques introducing unsupported claims.</li>
-                        <li>Feedback loops where low confidence repeatedly triggers redundant cycles.</li>
-                        <li>Evaluation mismatch: optimizing relevance while neglecting faithfulness.</li>
-                        <li>Stale indexes causing temporal inaccuracies.</li>
+                        <li>Over‑verification: checking obvious or low‑risk claims where verification overhead isn't justified.</li>
+                        <li>Claim extraction errors: missing subtle but important factual assertions.</li>
+                        <li>Inconsistent verification criteria leading to false positives/negatives.</li>
+                        <li>Citation gaps: verified claims without proper source attribution for auditability.</li>
+                        <li>Loop infinities: endless verification cycles without convergence criteria.</li>
                       </ul>
                     </div>
                   </section>
@@ -17145,17 +16538,17 @@ export const TechniqueDetails = ({
                     </div>
                   </section>
                 </>
-              ) : selectedTechnique.id === 'sequential-chaining' ? (
-                <> 
+              ) : selectedTechnique.id === 'parallel-chaining' ? (
+                <>
                   {/* Core Mechanism (short conceptual overview) */}
                   <section>
                     <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
                       <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
                       Core Mechanism
                     </h2>
-                    <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
+                    <div className="bg-gradient-to-br from-green-500/10 to-blue-500/10 border border-green-500/20 rounded-xl p-6">
                       <p className="text-gray-200 text-base leading-relaxed mb-4">
-                        Sequential chaining executes prompts in a linear pipeline where each step specializes in one task and passes a structured output to the next step. This isolates errors, preserves context, and improves quality compared to a single monolithic prompt.
+                        Parallel chaining executes independent prompts concurrently then merges their outputs. This reduces latency, increases throughput, and provides diverse perspectives on the same problem compared to sequential processing.
                       </p>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
                         <div className="text-center p-4 bg-gray-800/30 rounded-lg">
