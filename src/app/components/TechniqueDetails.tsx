@@ -70,6 +70,11 @@ import ContentBasedRoutingDetails from './technique-details/ContentBasedRoutingD
 import CapabilityRoutingDetails from './technique-details/CapabilityRoutingDetails';
 import LoadBalancingDetails from './technique-details/LoadBalancingDetails';
 import GeographicRoutingDetails from './technique-details/GeographicRoutingDetails';
+import SlidingWindowDetails from './technique-details/SlidingWindowDetails';
+import HierarchicalMemoryDetails from './technique-details/HierarchicalMemoryDetails';
+import AttentionMechanismsDetails from './technique-details/AttentionMechanismsDetails';
+import MemoryConsolidationDetails from './technique-details/MemoryConsolidationDetails';
+import WorkingMemoryPatternsDetails from './technique-details/WorkingMemoryPatternsDetails';
 import PalmDetails from './technique-details/PalmDetails';
 import LrtDetails from './technique-details/LrtDetails';
 
@@ -313,6 +318,16 @@ export const TechniqueDetails = ({
                 <LoadBalancingDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'geographic-routing' ? (
                 <GeographicRoutingDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'sliding-window' ? (
+                <SlidingWindowDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'hierarchical-memory' ? (
+                <HierarchicalMemoryDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'attention-mechanisms' ? (
+                <AttentionMechanismsDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'memory-consolidation' ? (
+                <MemoryConsolidationDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'working-memory-patterns' ? (
+                <WorkingMemoryPatternsDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'cod' ? (
                 <>
                   {/* Core Mechanism (short conceptual overview) */}
