@@ -1118,3 +1118,10 @@ LLM as judge
 graphQL
 
 find and remove doublons
+-----------------------
+
+Test bench news model
+
+Add like as saves when connected on twitter / youtube / linkedin
+
+add to raycast => 
