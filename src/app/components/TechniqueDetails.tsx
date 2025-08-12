@@ -66,6 +66,10 @@ import MapReduceDetails from './technique-details/MapReduceDetails';
 import ScatterGatherDetails from './technique-details/ScatterGatherDetails';
 import ForkJoinDetails from './technique-details/ForkJoinDetails';
 import AsyncAwaitDetails from './technique-details/AsyncAwaitDetails';
+import ContentBasedRoutingDetails from './technique-details/ContentBasedRoutingDetails';
+import CapabilityRoutingDetails from './technique-details/CapabilityRoutingDetails';
+import LoadBalancingDetails from './technique-details/LoadBalancingDetails';
+import GeographicRoutingDetails from './technique-details/GeographicRoutingDetails';
 import PalmDetails from './technique-details/PalmDetails';
 import LrtDetails from './technique-details/LrtDetails';
 
@@ -301,6 +305,14 @@ export const TechniqueDetails = ({
                 <ForkJoinDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'async-await' ? (
                 <AsyncAwaitDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'content-based-routing' ? (
+                <ContentBasedRoutingDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'capability-routing' ? (
+                <CapabilityRoutingDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'load-balancing' ? (
+                <LoadBalancingDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'geographic-routing' ? (
+                <GeographicRoutingDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'cod' ? (
                 <>
                   {/* Core Mechanism (short conceptual overview) */}
