@@ -58,6 +58,14 @@ import GraphRAGDetails from './technique-details/GraphRAGDetails';
 import HierarchicalRAGDetails from './technique-details/HierarchicalRAGDetails';
 import SequentialChainingDetails from './technique-details/SequentialChainingDetails';
 import ParallelChainingDetails from './technique-details/ParallelChainingDetails';
+import FeedbackChainingDetails from './technique-details/FeedbackChainingDetails';
+import ConditionalChainingDetails from './technique-details/ConditionalChainingDetails';
+import HierarchicalChainingDetails from './technique-details/HierarchicalChainingDetails';
+import IterativeRefinementDetails from './technique-details/IterativeRefinementDetails';
+import MapReduceDetails from './technique-details/MapReduceDetails';
+import ScatterGatherDetails from './technique-details/ScatterGatherDetails';
+import ForkJoinDetails from './technique-details/ForkJoinDetails';
+import AsyncAwaitDetails from './technique-details/AsyncAwaitDetails';
 import PalmDetails from './technique-details/PalmDetails';
 import LrtDetails from './technique-details/LrtDetails';
 
@@ -277,6 +285,22 @@ export const TechniqueDetails = ({
                 <SequentialChainingDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'parallel-chaining' ? (
                 <ParallelChainingDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'feedback-chaining' ? (
+                <FeedbackChainingDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'conditional-chaining' ? (
+                <ConditionalChainingDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'hierarchical-chaining' ? (
+                <HierarchicalChainingDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'iterative-refinement' ? (
+                <IterativeRefinementDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'map-reduce' ? (
+                <MapReduceDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'scatter-gather' ? (
+                <ScatterGatherDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'fork-join' ? (
+                <ForkJoinDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'async-await' ? (
+                <AsyncAwaitDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'cod' ? (
                 <>
                   {/* Core Mechanism (short conceptual overview) */}
