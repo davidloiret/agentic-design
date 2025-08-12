@@ -121,7 +121,7 @@ export const ChainOfThoughtDetails: React.FC<ChainOfThoughtDetailsProps> = ({ se
     <>
       {/* Core Mechanism */}
       <TechniqueSection
-        title="Core Mechanism (short conceptual overview)"
+        title="Core Mechanism"
         colorClass="bg-blue-500"
         gradient="from-blue-500/10 to-purple-500/10"
         borderClass="border-blue-500/20"

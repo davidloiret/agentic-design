@@ -10,11 +10,11 @@ interface TreeOfThoughtDetailsProps {
 export const TreeOfThoughtDetails: React.FC<TreeOfThoughtDetailsProps> = ({ selectedTechnique }) => {
   return (
     <>
-      {/* Core Mechanism (short conceptual overview) */}
+      {/* Core Mechanism */}
       <section>
         <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
           <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
-          Core Mechanism (short conceptual overview)
+          Core Mechanism
         </h2>
         <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border border-green-500/20 rounded-xl p-6">
           <p className="text-gray-200 text-base leading-relaxed">

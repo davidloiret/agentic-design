@@ -7,11 +7,7 @@ import ListSection from './ListSection';
 import KeyFeaturesSection from './KeyFeaturesSection';
 import ReferencesSection from './ReferencesSection';
 
-interface MemoryConsolidationDetailsProps {
-  selectedTechnique: any;
-}
-
-export const MemoryConsolidationDetails: React.FC<MemoryConsolidationDetailsProps> = ({ selectedTechnique }) => {
+export const MemoryConsolidationDetails = () => {
   const workflowSteps = [
     'Collect and analyze memory fragments, experiences, and information patterns from various sources and timeframes.',
     'Identify recurring patterns, themes, and relationships across collected memories using clustering and analysis.',

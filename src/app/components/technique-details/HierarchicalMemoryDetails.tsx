@@ -7,11 +7,7 @@ import ListSection from './ListSection';
 import KeyFeaturesSection from './KeyFeaturesSection';
 import ReferencesSection from './ReferencesSection';
 
-interface HierarchicalMemoryDetailsProps {
-  selectedTechnique: any;
-}
-
-export const HierarchicalMemoryDetails: React.FC<HierarchicalMemoryDetailsProps> = ({ selectedTechnique }) => {
+export const HierarchicalMemoryDetails = () => {
   const workflowSteps = [
     'Design memory hierarchy with multiple tiers: working memory, short-term, long-term, and permanent storage.',
     'Implement promotion/demotion policies based on access frequency, recency, and importance scoring.',

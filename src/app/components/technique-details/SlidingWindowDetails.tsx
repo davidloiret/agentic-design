@@ -7,11 +7,8 @@ import ListSection from './ListSection';
 import KeyFeaturesSection from './KeyFeaturesSection';
 import ReferencesSection from './ReferencesSection';
 
-interface SlidingWindowDetailsProps {
-  selectedTechnique: any;
-}
 
-export const SlidingWindowDetails: React.FC<SlidingWindowDetailsProps> = ({ selectedTechnique }) => {
+export const SlidingWindowDetails = () => {
   const workflowSteps = [
     'Define window size parameters based on computational limits, task complexity, and quality requirements.',
     'Implement efficient data structures for window management with fast insertion, deletion, and access patterns.',

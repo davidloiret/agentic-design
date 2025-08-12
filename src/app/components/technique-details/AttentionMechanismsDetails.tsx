@@ -7,11 +7,7 @@ import ListSection from './ListSection';
 import KeyFeaturesSection from './KeyFeaturesSection';
 import ReferencesSection from './ReferencesSection';
 
-interface AttentionMechanismsDetailsProps {
-  selectedTechnique: any;
-}
-
-export const AttentionMechanismsDetails: React.FC<AttentionMechanismsDetailsProps> = ({ selectedTechnique }) => {
+export const AttentionMechanismsDetails = () => {
   const workflowSteps = [
     'Define attention scoring functions based on semantic similarity, temporal relevance, and contextual importance.',
     'Compute attention weights for each element in the input sequence or memory using scoring functions.',

@@ -7,11 +7,7 @@ import ListSection from './ListSection';
 import KeyFeaturesSection from './KeyFeaturesSection';
 import ReferencesSection from './ReferencesSection';
 
-interface WorkingMemoryPatternsDetailsProps {
-  selectedTechnique: any;
-}
-
-export const WorkingMemoryPatternsDetails: React.FC<WorkingMemoryPatternsDetailsProps> = ({ selectedTechnique }) => {
+export const WorkingMemoryPatternsDetails = () => {
   const workflowSteps = [
     'Initialize working memory with capacity limits, attention control mechanisms, and interference suppression.',
     'Load relevant information from long-term memory into working memory based on current task requirements.',

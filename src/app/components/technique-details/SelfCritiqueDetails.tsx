@@ -7,11 +7,7 @@ import ListSection from './ListSection';
 import KeyFeaturesSection from './KeyFeaturesSection';
 import ReferencesSection from './ReferencesSection';
 
-interface SelfCritiqueDetailsProps {
-  selectedTechnique: any;
-}
-
-export const SelfCritiqueDetails: React.FC<SelfCritiqueDetailsProps> = ({ selectedTechnique }) => {
+export const SelfCritiqueDetails = () => {
   const workflowSteps = [
     'Generate initial response using standard prompting strategies optimized for the specific task domain.',
     'Apply systematic critique process examining accuracy, completeness, logic, and alignment with requirements.',

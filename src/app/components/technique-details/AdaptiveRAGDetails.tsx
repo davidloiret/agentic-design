@@ -119,7 +119,7 @@ export const AdaptiveRAGDetails: React.FC<AdaptiveRAGDetailsProps> = ({ selected
     <>
       {/* Core Mechanism */}
       <TechniqueSection
-        title="Core Mechanism (short conceptual overview)"
+        title="Core Mechanism"
         colorClass="bg-blue-500"
         gradient="from-green-500/10 to-emerald-500/10"
         borderClass="border-emerald-500/20"

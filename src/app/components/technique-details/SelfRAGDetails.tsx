@@ -118,7 +118,7 @@ export const SelfRAGDetails: React.FC<SelfRAGDetailsProps> = ({ selectedTechniqu
     <>
       {/* Core Mechanism */}
       <TechniqueSection
-        title="Core Mechanism (short conceptual overview)"
+        title="Core Mechanism"
         colorClass="bg-blue-500"
         gradient="from-purple-500/10 to-indigo-500/10"
         borderClass="border-purple-500/20"

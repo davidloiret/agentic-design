@@ -121,7 +121,7 @@ export const HierarchicalRAGDetails: React.FC<HierarchicalRAGDetailsProps> = ({ 
     <>
       {/* Core Mechanism */}
       <TechniqueSection
-        title="Core Mechanism (short conceptual overview)"
+        title="Core Mechanism"
         colorClass="bg-blue-500"
         gradient="from-amber-500/10 to-orange-500/10"
         borderClass="border-amber-500/20"

@@ -1125,3 +1125,51 @@ Test bench news model
 Add like as saves when connected on twitter / youtube / linkedin
 
 add to raycast => 
+
+add graphql
+
+taskiq (celery mais function async)
+
+mieux regrouper moins detailler ? eviter doublon
+
+----------------
+
+boite a idee use case pour workshop
+
+
+travailer la méthodo vibe coding.
+-> spec
+-> test
+-> code
+
+guidelines => context engineering
+=> analyze claude
+=> knowledge base partagé
+
+=> human layer
+=> agent => specialise context
+=> baisser load cognitif => plus petit contexte
+scope context => agent
+LLama => 
+=======================
+
+
+cacher en live token
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+apprendre à vibe coder

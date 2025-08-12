@@ -10,11 +10,11 @@ interface GraphOfThoughtDetailsProps {
 export const GraphOfThoughtDetails: React.FC<GraphOfThoughtDetailsProps> = ({ selectedTechnique }) => {
   return (
     <>
-      {/* Core Mechanism (short conceptual overview) */}
+      {/* Core Mechanism */}
       <section>
         <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
           <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
-          Core Mechanism (short conceptual overview)
+          Core Mechanism
         </h2>
         <div className="bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 rounded-xl p-6">
           <p className="text-gray-200 text-base leading-relaxed">

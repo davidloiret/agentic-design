@@ -10,11 +10,11 @@ interface LrtDetailsProps {
 export const LrtDetails: React.FC<LrtDetailsProps> = ({ selectedTechnique }) => {
   return (
     <>
-      {/* Core Mechanism (short conceptual overview) */}
+      {/* Core Mechanism */}
       <section>
         <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
           <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
-          Core Mechanism (short conceptual overview)
+          Core Mechanism
         </h2>
         <div className="bg-gradient-to-br from-violet-500/10 to-purple-500/10 border border-violet-500/20 rounded-xl p-6">
           <p className="text-gray-200 text-base leading-relaxed">
