@@ -1173,3 +1173,7 @@ cacher en live token
 
 
 apprendre à vibe coder
+
+workshop slide ?
+
+focus production scalable / et opti (prix etc)
