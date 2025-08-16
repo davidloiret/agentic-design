@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Brain, TrendingUp, Activity, Star, Code, BookOpen, Users, Target, Shield, ChartBar } from 'lucide-react';
+import { Brain, TrendingUp, Activity, Star, Code, BookOpen, Users, Target, Shield, ChartBar, ChevronRight } from 'lucide-react';
 import { categories } from '../../../categories';
 import Link from 'next/link';
 import { BrainMascot, BrainExpression } from '@/components/BrainMascot';
@@ -71,9 +71,14 @@ const CategoryChart: React.FC<{ data: { label: string; value: number; color: str
   );
 };
 
+// Import PatternCard
+import { PatternCard } from '../../../components/PatternCard';
+import { getCategoryColor } from '@/lib/design-system';
+
 // CategoryItem Component
 const CategoryItem: React.FC<{ category: any; index: number }> = ({ category, index }) => {
   const [isHovered, setIsHovered] = React.useState(false);
+  const categoryColor = getCategoryColor(category.id);
   
   // Different brain expressions for different categories
   const categoryExpressions: BrainExpression[] = ['focused', 'thinking', 'excited', 'happy', 'surprised', 'neutral'];
@@ -82,7 +87,7 @@ const CategoryItem: React.FC<{ category: any; index: number }> = ({ category, in
   return (
     <Link href={`/patterns/${category.id}`} className="block">
       <motion.div 
-        className="relative bg-gray-700/30 border border-gray-600/50 rounded-xl p-4 hover:bg-gray-700/50 transition-all cursor-pointer group overflow-hidden"
+        className={`relative bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-xl p-5 hover:bg-gray-800/70 hover:border-gray-600/50 hover:shadow-lg transition-all cursor-pointer group overflow-hidden`}
         whileHover={{ y: -2, scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
         initial={{ opacity: 0, y: 20 }}
@@ -105,9 +110,9 @@ const CategoryItem: React.FC<{ category: any; index: number }> = ({ category, in
               }}
             >
               <BrainMascot
-                expression={categoryExpressions[index]}
+                expression={categoryExpressions[index % categoryExpressions.length]}
                 size="small"
-                color={categoryColors[index]}
+                color={categoryColors[index % categoryColors.length]}
                 animate={true}
                 skipInitialAnimation={true}
               />
@@ -117,20 +122,20 @@ const CategoryItem: React.FC<{ category: any; index: number }> = ({ category, in
         
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center space-x-3">
-            <div className="flex items-center space-x-2">
-              <span className="text-lg">{category.icon}</span>
-              <h4 className="font-semibold text-white text-sm">{category.name}</h4>
+            <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${categoryColor.light} ${categoryColor.border} border flex items-center justify-center text-xl`}>
+              {category.icon}
             </div>
+            <h4 className="font-semibold text-white text-base">{category.name}</h4>
           </div>
-          <span className="px-2 py-1 bg-blue-500/10 text-blue-400 text-xs rounded-full">
+          <span className={`inline-flex items-center px-2.5 py-1 ${categoryColor.badge || 'bg-blue-500/10 text-blue-400 border-blue-500/20'} text-xs font-medium rounded-full border`}>
             {category.techniques?.length || 0} techniques
           </span>
         </div>
-        <p className="text-xs text-gray-300 mb-3 line-clamp-2">{category.description}</p>
+        <p className="text-sm text-gray-300 mb-4 line-clamp-2">{category.description}</p>
         <div className="flex items-center justify-between text-xs text-gray-400">
           <span>{category.useCases?.length || 0} use cases</span>
-          <span className="text-purple-400 hover:text-purple-300 group-hover:translate-x-1 transition-transform">
-            Explore →
+          <span className={`${categoryColor.text} group-hover:translate-x-1 transition-transform inline-flex items-center gap-1`}>
+            Explore <ChevronRight className="w-3 h-3" />
           </span>
         </div>
       </motion.div>

@@ -1,209 +1,154 @@
 'use client';
-import React, { useState } from 'react';
-import { BookOpen, Code, Check, Brain, GitBranch, Play, Sparkles, ArrowRight } from 'lucide-react';
 
-export const FunctionCallingDetails = () => {
+import React from 'react';
+import ReferencesSection from './shared/ReferencesSection';
+import {
+  QuickOverviewSection,
+  QuickImplementationSection,
+  DosAndDontsSection,
+  UsageGuideSection,
+  KeyMetricsSection,
+  TopUseCasesSection
+} from './shared';
+
+interface FunctionCallingDetailsProps {
+  selectedTechnique: any;
+}
+
+export const FunctionCallingDetails: React.FC<FunctionCallingDetailsProps> = ({ selectedTechnique }) => {
+  // Quick Implementation Recipe
+  const quickImplementation = {
+    steps: [
+      { num: '1', action: 'Define Schema', detail: 'JSON schema with parameters & types' },
+      { num: '2', action: 'Register Tools', detail: 'Add to function registry with auth' },
+      { num: '3', action: 'Validate Params', detail: 'Sanitize & validate all inputs' },
+      { num: '4', action: 'Execute', detail: 'Call API with timeouts & retries' },
+      { num: '5', action: 'Process Results', detail: 'Normalize & integrate responses' }
+    ],
+    example: 'get_weather(location="NYC", units="celsius") → {"temp": 18, "condition": "cloudy"}'
+  };
+
+  // Combined Do's and Don'ts
+  const dosAndDonts = [
+    { type: 'do', text: 'Write detailed function descriptions (3-4+ sentences minimum)', icon: '✅' },
+    { type: 'do', text: 'Use strict JSON schemas with required/optional field validation', icon: '✅' },
+    { type: 'do', text: 'Implement parameter sanitization and injection attack prevention', icon: '✅' },
+    { type: 'do', text: 'Add timeouts, retries with exponential backoff, and circuit breakers', icon: '✅' },
+    { type: 'do', text: 'Use parallel execution for independent function calls', icon: '✅' },
+    { type: 'do', text: 'Cache deterministic function results for cost optimization', icon: '✅' },
+    { type: 'dont', text: 'Use vague function descriptions that lead to hallucinated parameters', icon: '❌' },
+    { type: 'dont', text: 'Allow unbounded parallel calls without rate limiting', icon: '❌' },
+    { type: 'dont', text: 'Retry non-idempotent operations after timeouts', icon: '❌' },
+    { type: 'dont', text: 'Expose raw API credentials or secrets in function calls', icon: '❌' },
+    { type: 'dont', text: 'Skip input validation and security scanning', icon: '❌' }
+  ];
+
+  // When to Use vs When to Avoid
+  const usageGuide = {
+    useWhen: [
+      'Need real-time data beyond model training cutoff',
+      'Require external API integrations or database queries', 
+      'Must perform precise calculations or code execution',
+      'Triggering actions in external systems (email, scheduling)'
+    ],
+    avoidWhen: [
+      'Information available in model knowledge with acceptable quality',
+      'Hard real-time requirements where tool overhead breaks SLOs',
+      'High-risk irreversible actions without human approval',
+      'Simple tasks solvable with basic text generation'
+    ]
+  };
+
+  // Key Metrics (from BFCL and industry benchmarks)
+  const keyMetrics = [
+    { metric: 'Function Selection Accuracy', measure: '% correct tool chosen from registry' },
+    { metric: 'Parameter Extraction Rate', measure: '% required params correctly identified' },
+    { metric: 'Schema Validation Success', measure: '% calls passing validation checks' },
+    { metric: 'API Success Rate', measure: '% successful external function calls' },
+    { metric: 'Parallel Execution Efficiency', measure: 'Latency reduction vs sequential' },
+    { metric: 'Token Usage Optimization', measure: 'Context tokens per function call' },
+    { metric: 'Security Incident Rate', measure: 'Injection/XSS attempts blocked' },
+    { metric: 'Cost per Task', measure: 'Total cost: model + API + infrastructure' }
+  ];
+
+  // Top Use Cases (based on industry patterns and research)
+  const topUseCases = [
+    'Weather & Real-time Data: get_weather("NYC") → current conditions for decision making',
+    'Calendar Integration: schedule_meeting(time, attendees) → automated scheduling workflows',
+    'Database Operations: query_db(table, filters) → dynamic data retrieval and updates',
+    'Code Execution: run_python(code) → computational tasks and data analysis',
+    'Email & Communications: send_email(to, subject, body) → automated notifications',
+    'Web Search: search_web(query) → real-time information retrieval',
+    'File Operations: read_file(path), write_file(path, content) → document processing',
+    'API Integrations: call_api(endpoint, params) → external service interactions'
+  ];
+
+  const references = [
+    {
+      title: 'Foundational Academic Papers',
+      items: [
+        { title: 'ReAct: Synergizing Reasoning and Acting in Language Models (ICLR 2023)', url: 'https://arxiv.org/abs/2210.03629' },
+        { title: 'Toolformer: Language Models Can Teach Themselves to Use Tools (2023)', url: 'https://arxiv.org/abs/2302.04761' },
+        { title: 'Gorilla: Large Language Model Connected with Massive APIs (UC Berkeley 2023)', url: 'https://arxiv.org/abs/2305.15334' },
+        { title: 'Berkeley Function Calling Leaderboard (BFCL) - Current Benchmark', url: 'https://gorilla.cs.berkeley.edu/leaderboard.html' }
+      ]
+    },
+    {
+      title: 'Industry Implementation Guides',
+      items: [
+        { title: 'Anthropic Claude Tool Use Documentation', url: 'https://docs.anthropic.com/en/docs/tool-use' },
+        { title: 'Google Gemini Function Calling Guide', url: 'https://ai.google.dev/gemini-api/docs/function-calling' },
+        { title: 'OpenAI Function Calling Best Practices', url: 'https://platform.openai.com/docs/guides/function-calling' },
+        { title: 'LangChain Tools Integration Framework', url: 'https://python.langchain.com/docs/integrations/tools/' }
+      ]
+    },
+    {
+      title: 'Enterprise Frameworks & Security',
+      items: [
+        { title: 'Model Context Protocol (MCP) - Anthropic Standard', url: 'https://modelcontextprotocol.io/' },
+        { title: 'Google Agent Developer Kit (ADK) - Enterprise Tools', url: 'https://google.github.io/adk-docs/tools/' },
+        { title: 'CrewAI Multi-Agent Tool Coordination', url: 'https://docs.crewai.com/concepts/tools' },
+        { title: 'Azure OpenAI Function Calling Security Guidelines', url: 'https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/function-calling' }
+      ]
+    },
+    {
+      title: 'Research & Performance Evaluation',
+      items: [
+        { title: 'Function Calling in Large Language Models: A Survey (2024)', url: 'https://arxiv.org/search/?query=function+calling+large+language+models&searchtype=all' },
+        { title: 'Tool Use Pattern Analysis - Agentic Design Patterns', url: '/references/agentic_design_patterns/Chapter 5_ Tool Use.md' },
+        { title: 'API-Bank: Tool-Augmented LLM Benchmark', url: 'https://github.com/AlibabaResearch/DAMO-ConvAI/tree/main/api-bank' },
+        { title: 'ToolBench: Tool Learning Evaluation Framework', url: 'https://github.com/OpenBMB/ToolBench' }
+      ]
+    }
+  ];
+
   return (
     <>
-      {/* Core Mechanism */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
-          Core Mechanism
-        </h2>
-        <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
-          <p className="text-gray-200 text-base leading-relaxed">
-            Model selects a tool by name and emits JSON args per schema; orchestrator validates, executes external calls, and returns structured results for synthesis.
-          </p>
-        </div>
-      </section>
+      <QuickOverviewSection
+        pattern="Enable AI to invoke external functions and APIs through structured schemas"
+        why="Breaks LLM knowledge limitations, enables real-time data access, external actions, and precise calculations"
+        keyInsight="Schema-driven function calling with parameter validation, parallel execution, and security controls"
+      />
 
-      {/* Workflow / Steps */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
-          Workflow / Steps
-        </h2>
-        <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
-          <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
-            <li>Define JSON schemas and register tools with descriptions.</li>
-            <li>Plan call(s) → model outputs function name + args.</li>
-            <li>Validate/sanitize args; enrich defaults; prompt for missing requireds.</li>
-            <li>Execute with timeouts, retries, idempotency; parallelize when safe.</li>
-            <li>Normalize results; redact secrets; log audit trail.</li>
-            <li>Return results to model; optionally chain further calls.</li>
-          </ol>
-        </div>
-      </section>
+      <QuickImplementationSection
+        steps={quickImplementation.steps}
+        example={quickImplementation.example}
+      />
 
-      {/* Best Practices */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-green-500 rounded-full"></div>
-          Best Practices
-        </h2>
-        <div className="grid gap-3">
-          {[
-            'Tight schemas (enums/ranges/formats); hard-fail on validation errors.',
-            'Small, composable tools; clear names and examples.',
-            'Auth scoping and ACL per tool; never expose raw secrets.',
-            'Timeouts, retries with jitter, and circuit breakers.',
-            'Parallelize independent calls; cap concurrency and handle rate limits.',
-            'Idempotency for writes; dedupe by request key.',
-            'Structured logging and PII redaction.',
-          ].map((tip) => (
-            <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
-              <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
-              <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
-            </div>
-          ))}
-        </div>
-      </section>
+      <DosAndDontsSection items={dosAndDonts} />
 
-      {/* When NOT to Use */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-red-500 rounded-full"></div>
-          When NOT to Use
-        </h2>
-        <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-          <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-            <li>Question is answerable from model knowledge with acceptable quality.</li>
-            <li>Hard real-time paths where tool overhead breaks SLOs.</li>
-            <li>High-risk, irreversible actions without human review.</li>
-          </ul>
-        </div>
-      </section>
+      <UsageGuideSection
+        useWhen={usageGuide.useWhen}
+        avoidWhen={usageGuide.avoidWhen}
+      />
 
-      {/* Common Pitfalls */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
-          Common Pitfalls
-        </h2>
-        <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-          <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-            <li>Hallucinated tool names/params due to vague descriptions.</li>
-            <li>Non-idempotent writes retried after timeouts.</li>
-            <li>Unbounded parallelism → rate limits/cost spikes.</li>
-            <li>Secrets/PII leakage in prompts, outputs, or logs.</li>
-          </ul>
-        </div>
-      </section>
+      <KeyMetricsSection metrics={keyMetrics} />
 
-      {/* Key Features */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
-          Key Features
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {[
-            'Schema-based tool registry',
-            'Automatic parameter validation',
-            'Parallel execution controls',
-            'Timeouts/retries/circuit breakers',
-            'Idempotency & deduplication',
-            'Role/tenant-scoped permissions',
-            'Structured logging & auditability',
-            'Result normalization',
-          ].map((feat) => (
-            <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
-              {feat}
-            </div>
-          ))}
-        </div>
-      </section>
+      <TopUseCasesSection useCases={topUseCases} />
 
-      {/* KPIs / Success Metrics */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
-          KPIs / Success Metrics
-        </h2>
-        <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-          <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-            <li>Tool-call success rate; validation error rate; retry/fallback rate.</li>
-            <li>Task completion rate and quality uplift vs. no-tools baseline.</li>
-            <li>Latency p50/p95 and parallel efficiency; cost per task.</li>
-          </ul>
-        </div>
-      </section>
-
-      {/* Token / Resource Usage */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
-          Token / Resource Usage
-        </h2>
-        <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-          <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-            <li>Prompt: registry context + planning; Output: args JSON + synthesis.</li>
-            <li>External: API costs/egress/compute; cache common reads.</li>
-            <li>Heuristics: reason-first, call-if-needed; cap tool calls per turn.</li>
-          </ul>
-        </div>
-      </section>
-
-      {/* Best Use Cases */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
-          Best Use Cases
-        </h2>
-        <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-          <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-            <li>Real-time retrieval and CRUD over business systems.</li>
-            <li>Research + calculation + scheduling + messaging assistants.</li>
-            <li>Enterprise automations with audit and least-privilege access.</li>
-          </ul>
-        </div>
-      </section>
-
-      {/* References & Further Reading */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
-          References & Further Reading
-        </h2>
-        <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
-          <div>
-            <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
-            <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
-              <li>ReAct (2022)</li>
-              <li>Toolformer (2023)</li>
-              <li>Gorilla (2023)</li>
-              <li>API-Bank / ToolBench (2023)</li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
-            <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
-              <li>OpenAI function calling/tool calls</li>
-              <li>Anthropic tool use (function_calls XML)</li>
-              <li>Google/Vertex function calling</li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
-            <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
-              <li>Model Context Protocol (MCP)</li>
-              <li>LangChain tools</li>
-              <li>Semantic Kernel functions</li>
-              <li>LlamaIndex tools</li>
-              <li>Pydantic / JSON Schema validators</li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
-            <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
-              <li>Engineering blogs on safe tool use & orchestration</li>
-              <li>Open-source agent repos with function calling</li>
-              <li>Conference talks and workshops</li>
-            </ul>
-          </div>
-        </div>
-      </section>
+      <ReferencesSection categories={references} />
     </>
   );
 };
+
+export default FunctionCallingDetails;

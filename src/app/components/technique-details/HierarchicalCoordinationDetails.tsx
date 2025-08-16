@@ -1,219 +1,156 @@
 'use client';
-import React, { useState } from 'react';
-import { BookOpen, Code, Check, Brain, GitBranch, Play, Sparkles, ArrowRight } from 'lucide-react';
 
-export const HierarchicalCoordinationDetails = () => {
+import React from 'react';
+import ReferencesSection from './shared/ReferencesSection';
+import {
+  QuickOverviewSection,
+  QuickImplementationSection,
+  DosAndDontsSection,
+  UsageGuideSection,
+  KeyMetricsSection,
+  TopUseCasesSection
+} from './shared';
+
+interface HierarchicalCoordinationDetailsProps {
+  selectedTechnique: any;
+}
+
+export const HierarchicalCoordinationDetails: React.FC<HierarchicalCoordinationDetailsProps> = ({ selectedTechnique }) => {
+  const quickImplementation = {
+    steps: [
+      { num: '1', action: 'Define Hierarchy', detail: 'Establish supervisor-subordinate tiers with clear authority levels' },
+      { num: '2', action: 'Task Decomposition', detail: 'Break complex goals into hierarchical subtasks (HTN-style)' },
+      { num: '3', action: 'Delegation Protocol', detail: 'Implement task assignment with acceptance criteria and SLAs' },
+      { num: '4', action: 'Escalation Rules', detail: 'Define when and how issues bubble up hierarchy' },
+      { num: '5', action: 'Monitor & Coordinate', detail: 'Track execution, aggregate results, enforce policies' }
+    ],
+    example: 'ExecutiveAgent → ManagerAgents → TeamLeadAgents → WorkerAgents'
+  };
+
+  const dosAndDonts = [
+    { type: 'do', text: 'Define explicit roles, permissions, and authority boundaries per tier', icon: '✅' },
+    { type: 'do', text: 'Use structured task specifications with clear success criteria', icon: '✅' },
+    { type: 'do', text: 'Implement bounded re-decomposition with recursion depth limits', icon: '✅' },
+    { type: 'do', text: 'Summarize between levels to control context growth', icon: '✅' },
+    { type: 'do', text: 'Use smaller models for routine tasks, larger for strategic decisions', icon: '✅' },
+    { type: 'do', text: 'Instrument comprehensive traces and audit logs per tier', icon: '✅' },
+    { type: 'dont', text: 'Create single points of failure at supervisor level', icon: '❌' },
+    { type: 'dont', text: 'Allow excessive escalation that inflates latency and cost', icon: '❌' },
+    { type: 'dont', text: 'Use ambiguous authority that blocks worker task completion', icon: '❌' },
+    { type: 'dont', text: 'Forward full transcripts across tiers instead of summaries', icon: '❌' },
+    { type: 'dont', text: 'Skip policy enforcement checks at higher tiers', icon: '❌' }
+  ];
+
+  const usageGuide = {
+    useWhen: [
+      'Complex workflows requiring approval gates and oversight',
+      'Enterprise systems needing policy enforcement',
+      'Large-scale operations with interdependent subtasks',
+      'Scenarios requiring clear authority and accountability',
+      'Multi-step processes with quality control checkpoints',
+      'Operations needing resource authorization and allocation'
+    ],
+    avoidWhen: [
+      'Simple single-step tasks without coordination needs',
+      'Real-time systems where review latency breaks SLAs',
+      'Creative brainstorming requiring fluid collaboration',
+      'Small teams where hierarchy creates unnecessary overhead',
+      'Highly dynamic environments requiring rapid adaptation'
+    ]
+  };
+
+  const keyMetrics = [
+    { metric: 'Task Success Rate', measure: 'End-to-end completion vs flat baseline' },
+    { metric: 'Tier Latency', measure: 'P50/P95 processing time per hierarchical level' },
+    { metric: 'Escalation Rate', measure: 'Percentage of tasks requiring higher-tier review' },
+    { metric: 'Policy Compliance', measure: 'Violations caught and resolved at checkpoints' },
+    { metric: 'Resource Utilization', measure: 'Cost and compute efficiency across tiers' },
+    { metric: 'Delegation Accuracy', measure: 'Successful task assignments without rework' }
+  ];
+
+  const topUseCases = [
+    'Enterprise Workflows: Multi-tier approval processes for compliance, finance, procurement with policy enforcement',
+    'Incident Response: Command hierarchy with incident commander, team leads, and specialists for systematic resolution',
+    'Research Projects: Principal investigator, project managers, research teams with peer review and publication oversight',
+    'Manufacturing Operations: Plant managers, line supervisors, operators with quality control and safety protocols',
+    'Software Development: Architects, tech leads, developers with code review, testing, and deployment approval gates'
+  ];
+
+  const references = [
+    {
+      title: 'Recent Academic Research (2024-2025)',
+      items: [
+        { title: 'AgentOrchestra: A Hierarchical Multi-Agent Framework for General-Purpose Task Solving (Zhang et al., 2025)', url: 'https://arxiv.org/abs/2506.12508' },
+        { title: 'Multi-Agent Collaboration via Evolving Orchestration (Dang et al., 2025)', url: 'https://arxiv.org/html/2505.19591v1' },
+        { title: 'Towards Effective GenAI Multi-Agent Collaboration: Design and Evaluation for Enterprise Applications (Shu et al., 2024)', url: 'https://arxiv.org/html/2412.05449v1' },
+        { title: 'Multi-Agent Coordination across Diverse Applications: A Survey (2025)', url: 'https://arxiv.org/html/2502.14743v2' }
+      ]
+    },
+    {
+      title: 'Foundational Papers & Theory',
+      items: [
+        { title: 'Hierarchical Task Network Planning: Formalization and Analysis (Nau et al., 2003)', url: 'https://arxiv.org/abs/1403.7426' },
+        { title: 'Options: An Introduction to Temporal Abstraction in Reinforcement Learning (Sutton et al., 1999)', url: 'https://www.jmlr.org/papers/volume2/sutton00a/sutton00a.pdf' },
+        { title: 'Federated Control with Hierarchical Multi-Agent Deep Reinforcement Learning (2017)', url: 'https://arxiv.org/abs/1712.08266' },
+        { title: 'HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face (Shen et al., 2023)', url: 'https://arxiv.org/abs/2303.17580' }
+      ]
+    },
+    {
+      title: 'Enterprise Implementation Frameworks',
+      items: [
+        { title: 'AWS Multi-Agent Orchestration with Amazon Bedrock (2024)', url: 'https://aws.amazon.com/blogs/machine-learning/design-multi-agent-orchestration-with-reasoning-using-amazon-bedrock-and-open-source-frameworks/' },
+        { title: 'Microsoft Azure AI Agent Design Patterns (2024)', url: 'https://learn.microsoft.com/en-us/azure/architecture/ai-ml/guide/ai-agent-design-patterns' },
+        { title: 'IBM AI Agent Orchestration Guide (2024)', url: 'https://www.ibm.com/think/topics/ai-agent-orchestration' },
+        { title: 'Anthropic Multi-Agent Research System Architecture (2024)', url: 'https://www.anthropic.com/engineering/multi-agent-research-system' }
+      ]
+    },
+    {
+      title: 'Implementation Frameworks & Tools',
+      items: [
+        { title: 'LangGraph Multi-Agent Supervisor Pattern (2024)', url: 'https://langchain-ai.github.io/langgraph/tutorials/multi_agent/agent_supervisor/' },
+        { title: 'Microsoft AutoGen - Manager-Worker Agent Patterns (2024)', url: 'https://microsoft.github.io/autogen/' },
+        { title: 'CrewAI Hierarchical Agent Management (2024)', url: 'https://docs.crewai.com/' },
+        { title: 'OpenAI Swarm - Agent Orchestration Framework (2024)', url: 'https://github.com/openai/swarm' }
+      ]
+    },
+    {
+      title: 'Industry Case Studies & Applications',
+      items: [
+        { title: 'Enterprise Multi-Agent System Market Analysis (2024-2025)', url: 'https://research.aimultiple.com/agentic-frameworks/' },
+        { title: 'Organizational Coordination Theory - MIT Center for Collective Intelligence', url: 'https://ccs.mit.edu/21c/mgtsci/' },
+        { title: 'The Open Group: Coordination & Process Management (DPBoK)', url: 'https://pubs.opengroup.org/dpbok/latest/KLP-chap-coordination.html' },
+        { title: 'Venture Capital Trends in Multi-Agent Systems (2020-2024)', url: 'https://galileo.ai/blog/multi-agent-coordination-strategies' }
+      ]
+    }
+  ];
+
   return (
     <>
-      {/* Core Mechanism */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
-          Core Mechanism
-        </h2>
-        <div className="bg-gradient-to-br from-blue-500/10 to-indigo-500/10 border border-blue-500/20 rounded-xl p-6">
-          <p className="text-gray-200 text-base leading-relaxed">
-            Multi-level supervisor–subordinate structure that decomposes goals and decisions across tiers. Upper levels handle
-            objectives, policy, escalation, and resource authorization; lower levels execute concrete subtasks with local context.
-            Information aggregates upward; directives and approvals flow downward. This mirrors Hierarchical Task Networks (HTN),
-            hierarchical RL/options, and practical supervisor–worker patterns in modern agent frameworks.
-          </p>
-        </div>
-      </section>
+      <QuickOverviewSection
+        pattern="Multi-level agent coordination with supervisory relationships, centralized orchestration, and authority delegation"
+        why="Enables scalable task decomposition, policy enforcement, quality control, and clear accountability chains"
+        keyInsight="Hierarchical structure + task delegation + escalation protocols = enterprise-grade coordination"
+      />
 
-      {/* Workflow / Steps */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
-          Workflow / Steps
-        </h2>
-        <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
-          <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
-            <li>Define tiers: supervisor(s) → managers/leads → workers; clarify authority and escalation rules.</li>
-            <li>Decompose goals (HTN-style): break tasks into ordered/subtasks with preconditions and required artifacts.</li>
-            <li>Plan and delegate: supervisor assigns subtasks with acceptance criteria, SLAs, and resource caps.</li>
-            <li>Execute and report: workers act (tools, retrieval, code) and return structured results + traces.</li>
-            <li>Aggregate and verify: intermediate managers consolidate outputs; supervisors verify against policy/rubrics.</li>
-            <li>Escalate exceptions: unresolved conflicts, missing authority, or safety flags bubble up with context.</li>
-            <li>Learn and adapt: log decisions, costs, and outcomes; refine task schemas, routing, and escalation policies.</li>
-          </ol>
-        </div>
-      </section>
+      <QuickImplementationSection
+        steps={quickImplementation.steps}
+        example={quickImplementation.example}
+      />
 
-      {/* Best Practices */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-green-500 rounded-full"></div>
-          Best Practices
-        </h2>
-        <div className="grid gap-3">
-          {[
-            'Make tiers explicit: roles, permissions, approval limits, and escalation criteria.',
-            'Use structured task specs (inputs, preconditions, success criteria, KPIs) for delegations.',
-            'Enforce policy at higher tiers; sandbox execution at lower tiers; apply least privilege.',
-            'Summarize between levels to control context growth; persist artifacts instead of full transcripts.',
-            'Use smaller models for routine checks at lower tiers; reserve stronger models for planning/reviews.',
-            'Instrument traces: who delegated what, cost/latency per tier, and decision rationales.',
-            'Add retries with backoff and bounded re-decomposition for failed subtasks; cap recursion depth.',
-            'Define clear stop conditions to avoid infinite escalation or delegation loops.',
-          ].map((tip) => (
-            <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
-              <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
-              <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
-            </div>
-          ))}
-        </div>
-      </section>
+      <DosAndDontsSection items={dosAndDonts} />
 
-      {/* When NOT to Use */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-red-500 rounded-full"></div>
-          When NOT to Use
-        </h2>
-        <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-          <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-            <li>Simple, single-step tasks where a single agent meets quality and SLOs.</li>
-            <li>Hard real-time constraints where extra review/approval hops break latency budgets.</li>
-            <li>Highly creative brainstorming where rigid tiers reduce idea diversity and speed.</li>
-            <li>Teams so small that hierarchy adds overhead without coordination benefits.</li>
-          </ul>
-        </div>
-      </section>
+      <UsageGuideSection
+        useWhen={usageGuide.useWhen}
+        avoidWhen={usageGuide.avoidWhen}
+      />
 
-      {/* Common Pitfalls */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
-          Common Pitfalls
-        </h2>
-        <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-          <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-            <li>Single points of failure at the supervisor; bottlenecks and queueing delays.</li>
-            <li>Over-escalation: excessive approvals and rechecks inflate latency and cost.</li>
-            <li>Ambiguous authority: workers lack permissions or clarity to complete tasks.</li>
-            <li>Token bloat: forwarding full transcripts across tiers instead of concise summaries.</li>
-            <li>Policy drift: inconsistent enforcement across managers; missing audit trails.</li>
-          </ul>
-        </div>
-      </section>
+      <KeyMetricsSection metrics={keyMetrics} />
 
-      {/* Key Features */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
-          Key Features
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {[
-            'Supervisor–manager–worker tiers with clear permissions',
-            'HTN-style task decomposition and recomposition',
-            'Escalation workflows and exception handling',
-            'Policy enforcement and approval gates at higher tiers',
-            'Artifact-centric communication and summarization between tiers',
-            'Observability: per-tier metrics, traces, and audit logs',
-          ].map((feat) => (
-            <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
-              {feat}
-            </div>
-          ))}
-        </div>
-      </section>
+      <TopUseCasesSection useCases={topUseCases} />
 
-      {/* KPIs / Success Metrics */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
-          KPIs / Success Metrics
-        </h2>
-        <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-          <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-            <li>Task success rate vs. flat baseline; defect/rollback rate after approval.</li>
-            <li>Latency p50/p95 per tier; time-in-queue at supervisor and managers.</li>
-            <li>Cost per task by tier; tokens per delegation, per escalation, and per artifact.</li>
-            <li>Escalation rate and resolution time; rework rate after supervisor review.</li>
-            <li>Policy violations caught at higher tiers; audit completeness.</li>
-          </ul>
-        </div>
-      </section>
-
-      {/* Token / Resource Usage */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
-          Token / Resource Usage
-        </h2>
-        <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-          <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-            <li>Summarize cross-tier messages; pass references to artifacts instead of full text where possible.</li>
-            <li>Use small/fast models for routine checks at lower tiers; reserve larger models for planning and audits.</li>
-            <li>Batch approvals and aggregations; parallelize independent delegations.</li>
-            <li>Set explicit token and cost budgets per tier; enforce max recursion/decomposition depth.</li>
-            <li>Cache shared context at the supervisor; avoid re-sending unchanged evidence.</li>
-          </ul>
-        </div>
-      </section>
-
-      {/* Best Use Cases */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
-          Best Use Cases
-        </h2>
-        <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-          <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-            <li>Enterprise workflows requiring approvals: compliance, finance, procurement, policy changes.</li>
-            <li>Complex operations with interdependent subtasks: incident response, product launches, SRE runbooks.</li>
-            <li>Research and report generation with section owners and editorial review.</li>
-            <li>Multi-robot/drone coordination with mission control and local autonomy.</li>
-          </ul>
-        </div>
-      </section>
-
-      {/* References & Further Reading */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
-          References & Further Reading
-        </h2>
-        <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
-          <div>
-            <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
-            <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
-              <li><a href="https://arxiv.org/abs/1403.7426" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">An Overview of Hierarchical Task Network Planning (2014)</a></li>
-              <li><a href="https://www.jmlr.org/papers/volume2/sutton00a/sutton00a.pdf" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Options: Temporal Abstraction in Reinforcement Learning (Sutton, Precup, Singh, 1999/2000)</a></li>
-              <li><a href="https://arxiv.org/abs/1712.08266" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Federated Control with Hierarchical Multi‑Agent Deep RL (2017)</a></li>
-              <li><a href="https://arxiv.org/abs/2303.17580" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">HuggingGPT: A System to Connect LLMs with ML Community (Planner–Expert pattern, 2023)</a></li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
-            <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
-              <li><a href="https://langchain-ai.github.io/langgraph/how-tos/supervisor/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangGraph: Supervisor pattern (graph orchestration)</a></li>
-              <li><a href="https://microsoft.github.io/autogen/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Microsoft AutoGen: Manager–Worker Agent Patterns</a></li>
-              <li><a href="https://docs.crewai.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">CrewAI: Manager and Worker Agents</a></li>
-              <li><a href="https://learn.microsoft.com/en-us/azure/architecture/ai-ml/guide/ai-agent-design-patterns" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Azure Architecture: AI Agent Design Patterns</a></li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
-            <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
-              <li><a href="https://github.com/langchain-ai/langgraph" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangGraph</a></li>
-              <li><a href="https://microsoft.github.io/autogen/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">AutoGen</a></li>
-              <li><a href="https://www.crewai.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">CrewAI</a></li>
-              <li><a href="https://github.com/openai/swarm" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">OpenAI Swarm</a></li>
-              <li><a href="https://github.com/modelscope/agentscope" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">AgentScope</a></li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
-            <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
-              <li><a href="https://pubs.opengroup.org/dpbok/latest/KLP-chap-coordination.html" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">The Open Group: Coordination & Process (DPBoK)</a></li>
-              <li><a href="https://ccs.mit.edu/21c/mgtsci/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">MIT CCS: Coordination theory & organizational processes</a></li>
-            </ul>
-          </div>
-        </div>
-      </section>
+      <ReferencesSection categories={references} />
     </>
   );
 };
+
+export default HierarchicalCoordinationDetails;

@@ -75,7 +75,6 @@ export const categories: Category[] = [
     useCases: [
       'Multi-Model Selection: Automatically choosing the most suitable AI model based on query complexity, domain expertise requirements, or performance constraints.',
       'Expertise-Based Delegation: Routing specialized queries to domain-specific agents or models with relevant training and capabilities.',
-      'Load Balancing: Distributing requests across multiple processing nodes to optimize performance and prevent bottlenecks.',
       'Content Classification Routing: Directing different types of content (text, images, code) to specialized processing pipelines.',
       'Priority-Based Processing: Routing high-priority or time-sensitive requests to faster or more capable processing resources.',
       'Geographic Distribution: Directing requests to regional processing centers based on user location or data sovereignty requirements.',
@@ -111,52 +110,6 @@ export const categories: Category[] = [
       ]
     },
     techniques: ['content-based-routing', 'capability-routing', 'load-balancing', 'geographic-routing', 'dynamic-routing', 'dynamic-context-assembly']
-  },
-  { 
-    id: 'parallelization', 
-    name: 'Parallelization', 
-    icon: '⚡', 
-    description: 'Concurrent execution and parallel processing patterns',
-    detailedDescription: 'Parallelization patterns enable AI systems to execute multiple tasks, queries, or processing steps simultaneously, dramatically improving throughput and reducing overall processing time. These patterns leverage concurrent execution to handle independent operations in parallel, optimize resource utilization, and provide responsive user experiences even for complex multi-step workflows.',
-    useCases: [
-      'Batch Processing: Simultaneously processing multiple independent requests or data items to maximize throughput.',
-      'Multi-Perspective Analysis: Generating multiple viewpoints or approaches to the same problem concurrently for comprehensive analysis.',
-      'A/B Testing: Running multiple model variants or prompt strategies in parallel to compare performance and quality.',
-      'Resource Optimization: Utilizing multiple processing units or API endpoints concurrently to reduce overall processing time.',
-      'Distributed Reasoning: Breaking down complex problems into independent sub-problems that can be solved simultaneously.',
-      'Multi-Source Integration: Gathering information from multiple sources or databases concurrently for comprehensive responses.',
-      'Redundant Processing: Running critical operations in parallel for improved reliability and faster response times.',
-      'Progressive Enhancement: Generating basic responses quickly while computing enhanced results in parallel.'
-    ],
-    whyImportant: 'Parallelization is essential for building performant AI systems that can handle real-world scale and user expectations. It enables better resource utilization, reduces user-perceived latency, and allows systems to handle higher volumes of requests. This pattern is particularly important for applications requiring real-time responses, batch processing large datasets, or integrating multiple AI capabilities that can operate independently.',
-    implementationGuide: {
-      whenToUse: [
-        'Tasks that can be decomposed into independent, parallelizable sub-tasks',
-        'High-volume applications where throughput is critical',
-        'Systems with multiple independent data sources or processing steps',
-        'Applications requiring redundancy for reliability or quality improvement',
-        'Scenarios where different approaches to the same problem can be explored simultaneously',
-        'Resource-rich environments where parallel execution is cost-effective'
-      ],
-      bestPractices: [
-        'Identify truly independent tasks to avoid synchronization overhead',
-        'Implement proper error handling for individual parallel operations',
-        'Use connection pooling and resource management to prevent exhaustion',
-        'Design graceful degradation when some parallel operations fail',
-        'Monitor and balance load across parallel execution paths',
-        'Implement timeouts and circuit breakers for individual parallel operations',
-        'Consider the trade-offs between parallelism and resource costs'
-      ],
-      commonPitfalls: [
-        'Attempting to parallelize dependent operations leading to race conditions',
-        'Over-parallelization causing resource contention and reduced performance',
-        'Insufficient error handling causing entire parallel operations to fail',
-        'Not considering the overhead costs of coordination and synchronization',
-        'Ignoring rate limits and quotas when parallelizing external API calls',
-        'Poor result aggregation strategies leading to inconsistent outputs'
-      ]
-    },
-    techniques: ['map-reduce', 'scatter-gather', 'fork-join', 'async-await']
   },
   { 
     id: 'reflection', 
@@ -250,23 +203,62 @@ export const categories: Category[] = [
     },
     techniques: ['function-calling', 'api-integration', 'code-execution', 'plugin-architecture', 'model-context-protocol', 'json-schema', 'grpc-protocols', 'rest-apis', 'message-queuing']
   },
-
+  {
+    id: 'planning-execution',
+    name: 'Planning',
+    icon: '🎯',
+    description: 'Advanced planning strategies for complex multi-step tasks and goal achievement',
+    detailedDescription: 'Sophisticated approaches to breaking down complex objectives into manageable steps, handling dependencies, and executing plans while adapting to changing conditions.',
+    useCases: [
+      'Strategic Business Planning: Automated decomposition of strategic goals into actionable plans with resource allocation, timeline management, and progress tracking across organizational levels.',
+      'Project Management Automation: Breaking down complex projects into manageable tasks with dependency tracking, risk assessment, and adaptive scheduling based on real-time progress.',
+      'Resource Allocation Optimization: Dynamic distribution of computational, human, and material resources based on priority, availability, and efficiency considerations.',
+      'Multi-Agent Task Coordination: Orchestrating multiple AI agents to work together on complex objectives with role assignment, communication protocols, and coordination mechanisms.'
+    ],
+    whyImportant: 'Planning and execution patterns are essential for handling complex, multi-faceted challenges that require systematic decomposition and coordinated execution. They enable AI systems to break down overwhelming objectives into manageable components while maintaining awareness of dependencies, constraints, and resource limitations.',
+    implementationGuide: {
+      whenToUse: [
+        'Complex objectives requiring systematic decomposition into subtasks',
+        'Multi-step processes with dependencies and resource constraints',
+        'Dynamic environments requiring adaptive planning and re-planning',
+        'Collaborative scenarios involving multiple agents or stakeholders',
+        'Time-sensitive situations requiring efficient resource utilization',
+        'Projects with uncertain outcomes requiring contingency planning'
+      ],
+      bestPractices: [
+        'Design modular plans that can be adapted without complete reconstruction',
+        'Implement continuous monitoring and feedback loops for plan adjustment',
+        'Build in contingency planning for likely failure modes and uncertainties',
+        'Use hierarchical planning to manage complexity at different abstraction levels',
+        'Implement proper resource tracking and constraint management',
+        'Design clear success metrics and progress indicators for plan validation'
+      ],
+      commonPitfalls: [
+        'Over-planning without execution flexibility or adaptation mechanisms',
+        'Ignoring resource constraints and dependencies in plan construction',
+        'Poor handling of plan failures and inadequate replanning capabilities',
+        'Creating plans that are too rigid to adapt to changing circumstances',
+        'Insufficient monitoring and feedback mechanisms for plan progress',
+        'Failing to account for uncertainty and risk in planning processes'
+      ]
+    },
+    techniques: ['hierarchical-planning', 'goal-decomposition', 'constraint-satisfaction', 'scenario-planning', 'hierarchical-task-network-planning', 'meta-reasoning', 'task-management-orchestration']
+  },
   { 
     id: 'multi-agent', 
     name: 'Multi-Agent', 
     icon: '👥', 
     description: 'Coordination and communication patterns for multiple AI agents',
-    detailedDescription: 'Multi-agent patterns enable coordination, collaboration, and communication between multiple AI agents, each potentially specialized for different tasks or domains. These patterns implement communication protocols, task distribution strategies, coordination mechanisms, and inter-agent messaging that allow multiple agents to work together effectively. They support both centralized orchestration and distributed peer-to-peer collaboration, combining unique agent capabilities to solve complex problems that exceed the capacity of individual agents.',
+    detailedDescription: 'Multi-agent patterns enable sophisticated coordination, collaboration, and communication between multiple specialized AI agents working together to solve complex problems beyond individual agent capabilities. These patterns implement advanced orchestration mechanisms including supervisor-worker architectures, shared workspace collaboration, sequential pipelines, concurrent processing, and intelligent handoff systems. Modern multi-agent systems leverage state-of-the-art frameworks like LangGraph, Google ADK, and CrewAI to create enterprise-grade agentic workflows with proper error handling, scalability, and performance optimization. Recent research demonstrates that well-designed multi-agent systems can achieve 90% performance improvements over single-agent approaches for complex, multi-domain tasks.',
     useCases: [
-      'Specialized Task Division: Distributing complex workflows among agents with different expertise areas and capabilities.',
-      'Collaborative Problem Solving: Multiple agents contributing different perspectives and approaches to challenging problems.',
-      'Distributed Communication: Agents communicating directly to share information, negotiate resources, and coordinate activities.',
-      'Peer Review Systems: Agents reviewing and validating each other\'s work through structured communication protocols.',
-      'Distributed Computing: Coordinating agents across different computational resources for scalable processing.',
-      'Consensus Building: Multiple agents communicating to reach agreement on decisions or recommendations through voting and negotiation.',
-      'Market Mechanisms: Agents participating in auction-like mechanisms for resource allocation or task assignment.',
-      'Hierarchical Organizations: Implementing management structures with supervisor and worker agent relationships.',
-      'Knowledge Synthesis: Combining insights from multiple specialized agents into comprehensive solutions through collaborative learning.'
+      'Enterprise Research Systems: Supervisor-worker architectures coordinating specialized research agents for comprehensive analysis with 90% performance improvements over single agents.',
+      'Complex Content Creation: Sequential pipelines where research, writing, editing, and fact-checking agents collaborate in structured workflows with quality checkpoints.',
+      'Parallel Decision Analysis: Concurrent orchestration where multiple specialist agents (financial, market, risk, technical) simultaneously analyze investment decisions from different perspectives.',
+      'Dynamic Customer Support: Handoff orchestration intelligently routing customer queries to appropriate specialist agents based on context and complexity.',
+      'Collaborative Document Development: Shared scratchpad systems where multiple agents transparently collaborate on documents with real-time visibility and iterative refinement.',
+      'Distributed Problem Solving: Peer collaboration networks where agents share information, negotiate resources, and reach consensus through structured communication protocols.',
+      'Real-time Information Systems: Event-driven communication protocols enabling scalable agent coordination across enterprise systems.',
+      'Cross-platform Integration: A2A protocol implementations enabling seamless collaboration between agents across different platforms and vendors.'
     ],
     whyImportant: 'Multi-agent patterns enable the creation of sophisticated AI systems that leverage specialized capabilities and distributed processing. They allow for better scalability, improved reliability through redundancy, and enhanced problem-solving through diverse perspectives. These patterns are essential for complex applications that benefit from division of labor, specialized expertise, or require processing at scale beyond single-agent capabilities.',
     implementationGuide: {
@@ -296,7 +288,7 @@ export const categories: Category[] = [
         'Inadequate monitoring making it difficult to diagnose multi-agent system issues'
       ]
     },
-    techniques: ['agent-orchestration', 'peer-collaboration', 'hierarchical-coordination', 'consensus-algorithms', 'agent-to-agent', 'message-passing', 'pub-sub-patterns', 'gossip-protocols', 'actor-frameworks', 'distributed-coordination', 'a2a-protocol']
+    techniques: ['supervisor-worker-pattern', 'shared-scratchpad-collaboration', 'sequential-pipeline-agents', 'concurrent-orchestration', 'handoff-orchestration', 'hierarchical-coordination', 'peer-collaboration', 'consensus-algorithms', 'agent-communication-protocols', 'a2a-protocol']
   },
 
   // Memory and Context Patterns
@@ -344,7 +336,7 @@ export const categories: Category[] = [
         'Not handling memory corruption or inconsistency gracefully'
       ]
     },
-    techniques: ['sliding-window', 'hierarchical-memory', 'attention-mechanisms', 'memory-consolidation', 'working-memory-patterns', 'context-compression', 'context-compression-advanced', 'multimodal-context-integration', 'latent-memory-networks', 'adaptive-context-depth', 'latent-knowledge-retrieval']
+    techniques: ['parametric-memory', 'episodic-memory-systems', 'semantic-memory-networks', 'transactive-memory-systems', 'memory-consolidation-processes', 'distributed-memory-architectures', 'contextual-unstructured-memory', 'contextual-structured-memory', 'hierarchical-memory', 'memory-reading-writing-operations', 'memory-consolidation', 'working-memory-patterns']
   },
   { 
     id: 'learning-adaptation', 
@@ -391,52 +383,6 @@ export const categories: Category[] = [
       ]
     },
     techniques: ['reinforcement-learning', 'few-shot-adaptation', 'meta-learning', 'continuous-learning']
-  },
-  { 
-    id: 'goal-setting-monitoring', 
-    name: 'Goal Setting and Monitoring', 
-    icon: '🎯', 
-    description: 'Objective definition and progress tracking patterns',
-    detailedDescription: 'Goal setting and monitoring patterns enable AI systems to define clear objectives, track progress toward those goals, and adjust strategies based on performance metrics. These patterns implement systematic approaches to objective definition, milestone tracking, success measurement, and adaptive planning that ensure AI systems remain focused and effective in achieving desired outcomes.',
-    useCases: [
-      'Project Management: Setting project milestones, tracking progress, and adjusting timelines based on completion rates.',
-      'Performance Optimization: Defining performance targets and continuously monitoring system metrics for improvement opportunities.',
-      'Learning Objectives: Establishing learning goals and tracking knowledge acquisition and skill development progress.',
-      'User Engagement: Setting engagement targets and monitoring user interaction patterns for experience optimization.',
-      'Quality Assurance: Defining quality standards and monitoring output quality metrics across different processes.',
-      'Resource Utilization: Setting efficiency goals and tracking resource usage patterns for optimization.',
-      'Business KPIs: Monitoring key performance indicators and adjusting strategies to meet business objectives.',
-      'Personal Assistance: Helping users set and track personal goals with progress monitoring and motivational support.'
-    ],
-    whyImportant: 'Goal setting and monitoring patterns are essential for creating purposeful AI systems that can work toward specific objectives and measure their effectiveness. They provide structure for long-term planning, enable continuous improvement through feedback loops, and ensure that AI systems remain aligned with intended outcomes. These patterns are crucial for accountability, performance optimization, and maintaining focus in complex, multi-objective environments.',
-    implementationGuide: {
-      whenToUse: [
-        'Long-term projects or processes requiring sustained focus and progress tracking',
-        'Performance-critical applications where continuous improvement is important',
-        'Systems with multiple competing objectives requiring prioritization and balance',
-        'Applications where success measurement and reporting are required',
-        'Learning systems that need to track and optimize their development',
-        'User-facing applications that help people achieve their personal or professional goals'
-      ],
-      bestPractices: [
-        'Define SMART goals (Specific, Measurable, Achievable, Relevant, Time-bound)',
-        'Implement regular monitoring and reporting mechanisms for progress tracking',
-        'Use both leading and lagging indicators to provide comprehensive progress assessment',
-        'Design adaptive mechanisms that can adjust goals based on changing circumstances',
-        'Implement escalation procedures for when goals are at risk of not being met',
-        'Provide clear visualization and communication of progress to stakeholders',
-        'Design goal hierarchies that align individual objectives with broader system purposes'
-      ],
-      commonPitfalls: [
-        'Setting unrealistic or poorly defined goals that are difficult to measure or achieve',
-        'Insufficient monitoring leading to late discovery of progress issues',
-        'Over-focusing on easily measurable metrics while ignoring important qualitative factors',
-        'Not adapting goals when circumstances change significantly',
-        'Creating goal conflicts that lead to suboptimal overall system performance',
-        'Failing to align individual component goals with overall system objectives'
-      ]
-    },
-    techniques: ['adaptive-complexity-scaling', 'self-regulating-depth-control', 'meta-reasoning-orchestration', 'hierarchical-planning', 'goal-decomposition', 'constraint-satisfaction', 'scenario-planning']
   },
 
   // Error Handling and Human Interaction
@@ -623,56 +569,10 @@ export const categories: Category[] = [
         'Creating context dependencies that make the system fragile to individual component failures'
       ]
     },
-    techniques: ['multi-source-context-fusion', 'context-routing', 'adaptive-context-sizing']
+    techniques: ['multi-source-context-fusion', 'context-routing', 'adaptive-context-sizing', 'adaptive-context-depth', 'context-compression-advanced', 'multimodal-context-integration', 'sliding-window', 'attention-mechanisms']
   },
 
-  // Advanced Coordination Patterns
-  { 
-    id: 'cognitive-architectures', 
-    name: 'Cognitive Architectures', 
-    icon: '🧠', 
-    description: 'Domain-specific reasoning and cognitive processing patterns',
-    detailedDescription: 'Cognitive architecture patterns implement specialized reasoning systems that go beyond general-purpose models to handle domain-specific knowledge and processing requirements. These patterns create structured thinking frameworks that combine different cognitive processes, reasoning modes, and knowledge representation approaches to solve complex problems in specific domains. They bridge the gap between general AI capabilities and specialized expert knowledge.',
-    useCases: [
-      'Domain Expert Systems: Building AI systems with specialized knowledge in fields like medicine, law, engineering, or finance.',
-      'Multi-Modal Reasoning: Integrating different types of reasoning (logical, causal, temporal, spatial) for comprehensive problem-solving.',
-      'Cognitive Task Modeling: Replicating human cognitive processes for specific tasks like diagnosis, design, or strategic planning.',
-      'Hybrid Intelligence Systems: Combining symbolic reasoning with neural approaches for robust problem-solving.',
-      'Adaptive Reasoning Frameworks: Systems that can switch between different reasoning modes based on problem requirements.',
-      'Knowledge Integration Platforms: Combining multiple knowledge sources and reasoning approaches for comprehensive analysis.',
-      'Contextual Decision Systems: Making decisions that consider domain-specific context, constraints, and requirements.',
-      'Specialized Problem Solvers: Creating AI systems optimized for specific types of problems or domains.'
-    ],
-    whyImportant: 'Cognitive architectures are crucial for creating AI systems that can handle real-world complexity in specific domains. While general-purpose models provide broad capabilities, cognitive architectures enable deep specialization and sophisticated reasoning that matches or exceeds human expert performance in narrow domains. They provide the structure needed for reliable decision-making in high-stakes applications.',
-    implementationGuide: {
-      whenToUse: [
-        'Domain-specific applications requiring specialized knowledge and reasoning',
-        'Complex problem-solving that benefits from multiple reasoning approaches',
-        'Applications where explainable reasoning and decision-making are critical',
-        'Systems that need to integrate multiple types of knowledge and reasoning',
-        'High-stakes environments where domain expertise is essential for reliable operation',
-        'Applications requiring adaptation to specific cognitive or reasoning requirements'
-      ],
-      bestPractices: [
-        'Design modular architectures that can combine different reasoning components',
-        'Implement clear knowledge representation and reasoning transparency',
-        'Create domain-specific validation and testing frameworks',
-        'Design systems that can explain their reasoning processes',
-        'Implement proper integration between different cognitive components',
-        'Build in mechanisms for continuous learning and knowledge update',
-        'Ensure cognitive architectures are maintainable and debuggable'
-      ],
-      commonPitfalls: [
-        'Over-engineering cognitive systems when simpler approaches would suffice',
-        'Poor integration between different reasoning components leading to inconsistencies',
-        'Insufficient validation of domain-specific reasoning leading to unreliable behavior',
-        'Not considering the computational complexity of sophisticated reasoning systems',
-        'Inadequate handling of uncertainty and incomplete information in cognitive processing',
-        'Failing to maintain and update domain-specific knowledge over time'
-      ]
-    },
-    techniques: ['domain-reasoning', 'cognitive-pipelines', 'hybrid-reasoning', 'multi-modal-cognition', 'adaptive-thinking']
-  },
+  // Advanced Coordination Patterns  
   { 
     id: 'workflow-orchestration', 
     name: 'Workflow Orchestration', 
@@ -998,48 +898,6 @@ export const categories: Category[] = [
     },
     techniques: ['reinforcement-learning', 'curiosity-driven-search', 'multi-armed-bandits', 'evolutionary-algorithms']
   },
-  {
-    id: 'planning-execution',
-    name: 'Planning & Execution',
-    icon: '🎯',
-    description: 'Advanced planning strategies for complex multi-step tasks and goal achievement',
-    detailedDescription: 'Sophisticated approaches to breaking down complex objectives into manageable steps, handling dependencies, and executing plans while adapting to changing conditions.',
-    useCases: [
-      'Strategic Business Planning: Automated decomposition of strategic goals into actionable plans with resource allocation, timeline management, and progress tracking across organizational levels.',
-      'Project Management Automation: Breaking down complex projects into manageable tasks with dependency tracking, risk assessment, and adaptive scheduling based on real-time progress.',
-      'Resource Allocation Optimization: Dynamic distribution of computational, human, and material resources based on priority, availability, and efficiency considerations.',
-      'Multi-Agent Task Coordination: Orchestrating multiple AI agents to work together on complex objectives with role assignment, communication protocols, and coordination mechanisms.'
-    ],
-    whyImportant: 'Planning and execution patterns are essential for handling complex, multi-faceted challenges that require systematic decomposition and coordinated execution. They enable AI systems to break down overwhelming objectives into manageable components while maintaining awareness of dependencies, constraints, and resource limitations.',
-    implementationGuide: {
-      whenToUse: [
-        'Complex objectives requiring systematic decomposition into subtasks',
-        'Multi-step processes with dependencies and resource constraints',
-        'Dynamic environments requiring adaptive planning and re-planning',
-        'Collaborative scenarios involving multiple agents or stakeholders',
-        'Time-sensitive situations requiring efficient resource utilization',
-        'Projects with uncertain outcomes requiring contingency planning'
-      ],
-      bestPractices: [
-        'Design modular plans that can be adapted without complete reconstruction',
-        'Implement continuous monitoring and feedback loops for plan adjustment',
-        'Build in contingency planning for likely failure modes and uncertainties',
-        'Use hierarchical planning to manage complexity at different abstraction levels',
-        'Implement proper resource tracking and constraint management',
-        'Design clear success metrics and progress indicators for plan validation'
-      ],
-      commonPitfalls: [
-        'Over-planning without execution flexibility or adaptation mechanisms',
-        'Ignoring resource constraints and dependencies in plan construction',
-        'Poor handling of plan failures and inadequate replanning capabilities',
-        'Creating plans that are too rigid to adapt to changing circumstances',
-        'Insufficient monitoring and feedback mechanisms for plan progress',
-        'Failing to account for uncertainty and risk in planning processes'
-      ]
-    },
-    techniques: ['hierarchical-planning', 'goal-decomposition', 'constraint-satisfaction', 'scenario-planning']
-  },
-
   {
     id: 'human-ai-collaboration',
     name: 'Human-AI Collaboration',

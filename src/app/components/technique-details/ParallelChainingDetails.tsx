@@ -1,86 +1,80 @@
 'use client';
 
 import React from 'react';
-import TechniqueSection from './TechniqueSection';
-import BestPracticesSection from './BestPracticesSection';
-import ListSection from './ListSection';
-import KeyFeaturesSection from './KeyFeaturesSection';
-import ReferencesSection from './ReferencesSection';
+import ReferencesSection from './shared/ReferencesSection';
+import {
+  QuickOverviewSection,
+  QuickImplementationSection,
+  DosAndDontsSection,
+  UsageGuideSection,
+  KeyMetricsSection,
+  TopUseCasesSection
+} from './shared';
 
 interface ParallelChainingDetailsProps {
   selectedTechnique: any;
 }
 
 export const ParallelChainingDetails: React.FC<ParallelChainingDetailsProps> = ({ selectedTechnique }) => {
-  const workflowSteps = [
-    'Decompose task into independent parallel branches with clear input specifications.',
-    'Design prompts for each branch with consistent output schemas (JSON preferred).',
-    'Execute branches concurrently with timeout and error handling per worker.',
-    'Implement aggregation strategy: voting, weighted scoring, or heuristic merging.',
-    'Validate merged output and provide fallback mechanisms for partial results.'
+  // Quick Implementation Recipe
+  const quickImplementation = {
+    steps: [
+      { num: '1', action: 'Decompose', detail: 'Identify independent sub-tasks' },
+      { num: '2', action: 'Design I/O', detail: 'Consistent schemas for branches' },
+      { num: '3', action: 'Execute', detail: 'Run branches concurrently' },
+      { num: '4', action: 'Aggregate', detail: 'Vote/merge/synthesize results' },
+      { num: '5', action: 'Monitor', detail: 'Track latency, cost, agreement' }
+    ],
+    example: 'search_news AND search_social AND search_web → aggregate → synthesize'
+  };
+
+  // Combined Do's and Don'ts
+  const dosAndDonts = [
+    { type: 'do', text: 'Use structured outputs (JSON) for consistent aggregation', icon: '✅' },
+    { type: 'do', text: 'Implement timeouts and partial result handling', icon: '✅' },
+    { type: 'do', text: 'Use smaller models for parallel branches, stronger for merge', icon: '✅' },
+    { type: 'do', text: 'Batch requests and respect rate limits', icon: '✅' },
+    { type: 'do', text: 'Cache results from deterministic branches', icon: '✅' },
+    { type: 'dont', text: 'Parallelize dependent tasks', icon: '❌' },
+    { type: 'dont', text: 'Ignore rate limits or burst capacity', icon: '❌' },
+    { type: 'dont', text: 'Over-parallelize simple tasks', icon: '❌' },
+    { type: 'dont', text: 'Skip error handling for partial failures', icon: '❌' },
+    { type: 'dont', text: 'Use verbose unstructured data between stages', icon: '❌' }
   ];
 
-  const bestPractices = [
-    'Cap fan-out and enforce per-run token budgets with guardrails to prevent cost explosion.',
-    'Use timeouts and gracefully handle partial results to bound latency and cost.',
-    'Prefer smaller/cheaper models for parallel legs; reserve strongest model for final merge.',
-    'Batch requests where supported; deduplicate prompts; share context via IDs not full text.',
-    'Implement backoff for rate limits and use queuing/backpressure for high-throughput scenarios.',
-    'Cache stable or reusable worker results across runs to improve efficiency.',
-    'Monitor agreement scores and useful-result ratios to optimize parallel branch design.'
+  // When to Use vs When to Avoid (condensed)
+  const usageGuide = {
+    useWhen: [
+      'Multiple independent lookups (APIs, DBs)',
+      'Multi-perspective analysis tasks',
+      'I/O-bound operations with latency',
+      'Consensus-building scenarios'
+    ],
+    avoidWhen: [
+      'Sequential dependencies exist',
+      'Simple single-step tasks',
+      'Strict rate limits apply',
+      'Consistency > speed requirements'
+    ]
+  };
+
+  // Key Metrics (simplified)
+  const keyMetrics = [
+    { metric: 'Wall-clock Speedup', measure: 'Time vs sequential baseline' },
+    { metric: 'Throughput', measure: 'Tasks/minute at concurrency' },
+    { metric: 'Agreement Score', measure: '% consensus among branches' },
+    { metric: 'Cost Efficiency', measure: 'Total tokens × model rates' },
+    { metric: 'Success Rate', measure: '% completed branches' },
+    { metric: 'P95 Latency', measure: 'Tail completion time' }
   ];
 
-  const whenNotToUse = [
-    'Tasks where branches have strong dependencies and cannot be parallelized effectively.',
-    'Simple problems where sequential processing is sufficient and parallel overhead is unjustified.',
-    'Rate-limited scenarios where concurrent requests would cause throttling or increased costs.',
-    'Cases where result diversity is undesirable and consistency is more important than speed.'
-  ];
-
-  const commonPitfalls = [
-    'Poor branch decomposition leading to redundant work or missing coverage.',
-    'Inadequate aggregation strategy causing loss of quality or important information.',
-    'Ignoring rate limits and burst capacity, causing throttling or failed requests.',
-    'Over-parallelization leading to diminishing returns and unnecessary cost increases.',
-    'Insufficient error handling for partial failures leaving gaps in final results.',
-    'Poor result merging causing inconsistencies or conflicts in final output.'
-  ];
-
-  const keyFeatures = [
-    'Concurrent execution with fan-out/fan-in architecture for reduced latency',
-    'Multiple aggregation strategies: voting, scoring, and intelligent merging',
-    'Timeout handling and graceful degradation with partial results',
-    'Rate limit awareness and backpressure management for high throughput',
-    'Flexible branch design allowing different models and prompting strategies',
-    'Comprehensive monitoring of agreement scores and worker success rates'
-  ];
-
-  const kpiMetrics = [
-    'Wall-clock speedup: Speedup vs sequential baseline for same task quality.',
-    'Throughput: Tasks per minute at target concurrency (P50/P95).',
-    'Agreement score: Consensus/majority agreement or pairwise similarity.',
-    'Useful-result ratio: Valid/non-empty worker outputs divided by total.',
-    'Tail latency: P95 time-to-aggregate with partials tolerated.',
-    'Cost per run: Sum of all worker tokens + merge cost.'
-  ];
-
-  const tokenUsage = [
-    'Total tokens scale with fan-out: sum of all parallel worker inputs/outputs plus aggregation. Plan for burst concurrency within rate limits and budgets.',
-    'Cap fan-out and enforce per-run token budgets with guardrails.',
-    'Use timeouts and accept partial results to bound cost and latency.',
-    'Prefer smaller/cheaper models for parallel legs; reserve strongest model for final merge.',
-    'Batch where supported; deduplicate prompts; share context via IDs rather than full text.',
-    'Implement backoff for rate limits and use queuing/backpressure.',
-    'Cache stable or reusable worker results across runs.'
-  ];
-
-  const bestUseCases = [
-    'Multi-perspective analysis requiring diverse viewpoints on the same problem.',
-    'High-throughput processing where latency reduction justifies increased resource usage.',
-    'Consensus building tasks where multiple opinions need to be synthesized.',
-    'Creative tasks benefiting from diverse approaches and idea generation.',
-    'Quality assurance scenarios using multiple validators or reviewers.',
-    'Research synthesis combining insights from multiple specialized perspectives.'
+  // Top Use Cases (concise)
+  const topUseCases = [
+    'Multi-Source Research: news + academic + social → synthesize findings',
+    'Content Generation: headline + body + image + CTA → complete email',
+    'Data Validation: format + business rules + external APIs → pass/fail',
+    'Creative Ideation: 3 models generate options → select best',
+    'Travel Planning: flights + hotels + events + restaurants → itinerary'
   ];
 
   const references = [
@@ -88,124 +82,64 @@ export const ParallelChainingDetails: React.FC<ParallelChainingDetailsProps> = (
       title: 'Academic Papers',
       items: [
         { title: 'Self-Consistency Improves Chain of Thought Reasoning in Language Models (Wang et al., 2022)', url: 'https://arxiv.org/abs/2203.11171' },
-        { title: 'Constitutional AI: Harmlessness from AI Feedback (Bai et al., 2022)', url: 'https://arxiv.org/abs/2212.08073' },
-        { title: 'Training Language Models to Follow Instructions with Human Feedback (Ouyang et al., 2022)', url: 'https://arxiv.org/abs/2203.02155' }
+        { title: 'A Systematic Survey of Prompt Engineering in Large Language Models (Sahoo et al., 2024)', url: 'https://arxiv.org/abs/2402.07927' },
+        { title: 'Chain-of-Thought Prompting Elicits Reasoning (Wei et al., 2022)', url: 'https://arxiv.org/abs/2201.11903' },
+        { title: 'Least-to-Most Prompting Enables Complex Reasoning (Zhou et al., 2022)', url: 'https://arxiv.org/abs/2205.10625' }
       ]
     },
     {
       title: 'Implementation Guides',
       items: [
-        { title: 'LangChain Parallel Processing with LCEL', url: 'https://python.langchain.com/docs/expression_language/how_to/parallel' },
-        { title: 'OpenAI Batch API for Parallel Processing', url: 'https://platform.openai.com/docs/guides/batch' },
-        { title: 'Anthropic Parallel Request Patterns', url: 'https://docs.anthropic.com/claude/docs/parallel-processing' }
+        { title: 'LangChain - How to Invoke Runnables in Parallel', url: 'https://python.langchain.com/docs/how_to/parallel/' },
+        { title: 'OpenAI Batch API Documentation', url: 'https://platform.openai.com/docs/guides/batch' },
+        { title: 'Anthropic Message Batches API', url: 'https://docs.anthropic.com/en/docs/build-with-claude/message-batches' },
+        { title: 'Google ADK Multi-Agent Systems', url: 'https://google.github.io/adk-docs/agents/multi-agents/' }
       ]
     },
     {
       title: 'Tools & Libraries',
       items: [
-        { title: 'LangChain RunnableParallel for concurrent execution', url: '#' },
-        { title: 'asyncio and aiohttp for Python async processing', url: '#' },
-        { title: 'Promise.all() for JavaScript parallel processing', url: '#' }
+        { title: 'LangChain RunnableParallel Documentation', url: 'https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableParallel.html' },
+        { title: 'Python asyncio Documentation', url: 'https://docs.python.org/3/library/asyncio.html' },
+        { title: 'JavaScript Promise.all() Reference', url: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all' },
+        { title: 'LangGraph for Stateful Applications', url: 'https://langchain-ai.github.io/langgraph/' }
       ]
     },
     {
       title: 'Community & Discussions',
       items: [
-        { title: 'LangChain Community - Parallel processing patterns', url: 'https://discord.gg/langchain' },
-        { title: 'r/MachineLearning - Parallel prompting strategies', url: 'https://www.reddit.com/r/MachineLearning/' },
-        { title: 'OpenAI Community - Batch processing discussions', url: 'https://community.openai.com/' }
+        { title: 'LangChain Discord Community', url: 'https://discord.gg/langchain' },
+        { title: 'OpenAI Developer Forum', url: 'https://community.openai.com/' },
+        { title: 'Anthropic Discord', url: 'https://discord.gg/anthropic' },
+        { title: 'r/LocalLLaMA - Parallel Processing Discussions', url: 'https://www.reddit.com/r/LocalLLaMA/' }
       ]
     }
   ];
 
   return (
     <>
-      {/* Core Mechanism */}
-      <TechniqueSection
-        title="Core Mechanism"
-        colorClass="bg-blue-500"
-        gradient="from-green-500/10 to-blue-500/10"
-        borderClass="border-green-500/20"
-      >
-        <p className="text-gray-200 text-base leading-relaxed mb-4">
-          Parallel chaining executes multiple independent prompts concurrently, then merges results via aggregation 
-          strategies (e.g., majority vote, weighted scoring, map-reduce, or heuristic merge). It trades higher burst 
-          resource usage for lower wall-clock latency and broader coverage.
-        </p>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-          <div className="text-center p-4 bg-gray-800/30 rounded-lg">
-            <div className="text-2xl mb-2">⚡</div>
-            <div className="text-xs text-gray-400 mb-1">Flow</div>
-            <div className="text-sm font-medium text-white">Concurrent fan-out/fan-in</div>
-          </div>
-          <div className="text-center p-4 bg-gray-800/30 rounded-lg">
-            <div className="text-2xl mb-2">🧮</div>
-            <div className="text-xs text-gray-400 mb-1">Aggregation</div>
-            <div className="text-sm font-medium text-white">Voting/merging strategies</div>
-          </div>
-          <div className="text-center p-4 bg-gray-800/30 rounded-lg">
-            <div className="text-2xl mb-2">⏱️</div>
-            <div className="text-xs text-gray-400 mb-1">Latency</div>
-            <div className="text-sm font-medium text-white">Lower wall-clock time</div>
-          </div>
-          <div className="text-center p-4 bg-gray-800/30 rounded-lg">
-            <div className="text-2xl mb-2">💸</div>
-            <div className="text-xs text-gray-400 mb-1">Cost</div>
-            <div className="text-sm font-medium text-white">Higher burst usage</div>
-          </div>
-        </div>
-      </TechniqueSection>
-
-      {/* Workflow / Steps */}
-      <ListSection
-        title="Workflow / Steps"
-        items={workflowSteps}
-        colorClass="bg-purple-500"
-        ordered={true}
+      <QuickOverviewSection
+        pattern="Execute multiple independent tasks concurrently to reduce latency"
+        why="Drastically reduces wall-clock time for I/O-bound operations, enables multi-perspective analysis"
+        keyInsight="Fan-out independent tasks → aggregate results with voting/merging/synthesis strategies"
       />
 
-      {/* Best Practices */}
-      <BestPracticesSection practices={bestPractices} />
-
-      {/* When NOT to Use */}
-      <ListSection
-        title="When NOT to Use"
-        items={whenNotToUse}
-        colorClass="bg-red-500"
+      <QuickImplementationSection
+        steps={quickImplementation.steps}
+        example={quickImplementation.example}
       />
 
-      {/* Common Pitfalls */}
-      <ListSection
-        title="Common Pitfalls"
-        items={commonPitfalls}
-        colorClass="bg-amber-500"
+      <DosAndDontsSection items={dosAndDonts} />
+
+      <UsageGuideSection
+        useWhen={usageGuide.useWhen}
+        avoidWhen={usageGuide.avoidWhen}
       />
 
-      {/* Key Features */}
-      <KeyFeaturesSection features={keyFeatures} />
+      <KeyMetricsSection metrics={keyMetrics} />
 
-      {/* KPIs / Success Metrics */}
-      <ListSection
-        title="KPIs / Success Metrics"
-        items={kpiMetrics}
-        colorClass="bg-emerald-500"
-      />
+      <TopUseCasesSection useCases={topUseCases} />
 
-      {/* Token / Resource Usage */}
-      <ListSection
-        title="Token / Resource Usage"
-        items={tokenUsage}
-        colorClass="bg-indigo-500"
-      />
-
-      {/* Best Use Cases */}
-      <ListSection
-        title="Best Use Cases"
-        items={bestUseCases}
-        colorClass="bg-fuchsia-500"
-      />
-
-      {/* References & Further Reading */}
       <ReferencesSection categories={references} />
     </>
   );

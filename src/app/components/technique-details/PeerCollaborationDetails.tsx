@@ -1,220 +1,156 @@
 'use client';
-import React, { useState } from 'react';
-import { BookOpen, Code, Check, Brain, GitBranch, Play, Sparkles, ArrowRight } from 'lucide-react';
 
-export const PeerCollaborationDetails = () => {
+import React from 'react';
+import ReferencesSection from './shared/ReferencesSection';
+import {
+  QuickOverviewSection,
+  QuickImplementationSection,
+  DosAndDontsSection,
+  UsageGuideSection,
+  KeyMetricsSection,
+  TopUseCasesSection
+} from './shared';
+
+interface PeerCollaborationDetailsProps {
+  selectedTechnique: any;
+}
+
+export const PeerCollaborationDetails: React.FC<PeerCollaborationDetailsProps> = ({ selectedTechnique }) => {
+  const quickImplementation = {
+    steps: [
+      { num: '1', action: 'Network Design', detail: 'Define peer-to-peer communication topology and protocols' },
+      { num: '2', action: 'Consensus Rules', detail: 'Implement voting, reputation, and agreement mechanisms' },
+      { num: '3', action: 'Self-Organization', detail: 'Enable dynamic role assignment and task distribution' },
+      { num: '4', action: 'Conflict Resolution', detail: 'Add negotiation and dispute resolution protocols' },
+      { num: '5', action: 'Adaptive Learning', detail: 'Implement collective intelligence and knowledge sharing' }
+    ],
+    example: 'AgentA ↔ AgentB ↔ AgentC → Consensus → Collective Decision'
+  };
+
+  const dosAndDonts = [
+    { type: 'do', text: 'Implement robust consensus mechanisms for critical decisions', icon: '✅' },
+    { type: 'do', text: 'Enable dynamic topology adaptation based on agent performance', icon: '✅' },
+    { type: 'do', text: 'Use reputation systems to weight agent contributions', icon: '✅' },
+    { type: 'do', text: 'Design fault-tolerant protocols for agent failures', icon: '✅' },
+    { type: 'do', text: 'Implement privacy-preserving communication when needed', icon: '✅' },
+    { type: 'do', text: 'Enable emergent behavior through local interaction rules', icon: '✅' },
+    { type: 'dont', text: 'Create single points of failure in the peer network', icon: '❌' },
+    { type: 'dont', text: 'Allow unchecked consensus manipulation by malicious agents', icon: '❌' },
+    { type: 'dont', text: 'Ignore network partition and Byzantine fault scenarios', icon: '❌' },
+    { type: 'dont', text: 'Use synchronous protocols that block on slow peers', icon: '❌' },
+    { type: 'dont', text: 'Neglect scalability limits in peer-to-peer architectures', icon: '❌' }
+  ];
+
+  const usageGuide = {
+    useWhen: [
+      'Distributed problem-solving across organizations',
+      'Consensus-building without central authority',
+      'Research collaboration and peer review processes',
+      'Decentralized decision-making scenarios',
+      'Systems requiring fault tolerance and resilience',
+      'Cross-domain knowledge integration tasks'
+    ],
+    avoidWhen: [
+      'Tasks requiring strict hierarchical control',
+      'Time-critical decisions needing immediate response',
+      'Simple problems solvable by single agents',
+      'Scenarios with well-defined optimal solutions',
+      'Environments with unreliable network connectivity'
+    ]
+  };
+
+  const keyMetrics = [
+    { metric: 'Consensus Quality', measure: 'Agreement strength and decision confidence' },
+    { metric: 'Network Resilience', measure: 'Performance under node failures and attacks' },
+    { metric: 'Convergence Time', measure: 'Speed of reaching collaborative decisions' },
+    { metric: 'Knowledge Diversity', measure: 'Variety of perspectives and solutions generated' },
+    { metric: 'Scalability Factor', measure: 'Performance degradation with network size' },
+    { metric: 'Byzantine Tolerance', measure: 'Robustness against malicious agents' }
+  ];
+
+  const topUseCases = [
+    'Scientific Research Collaboration: Distributed peer review with consensus-based evaluation and knowledge synthesis across institutions',
+    'Blockchain Consensus: Decentralized validation with Byzantine fault tolerance and proof-of-stake mechanisms for secure transactions',
+    'Distributed Software Development: Peer-based code review, collaborative debugging, and consensus-driven architecture decisions',
+    'Supply Chain Coordination: Multi-party consensus for logistics, quality control, and compliance across organizational boundaries',
+    'Autonomous Vehicle Networks: Peer-to-peer coordination for traffic management, route optimization, and safety consensus'
+  ];
+
+  const references = [
+    {
+      title: 'Recent Academic Research (2023-2025)',
+      items: [
+        { title: 'Multi-Agent Collaboration Mechanisms: A Survey of LLMs (Tran et al., 2025)', url: 'https://arxiv.org/html/2501.06322v1' },
+        { title: 'Exploring Collaboration Mechanisms for LLM Agents: A Social Psychology View (Zhang et al., 2024)', url: 'https://arxiv.org/abs/2310.02124' },
+        { title: 'AgentNet: Decentralized Evolutionary Coordination for LLM-based Multi-Agent Systems (Yang et al., 2024)', url: 'https://arxiv.org/html/2504.00587v1' },
+        { title: 'Multi-Agent Coordination across Diverse Applications: A Survey (2025)', url: 'https://arxiv.org/html/2502.14743v2' }
+      ]
+    },
+    {
+      title: 'Decentralized Systems & Blockchain (2024-2025)',
+      items: [
+        { title: 'Web 4.0: Frameworks for Autonomous AI Agents and Decentralized Enterprise Coordination (2025)', url: 'https://www.frontiersin.org/journals/blockchain/articles/10.3389/fbloc.2025.1591907/full' },
+        { title: 'AI Agents Meet Blockchain: A Survey on Secure and Scalable Collaboration (2025)', url: 'https://www.mdpi.com/1999-5903/17/2/57' },
+        { title: 'Blockchain Security Enhancement: Hybrid Consensus Algorithms and ML Techniques (2024)', url: 'https://www.nature.com/articles/s41598-024-51578-7' },
+        { title: 'Multi-Agent Systems and Blockchain: Systematic Literature Review', url: 'https://link.springer.com/chapter/10.1007/978-3-319-94580-4_9' }
+      ]
+    },
+    {
+      title: 'Consensus Mechanisms & Protocols',
+      items: [
+        { title: 'Practical Byzantine Fault Tolerance (PBFT) - Original Castro & Liskov Paper', url: 'https://pmg.csail.mit.edu/papers/osdi99.pdf' },
+        { title: 'Ethereum 2.0 Proof-of-Stake Consensus Specification', url: 'https://github.com/ethereum/consensus-specs' },
+        { title: 'IPFS - Peer-to-Peer Distributed File System', url: 'https://ipfs.tech/' },
+        { title: 'BitTorrent Protocol - Decentralized Peer-to-Peer Network', url: 'https://www.bittorrent.org/beps/bep_0003.html' }
+      ]
+    },
+    {
+      title: 'Implementation Frameworks',
+      items: [
+        { title: 'Holochain - Agent-Centric Distributed Computing', url: 'https://holochain.org/' },
+        { title: 'Swarm - Ethereum Decentralized Storage and Communication', url: 'https://www.ethswarm.org/' },
+        { title: 'LibP2P - Peer-to-Peer Networking Stack', url: 'https://libp2p.io/' },
+        { title: 'Hyperledger Fabric - Enterprise Blockchain Framework', url: 'https://hyperledger-fabric.readthedocs.io/' }
+      ]
+    },
+    {
+      title: 'Social Psychology & Collaboration Research',
+      items: [
+        { title: 'ACL 2024 - Collaboration Mechanisms for LLM Agents (Social Psychology View)', url: 'https://aclanthology.org/2024.acl-long.782/' },
+        { title: 'MIT Research - Collective Intelligence and Human-AI Collaboration', url: 'https://cci.mit.edu/' },
+        { title: 'Stanford HAI - Human-Centered AI Research', url: 'https://hai.stanford.edu/' },
+        { title: 'Future Internet Special Issue - Multi-Agent Systems and Collaboration (2025)', url: 'https://www.mdpi.com/journal/futureinternet/special_issues/multi_agent_systems' }
+      ]
+    }
+  ];
+
   return (
     <>
-      {/* Core Mechanism */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
-          Core Mechanism
-        </h2>
-        <div className="bg-gradient-to-br from-blue-500/10 to-green-500/10 border border-blue-500/20 rounded-xl p-6">
-          <p className="text-gray-200 text-base leading-relaxed">
-            Decentralized cooperation among equal-role LLM agents communicating peer-to-peer. Peers propose, critique, and
-            reconcile answers via voting, self-consistency, or a judge/arbiter, optionally sharing artifacts in a
-            blackboard or shared memory. No single permanent controller is required; coordination emerges through
-            structured rounds and consensus rules.
-          </p>
-        </div>
-      </section>
+      <QuickOverviewSection
+        pattern="Decentralized collaboration between equal agents without central authority using peer-to-peer communication"
+        why="Eliminates single points of failure, enables cross-organizational cooperation, harnesses collective intelligence, and provides Byzantine fault tolerance"
+        keyInsight="P2P topology + consensus mechanisms + self-organization = resilient distributed intelligence"
+      />
 
-      {/* Workflow / Steps */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
-          Workflow / Steps
-        </h2>
-        <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
-          <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
-            <li>Team setup: define number of peers, diverse personas/capabilities, shared tools/memory.</li>
-            <li>Goal + context: normalize task, constraints, and evaluation rubric.</li>
-            <li>Proposal round: each peer generates an initial solution with rationale and confidence.</li>
-            <li>Critique/debate rounds: peers cross-examine and refine; enforce max rounds and turn limits.</li>
-            <li>Aggregation: select via majority vote, confidence-weighted vote, self-consistency, or LLM-as-judge.</li>
-            <li>Synthesis: one peer (or meta-agent) composes the final answer using winning evidence.</li>
-            <li>Verification: optional tests/tool checks; retry with counterfactuals if criteria not met.</li>
-            <li>Logging: persist traces, costs, decisions, and dissent for audit and learning.</li>
-          </ol>
-        </div>
-      </section>
+      <QuickImplementationSection
+        steps={quickImplementation.steps}
+        example={quickImplementation.example}
+      />
 
-      {/* Best Practices */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-green-500 rounded-full"></div>
-          Best Practices
-        </h2>
-        <div className="grid gap-3">
-          {[
-            'Maximize diversity: vary roles/prompts/tools or even base models to reduce correlated errors.',
-            'Use structured message schemas (role, claim, evidence, confidence) for parsable debates.',
-            'Bound tokens and rounds; add explicit stop criteria to avoid ping-pong loops.',
-            'Calibrate confidence and prefer confidence-weighted or judge-mediated selection for hard tasks.',
-            'Have an impartial arbiter (LLM-as-a-judge) only for tie-breaks; validate with spot human evals.',
-            'Summarize between rounds to compress context; cache retrieved evidence across peers.',
-            'Isolate tools and sandbox effects; enforce safety filters on inputs/outputs.',
-            'Instrument traces, costs, and agreement metrics; regression-test with benchmark suites.',
-          ].map((tip) => (
-            <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
-              <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
-              <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
-            </div>
-          ))}
-        </div>
-      </section>
+      <DosAndDontsSection items={dosAndDonts} />
 
-      {/* When NOT to Use */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-red-500 rounded-full"></div>
-          When NOT to Use
-        </h2>
-        <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-          <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-            <li>Simple or deterministic tasks where a single agent meets quality and SLOs.</li>
-            <li>Hard real-time paths with strict latency budgets or tight cost ceilings.</li>
-            <li>High-stakes writes (payments, policy changes) requiring single-source-of-truth authority.</li>
-            <li>Homogeneous peers (same prompt/model) that offer little diversity benefit.</li>
-          </ul>
-        </div>
-      </section>
+      <UsageGuideSection
+        useWhen={usageGuide.useWhen}
+        avoidWhen={usageGuide.avoidWhen}
+      />
 
-      {/* Common Pitfalls */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
-          Common Pitfalls
-        </h2>
-        <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-          <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-            <li>Echo chambers and self-reinforcement; mode collapse toward incorrect majority answers.</li>
-            <li>Unbounded token growth from many peers/rounds without compression.</li>
-            <li>Noisy or biased judges; selection overfits to writing style rather than correctness.</li>
-            <li>Shared-memory races or stale context causing contradictions between peers.</li>
-          </ul>
-        </div>
-      </section>
+      <KeyMetricsSection metrics={keyMetrics} />
 
-      {/* Key Features */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
-          Key Features
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {[
-            'Peer-to-peer messaging with typed arguments and artifacts',
-            'Critique/debate mechanisms and cross-examination',
-            'Consensus selection: majority, confidence-weighted, self-consistency, judge',
-            'Shared blackboard or memory with concurrency controls',
-            'Fault tolerance: drop or replace failing peers',
-            'Pluggable frameworks (AutoGen, LangGraph, Swarm, CrewAI, AgentScope)',
-          ].map((feat) => (
-            <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
-              {feat}
-            </div>
-          ))}
-        </div>
-      </section>
+      <TopUseCasesSection useCases={topUseCases} />
 
-      {/* KPIs / Success Metrics */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
-          KPIs / Success Metrics
-        </h2>
-        <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-          <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-            <li>Task success rate vs single-agent baseline; win rate on human/LLM judged comparisons.</li>
-            <li>Tokens and cost per successful task; peers × rounds; latency p50/p95.</li>
-            <li>Agreement with ground truth; disagreement entropy and diversity score.</li>
-            <li>Failure taxonomy: deadlocks, contradictions, tool errors; MTTR with retries.</li>
-          </ul>
-        </div>
-      </section>
-
-      {/* Token / Resource Usage */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
-          Token / Resource Usage
-        </h2>
-        <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-          <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-            <li>Cap peers and rounds; summarize between rounds to control context growth.</li>
-            <li>Use small models for critique/voting; reserve larger models for synthesis/verification.</li>
-            <li>Parallelize peer turns; cache shared evidence and retrieved chunks.</li>
-            <li>Set explicit token budgets per round and per conversation.</li>
-          </ul>
-        </div>
-      </section>
-
-      {/* Best Use Cases */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
-          Best Use Cases
-        </h2>
-        <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-          <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-            <li>Program repair and code reasoning (e.g., SWE-bench Verified), multi-perspective code review.</li>
-            <li>Math and logical reasoning (e.g., GSM8K-like tasks) with self-consistency and debate.</li>
-            <li>Research synthesis, policy analysis, red teaming, and safety alignment reviews.</li>
-            <li>Planning under uncertainty with tool calls and evidence aggregation.</li>
-          </ul>
-        </div>
-      </section>
-
-      {/* References & Further Reading */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
-          References & Further Reading
-        </h2>
-        <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
-          <div>
-            <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
-            <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
-              <li><a href="https://arxiv.org/abs/2308.08155" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation (2023)</a></li>
-              <li><a href="https://arxiv.org/abs/2303.05431" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">CAMEL: Communicative Agents for Role-Playing (2023)</a></li>
-              <li><a href="https://arxiv.org/abs/2305.10601" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Tree of Thoughts: Deliberate Problem Solving with LLMs (2023)</a></li>
-              <li><a href="https://arxiv.org/abs/2303.11366" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Reflexion: Language Agents with Verbal Reinforcement Learning (2023)</a></li>
-              <li><a href="https://arxiv.org/abs/2306.05685" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LLM-as-a-Judge: Reliable Evaluation via Pairwise Comparison (2023)</a></li>
-              <li><a href="https://arxiv.org/abs/2203.11171" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Self-Consistency Improves Chain-of-Thought Reasoning (2022)</a></li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
-            <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
-              <li><a href="https://microsoft.github.io/autogen/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">AutoGen Framework Docs</a></li>
-              <li><a href="https://langchain-ai.github.io/langgraph/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangGraph Documentation</a></li>
-              <li><a href="https://github.com/openai/swarm" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">OpenAI Swarm (GitHub)</a></li>
-              <li><a href="https://docs.crewai.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">CrewAI Documentation</a></li>
-              <li><a href="https://arxiv.org/abs/2402.14034" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">AgentScope: Flexible Multi-Agent Platform (2024)</a></li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
-            <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
-              <li><a href="https://microsoft.github.io/autogen/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">AutoGen</a></li>
-              <li><a href="https://github.com/langchain-ai/langgraph" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangGraph</a></li>
-              <li><a href="https://www.crewai.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">CrewAI</a></li>
-              <li><a href="https://github.com/openai/swarm" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">OpenAI Swarm</a></li>
-              <li><a href="https://github.com/modelscope/agentscope" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">AgentScope</a></li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
-            <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
-              <li><a href="https://www.swebench.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">SWE-bench (incl. Verified) benchmark</a></li>
-              <li><a href="https://arxiv.org/abs/2308.09790" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">AgentBench: Evaluating LLMs as Agents (2023)</a></li>
-            </ul>
-          </div>
-        </div>
-      </section>
+      <ReferencesSection categories={references} />
     </>
   );
 };
+
+export default PeerCollaborationDetails;

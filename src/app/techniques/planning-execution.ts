@@ -2,135 +2,95 @@ import { Technique } from './types';
 
 export const planningExecutionTechniques: Technique[] = [
   {
-    id: 'adaptive-complexity-scaling',
-    name: 'Adaptive Complexity Scaling',
-    abbr: 'ACS',
-    icon: '📈',
-    color: 'from-indigo-600 to-purple-700',
-    category: 'planning-execution',
-    description: 'Dynamically adjusts planning complexity based on task difficulty and available resources',
-    features: [
-      'Real-time complexity assessment',
-      'Resource-aware planning depth',
-      'Dynamic algorithm selection',
-      'Performance-based optimization',
-      'Energy-efficient processing',
-      'Quality-speed trade-offs'
-    ],
-    useCases: ['real-time-systems', 'resource-constrained-devices', 'adaptive-ai', 'edge-computing'],
-    complexity: 'high',
-    example: 'Adaptive Planning System:\n\nSimple Task: "Schedule a meeting"\n→ Complexity Score: 2/10\n→ Planning Depth: Basic (1-2 steps)\n→ Resources: Minimal CPU, 50ms\n→ Algorithm: Simple constraint matching\n\nComplex Task: "Optimize supply chain network"\n→ Complexity Score: 9/10\n→ Planning Depth: Deep (15+ steps)\n→ Resources: High CPU, distributed processing\n→ Algorithm: Advanced optimization with simulation\n\nAdaptive Benefits:\n• 80% reduction in unnecessary computation\n• Maintains quality while reducing latency\n• Scales from mobile devices to data centers\n• Self-optimizes based on performance feedback\n\nReal-world Impact:\n• Simple queries: 10x faster response\n• Complex queries: Better solutions through deeper analysis\n• Resource usage: Optimal allocation per task complexity'
-  },
-  {
-    id: 'self-regulating-depth-control',
-    name: 'Self-Regulating Depth Control',
-    abbr: 'SRDC',
-    icon: '🎛️',
-    color: 'from-cyan-600 to-blue-700',
-    category: 'planning-execution',
-    description: 'AI systems that automatically determine optimal reasoning depth without human intervention',
-    features: [
-      'Autonomous depth determination',
-      'Confidence-based stopping criteria',
-      'Quality threshold monitoring',
-      'Cost-benefit analysis',
-      'Uncertainty-driven iteration',
-      'Self-calibrating parameters'
-    ],
-    useCases: ['autonomous-systems', 'real-time-decision-making', 'resource-optimization', 'adaptive-ai'],
-    complexity: 'high',
-    example: 'Autonomous Financial Trading Agent:\n\nMarket Analysis Request: "Should I buy TSLA?"\n\nSelf-Regulation Process:\n1. Initial Analysis (Depth 1):\n   • Basic price trends: Confidence 60%\n   • Threshold not met, continue deeper\n\n2. Extended Analysis (Depth 2):\n   • Technical indicators: Confidence 75%\n   • Market sentiment: Confidence 70%\n   • Combined confidence: 72%, still below 85% threshold\n\n3. Deep Analysis (Depth 3):\n   • Fundamental analysis: Confidence 80%\n   • Competitor comparison: Confidence 85%\n   • Regulatory factors: Confidence 88%\n   • Combined confidence: 87% > 85% threshold\n   → STOP, sufficient confidence achieved\n\nFinal Decision: "BUY - High confidence recommendation"\nResources Used: 3 analysis cycles (optimal trade-off)\nTime Taken: 2.3 seconds vs potential 10+ seconds for max depth\n\nSelf-Learning:\n• Track decision outcomes vs depth used\n• Adjust confidence thresholds based on accuracy\n• Optimize for better depth predictions'
-  },
-  {
-    id: 'meta-reasoning-orchestration',
-    name: 'Meta-Reasoning Orchestration',
-    abbr: 'MRO',
+    id: 'meta-reasoning',
+    name: 'Meta-Reasoning',
+    abbr: 'MR',
     icon: '🧠',
     color: 'from-purple-600 to-pink-700',
     category: 'planning-execution',
-    description: 'Higher-order reasoning that manages and optimizes lower-level reasoning processes',
+    description: 'Higher-order reasoning about reasoning processes, including strategy selection and monitoring',
     features: [
       'Reasoning strategy selection',
       'Multi-level reasoning coordination',
       'Strategy performance monitoring',
       'Dynamic strategy switching',
-      'Reasoning resource allocation',
-      'Cross-domain strategy transfer'
+      'Cross-domain strategy transfer',
+      'Meta-cognitive monitoring'
     ],
-    useCases: ['complex-problem-solving', 'multi-domain-reasoning', 'adaptive-intelligence', 'cognitive-architectures'],
+    useCases: ['complex-problem-solving', 'multi-domain-reasoning', 'adaptive-intelligence'],
     complexity: 'high',
-    example: 'Multi-Domain Problem: "Design a sustainable smart city"\n\nMeta-Reasoning Orchestration:\n\n1. Problem Analysis (Meta-Level):\n   • Identifies sub-domains: Urban planning, Energy, Transport, Economics\n   • Selects reasoning strategies per domain:\n     - Urban planning: Hierarchical planning\n     - Energy: Constraint satisfaction\n     - Transport: Graph optimization\n     - Economics: Scenario planning\n\n2. Strategy Coordination:\n   • Parallel reasoning in each domain\n   • Cross-domain constraint sharing\n   • Conflict resolution between domains\n   • Resource allocation: 40% energy, 30% transport, 20% urban, 10% economics\n\n3. Dynamic Adaptation:\n   • Energy analysis shows renewable constraints\n   • Meta-reasoner increases energy allocation to 50%\n   • Switches transport strategy to electric-focused optimization\n   • Updates economic projections based on energy costs\n\n4. Synthesis:\n   • Integrates domain-specific solutions\n   • Resolves cross-domain conflicts\n   • Produces coherent integrated plan\n\nMeta-Reasoning Benefits:\n• Optimal strategy selection per problem type\n• Dynamic reallocation based on progress\n• Cross-domain knowledge transfer\n• 3x improvement in complex problem solving'
+    example: 'Multi-Domain Problem: "Design a sustainable smart city"\n\nMeta-Reasoning Process:\n\n1. Problem Analysis (Meta-Level):\n   • Identifies sub-domains: Urban planning, Energy, Transport, Economics\n   • Selects reasoning strategies per domain:\n     - Urban planning: Hierarchical task networks\n     - Energy: Constraint satisfaction\n     - Transport: Graph optimization\n     - Economics: Probabilistic modeling\n\n2. Strategy Coordination:\n   • Parallel reasoning in each domain\n   • Cross-domain constraint sharing\n   • Conflict resolution between domains\n   • Resource allocation based on complexity\n\n3. Dynamic Adaptation:\n   • Energy analysis shows renewable constraints\n   • Meta-reasoner switches transport strategy to electric-focused\n   • Updates economic projections based on energy costs\n   • Monitors progress and adjusts strategies\n\n4. Meta-Cognitive Monitoring:\n   • "Am I using the right reasoning approach?"\n   • "Is progress sufficient for the time remaining?"\n   • "Should I try a different strategy?"\n\nMeta-Reasoning Benefits:\n• Optimal strategy selection per problem type\n• Dynamic adaptation based on progress\n• Cross-domain knowledge transfer\n• Self-awareness of reasoning processes',
+    references: [
+      'Establishing Meta-Decision-Making for AI: An Ontology of Relevance, Representation and Reasoning (ArXiv 2022)',
+      'A meta-cognitive architecture for planning in uncertain environments (ScienceDirect 2013)',
+      'Meta-Reasoning in Agents - Evidence-Based Advances in Reflective AI Systems (Computer Society)'
+    ]
   },
   {
-    id: 'hierarchical-planning',
-    name: 'Hierarchical Planning',
+    id: 'hierarchical-task-network-planning',
+    name: 'Hierarchical Task Network (HTN) Planning',
     abbr: 'HTN',
     icon: '🏗️',
     color: 'from-blue-600 to-purple-600',
     category: 'planning-execution',
-    description: 'Decomposes high-level goals into hierarchical sub-tasks',
+    description: 'Automated planning approach that decomposes complex tasks into hierarchically structured networks of simpler tasks using domain knowledge',
     features: [
-      'Goal decomposition',
-      'Multi-level abstraction',
-      'Dependency management',
-      'Resource allocation'
+      'Hierarchical task decomposition',
+      'Domain knowledge integration',
+      'Multi-level task abstraction',
+      'Dependency constraint management',
+      'Primitive and compound task handling',
+      'Method-based task refinement'
     ],
-    useCases: ['project-management', 'complex-workflows', 'strategic-planning', 'system-design'],
+    useCases: ['autonomous-agents', 'multi-agent-systems', 'complex-workflow-automation', 'robotics-planning'],
     complexity: 'high',
-    example: 'Goal: Launch new product\n\nLevel 1: Product Launch\n├─ Level 2: Product Development\n│  ├─ Level 3: Market Research\n│  ├─ Level 3: Design & Engineering\n│  └─ Level 3: Testing & QA\n├─ Level 2: Marketing Strategy\n└─ Level 3: Go-to-Market Plan\n\nEach level has specific tasks, timelines, and dependencies'
+    example: 'HTN Planning for Autonomous Research Agent:\n\nTop-Level Task: "Conduct Market Analysis"\n\nHTN Decomposition:\n├─ Method 1: Comprehensive Analysis\n│  ├─ Task: Gather Data Sources\n│  │  ├─ Primitive: Search Academic Papers\n│  │  ├─ Primitive: Query Market Databases\n│  │  └─ Primitive: Scrape Industry Reports\n│  ├─ Task: Process Information\n│  │  ├─ Compound: Statistical Analysis\n│  │  │  ├─ Primitive: Calculate Trends\n│  │  │  └─ Primitive: Identify Correlations\n│  │  └─ Compound: Competitive Analysis\n│  └─ Task: Generate Report\n│     ├─ Primitive: Structure Findings\n│     └─ Primitive: Create Visualizations\n\nConstraints:\n• Data gathering must complete before processing\n• Statistical analysis precedes competitive analysis\n• All analysis must finish before report generation\n\nHTN Advantages:\n• Domain expertise encoded in methods\n• Efficient search through task hierarchy\n• Reusable task decomposition patterns\n• Human-interpretable plan structure',
+    references: [
+      'An Overview of Hierarchical Task Network Planning (ArXiv 2014) - https://arxiv.org/abs/1403.7426',
+      'HTN planning: Overview, comparison, and beyond (ScienceDirect 2015)',
+      'Hierarchical Task Network Planning for Facilitating Cooperative Multi-Agent Reinforcement Learning (ArXiv 2023)'
+    ]
+  },
+  {
+    id: 'task-management-orchestration',
+    name: 'Task Management & Orchestration',
+    abbr: 'TMO',
+    icon: '✅',
+    color: 'from-green-600 to-blue-600',
+    category: 'planning-execution',
+    description: 'Systematic task decomposition, progress tracking, and adaptive workflow management for complex multi-step processes',
+    features: [
+      'Dynamic task decomposition',
+      'Progress state tracking',
+      'Dependency management',
+      'Priority orchestration',
+      'Real-time adaptation',
+      'Completion validation',
+      'Bottleneck detection',
+      'Parallel execution coordination'
+    ],
+    useCases: ['project-management', 'workflow-orchestration', 'cognitive-load-management', 'progress-tracking', 'collaborative-coordination', 'quality-assurance'],
+    complexity: 'medium',
+    example: 'AI Model Development Project:\n\n**Task Registry Initialization:**\n```\nProject: "Customer Sentiment Model"\nTasks: [\n  {id: "data-collection", status: "completed", priority: "high"},\n  {id: "data-cleaning", status: "in_progress", depends_on: ["data-collection"]},\n  {id: "feature-engineering", status: "pending", depends_on: ["data-cleaning"]},\n  {id: "model-training", status: "pending", depends_on: ["feature-engineering"]},\n  {id: "validation", status: "pending", depends_on: ["model-training"]},\n  {id: "deployment", status: "pending", depends_on: ["validation"]}\n]\n```\n\n**Orchestration Flow:**\n1. **Dependency Resolution**: Automatically unblocks "data-cleaning" when "data-collection" completes\n2. **Progress Tracking**: Real-time visibility: 1/6 completed, 1/6 in_progress, 4/6 pending\n3. **Adaptive Prioritization**: Urgent deployment deadline → increases priority of dependent tasks\n4. **Parallel Execution**: "documentation" and "testing" tasks run parallel to main pipeline\n5. **Bottleneck Detection**: "data-cleaning" taking longer than expected → alerts and resource reallocation\n\n**Benefits:**\n• Clear progress visibility for stakeholders\n• Automatic dependency management prevents errors\n• Adaptive scheduling responds to changing requirements\n• Reduces cognitive load through systematic organization'
   },
   {
     id: 'goal-decomposition',
-    name: 'Goal Decomposition',
-    abbr: '',
+    name: 'Intelligent Goal Decomposition',
+    abbr: 'IGD',
     icon: '🎯',
-    color: 'from-purple-600 to-pink-600',
+    color: 'from-orange-500 to-yellow-600',
     category: 'planning-execution',
-    description: 'Breaks down complex goals into manageable sub-goals',
+    description: 'Systematic breakdown of complex objectives into achievable, measurable sub-goals with clear success criteria',
     features: [
       'SMART goal creation',
       'Dependency analysis',
-      'Priority assignment',
-      'Progress tracking'
+      'Resource requirement estimation',
+      'Risk assessment',
+      'Success metrics definition',
+      'Milestone identification'
     ],
-    useCases: ['task-management', 'goal-setting', 'project-planning', 'personal-productivity'],
+    useCases: ['project-planning', 'personal-development', 'business-strategy', 'learning-objectives'],
     complexity: 'medium',
-    example: 'Main Goal: "Improve website performance"\n\nDecomposition:\n• Sub-goal 1: Optimize images (reduce size by 50%)\n• Sub-goal 2: Minimize JavaScript (reduce bundle by 30%)\n• Sub-goal 3: Implement caching (achieve 90% cache hit rate)\n• Sub-goal 4: Upgrade server (reduce response time by 40%)\n\nEach sub-goal has specific metrics and deadlines'
-  },
-  {
-    id: 'constraint-satisfaction',
-    name: 'Constraint Satisfaction',
-    abbr: 'CSP',
-    icon: '⚖️',
-    color: 'from-pink-600 to-red-600',
-    category: 'planning-execution',
-    description: 'Plans solutions within specified constraints and limitations',
-    features: [
-      'Constraint modeling',
-      'Solution space exploration',
-      'Trade-off analysis',  
-      'Optimization algorithms'
-    ],
-    useCases: ['resource-allocation', 'scheduling', 'optimization', 'configuration'],
-    complexity: 'high',
-    example: 'Scheduling Problem:\n\nConstraints:\n• 5 tasks, 3 workers\n• Worker A: 8-hour availability\n• Worker B: 6-hour availability  \n• Worker C: 4-hour availability\n• Task dependencies: A→B, C→D\n• Deadline: 2 days\n\nSolution: Optimal task assignment and timeline\nrespecting all constraints'
-  },
-  {  
-    id: 'scenario-planning',
-    name: 'Scenario Planning',
-    abbr: '',
-    icon: '🔮',
-    color: 'from-red-600 to-orange-600',
-    category: 'planning-execution',
-    description: 'Develops plans for multiple possible future scenarios',
-    features: [
-      'Scenario generation',
-      'Probability assessment',
-      'Contingency planning',
-      'Risk mitigation'
-    ],
-    useCases: ['strategic-planning', 'risk-management', 'business-planning', 'decision-making'],
-    complexity: 'high',
-    example: 'Business Planning Scenarios:\n\nScenario A (40%): Economic growth\n• Strategy: Aggressive expansion\n• Resources: High investment\n• Timeline: 18 months\n\nScenario B (35%): Economic stability\n• Strategy: Steady growth\n• Resources: Moderate investment\n• Timeline: 24 months\n\nScenario C (25%): Economic downturn\n• Strategy: Cost optimization\n• Resources: Minimal investment\n• Timeline: Conservative approach'
+    example: 'AI Model Performance Improvement Goal:\n\nOriginal Goal: "Improve AI model performance"\n→ Problem: Vague, unmeasurable, no timeline\n\nIntelligent Decomposition:\n\nLevel 1 - Strategic Objective:\n"Increase model accuracy from 87% to 95% within 3 months while maintaining <200ms latency"\n\nLevel 2 - Tactical Sub-Goals:\n1. Data Quality Improvement (Month 1)\n   • Clean existing dataset\n   • Add 10,000 high-quality samples\n   • Reduce data noise by 50%\n   • Success: Dataset quality score >90%\n\n2. Model Architecture Optimization (Month 2)\n   • Experiment with 5 architecture variants\n   • Implement ensemble methods\n   • Optimize hyperparameters\n   • Success: >92% accuracy on validation set\n\n3. Training Process Enhancement (Month 2-3)\n   • Implement advanced training techniques\n   • Add regularization methods\n   • Optimize training pipeline\n   • Success: Reduce overfitting by 30%\n\n4. Performance Validation (Month 3)\n   • Comprehensive testing on unseen data\n   • Latency benchmarking\n   • A/B testing in production\n   • Success: Meet all performance criteria\n\nLevel 3 - Operational Tasks:\nData Quality Improvement:\n• Identify data quality issues (2 days)\n• Implement automated cleaning pipeline (5 days)\n• Source additional training data (7 days)\n• Validate data quality improvements (1 day)\n\nResource Requirements:\n• Human resources: 2 ML engineers, 1 data scientist\n• Computational: 4 GPU-hours/day for training\n• Data storage: 500GB additional capacity\n• Budget: $15,000 for data acquisition\n\nRisk Assessment:\n• High risk: New data may not improve performance\n• Medium risk: Architecture changes affect latency\n• Low risk: Training time exceeds estimates\n• Mitigation: Parallel experiments, rollback plans\n\nProgress Tracking:\nWeek 4 Results:\n• Data quality: 92% complete (ahead of schedule)\n• Model accuracy: 89.5% (good progress)\n• Latency: 185ms (within limits)\n• Risk status: All risks under control\n\nAdaptive Refinement:\n• Discovery: Ensemble methods show promise\n• Adjustment: Allocate more resources to ensembles\n• Timeline: Maintain 3-month deadline\n• Quality gate: 93% accuracy by end of month 2\n\nResults:\n• Final accuracy: 94.8% (close to target)\n• Latency: 178ms (exceeded target)\n• Timeline: Delivered 1 week early\n• Team satisfaction: Clear goals improved focus'
   }
 ];

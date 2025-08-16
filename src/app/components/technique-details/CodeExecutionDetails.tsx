@@ -1,214 +1,163 @@
 'use client';
 
-import { Check } from 'lucide-react';
+import React from 'react';
+import ReferencesSection from './shared/ReferencesSection';
+import {
+  QuickOverviewSection,
+  QuickImplementationSection,
+  DosAndDontsSection,
+  UsageGuideSection,
+  KeyMetricsSection,
+  TopUseCasesSection
+} from './shared';
 
-export const CodeExecutionDetails = () => {
+interface CodeExecutionDetailsProps {
+  selectedTechnique: any;
+}
+
+export const CodeExecutionDetails: React.FC<CodeExecutionDetailsProps> = ({ selectedTechnique }) => {
+  // Quick Implementation Recipe
+  const quickImplementation = {
+    steps: [
+      { num: '1', action: 'Generate Code', detail: 'Create minimal, purpose-built scripts' },
+      { num: '2', action: 'Security Scan', detail: 'Static analysis & import validation' },
+      { num: '3', action: 'MicroVM Launch', detail: 'Start Firecracker microVM (<125ms)' },
+      { num: '4', action: 'Execute', detail: 'Run in isolated kernel with limits' },
+      { num: '5', action: 'Process Results', detail: 'Capture outputs & destroy microVM' }
+    ],
+    example: 'User: "Calculate fibonacci(20)" → Generate Python → Validate imports → Launch Firecracker → Return: 6765'
+  };
+
+  // Combined Do's and Don'ts
+  const dosAndDonts = [
+    { type: 'do', text: 'Use Firecracker microVMs for hardware-enforced isolation', icon: '✅' },
+    { type: 'do', text: 'Implement VM-level security with dedicated kernels per execution', icon: '✅' },
+    { type: 'do', text: 'Leverage KVM hypervisor with <5 MiB memory overhead per microVM', icon: '✅' },
+    { type: 'do', text: 'Use jailer process for additional cgroup/namespace isolation', icon: '✅' },
+    { type: 'do', text: 'Destroy microVMs after each execution for perfect isolation', icon: '✅' },
+    { type: 'do', text: 'Pool warm microVMs for <125ms startup performance', icon: '✅' },
+    { type: 'dont', text: 'Rely solely on containers for untrusted code (shared kernel risk)', icon: '❌' },
+    { type: 'dont', text: 'Use traditional VMs (minutes startup vs 125ms microVM)', icon: '❌' },
+    { type: 'dont', text: 'Skip hardware virtualization for critical security boundaries', icon: '❌' },
+    { type: 'dont', text: 'Reuse microVMs across different execution contexts', icon: '❌' },
+    { type: 'dont', text: 'Enable unnecessary devices (keep minimal virtio interface)', icon: '❌' }
+  ];
+
+  // When to Use vs When to Avoid
+  const usageGuide = {
+    useWhen: [
+      'Untrusted/AI-generated code requiring maximum security isolation',
+      'Multi-tenant environments where kernel-level isolation is critical',
+      'Production serverless workloads needing <125ms cold start performance',
+      'High-density compute requiring thousands of isolated execution contexts'
+    ],
+    avoidWhen: [
+      'Simple calculations answerable through LLM reasoning alone',
+      'Environments where container isolation is sufficient (trusted code)',
+      'Resource-constrained edge devices without KVM virtualization support',
+      'Legacy applications requiring full hardware emulation or BIOS support'
+    ]
+  };
+
+  // Key Metrics (from AWS Lambda/Firecracker production data)
+  const keyMetrics = [
+    { metric: 'MicroVM Startup Time', measure: '<125ms boot to userspace (vs minutes for VMs)' },
+    { metric: 'Security Isolation Rate', measure: 'Hardware VM barriers + process isolation (target: 100%)' },
+    { metric: 'Resource Density', measure: 'Thousands of microVMs per host with <5 MiB overhead' },
+    { metric: 'Performance Overhead', measure: '>95% bare-metal performance in microVM' },
+    { metric: 'Creation Rate', measure: 'Up to 150 microVMs/second per host' },
+    { metric: 'Memory Elasticity', measure: '2-3 orders magnitude improvement with Faascale' },
+    { metric: 'Security Incident Rate', measure: 'VM escapes + kernel compromises (target: 0%)' },
+    { metric: 'Cost Efficiency', measure: '35-40% reduction vs traditional VM infrastructure' }
+  ];
+
+  // Top Use Cases (AWS Lambda/Firecracker production patterns)
+  const topUseCases = [
+    'Serverless Functions: AWS Lambda-style execution with Firecracker microVMs',
+    'Untrusted Code Execution: AI agent code in isolated kernels (CI/CD, notebooks)',
+    'Multi-tenant Platforms: Separate microVMs per customer with hardware isolation',
+    'Container Security Upgrade: Replace Docker with microVM for critical workloads',
+    'Edge Computing: Lightweight VMs for edge deployment with minimal overhead',
+    'Development Environments: Instant dev environments with VM-level isolation',
+    'Batch Processing: High-density compute with thousands of microVMs per host',
+    'Security Research: Malware analysis in disposable, hardware-isolated environments'
+  ];
+
+  const references = [
+    {
+      title: 'Academic Research & Security',
+      items: [
+        { title: 'SandboxEval: Comprehensive Test Suite for LLM Assessment Environments', url: 'https://arxiv.org/html/2504.00018' },
+        { title: 'Security of AI Agents: System Security Perspective on Vulnerabilities', url: 'https://arxiv.org/abs/2406.08689' },
+        { title: 'Vulnerability Handling of AI-Generated Code', url: 'https://arxiv.org/abs/2408.08549' },
+        { title: 'Optimizing AI-Assisted Code Generation: Security & Quality', url: 'https://arxiv.org/html/2412.10953v1' }
+      ]
+    },
+    {
+      title: 'Industry Benchmarks & Evaluation',
+      items: [
+        { title: 'SWE-bench: Real-World Software Engineering Benchmark', url: 'https://www.swebench.com/' },
+        { title: 'Understanding LLM Code Benchmarks: HumanEval to SWE-bench', url: 'https://www.runloop.ai/blog/understanding-llm-code-benchmarks-from-humaneval-to-swe-bench' },
+        { title: 'Google ADK BuiltInCodeExecutor Documentation', url: 'https://google.github.io/adk-docs/tools/built-in-tools/' },
+        { title: 'Microsoft Azure OpenAI Code Interpreter Guide', url: 'https://learn.microsoft.com/en-us/azure/ai-foundry/openai/how-to/code-interpreter' }
+      ]
+    },
+    {
+      title: 'MicroVM Technologies & Sandboxing',
+      items: [
+        { title: 'AWS Firecracker - Lightweight Virtualization for Serverless', url: 'https://firecracker-microvm.github.io/' },
+        { title: 'Firecracker GitHub Repository & Documentation', url: 'https://github.com/firecracker-microvm/firecracker' },
+        { title: 'Kata Containers - Secure Container Runtime with VM Isolation', url: 'https://katacontainers.io/' },
+        { title: 'gVisor - User-space Kernel for Container Sandboxing', url: 'https://gvisor.dev/' }
+      ]
+    },
+    {
+      title: 'Production MicroVM Implementations',
+      items: [
+        { title: 'AWS Lambda Firecracker Architecture (Trillions of Executions)', url: 'https://aws.amazon.com/lambda/' },
+        { title: 'Northflank - 2M+ MicroVMs Monthly Production Case Study', url: 'https://northflank.com/' },
+        { title: 'Microsoft Hyperlight - Ultra-Fast MicroVM Technology', url: 'https://github.com/microsoft/hyperlight' },
+        { title: 'Cloud Hypervisor - Next-Gen Virtualization', url: 'https://www.cloudhypervisor.org/' }
+      ]
+    },
+    {
+      title: 'Security Research & Guidelines',
+      items: [
+        { title: 'USENIX NSDI 2020: Firecracker Lightweight Virtualization Paper', url: 'https://www.usenix.org/conference/nsdi20/presentation/agache' },
+        { title: 'Springer: Runtime Performance Analysis of MicroVMs', url: 'https://link.springer.com/article/10.1007/s10586-021-03411-8' },
+        { title: 'AWS Security: Hardware-enforced Isolation Benefits', url: 'https://aws.amazon.com/security/' },
+        { title: 'Linux KVM Security Model & Virtualization Benefits', url: 'https://www.kernel.org/doc/Documentation/virtual/kvm/security.txt' }
+      ]
+    }
+  ];
+
   return (
     <>
-      {/* Core Mechanism */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
-          Core Mechanism
-        </h2>
-        <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
-          <p className="text-gray-200 text-base leading-relaxed">
-            Generate minimal, purpose-built code from the request; validate for safety; execute in a hardened sandbox (e.g., Firecracker microVMs) with strict resource, file system, and network limits; capture outputs and errors; summarize results.
-          </p>
-        </div>
-      </section>
+      <QuickOverviewSection
+        pattern="Execute LLM-generated code safely in isolated microVM environments"
+        why="LLMs can generate code for calculations, data analysis, and algorithms but require secure execution due to potential malicious or buggy output"
+        keyInsight="Treat LLM code as untrusted - use Firecracker microVMs for hardware isolation with <125ms startup"
+      />
 
-      {/* Workflow / Steps */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
-          Workflow / Steps
-        </h2>
-        <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
-          <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
-            <li>Analyze intent and choose language/runtime (Python, Node/Deno, Rust, etc.).</li>
-            <li>Generate code with clear inputs/outputs; avoid side effects and external I/O by default.</li>
-            <li>Static checks: denylist imports, syscall patterns, network/file access; enforce policies.</li>
-            <li>Select sandbox: pre-warmed Firecracker VM or WASI runtime; set CPU/mem/time limits.</li>
-            <li>Stage inputs; execute with timeouts; stream stdout/stderr; capture exit status.</li>
-            <li>Post-validate outputs (schema/size); redact secrets; summarize and return results.</li>
-            <li>Reset or recycle the environment to guarantee isolation and reproducibility.</li>
-          </ol>
-        </div>
-      </section>
+      <QuickImplementationSection
+        steps={quickImplementation.steps}
+        example={quickImplementation.example}
+      />
 
-      {/* Best Practices */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-green-500 rounded-full"></div>
-          Best Practices
-        </h2>
-        <div className="grid gap-3">
-          {[
-            'Generate the smallest viable program; prefer pure functions and bounded data.',
-            'Default to no-network, read-only FS; enable least-privilege capabilities per task.',
-            'Use allowlists for packages/imports; pin versions; checksum artifacts.',
-            'Set strict time/CPU/memory/file-size limits; kill long-running or fork bombs.',
-            'Capture structured outputs (JSON) to simplify validation and downstream use.',
-            'Log decisions, package versions, resource usage, and execution metadata for auditability.',
-            'Cache cold-start artifacts; keep a warm VM pool to reduce latency while preserving isolation.',
-            'Add unit examples/tests for generated code when feasible; prefer deterministic operations.'
-          ].map((tip) => (
-            <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
-              <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
-              <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
-            </div>
-          ))}
-        </div>
-      </section>
+      <DosAndDontsSection items={dosAndDonts} />
 
-      {/* When NOT to Use */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-red-500 rounded-full"></div>
-          When NOT to Use
-        </h2>
-        <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-          <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-            <li>The answer is reliably available via reasoning without computation.</li>
-            <li>Hard real-time constraints where sandbox startup/exec overhead violates SLAs.</li>
-            <li>Tasks requiring privileged host access or unrestricted network/filesystem.</li>
-            <li>Highly sensitive data without an approved compliant execution path.</li>
-          </ul>
-        </div>
-      </section>
+      <UsageGuideSection
+        useWhen={usageGuide.useWhen}
+        avoidWhen={usageGuide.avoidWhen}
+      />
 
-      {/* Common Pitfalls */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
-          Common Pitfalls
-        </h2>
-        <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-          <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-            <li>Prompt injections leading to unsafe imports, network calls, or data exfiltration.</li>
-            <li>Unbounded loops or heavy allocations causing timeouts/OOM kills.</li>
-            <li>Nondeterministic libraries (randomness, time, network) breaking reproducibility.</li>
-            <li>Large outputs (plots, arrays) overwhelming token/cost limits without summarization.</li>
-            <li>State leakage across runs when environments aren’t fully reset.</li>
-          </ul>
-        </div>
-      </section>
+      <KeyMetricsSection metrics={keyMetrics} />
 
-      {/* Key Features */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
-          Key Features
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {[
-            'Hardened sandboxing (Firecracker microVMs, WASI/wasmtime)',
-            'Resource quotas: CPU, memory, wall-clock, file size',
-            'Network isolation by default; fine-grained, audited opt-ins',
-            'Package allowlists and supply-chain controls',
-            'Multi-language support (Python, TypeScript/Deno, Rust)',
-            'Structured output capture and log collection',
-            'Deterministic mode options and environment pinning',
-            'Warm-pool management for low-latency starts'
-          ].map((feat) => (
-            <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
-              {feat}
-            </div>
-          ))}
-        </div>
-      </section>
+      <TopUseCasesSection useCases={topUseCases} />
 
-      {/* KPIs / Success Metrics */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
-          KPIs / Success Metrics
-        </h2>
-        <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-          <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-            <li>Execution success rate; compile/runtime error rate; timeout rate.</li>
-            <li>p50/p95 cold-start and warm-start latency; execution time distribution.</li>
-            <li>Resource usage efficiency (CPU-seconds, memory peak) per task.</li>
-            <li>Sandbox incident rate (escapes: 0), policy violation blocks, and audit coverage.</li>
-            <li>Determinism/reproducibility rate across reruns; cache hit rate for warm pools.</li>
-          </ul>
-        </div>
-      </section>
-
-      {/* Token / Resource Usage */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
-          Token / Resource Usage
-        </h2>
-        <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-          <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-            <li>Prompt tokens: planning + code generation + result summarization; minimize code size.</li>
-            <li>External compute: VM startup, compilation, runtime; prefer warm pools and caching.</li>
-            <li>Stream logs/stdout and chunk large outputs; validate and compress if needed.</li>
-            <li>Cap execution time and output size; prefer structured (JSON) results over raw dumps.</li>
-          </ul>
-        </div>
-      </section>
-
-      {/* Best Use Cases */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
-          Best Use Cases
-        </h2>
-        <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-          <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-            <li>Data analysis and visualization on user-provided datasets.</li>
-            <li>Mathematical computation, simulation, and algorithm prototyping.</li>
-            <li>Format conversion and code validation/linting in isolation.</li>
-            <li>Education and safe experimentation with constrained libraries.</li>
-          </ul>
-        </div>
-      </section>
-
-      {/* References & Further Reading */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
-          References & Further Reading
-        </h2>
-        <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
-          <div>
-            <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
-            <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
-              <li>Secure sandboxing: Firecracker (AWS, 2018) design paper</li>
-              <li>ReAct/Toolformer/Gorilla: tool-augmented reasoning for code + tools</li>
-              <li>WASI/WebAssembly isolation models and capability security</li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
-            <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
-              <li>Firecracker microVM setup and VM pooling strategies</li>
-              <li>Package allowlists, syscall filtering, and network isolation policies</li>
-              <li>Schema-first output validation and redaction pipelines</li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
-            <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
-              <li>Firecracker, gVisor, nsjail, Kata Containers</li>
-              <li>WASI runtimes: wasmtime, wasmer; Pyodide for browser Python</li>
-              <li>Deno/Node sandboxes; Docker with seccomp/AppArmor</li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
-            <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
-              <li>Security engineering blogs on sandbox escapes and mitigations</li>
-              <li>Open-source sandboxes (e2b, Modal-style runners) design notes</li>
-              <li>Conference talks on WASI, microVM isolation, and secure execution</li>
-            </ul>
-          </div>
-        </div>
-      </section>
+      <ReferencesSection categories={references} />
     </>
   );
 };
+
+export default CodeExecutionDetails;

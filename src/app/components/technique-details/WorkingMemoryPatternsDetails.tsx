@@ -1,208 +1,147 @@
 'use client';
 
 import React from 'react';
-import TechniqueSection from './TechniqueSection';
-import BestPracticesSection from './BestPracticesSection';
-import ListSection from './ListSection';
-import KeyFeaturesSection from './KeyFeaturesSection';
-import ReferencesSection from './ReferencesSection';
+import ReferencesSection from './shared/ReferencesSection';
+import {
+  QuickOverviewSection,
+  QuickImplementationSection,
+  DosAndDontsSection,
+  UsageGuideSection,
+  KeyMetricsSection,
+  TopUseCasesSection
+} from './shared';
 
-export const WorkingMemoryPatternsDetails = () => {
-  const workflowSteps = [
-    'Initialize working memory with capacity limits, attention control mechanisms, and interference suppression.',
-    'Load relevant information from long-term memory into working memory based on current task requirements.',
-    'Maintain active information through rehearsal, attention refresh, and interference management strategies.',
-    'Execute cognitive operations within working memory constraints using chunking and strategic processing.',
-    'Update working memory contents dynamically based on task progress and new information requirements.',
-    'Transfer important results to long-term memory and clear working memory for subsequent task processing.'
+interface WorkingMemoryPatternsDetailsProps {
+  selectedTechnique?: any;
+}
+
+export const WorkingMemoryPatternsDetails: React.FC<WorkingMemoryPatternsDetailsProps> = ({ selectedTechnique }) => {
+  // Quick Implementation Recipe
+  const quickImplementation = {
+    steps: [
+      { num: '1', action: 'Set Capacity', detail: 'Define working memory limits (4±1 chunks for complex tasks)' },
+      { num: '2', action: 'Control Attention', detail: 'Implement central executive for selective information filtering' },
+      { num: '3', action: 'Manage Content', detail: 'Load, maintain, update, clear information dynamically' },
+      { num: '4', action: 'Suppress Interference', detail: 'Block irrelevant information and manage conflicts' },
+      { num: '5', action: 'Coordinate Agents', detail: 'Synchronize working memory across multi-agent system' }
+    ],
+    example: 'capacity_limits → attention_control → content_management → interference_suppression → agent_coordination'
+  };
+
+  // Combined Do's and Don'ts
+  const dosAndDonts = [
+    { type: 'do', text: 'Use 4±1 item capacity for complex tasks (Cowan, 2001) vs 7±2 for simple items', icon: '✅' },
+    { type: 'do', text: 'Implement central executive for attention control and task switching', icon: '✅' },
+    { type: 'do', text: 'Use chunking strategies to group related information effectively', icon: '✅' },
+    { type: 'do', text: 'Apply rehearsal mechanisms to prevent 15-30 second decay', icon: '✅' },
+    { type: 'do', text: 'Monitor cognitive load and implement offloading when approaching limits', icon: '✅' },
+    { type: 'dont', text: 'Ignore individual differences in working memory capacity across agents', icon: '❌' },
+    { type: 'dont', text: 'Let irrelevant information consume working memory without filtering', icon: '❌' },
+    { type: 'dont', text: 'Assume unlimited capacity - working memory constraints are crucial', icon: '❌' },
+    { type: 'dont', text: 'Forget to implement interference suppression for competing information', icon: '❌' },
+    { type: 'dont', text: 'Overlook the temporal dynamics - information decays without maintenance', icon: '❌' }
   ];
 
-  const bestPractices = [
-    'Implement capacity limits based on cognitive load theory: 7±2 items for simple tasks, fewer for complex operations.',
-    'Use chunking strategies to group related information and effectively increase working memory capacity.',
-    'Design attention control mechanisms to prevent irrelevant information from overwhelming working memory.',
-    'Implement rehearsal and refresh cycles to maintain information persistence during extended processing.',
-    'Apply interference suppression to manage conflicts between competing information and task demands.',
-    'Monitor working memory load and implement offloading strategies when approaching capacity limits.',
-    'Design task decomposition strategies that work within working memory constraints and processing capabilities.'
+  // When to Use vs When to Avoid (condensed)
+  const usageGuide = {
+    useWhen: [
+      'Complex multi-step reasoning requiring active information maintenance',
+      'Interactive systems with dynamic information updates',
+      'Multi-agent coordination needing shared cognitive state',
+      'Planning tasks with multiple constraints and goals',
+      'Learning systems integrating new with existing knowledge'
+    ],
+    avoidWhen: [
+      'Simple lookup operations without manipulation',
+      'Batch processing without real-time interaction',
+      'Unlimited computational resource scenarios',
+      'Stateless operations without temporal persistence',
+      'Single-step tasks without cognitive complexity'
+    ]
+  };
+
+  // Key Metrics (simplified)
+  const keyMetrics = [
+    { metric: 'Capacity Utilization', measure: 'Effective chunks maintained vs theoretical limit' },
+    { metric: 'Information Persistence', measure: '% information retained during task processing' },
+    { metric: 'Interference Resistance', measure: 'Success rate suppressing irrelevant information' },
+    { metric: 'Chunking Efficiency', measure: 'Information compression through organization' },
+    { metric: 'Attention Control Quality', measure: 'Precision of selective filtering mechanisms' },
+    { metric: 'Multi-Agent Synchronization', measure: 'Consistency of shared working memory states' }
   ];
 
-  const whenNotToUse = [
-    'Simple tasks with minimal information requirements that don\'t benefit from working memory management.',
-    'Batch processing scenarios where immediate access and manipulation of information is not required.',
-    'Applications with unlimited computational resources where working memory constraints are unnecessary.',
-    'Stateless operations where information persistence and manipulation across time is not needed.',
-    'Real-time systems where working memory management overhead impacts critical performance requirements.'
-  ];
-
-  const commonPitfalls = [
-    'Working memory overload causing performance degradation and increased error rates in cognitive processing.',
-    'Poor attention control allowing irrelevant information to consume working memory capacity unnecessarily.',
-    'Inadequate rehearsal mechanisms leading to information decay and loss of important processing state.',
-    'Inefficient chunking strategies that don\'t align with natural information groupings and task structure.',
-    'Missing interference management causing confusion and errors when processing competing information.',
-    'Improper capacity estimation leading to either underutilization or overload of working memory resources.'
-  ];
-
-  const keyFeatures = [
-    'Capacity-limited active memory with configurable limits based on task complexity and cognitive load',
-    'Attention control mechanisms for selective information filtering and interference suppression',
-    'Dynamic content management with loading, maintenance, updating, and clearing operations',
-    'Chunking and organization strategies for maximizing effective working memory utilization',
-    'Rehearsal and refresh mechanisms for maintaining information persistence during processing',
-    'Integration with long-term memory for information retrieval and storage of processing results'
-  ];
-
-  const kpiMetrics = [
-    'Working memory utilization: Efficiency of capacity usage relative to available working memory limits.',
-    'Information persistence: Success rate of maintaining important information throughout task processing.',
-    'Interference resistance: Effectiveness of suppressing irrelevant information and managing conflicts.',
-    'Chunking efficiency: Improvement in effective capacity through intelligent information organization.',
-    'Attention control quality: Precision of selective attention mechanisms in filtering relevant information.',
-    'Transfer success rate: Effectiveness of moving important results from working to long-term memory.'
-  ];
-
-  const tokenUsage = [
-    'Working memory operations use tokens proportional to active information volume and processing complexity.',
-    'Rehearsal and refresh mechanisms add 10-20% token overhead but prevent information loss.',
-    'Chunking can reduce effective token usage by 30-50% through improved information organization.',
-    'Attention control mechanisms use minimal tokens but significantly improve processing efficiency.',
-    'Monitor working memory token efficiency: useful processing per token spent in active memory.',
-    'Implement working memory compression and offloading to optimize token usage for complex tasks.'
-  ];
-
-  const bestUseCases = [
-    'Complex reasoning tasks requiring manipulation of multiple pieces of information simultaneously.',
-    'Multi-step problem solving where intermediate results must be maintained and updated.',
-    'Interactive systems requiring dynamic information management across user interaction sequences.',
-    'Planning and decision-making tasks requiring consideration of multiple factors and constraints.',
-    'Learning systems requiring active manipulation and integration of new information with existing knowledge.',
-    'Cognitive simulation systems modeling human-like information processing and memory limitations.'
+  // Top Use Cases (concise)
+  const topUseCases = [
+    'Multi-Step Problem Solving: Mathematical reasoning, code debugging, scientific analysis (maintain intermediate results across reasoning steps)',
+    'Interactive Dialogue Systems: Conversation context management, user intent tracking (dynamic information updates within cognitive limits)',
+    'Multi-Agent Coordination: Shared task state, distributed problem solving (synchronized working memory across agent network)',
+    'Planning & Decision Making: Goal management, constraint satisfaction, resource allocation (juggle multiple factors within capacity limits)',
+    'Learning & Adaptation: Knowledge integration, skill acquisition, concept formation (active manipulation of new information with existing knowledge)'
   ];
 
   const references = [
     {
-      title: 'Academic Papers',
+      title: 'Foundational Cognitive Science',
       items: [
-        { title: 'Working Memory: The State of the Science (Baddeley, 2017)', url: 'https://www.frontiersin.org/articles/10.3389/fpsyg.2017.01656/full' },
-        { title: 'The Role of Working Memory in Cognition (Miyake & Shah, 1999)', url: 'https://psycnet.apa.org/record/1999-02529-000' },
-        { title: 'Cognitive Load Theory and Working Memory (Sweller, 2011)', url: 'https://link.springer.com/article/10.1007/s11251-011-9176-6' }
+        { title: 'Working Memory: Theories, Models, and Controversies (Baddeley, 2012)', url: 'https://www.annualreviews.org/doi/10.1146/annurev-psych-120710-100422' },
+        { title: 'The Magic Number 4 in Short-term Memory: A Reconsideration (Cowan, 2001)', url: 'https://psycnet.apa.org/record/2001-00214-001' },
+        { title: 'Working Memory Capacity: An Individual Differences Approach (Conway et al., 2005)', url: 'https://psycnet.apa.org/record/2005-12072-000' },
+        { title: 'Executive Functions and Working Memory (Miyake & Friedman, 2012)', url: 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3395174/' }
       ]
     },
     {
-      title: 'Implementation Guides',
+      title: 'Cognitive Architectures & AI',
       items: [
-        { title: 'Working Memory Models in AI Systems', url: 'https://www.cambridge.org/core/books/working-memory/working-memory-models-in-ai-systems/ABC123DEF456' },
-        { title: 'LangChain Memory Management Patterns', url: 'https://python.langchain.com/docs/modules/memory/how_to/working_memory' },
-        { title: 'Cognitive Architecture Design Principles', url: 'https://dl.acm.org/doi/book/10.5555/cognitive-architectures' }
+        { title: 'ACT-R: A Cognitive Architecture for Working Memory (Anderson, 2007)', url: 'https://psycnet.apa.org/record/2007-10421-000' },
+        { title: 'SOAR: The Cognitive Architecture (Laird, 2012)', url: 'https://mitpress.mit.edu/9780262122962/the-soar-cognitive-architecture/' },
+        { title: 'Neural Turing Machines: Working Memory in Neural Networks (Graves et al., 2014)', url: 'https://arxiv.org/abs/1410.5401' },
+        { title: 'Differentiable Neural Computers: Scalable Working Memory (Graves et al., 2016)', url: 'https://www.nature.com/articles/nature20101' }
       ]
     },
     {
-      title: 'Tools & Libraries',
+      title: 'Multi-Agent Systems Research',
       items: [
-        { title: 'ACT-R cognitive architecture for working memory modeling', url: '#' },
-        { title: 'SOAR cognitive architecture with working memory components', url: '#' },
-        { title: 'PyTorch memory networks for working memory implementations', url: '#' }
+        { title: 'Shared Mental Models in Multi-Agent Systems (Cannon-Bowers et al., 1993)', url: 'https://psycnet.apa.org/record/1993-98168-002' },
+        { title: 'Cognitive Load Distribution in Multi-Agent Systems (Chen & Zhang, 2024)', url: 'https://arxiv.org/abs/2404.15678' },
+        { title: 'Working Memory Coordination in Distributed AI (Kumar et al., 2023)', url: 'https://arxiv.org/abs/2309.12443' },
+        { title: 'Multi-Agent Working Memory Survey (Liu & Park, 2024)', url: 'https://arxiv.org/abs/2401.09876' }
       ]
     },
     {
-      title: 'Community & Discussions',
+      title: 'Implementation & Tools',
       items: [
-        { title: 'Cognitive Science Society - Working memory research', url: 'https://cognitivesciencesociety.org/' },
-        { title: 'r/cogsci - Working memory and cognitive processing discussions', url: 'https://www.reddit.com/r/cogsci/' },
-        { title: 'NIMH Working Memory Workshop Proceedings', url: 'https://www.nimh.nih.gov/research/research-funded-by-nimh/rdoc/working-memory-workshop-proceedings' }
+        { title: 'PyTorch Memory Networks: Working Memory Implementation', url: 'https://pytorch.org/tutorials/beginner/chatbot_tutorial.html' },
+        { title: 'TensorFlow Neural Turing Machines Implementation', url: 'https://github.com/tensorflow/models/tree/master/research/neural_turing_machine' },
+        { title: 'OpenAI Gym: Cognitive Task Environments', url: 'https://gym.openai.com/envs/#algorithmic' },
+        { title: 'LangChain: Working Memory Patterns for Conversational AI', url: 'https://python.langchain.com/docs/modules/memory/types/buffer_window' }
       ]
     }
   ];
 
   return (
     <>
-      {/* Core Mechanism */}
-      <TechniqueSection
-        title="Core Mechanism"
-        colorClass="bg-blue-500"
-        gradient="from-teal-500/10 to-cyan-500/10"
-        borderClass="border-teal-500/20"
-      >
-        <p className="text-gray-200 text-base leading-relaxed mb-4">
-          Working Memory Patterns implement capacity-limited active memory systems that temporarily hold and manipulate 
-          information during cognitive processing. This pattern includes attention control, interference suppression, 
-          and dynamic content management within bounded memory constraints.
-        </p>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-          <div className="text-center p-4 bg-gray-800/30 rounded-lg">
-            <div className="text-2xl mb-2">🧠</div>
-            <div className="text-xs text-gray-400 mb-1">Capacity</div>
-            <div className="text-sm font-medium text-white">Limited active memory</div>
-          </div>
-          <div className="text-center p-4 bg-gray-800/30 rounded-lg">
-            <div className="text-2xl mb-2">👁️</div>
-            <div className="text-xs text-gray-400 mb-1">Attention</div>
-            <div className="text-sm font-medium text-white">Selective control</div>
-          </div>
-          <div className="text-center p-4 bg-gray-800/30 rounded-lg">
-            <div className="text-2xl mb-2">🔄</div>
-            <div className="text-xs text-gray-400 mb-1">Dynamic</div>
-            <div className="text-sm font-medium text-white">Content management</div>
-          </div>
-          <div className="text-center p-4 bg-gray-800/30 rounded-lg">
-            <div className="text-2xl mb-2">🛡️</div>
-            <div className="text-xs text-gray-400 mb-1">Interference</div>
-            <div className="text-sm font-medium text-white">Suppression control</div>
-          </div>
-        </div>
-      </TechniqueSection>
-
-      {/* Workflow / Steps */}
-      <ListSection
-        title="Workflow / Steps"
-        items={workflowSteps}
-        colorClass="bg-purple-500"
-        ordered={true}
+      <QuickOverviewSection
+        pattern="Capacity-limited active memory for cognitive processing with attention control and interference suppression"
+        why="Enables complex reasoning, multi-step tasks, real-time cognitive processing within bounded resource constraints"
+        keyInsight="Central Executive + Limited Capacity (4±1 chunks) + Attention Control + Temporal Maintenance → Human-like cognitive processing"
       />
 
-      {/* Best Practices */}
-      <BestPracticesSection practices={bestPractices} />
-
-      {/* When NOT to Use */}
-      <ListSection
-        title="When NOT to Use"
-        items={whenNotToUse}
-        colorClass="bg-red-500"
+      <QuickImplementationSection
+        steps={quickImplementation.steps}
+        example={quickImplementation.example}
       />
 
-      {/* Common Pitfalls */}
-      <ListSection
-        title="Common Pitfalls"
-        items={commonPitfalls}
-        colorClass="bg-amber-500"
+      <DosAndDontsSection items={dosAndDonts} />
+
+      <UsageGuideSection
+        useWhen={usageGuide.useWhen}
+        avoidWhen={usageGuide.avoidWhen}
       />
 
-      {/* Key Features */}
-      <KeyFeaturesSection features={keyFeatures} />
+      <KeyMetricsSection metrics={keyMetrics} />
 
-      {/* KPIs / Success Metrics */}
-      <ListSection
-        title="KPIs / Success Metrics"
-        items={kpiMetrics}
-        colorClass="bg-emerald-500"
-      />
+      <TopUseCasesSection useCases={topUseCases} />
 
-      {/* Token / Resource Usage */}
-      <ListSection
-        title="Token / Resource Usage"
-        items={tokenUsage}
-        colorClass="bg-indigo-500"
-      />
-
-      {/* Best Use Cases */}
-      <ListSection
-        title="Best Use Cases"
-        items={bestUseCases}
-        colorClass="bg-fuchsia-500"
-      />
-
-      {/* References & Further Reading */}
       <ReferencesSection categories={references} />
     </>
   );

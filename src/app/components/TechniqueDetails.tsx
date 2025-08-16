@@ -4,7 +4,11 @@ import { BookOpen, Code, Check, Brain, GitBranch, Play, Sparkles, ArrowRight } f
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import CodeSandbox from '../../components/CodeSandbox';
+import { getComplexityColor, getCategoryColor } from '@/lib/design-system';
 import { SelfCritiqueDetails } from './technique-details/SelfCritiqueDetails';
+import { ProducerCriticDetails } from './technique-details/ProducerCriticDetails';
+import { LLMAsJudgeDetails } from './technique-details/LLMAsJudgeDetails';
+import { ReflexionPatternDetails } from './technique-details/ReflexionPatternDetails';
 import { GossipProtocolsDetails } from './technique-details/GossipProtocolsDetails';
 import { ContextCompressionDetails } from './technique-details/ContextCompressionDetails';
 import { ConversationalOrchestrationDetails } from './technique-details/ConversationalOrchestrationDetails';
@@ -24,6 +28,7 @@ import { InteractivePatternFlow } from '../../components/InteractivePatternFlow'
 import { ActorFrameworksDetails } from './technique-details/ActorFrameworksDetails';
 import { LatentKnowledgeRetrievalDetails } from './technique-details/LatentKnowledgeRetrievalDetails';
 import { ConsensusAlgorithmsDetails } from './technique-details/ConsensusAlgorithmsDetails';
+import { AgentCommunicationProtocolsDetails } from './technique-details/AgentCommunicationProtocolsDetails';
 import { ContinuousLearningDetails } from './technique-details/ContinuousLearningDetails';
 import { ReinforcementLearningAdaptationDetails } from './technique-details/ReinforcementLearningAdaptationDetails';
 import { MetaLearningDetails } from './technique-details/MetaLearningDetails';
@@ -35,7 +40,6 @@ import { JsonSchemaDetails } from './technique-details/JsonSchemaDetails';
 import { ApiIntegrationDetails } from './technique-details/ApiIntegrationDetails';
 import { CodeExecutionDetails } from './technique-details/CodeExecutionDetails';
 import { PluginArchitectureDetails } from './technique-details/PluginArchitectureDetails';
-import { DynamicRoutingDetails } from './technique-details/DynamicRoutingDetails';
 import { ContextRoutingDetails } from './technique-details/ContextRoutingDetails';
 import { DynamicContextAssemblyDetails } from './technique-details/DynamicContextAssemblyDetails';
 import { ParallelSynthesisDetails } from './technique-details/ParallelSynthesisDetails';
@@ -114,17 +118,16 @@ import HierarchicalRAGDetails from './technique-details/HierarchicalRAGDetails';
 import SequentialChainingDetails from './technique-details/SequentialChainingDetails';
 import ParallelChainingDetails from './technique-details/ParallelChainingDetails';
 import FeedbackChainingDetails from './technique-details/FeedbackChainingDetails';
-import ConditionalChainingDetails from './technique-details/ConditionalChainingDetails';
-import HierarchicalChainingDetails from './technique-details/HierarchicalChainingDetails';
-import IterativeRefinementDetails from './technique-details/IterativeRefinementDetails';
 import MapReduceDetails from './technique-details/MapReduceDetails';
 import ScatterGatherDetails from './technique-details/ScatterGatherDetails';
 import ForkJoinDetails from './technique-details/ForkJoinDetails';
 import AsyncAwaitDetails from './technique-details/AsyncAwaitDetails';
 import ContentBasedRoutingDetails from './technique-details/ContentBasedRoutingDetails';
 import CapabilityRoutingDetails from './technique-details/CapabilityRoutingDetails';
-import LoadBalancingDetails from './technique-details/LoadBalancingDetails';
-import GeographicRoutingDetails from './technique-details/GeographicRoutingDetails';
+import LlmBasedRoutingDetails from './technique-details/LlmBasedRoutingDetails';
+import EmbeddingBasedRoutingDetails from './technique-details/EmbeddingBasedRoutingDetails';
+import RuleBasedRoutingDetails from './technique-details/RuleBasedRoutingDetails';
+import MachineLearningModelBasedRoutingDetails from './technique-details/MachineLearningModelBasedRoutingDetails';
 import SlidingWindowDetails from './technique-details/SlidingWindowDetails';
 import HierarchicalMemoryDetails from './technique-details/HierarchicalMemoryDetails';
 import AttentionMechanismsDetails from './technique-details/AttentionMechanismsDetails';
@@ -150,6 +153,38 @@ import { ScenarioPlanningDetails } from './technique-details/ScenarioPlanningDet
 import { MultiModalCognitionDetails } from './technique-details/MultiModalCognitionDetails';
 import { MultimodalContextIntegrationDetails } from './technique-details/MultimodalContextIntegrationDetails';
 import { ContextCompressionAdvancedDetails } from './technique-details/ContextCompressionAdvancedDetails';
+import { MetaReasoningDetails } from './technique-details/MetaReasoningDetails';
+import { HierarchicalTaskNetworkPlanningDetails } from './technique-details/HierarchicalTaskNetworkPlanningDetails';
+import { SupervisorWorkerPatternDetails } from './technique-details/SupervisorWorkerPatternDetails';
+import { SharedScratchpadCollaborationDetails } from './technique-details/SharedScratchpadCollaborationDetails';
+import { TaskManagementOrchestrationDetails } from './technique-details/TaskManagementOrchestrationDetails';
+import { SequentialPipelineAgentsDetails } from './technique-details/SequentialPipelineAgentsDetails';
+import { ConcurrentOrchestrationDetails } from './technique-details/ConcurrentOrchestrationDetails';
+import { HandoffOrchestrationDetails } from './technique-details/HandoffOrchestrationDetails';
+import { ParametricMemoryDetails } from './technique-details/ParametricMemoryDetails';
+import { EpisodicMemorySystemsDetails } from './technique-details/EpisodicMemorySystemsDetails';
+import { SemanticMemoryNetworksDetails } from './technique-details/SemanticMemoryNetworksDetails';
+import { TransactiveMemorySystemsDetails } from './technique-details/TransactiveMemorySystemsDetails';
+import { MemoryReadingWritingOperationsDetails } from './technique-details/MemoryReadingWritingOperationsDetails';
+import { ContextualStructuredMemoryDetails } from './technique-details/ContextualStructuredMemoryDetails';
+import { ContextualUnstructuredMemoryDetails } from './technique-details/ContextualUnstructuredMemoryDetails';
+import { MemoryConsolidationProcessesDetails } from './technique-details/MemoryConsolidationProcessesDetails';
+import { DistributedMemoryArchitecturesDetails } from './technique-details/DistributedMemoryArchitecturesDetails';
+import { ReinforcementLearningFromHumanFeedbackDetails } from './technique-details/ReinforcementLearningFromHumanFeedbackDetails';
+import { DirectPreferenceOptimizationDetails } from './technique-details/DirectPreferenceOptimizationDetails';
+import { InContextLearningDetails } from './technique-details/InContextLearningDetails';
+import { MetaLearningSystemsDetails } from './technique-details/MetaLearningSystemsDetails';
+import { ContinualLearningSystemsDetails } from './technique-details/ContinualLearningSystemsDetails';
+import { SelfImprovingSystemsDetails } from './technique-details/SelfImprovingSystemsDetails';
+import { ConstitutionalAIDetails } from './technique-details/ConstitutionalAIDetails';
+import { ReinforcementLearningFromAIFeedbackDetails } from './technique-details/ReinforcementLearningFromAIFeedbackDetails';
+import { TestTimeScalingDetails } from './technique-details/TestTimeScalingDetails';
+import { OddsRatioPreferenceOptimizationDetails } from './technique-details/OddsRatioPreferenceOptimizationDetails';
+import { SimplePreferenceOptimizationDetails } from './technique-details/SimplePreferenceOptimizationDetails';
+import { SupervisedLearningAdaptationDetails } from './technique-details/SupervisedLearningAdaptationDetails';
+import { UnsupervisedLearningAdaptationDetails } from './technique-details/UnsupervisedLearningAdaptationDetails';
+import { OnlineLearningAdaptationDetails } from './technique-details/OnlineLearningAdaptationDetails';
+import { MemoryBasedLearningDetails } from './technique-details/MemoryBasedLearningDetails';
 
 interface TechniqueDetailsProps {
   selectedTechnique: any;
@@ -210,7 +245,7 @@ export const TechniqueDetails = ({
         <div className="bg-gradient-to-r from-gray-900/80 to-gray-800/80 p-6 lg:p-6 border-b border-gray-700/30">
           <div className="flex items-start gap-4 lg:gap-4">
             <div className="flex-shrink-0">
-              <div className="w-16 h-16 lg:w-16 lg:h-16 bg-gray-800/60 rounded-2xl flex items-center justify-center text-2xl lg:text-2xl">
+              <div className={`w-16 h-16 lg:w-16 lg:h-16 bg-gradient-to-br ${getCategoryColor(selectedTechnique.category).light} ${getCategoryColor(selectedTechnique.category).border} border rounded-2xl flex items-center justify-center text-2xl lg:text-2xl`}>
                 {selectedTechnique.icon}
               </div>
             </div>
@@ -225,10 +260,10 @@ export const TechniqueDetails = ({
                   </h1>
                   <p className="text-gray-300 text-base lg:text-base leading-relaxed mb-4">{selectedTechnique.description}</p>
                   <div className="flex flex-wrap gap-3">
-                    <span className={`inline-flex items-center px-3 lg:px-3 py-1.5 rounded-full text-sm font-medium bg-gradient-to-r ${selectedTechnique.color} text-white`}>
+                    <span className={`inline-flex items-center px-3 lg:px-3 py-1.5 rounded-full text-sm font-medium ${getComplexityColor(selectedTechnique.complexity).badge}`}>
                       Complexity: {selectedTechnique.complexity}
                     </span>
-                    <span className="inline-flex items-center px-3 lg:px-3 py-1.5 rounded-full text-sm font-medium bg-gray-800/60 text-gray-200">
+                    <span className={`inline-flex items-center px-3 lg:px-3 py-1.5 rounded-full text-sm font-medium ${getCategoryColor(selectedTechnique.category).badge || 'bg-gray-800/60 text-gray-200'}`}>
                       {categories.find(c => c.id === selectedTechnique.category)?.name || 'Pattern'}
                     </span>
                   </div>
@@ -369,12 +404,6 @@ export const TechniqueDetails = ({
                 <ParallelChainingDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'feedback-chaining' ? (
                 <FeedbackChainingDetails selectedTechnique={selectedTechnique} />
-              ) : selectedTechnique.id === 'conditional-chaining' ? (
-                <ConditionalChainingDetails selectedTechnique={selectedTechnique} />
-              ) : selectedTechnique.id === 'hierarchical-chaining' ? (
-                <HierarchicalChainingDetails selectedTechnique={selectedTechnique} />
-              ) : selectedTechnique.id === 'iterative-refinement' ? (
-                <IterativeRefinementDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'map-reduce' ? (
                 <MapReduceDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'scatter-gather' ? (
@@ -387,20 +416,72 @@ export const TechniqueDetails = ({
                 <ContentBasedRoutingDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'capability-routing' ? (
                 <CapabilityRoutingDetails selectedTechnique={selectedTechnique} />
-              ) : selectedTechnique.id === 'load-balancing' ? (
-                <LoadBalancingDetails selectedTechnique={selectedTechnique} />
-              ) : selectedTechnique.id === 'geographic-routing' ? (
-                <GeographicRoutingDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'llm-based-routing' ? (
+                <LlmBasedRoutingDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'embedding-based-routing' ? (
+                <EmbeddingBasedRoutingDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'rule-based-routing' ? (
+                <RuleBasedRoutingDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'machine-learning-model-based-routing' ? (
+                <MachineLearningModelBasedRoutingDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'sliding-window' ? (
                 <SlidingWindowDetails />
               ) : selectedTechnique.id === 'hierarchical-memory' ? (
-                <HierarchicalMemoryDetails />
+                <HierarchicalMemoryDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'attention-mechanisms' ? (
                 <AttentionMechanismsDetails />
               ) : selectedTechnique.id === 'memory-consolidation' ? (
-                <MemoryConsolidationDetails />
+                <MemoryConsolidationDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'working-memory-patterns' ? (
-                <WorkingMemoryPatternsDetails />
+                <WorkingMemoryPatternsDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'parametric-memory' ? (
+                <ParametricMemoryDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'episodic-memory-systems' ? (
+                <EpisodicMemorySystemsDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'semantic-memory-networks' ? (
+                <SemanticMemoryNetworksDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'transactive-memory-systems' ? (
+                <TransactiveMemorySystemsDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'memory-reading-writing-operations' ? (
+                <MemoryReadingWritingOperationsDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'contextual-structured-memory' ? (
+                <ContextualStructuredMemoryDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'contextual-unstructured-memory' ? (
+                <ContextualUnstructuredMemoryDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'memory-consolidation-processes' ? (
+                <MemoryConsolidationProcessesDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'distributed-memory-architectures' ? (
+                <DistributedMemoryArchitecturesDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'reinforcement-learning-from-human-feedback' ? (
+                <ReinforcementLearningFromHumanFeedbackDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'direct-preference-optimization' ? (
+                <DirectPreferenceOptimizationDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'in-context-learning' ? (
+                <InContextLearningDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'meta-learning' ? (
+                <MetaLearningSystemsDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'continual-learning' ? (
+                <ContinualLearningSystemsDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'self-improving-systems' ? (
+                <SelfImprovingSystemsDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'constitutional-ai' ? (
+                <ConstitutionalAIDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'reinforcement-learning-from-ai-feedback' ? (
+                <ReinforcementLearningFromAIFeedbackDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'test-time-scaling' ? (
+                <TestTimeScalingDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'odds-ratio-preference-optimization' ? (
+                <OddsRatioPreferenceOptimizationDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'simple-preference-optimization' ? (
+                <SimplePreferenceOptimizationDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'supervised-learning-adaptation' ? (
+                <SupervisedLearningAdaptationDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'unsupervised-learning-adaptation' ? (
+                <UnsupervisedLearningAdaptationDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'online-learning-adaptation' ? (
+                <OnlineLearningAdaptationDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'memory-based-learning' ? (
+                <MemoryBasedLearningDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'cod' ? (
                 <>
                   {/* Core Mechanism */}
@@ -670,9 +751,9 @@ export const TechniqueDetails = ({
               ) : selectedTechnique.id === 'scenario-planning' ? (
                 <ScenarioPlanningDetails />
               ) : selectedTechnique.id === 'memory-consolidation' ? (
-                <MemoryConsolidationDetails />
+                <MemoryConsolidationDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'working-memory-patterns' ? (
-                <WorkingMemoryPatternsDetails />
+                <WorkingMemoryPatternsDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'multi-modal-cognition' ? (
                 <MultiModalCognitionDetails />
               ) : selectedTechnique.id === 'multimodal-context-integration' ? (
@@ -680,7 +761,7 @@ export const TechniqueDetails = ({
               ) : selectedTechnique.id === 'sliding-window' ? (
                 <SlidingWindowDetails />
               ) : selectedTechnique.id === 'hierarchical-memory' ? (
-                <HierarchicalMemoryDetails />
+                <HierarchicalMemoryDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'attention-mechanisms' ? (
                 <AttentionMechanismsDetails />
               ) : selectedTechnique.id === 'context-compression' ? (
@@ -721,6 +802,8 @@ export const TechniqueDetails = ({
                 <ActorFrameworksDetails />
               ) : selectedTechnique.id === 'consensus-algorithms' ? (
                 <ConsensusAlgorithmsDetails />
+              ) : selectedTechnique.id === 'agent-communication-protocols' ? (
+                <AgentCommunicationProtocolsDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'reinforcement-learning-adaptation' ? (
                 <ReinforcementLearningAdaptationDetails />
               ) : selectedTechnique.id === 'continuous-learning' ? (
@@ -763,14 +846,34 @@ export const TechniqueDetails = ({
                 <A2aProtocolDetails />
               ) : selectedTechnique.id === 'parallel-synthesis' ? (
                 <ParallelSynthesisDetails />
-              ) : selectedTechnique.id === 'dynamic-routing' ? (
-                <DynamicRoutingDetails />
               ) : selectedTechnique.id === 'context-routing' ? (
                 <ContextRoutingDetails />
               ) : selectedTechnique.id === 'dynamic-context-assembly' ? (
                 <DynamicContextAssemblyDetails />
               ) : selectedTechnique.id === 'self-critique' ? (
-                <SelfCritiqueDetails />
+                <SelfCritiqueDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'producer-critic' ? (
+                <ProducerCriticDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'llm-as-judge' ? (
+                <LLMAsJudgeDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'reflexion-pattern' ? (
+                <ReflexionPatternDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'meta-reasoning' ? (
+                <MetaReasoningDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'hierarchical-task-network-planning' ? (
+                <HierarchicalTaskNetworkPlanningDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'supervisor-worker-pattern' ? (
+                <SupervisorWorkerPatternDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'shared-scratchpad-collaboration' ? (
+                <SharedScratchpadCollaborationDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'task-management-orchestration' ? (
+                <TaskManagementOrchestrationDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'sequential-pipeline-agents' ? (
+                <SequentialPipelineAgentsDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'concurrent-orchestration' ? (
+                <ConcurrentOrchestrationDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'handoff-orchestration' ? (
+                <HandoffOrchestrationDetails selectedTechnique={selectedTechnique} />
               ) : (
                 <section>
                   <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
@@ -824,7 +927,7 @@ export const TechniqueDetails = ({
               <div>
                 <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
                   <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
-                  Step-by-Step 2 Flow Visualization
+                  Step-by-Step Flow Visualization
                 </h2>
                 <div className="bg-gray-900/60 rounded-xl border border-gray-700/30">
                   <div className="bg-gray-900/60 px-4 py-3 border-b border-gray-700/30">

@@ -2,10 +2,10 @@
 
 import React from 'react';
 import TechniqueSection from './TechniqueSection';
-import BestPracticesSection from './BestPracticesSection';
+import BestPracticesSection from './shared/BestPracticesSection';
 import ListSection from './ListSection';
-import KeyFeaturesSection from './KeyFeaturesSection';
-import ReferencesSection from './ReferencesSection';
+import KeyFeaturesSection from './shared/KeyFeaturesSection';
+import ReferencesSection from './shared/ReferencesSection';
 
 interface IterativeRefinementDetailsProps {
   selectedTechnique: any;

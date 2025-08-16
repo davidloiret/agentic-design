@@ -1,219 +1,167 @@
 'use client';
-import React, { useState } from 'react';
-import { BookOpen, Code, Check, Brain, GitBranch, Play, Sparkles, ArrowRight } from 'lucide-react';
 
-export const GoalDecompositionDetails = () => {
+import React from 'react';
+import ReferencesSection from './shared/ReferencesSection';
+import {
+  QuickOverviewSection,
+  QuickImplementationSection,
+  DosAndDontsSection,
+  UsageGuideSection,
+  KeyMetricsSection,
+  TopUseCasesSection
+} from './shared';
+
+interface GoalDecompositionDetailsProps {
+  selectedTechnique: any;
+}
+
+export const GoalDecompositionDetails: React.FC<GoalDecompositionDetailsProps> = ({ selectedTechnique }) => {
+  // Quick Implementation Recipe
+  const quickImplementation = {
+    steps: [
+      { num: '1', action: 'Define', detail: 'Set SMART goal with scope, constraints, and success criteria' },
+      { num: '2', action: 'Decompose', detail: 'Break into sub-goals and validate coverage' },
+      { num: '3', action: 'Map', detail: 'Create dependency graph (DAG) and identify critical path' },
+      { num: '4', action: 'Prioritize', detail: 'Rank by impact × urgency × feasibility' },
+      { num: '5', action: 'Execute', detail: 'Monitor progress and adapt based on feedback' }
+    ],
+    example: 'improve_model_performance → [data_quality, architecture, training, validation] → executable_tasks'
+  };
+
+  // Combined Do's and Don'ts
+  const dosAndDonts = [
+    { type: 'do', text: 'Write SMART goals with explicit scope and success criteria', icon: '✅' },
+    { type: 'do', text: 'Create dependency graph (DAG) to identify critical path', icon: '✅' },
+    { type: 'do', text: 'Define acceptance criteria and quality gates for each sub-goal', icon: '✅' },
+    { type: 'do', text: 'Use evidence-driven prioritization (impact × urgency × feasibility)', icon: '✅' },
+    { type: 'do', text: 'Implement progress tracking with milestone checkpoints', icon: '✅' },
+    { type: 'do', text: 'Separate LLM ideation from symbolic validation/scheduling', icon: '✅' },
+    { type: 'do', text: 'Version goal trees and reuse proven templates', icon: '✅' },
+    { type: 'do', text: 'Track risks and maintain mitigation tasks alongside delivery', icon: '✅' },
+    { type: 'dont', text: 'Over-decompose simple goals (planning overhead vs benefit)', icon: '❌' },
+    { type: 'dont', text: 'Ignore dependencies leading to plan invalidation downstream', icon: '❌' },
+    { type: 'dont', text: 'Create unbounded iterations without stop criteria', icon: '❌' },
+    { type: 'dont', text: 'Focus on activity metrics instead of outcome measurements', icon: '❌' },
+    { type: 'dont', text: 'Skip stakeholder alignment on goal definitions', icon: '❌' },
+    { type: 'dont', text: 'Use for safety-critical actions without human review', icon: '❌' }
+  ];
+
+  // When to Use vs When to Avoid
+  const usageGuide = {
+    useWhen: [
+      'Complex multi-workstream programs',
+      'Product launches with many dependencies',
+      'Research roadmaps requiring coordination',
+      'Strategic planning with measurable outcomes',
+      'Personal development with structured progress',
+      'Operational excellence initiatives'
+    ],
+    avoidWhen: [
+      'Trivial single-step tasks',
+      'Ill-defined goals without stakeholder alignment',
+      'Hard real-time systems with microsecond budgets',
+      'Safety-critical actions requiring formal verification',
+      'Rapidly changing requirements without stability',
+      'Simple linear processes without dependencies'
+    ]
+  };
+
+  // Key Metrics
+  const keyMetrics = [
+    { metric: 'Goal Attainment Rate', measure: '% of sub-goals completed successfully' },
+    { metric: 'Timeline Variance', measure: 'Actual vs planned completion time' },
+    { metric: 'Critical Path Efficiency', measure: 'On-time milestone delivery rate' },
+    { metric: 'Decomposition Quality', measure: 'Coverage validation and peer review scores' },
+    { metric: 'Resource Utilization', measure: 'Actual vs estimated effort and cost' },
+    { metric: 'Replanning Frequency', measure: 'Number of plan adjustments per goal' },
+    { metric: 'Parallel Work Ratio', measure: '% tasks executed concurrently vs sequentially' }
+  ];
+
+  // Top Use Cases
+  const topUseCases = [
+    'AI Model Development: "Improve accuracy 87%→95%" → Data quality + Architecture optimization + Training enhancement + Validation with measurable checkpoints',
+    'Product Launch: "Launch e-commerce platform in 6 months" → Frontend + Backend + Payments + Testing with dependency tracking and parallel workstreams',
+    'Research Project: "Complete market analysis study" → Literature review + Data collection + Statistical analysis + Report generation with milestone gates',
+    'Personal Development: "Become machine learning expert" → Foundation courses + Practical projects + Portfolio building + Job preparation with progress tracking',
+    'Business Strategy: "Enter new market segment" → Market research + Product adaptation + Partnership development + Launch execution with risk mitigation',
+    'Software Architecture: "Migrate to microservices" → Service identification + Database splitting + API design + Deployment automation with rollback plans',
+    'Educational Curriculum: "Design AI safety course" → Learning objectives + Content development + Assessment design + Delivery optimization with feedback loops',
+    'Operational Excellence: "Reduce customer support response time 50%" → Process analysis + Tool optimization + Training programs + Quality monitoring'
+  ];
+
+  const references = [
+    {
+      title: 'Academic Research',
+      items: [
+        { title: 'SMART Goals and Systematic Planning (Doran, 1981)', url: 'https://en.wikipedia.org/wiki/SMART_criteria' },
+        { title: 'Tree of Thoughts: Deliberate Problem Solving (2023)', url: 'https://arxiv.org/abs/2305.10601' },
+        { title: 'Planning with Large Language Models (2023)', url: 'https://arxiv.org/abs/2307.03893' },
+        { title: 'Hierarchical Task Network Planning Overview (2014)', url: 'https://arxiv.org/abs/1403.7426' }
+      ]
+    },
+    {
+      title: 'Implementation Frameworks',
+      items: [
+        { title: 'LangGraph: Planner-Executor Patterns', url: 'https://langchain-ai.github.io/langgraph/' },
+        { title: 'Prefect: DAG-based Workflow Orchestration', url: 'https://docs.prefect.io/' },
+        { title: 'Apache Airflow: Task Dependency Management', url: 'https://airflow.apache.org/docs/' },
+        { title: 'GitHub Projects: Goal and Milestone Tracking', url: 'https://docs.github.com/en/issues/planning-and-tracking' }
+      ]
+    },
+    {
+      title: 'Tools & Libraries',
+      items: [
+        { title: 'NetworkX - Python Dependency Graph Library', url: 'https://networkx.org/' },
+        { title: 'Mermaid - Goal Tree Visualization', url: 'https://mermaid.js.org/' },
+        { title: 'LangChain - LLM-assisted Planning', url: 'https://python.langchain.com/' },
+        { title: 'DSPy - Structured Goal Programming', url: 'https://dspy.ai/' }
+      ]
+    },
+    {
+      title: 'Best Practices & Methodologies',
+      items: [
+        { title: 'OKRs (Objectives and Key Results) Framework', url: 'https://en.wikipedia.org/wiki/OKR' },
+        { title: 'Agile Goal Setting and Sprint Planning', url: 'https://www.scrum.org/resources/what-is-sprint-planning' },
+        { title: 'Critical Path Method (CPM) for Dependencies', url: 'https://en.wikipedia.org/wiki/Critical_path_method' },
+        { title: 'Getting Things Done (GTD) Methodology', url: 'https://gettingthingsdone.com/' }
+      ]
+    },
+    {
+      title: 'Community & Research',
+      items: [
+        { title: 'ICAPS - International Conference on Planning', url: 'https://icaps-conference.org/' },
+        { title: 'Project Management Institute (PMI)', url: 'https://www.pmi.org/' },
+        { title: 'Product Management Community', url: 'https://www.productmanagement.org/' },
+        { title: 'Goal Setting Research Community', url: 'https://www.goalsresearch.org/' }
+      ]
+    }
+  ];
+
   return (
     <>
-      {/* Core Mechanism */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
-          Core Mechanism
-        </h2>
-        <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
-          <p className="text-gray-200 text-base leading-relaxed">
-            Goal Decomposition turns an ambitious objective into SMART sub-goals and executable tasks, maps
-            dependencies as a DAG, prioritizes via impact/urgency, and executes iteratively with feedback.
-            In agent systems, LLMs propose sub-goals while symbolic schedulers/validators ensure feasibility,
-            safety, and resource alignment.
-          </p>
-        </div>
-      </section>
+      <QuickOverviewSection
+        pattern="Systematic breakdown of complex objectives into achievable, measurable sub-goals with clear success criteria"
+        why="Transforms vague ambitions into executable plans, enables progress tracking, and reduces overwhelming complexity through structured decomposition"
+        keyInsight="SMART goals + dependency mapping + impact prioritization + progress monitoring = systematic achievement"
+      />
 
-      {/* Workflow / Steps */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
-          Workflow / Steps
-        </h2>
-        <div className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl p-6">
-          <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
-            <li>Define goal, scope, constraints, and success criteria (SMART, guardrails, deadlines).</li>
-            <li>Generate candidate sub-goals; cluster and deduplicate; validate coverage vs. goal.</li>
-            <li>Break sub-goals into tasks with owners, estimates, acceptance criteria, and risks.</li>
-            <li>Construct a dependency graph (DAG); identify critical path and parallelizable work.</li>
-            <li>Prioritize (impact × urgency × risk); stage into milestones with buffers.</li>
-            <li>Allocate resources; set SLOs; define stop conditions and rollback/repair policies.</li>
-            <li>Execute–measure–learn loop: monitor metrics; replan on deviations; retire or merge tasks.</li>
-            <li>Finalize and retrospect: compare outcomes to goals; capture templates for reuse.</li>
-          </ol>
-        </div>
-      </section>
+      <QuickImplementationSection
+        steps={quickImplementation.steps}
+        example={quickImplementation.example}
+      />
 
-      {/* Best Practices */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-green-500 rounded-full"></div>
-          Best Practices
-        </h2>
-        <div className="grid gap-3">
-          {[
-            'Write goals as SMART with explicit out-of-scope items; keep decomposition tree shallow but complete.',
-            'Model dependencies explicitly; prefer partial orders to unlock safe parallelism.',
-            'Define acceptance criteria per task; add quality gates and automated checks where possible.',
-            'Bound recursion depth and branching factor; cap iterations and enforce stop criteria.',
-            'Use evidence-driven reprioritization (metrics, risks, blockers) at a fixed cadence.',
-            'Separate LLM ideation from symbolic validation/scheduling; log provenance and decisions.',
-            'Version goal trees; reuse proven subtrees/templates; cache recurring prompts/results.',
-            'Track risks/assumptions; maintain mitigation tasks on the same board as delivery tasks.',
-          ].map((tip) => (
-            <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
-              <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
-              <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
-            </div>
-          ))}
-        </div>
-      </section>
+      <DosAndDontsSection items={dosAndDonts} />
 
-      {/* When NOT to Use */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-red-500 rounded-full"></div>
-          When NOT to Use
-        </h2>
-        <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-          <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-            <li>Trivial or one-step tasks where planning overhead adds latency without benefit.</li>
-            <li>Ill-posed or shifting goals without stakeholder alignment and measurable outcomes.</li>
-            <li>Hard real-time paths with microsecond budgets; use reactive policies instead.</li>
-            <li>Safety-critical actions without human review or formal verification.</li>
-          </ul>
-        </div>
-      </section>
+      <UsageGuideSection
+        useWhen={usageGuide.useWhen}
+        avoidWhen={usageGuide.avoidWhen}
+      />
 
-      {/* Common Pitfalls */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
-          Common Pitfalls
-        </h2>
-        <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-          <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-            <li>Over-decomposition causing cost/latency blowups with little quality gain.</li>
-            <li>Missing prerequisites or hidden coupling leading to plan invalidation downstream.</li>
-            <li>Unbounded iteration or lack of stop criteria; goal drift and scope creep.</li>
-            <li>Metrics misalignment (activity vs. outcome) obscuring true progress.</li>
-          </ul>
-        </div>
-      </section>
+      <KeyMetricsSection metrics={keyMetrics} />
 
-      {/* Key Features */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
-          Key Features
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {[
-            'SMART sub-goals with owners and acceptance criteria',
-            'Dependency graph (DAG) with critical-path analysis',
-            'Parallelizable task groups and milestone staging',
-            'Risk register, buffers, and plan-repair policies',
-            'Progress tracking with status roll-ups and audits',
-            'LLM-assisted ideation + symbolic validation/scheduling',
-          ].map((feat) => (
-            <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
-              {feat}
-            </div>
-          ))}
-        </div>
-      </section>
+      <TopUseCasesSection useCases={topUseCases} />
 
-      {/* KPIs / Success Metrics */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
-          KPIs / Success Metrics
-        </h2>
-        <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-          <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-            <li>Goal attainment rate; variance to target (time, cost, quality).</li>
-            <li>Critical-path length and on-time milestone rate; replan/repair frequency.</li>
-            <li>Sub-goal coverage and decomposition quality (rubric/peer review).</li>
-            <li>Throughput and lead time; blocked-time percentage.</li>
-            <li>For LLM-augmented planning: tokens per plan, cost per successful execution, latency p50/p95.</li>
-          </ul>
-        </div>
-      </section>
-
-      {/* Token / Resource Usage */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
-          Token / Resource Usage
-        </h2>
-        <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-          <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-            <li>Token budget grows with depth × breadth; prune and cache reusable subtrees/templates.</li>
-            <li>Prefer concise structured prompts; pass state by reference; cap turns per node.</li>
-            <li>Batch validations; stream progress updates; use retrieval instead of re-sending large context.</li>
-          </ul>
-        </div>
-      </section>
-
-      {/* Best Use Cases */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
-          Best Use Cases
-        </h2>
-        <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-          <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-            <li>Product launches, research roadmaps, and multi-workstream programs.</li>
-            <li>Incident response and reliability engineering with parallel tasking.</li>
-            <li>Operational excellence: process improvements with measurable targets.</li>
-            <li>Education/personal productivity: study plans, career plans, habit systems.</li>
-          </ul>
-        </div>
-      </section>
-
-      {/* References & Further Reading */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
-          References & Further Reading
-        </h2>
-        <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
-          <div>
-            <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
-            <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
-              <li><a href="https://arxiv.org/abs/1403.7426" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">HTN Planning Overview (2014)</a></li>
-              <li><a href="https://arxiv.org/abs/1911.05499" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">HDDL: Language for Hierarchical Planning (2020)</a></li>
-              <li><a href="https://arxiv.org/abs/2305.10601" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Tree of Thoughts (2023)</a></li>
-              <li><a href="https://arxiv.org/abs/2212.14052" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Chain-of-Thought &amp; Self-Consistency (2023)</a></li>
-              <li><a href="https://jair.org/index.php/jair/article/view/10309" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">SHOP2 HTN Planner (2003)</a></li>
-              <li><a href="https://www.jair.org/index.php/jair/article/view/1037" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Options Framework for HRL (1999)</a></li>
-              <li><a href="https://arxiv.org/abs/2307.03893" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Survey: Planning with LLMs (2023/2024)</a></li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
-            <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
-              <li><a href="https://langchain-ai.github.io/langgraph/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangGraph: Planner–Executor Patterns</a></li>
-              <li><a href="https://docs.prefect.io/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Prefect: DAG-based Orchestration</a></li>
-              <li><a href="https://airflow.apache.org/docs/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Apache Airflow: DAG Scheduling</a></li>
-              <li><a href="https://panda-hddl.github.io/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">PANDA HTN Planner</a></li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-white font-semibold mb-2 text-sm">Tools &amp; Libraries</h3>
-            <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
-              <li>LangChain, LlamaIndex, <a href="https://dspy.ai/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">DSPy</a></li>
-              <li><a href="https://networkx.org/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">NetworkX</a> for dependency DAGs; graph UIs (Mermaid, React Flow)</li>
-              <li>Planning toolkits: PANDA, SHOP2/JSHOP2, PyHOP</li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-white font-semibold mb-2 text-sm">Community &amp; Discussions</h3>
-            <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
-              <li><a href="https://icaps-conference.org/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">ICAPS</a> and <a href="https://aaai.org/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">AAAI</a> planning tracks</li>
-              <li><a href="https://discuss.huggingface.co/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Hugging Face Forums</a> and <a href="https://www.reddit.com/r/MachineLearning/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">r/MachineLearning</a></li>
-              <li>Engineering blogs on program management, DAG orchestration, and LLM planning</li>
-            </ul>
-          </div>
-        </div>
-      </section>
+      <ReferencesSection categories={references} />
     </>
   );
 };

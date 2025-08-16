@@ -1177,3 +1177,462 @@ apprendre à vibe coder
 workshop slide ?
 
 focus production scalable / et opti (prix etc)
+
+
+Security, safety & eval strategy
+last update timestamp
+
+**How-tos**, **Benchmarks**, **Safety**, **Glossary**.
+
+ajouter citation de agentic design patterns
+
+
+context management tips:
+- reduce cognitive load => reduce context
+- garbage in garbae out
+-> focus on spec
+->
+
+Methodology
+
+References:
+https://github.com/zjunlp/LLMAgentPapers
+
+We need something to compare diff from differebt service
+- le chat
+- chatgpt
+- gemini
+- qwen
+- deepseek
+- claude
+
+
+
+
+
+Adapt by user level ? Simplifier en fonction age etc => site s'adaote
+Compare outpiut of several service
+former à utiliser l'IA pas forcement construire
+controle donné anonymisation => vendre le produit
+Stocker et versionner prompt
+
+Experience de leraning interactif => apprendre context management => voix les differences
+
+all backed by scientific sources no vendor
+literature/evidence-backed taxonomy
+
+----
+
+se construire des bench pour eval les modeles
+
+xml usage
+
+https://github.com/qianlima-lab/awesome-lifelong-llm-agent
+https://link.springer.com/article/10.1007/s44336-024-00009-2
+
+Dev sense of what the model can do to avoid loosing too much time and selecting the good option
+- research
+- thinking
+Plan mode (need reasoning model) => execute 
+
+Utiliser les hallucnations => idees
+Eviter de trop limiter le model
+=> structured output
+
+dev sense de l'empathie => se mettre a la place du modele
+
+
+-> add video
+- langchain
+- langgraph
+etc
+
+
+---------
+
+Use cases:
+- Creer une feature
+- Refactoring
+- Creer la documentation d'un composant
+- Documentyer le code d'un composant
+- Fix un bug
+- Debug un probleme de performance
+- Affiner une specs / gherkins
+- Ideation processus
+- Marketing research
+- Trouver des incohérences de design UI/UX / améliorer UX
+- Trouver incohérences de design / architecture de code
+- AI Reviews
+
+Code méthodo
+
+
+1. Write spec
+2. Write tests
+3. Code
+4. Run code
+
+Worktree
+
+Create TODO
+Think ultra hard
+https://www.anthropic.com/engineering/claude-code-best-practices
+
+commands
+style => DDD / Clean archiecture / etc add claude
+
+add different perspective
+
+product management / strategy
+
+--------
+
+Creer une section overvoew ? la on sait pas trop qu'on peut cliquer
+
+parfois trop de contrainte donne mauvais resultat
+y'a des jours ou ca marche mieux que d'autres => own your ai
+
+xml techniques
+
+bien designer au départ comme on design pour humaion
+difficle de refacto => meilleur pour creer
+
+poser question directement => dynamic content => explain like I am five etc
+
+key features / core mechanism
+
+contrainte pour consistenc
+
+framework agnostic
+
+
+-------
+DSPY
+
+
+==========
+
+I want to provide a amazing learning experience, user should be able to discuss directly to the ressource, ask question and even dynamically change the design with different tone, like explain like I am five, adapt to user.
+Thinkhhard about this, I want to create the perfect learning experience.
+
+Prio au format cheatsheet mais p-e qu'il faut un format plus complet meme si on a deja demo etc, c'est deja pas mal
+P-e qu'il faut mieux expliquer à quoi ca sert et pk on en a besoin
+
+https://context7.com/
+
+In Key Metrics I want to add a indice of model cognitive load and 
+
+re ranking
+
+
+Why we need this technique
+
+Caching
+
+Ajouter cognitive load
+
+I don't want a new "Industry Best Practices & Tutorials"
+
+We should have only in references 4 categories :
+- Academic Papers
+- Implementation Guides
+- Tools & Libraries
+- Community & Discussions
+
+
+cheatsheet like
+- learn
+- and revisit
+
+Prompt chaining => orchestration ?
+
+
+Demontrer l'usage de plusieurs patterns:
+
+- Use case => multiple pattern 
+
+
+Add LlmBasedRoutingDetails in learning-details techniques, focus on LLM based routing  ensure every information is       │
+│   correct and backed by authoritative source. Ensure every sources are relevant and link working. Ensure no bullshit, all  │
+│   information should be pertinent for the learner and valuable and true. Thinkhard, make research, add missing reference   │
+│   link. Here a reference '/Users/dlo.ext/code/agentic-design/references/agentic_design_patterns/Chapter 2_ Routing.md'     │
+│   We should follow the same structure as @src/app/components/technique-details/SequentialChainingDetails.tsx using the     │
+│   shared component. Always focus on Agentic AI systems.
+
+
+Multi Agent Orchestration category ?
+https://learn.microsoft.com/en-us/azure/architecture/ai-ml/guide/ai-agent-design-patterns
+
+See 
+- Langgraph
+- Anthropic
+- microsoft https://learn.microsoft.com/en-us/azure/architecture/ai-ml/guide/ai-agent-design-patterns
+Add mermaid ? => no we have the react flow
+
+https://www.promptingguide.ai/techniques/prompt_chaining
+
+Now that we hit limit in LLM, now there is more place for engineering.
+
+add popularity score
+
+https://google.github.io/adk-docs/agents/multi-agents/
+
+
+=================
+
+
+Short answer: not the same—*LLM-as-a-judge* is one way to **implement the “critic”** in a broader **producer–critic** (a.k.a. actor–critic) pattern.
+
+Here’s the mapping:
+
+* **Producer–critic pattern (general):** A generator/actor produces outputs; a separate component (the critic) evaluates them and feeds back a score, ranking, or guidance. The critic can be a human, a rule checker, a reward model, a verifier, or an LLM. It can run during **training** (to shape the model) and/or at **inference** (to pick or refine outputs).
+* **LLM-as-a-judge (specific):** The critic happens to be an LLM that scores, compares, or explains its evaluation of candidates (often using a rubric). It might be used to select the best of N samples, to provide critiques for refinement, or to generate preference labels (RLAIF/Constitutional AI).
+
+Key differences:
+
+1. **Scope:** producer–critic is an architecture pattern; LLM-as-judge is one instantiation of the critic.
+2. **Signal type:** critics may give hard constraints, structured rewards, or formal verification; LLM-judges usually give natural-language rationales plus a scalar score/ranking.
+3. **Use cases:** producer–critic spans training (RLHF/DPO, reward shaping) and inference (reranking, self-refine). LLM-as-judge is common for evaluation/reranking and for generating preference data.
+4. **Reliability concerns:** with LLM-as-judge you must handle bias, calibration, and “model judging itself”; mitigations include using a different judge model, pairwise comparisons, explicit rubrics, and multi-judge ensembling.
+
+Rule of thumb: *LLM-as-a-judge* ≈ “critic powered by an LLM.” It fits **inside** the producer–critic pattern, but the pattern doesn’t require an LLM (or even a learned critic) at all.
+
+
+State and usage
+
+owasp etc security
+
+Academic backing is crucial for credibility
+
+-------
+
+After analyzing all current planning techniques against academic sources and canonical naming, here are the critical
+  issues:
+
+  ❌ MAJOR OVERLAPS & NON-CANONICAL NAMING
+
+  1. "Hierarchical Planning" vs "Goal Decomposition"
+
+  OVERLAP: Academic sources show goal decomposition is a component within hierarchical planning, not a separate
+  technique.
+  - HTN planning canonically includes goal decomposition as one of its core features
+  - Having both creates redundancy
+
+  2. "Self-Regulating Depth Control"
+
+  NOT ACADEMICALLY ESTABLISHED: This exact term doesn't exist in academic literature.
+  - The concepts exist separately (confidence-based stopping, early stopping)
+  - But this specific formulation/naming is not canonical
+
+  3. "Meta-Reasoning Orchestration"
+
+  PARTIALLY CANONICAL: "Meta-reasoning" exists, but "orchestration" is not the standard academic term.
+  - Academic literature uses "meta-cognition" or "meta-reasoning"
+  - "Orchestration" is more of a systems term
+
+  4. "Scenario Planning"
+
+  NOT AI-SPECIFIC: This is primarily a business/strategic planning technique.
+  - Academic AI literature focuses on AI-enhanced scenario planning as an application
+  - Not a core AI planning technique itself
+
+  🎯 RECOMMENDATION: Keep Only Canonical Techniques
+
+  KEEP (with proper naming):
+  1. "Hierarchical Task Network (HTN) Planning" - Canonical name, well-established
+  2. "Meta-Reasoning" - Remove "orchestration", use canonical term
+
+  REMOVE:
+  1. "Self-Regulating Depth Control" - Not academically established
+  2. "Goal Decomposition" - Redundant with HTN planning
+  3. "Scenario Planning" - Not a core AI planning technique
+
+
+Multi agent
+
+https://google.github.io/adk-docs/agents/multi-agents/                                                       │
+│   https://learn.microsoft.com/en-us/azure/architecture/ai-ml/guide/ai-agent-design-patterns                                │
+│   https://blog.langchain.com/langgraph-multi-agent-workflows/                                                              │
+│   https://www.anthropic.com/engineering/multi-agent-research-system    
+
+
+ - Focused on agentic AI systems rather than general distributed computing
+
+
+ deep research is just a use case not a pattern
+
+
+ ===
+ learn pattern to help build incredible complex / magical systems
+====
+
+ Great question! The "scratchpad" in Shared Scratchpad Collaboration is conceptually similar to but broader than Claude
+  Code's task list. Let me clarify the difference:
+
+  Claude Code's Task List:
+
+  - Specific Purpose: Progress tracking for coding tasks
+  - Structure: Todo items with status (pending/in_progress/completed)
+  - Usage: Linear task management and progress visibility
+  - Scope: Individual assistant's work organization
+
+  Multi-Agent Shared Scratchpad:
+
+  - Broader Purpose: Collaborative workspace for any type of content
+  - Structure: Flexible shared state (documents, data, decisions, analysis, etc.)
+  - Usage: Real-time collaborative building and refinement
+  - Scope: Multiple agents working together on shared objectives
+
+  Examples of Shared Scratchpad Content:
+
+  Document Collaboration:
+  Shared Document: "AI Safety Guidelines"
+  Section 1: [ResearchAgent] Technical foundations...
+  Section 2: [PolicyAgent] Regulatory framework...
+  Section 3: [EthicsAgent] Ethical considerations...
+  Review Notes: [ReviewAgent] Suggestions for improvement...
+
+  Strategic Analysis:
+  Market Analysis Workspace:
+  - Market Size: [MarketAgent] $2.5B, growing 15% annually
+  - Competitors: [CompetitiveAgent] 3 major players, gaps identified
+  - Risks: [RiskAgent] Regulatory changes, technical barriers
+  - Recommendation: [SynthesisAgent] Enter market Q2 with partnership strategy
+
+  Research Collaboration:
+  Research Paper Workspace:
+  - Literature Review: [Agent1] 45 papers analyzed, key themes identified
+  - Methodology: [Agent2] Experimental design proposed, validated
+  - Results: [Agent3] Data analysis complete, significance confirmed
+  - Discussion: [All] Collaborative interpretation and implications
+
+  So while Claude Code's task list is a linear progress tracker, the shared scratchpad is a collaborative knowledge 
+  workspace where agents build upon each other's work in real-time. It's more like a shared Google Doc or Notion page
+  where multiple people (agents) contribute simultaneously, rather than a simple task checklist.
+
+  The key insight is transparency and building upon each other's work, not just task coordination!
+
+:::::
+
+where to put the task list technique
+
+add video source / BAML etc
+
+
+
+ Improve sequential-pipeline-agents details in learning-details techniques. Ensure every information is correct and that  │
+│   we don't miss any critical information and backed by authoritative source. Ensure every sources are relevant and link    │
+│   working. Ensure no bullshit, all information should be pertinent for the learner and valuable and true. Thinkhard, make  │
+│   research, add missing reference link. FOLLOW the SAME STRUCTURE as                                                       │
+│   @src/app/components/technique-details/SequentialChainingDetails.tsx using the shared component. Focus on use of this     │
+│   technique for Agentic AI systems. 
+
+we need to check on sdk / agents because principle are defined also here and we should add framework example. But idea is for the builder to understand without framework
+
+
+tool use vs structured JSON output and why this is bad to constraint model etc => BAML
+
+semantic filter for tool use
+
+advanced transformer explanation
+=> referencer tout ce que je connais affiner mes connaissances
+=> m'aider à construire systemes agengique
+=> prouver que je sais
+=> devenir une ref dans le domaine => vendre expertise
+=> construire mon expertise => knowledge base
+
+Web LLM 
+
+ambient agent
+
+swarm
+
+ajouter les differents noms utilisés
+
+gem board
+
+should we add more generic scalable / distributed systems and tehcnique surch as async await / fork join etc
+
+  The restructured Memory Management category now provides a solid academic foundation with canonical terminology, proper
+   separation of concerns, and techniques specifically designed for modern agentic AI systems and multi-agent
+  architectures.
+
+Kortexya should be a JEI and R&D should have this building block all in rust python typescript
+Focus on building block:
+- Crawling => firecrawl like
+- Auth => greponse like but in rust 
+- RAG, node rag etc
+- Semantic knowledge (knowledge management)
+- Fine tuning
+- Inference (cloud, edge)
+- Cloud / hosting. MLOps
+- Data management (data scientist, spark etc, kafka, elastic search)
+=> Construire knowledge base => agentic design et construire une méthodo pour construire les agents
+
+
+Context tips:
+Example are bad
+
+vision, speech
+
+temporary graph
+
+
+https://docs.anthropic.com/en/docs/claude-code/sdk
+
+add # anchor
+
+don't rush, plan first
+
+edge inference
+distilation
+
+think hard
+
+----------
+
+Advanced Alignment Techniques:
+  1. RLHF - Reinforcement Learning from Human Feedback
+  2. DPO - Direct Preference Optimization
+  3. RLAIF - Reinforcement Learning from AI Feedback
+  4. ORPO - Odds Ratio Preference Optimization
+  5. SimPO - Simple Preference Optimization
+  6. CAI - Constitutional AI
+
+  Core Learning Paradigms:
+  7. ICL - In-Context Learning (includes few-shot and zero-shot)
+  8. SLA - Supervised Learning for Agents
+  9. ULA - Unsupervised Learning for Agents
+  10. OLA - Online Learning for Agents
+  11. MBL - Memory-Based Learning
+
+  Advanced Learning Systems:
+  12. MLS - Meta-Learning Systems
+  13. CL - Continual Learning
+  14. SIS - Self-Improving Systems15. TTS - Test-Time Scaling
+
+
+
+Good codebase => good LLM generation
+messy code base / bad consistency => bad LLM generation
+
+Well documented / SOLID / clean archi / hexa => help LLM with best practice
+
+
+Deep Dive
+
+Write insight in file
+
+design-principle
+
+Navigate to Top-tier silicon valley designer 
+Feedback and perspective
+
+
+Do complex rebase
+
+https://www.anthropic.com/engineering/claude-code-best-practices
+
+# Kortexya
+- Mise en place de workflow de dev avec claude code ou autre model open weight pour améliorer le dev
+Traitement des mails

@@ -51,7 +51,6 @@ async function parseDataFiles() {
         './planning-execution': 'planning-execution',
         './parallelization': 'parallelization',
         './multi-agent': 'multi-agent',
-        './interpretability': 'cognitive-architectures',
         './human-ai-collaboration': 'human-ai-collaboration',
         './knowledge-retrieval': 'knowledge-retrieval',
         './knowledge-representation': 'knowledge-representation'
@@ -80,13 +79,10 @@ function getSampleTechniquesForCategory(category) {
     'prompt-chaining': [
       { id: 'sequential-chaining', name: 'Sequential Chaining', category, description: 'Sequential prompt chaining' },
       { id: 'parallel-chaining', name: 'Parallel Chaining', category, description: 'Parallel prompt chaining' },
-      { id: 'conditional-chaining', name: 'Conditional Chaining', category, description: 'Conditional prompt chaining' },
-      { id: 'feedback-chaining', name: 'Feedback Chaining', category, description: 'Feedback-based chaining' }
     ],
     'routing': [
       { id: 'content-based-routing', name: 'Content-Based Routing', category, description: 'Route based on content analysis' },
       { id: 'capability-routing', name: 'Capability Routing', category, description: 'Route based on agent capabilities' },
-      { id: 'load-balancing', name: 'Load Balancing', category, description: 'Balance load across agents' }
     ],
     'tool-use': [
       { id: 'function-calling', name: 'Function Calling', category, description: 'Call external functions' },

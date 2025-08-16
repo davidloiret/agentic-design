@@ -10,6 +10,7 @@ export interface Technique {
   useCases: string[];
   complexity: 'low' | 'medium' | 'high';
   example: string;
+  references?: string[];
 }
 
 export type TechniqueCategory = 
@@ -34,5 +35,4 @@ export type TechniqueCategory =
   | 'evaluation-monitoring'
   | 'prioritization'
   | 'exploration-discovery'
-  | 'cognitive-architectures'
   | 'context-orchestration';
