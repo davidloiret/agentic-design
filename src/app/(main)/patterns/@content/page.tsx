@@ -127,7 +127,7 @@ const CategoryItem: React.FC<{ category: any; index: number }> = ({ category, in
             </div>
             <h4 className="font-semibold text-white text-base">{category.name}</h4>
           </div>
-          <span className={`inline-flex items-center px-2.5 py-1 ${categoryColor.badge || 'bg-blue-500/10 text-blue-400 border-blue-500/20'} text-xs font-medium rounded-full border`}>
+          <span className={`inline-flex items-center px-2.5 py-1 ${(categoryColor as any).badge || 'bg-blue-500/10 text-blue-400 border-blue-500/20'} text-xs font-medium rounded-full border`}>
             {category.techniques?.length || 0} techniques
           </span>
         </div>

@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface DoOrDont {
-  type: 'do' | 'dont';
+  type: string;
   text: string;
   icon?: string;
 }

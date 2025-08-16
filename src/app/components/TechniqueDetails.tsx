@@ -269,7 +269,7 @@ export const TechniqueDetails = ({
                     <span className={`inline-flex items-center px-3 lg:px-3 py-1.5 rounded-full text-sm font-medium ${getComplexityColor(selectedTechnique.complexity).badge}`}>
                       Complexity: {selectedTechnique.complexity}
                     </span>
-                    <span className={`inline-flex items-center px-3 lg:px-3 py-1.5 rounded-full text-sm font-medium ${getCategoryColor(selectedTechnique.category).badge || 'bg-gray-800/60 text-gray-200'}`}>
+                    <span className={`inline-flex items-center px-3 lg:px-3 py-1.5 rounded-full text-sm font-medium ${(getCategoryColor(selectedTechnique.category) as any).badge || 'bg-gray-800/60 text-gray-200'}`}>
                       {categories.find(c => c.id === selectedTechnique.category)?.name || 'Pattern'}
                     </span>
                   </div>
@@ -713,7 +713,7 @@ export const TechniqueDetails = ({
               ) : selectedTechnique.id === 'long-cot' ? (
                 <LongCotDetails />
               ) : selectedTechnique.id === 'function-calling' ? (
-                <FunctionCallingDetails />
+                <FunctionCallingDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'event-driven-orchestrator-worker' ? (
                 <EventDrivenOrchestratorWorkerDetails />
               ) : selectedTechnique.id === 'resource-aware-scheduling' ? (
