@@ -1,185 +1,160 @@
 'use client';
 
 import React from 'react';
-import TechniqueSection from './TechniqueSection';
-import BestPracticesSection from './shared/BestPracticesSection';
-import ListSection from './ListSection';
-import KeyFeaturesSection from './shared/KeyFeaturesSection';
 import ReferencesSection from './shared/ReferencesSection';
+import {
+  QuickOverviewSection,
+  QuickImplementationSection,
+  DosAndDontsSection,
+  UsageGuideSection,
+  KeyMetricsSection,
+  TopUseCasesSection
+} from './shared';
 
 interface SelfRAGDetailsProps {
   selectedTechnique: any;
 }
 
 export const SelfRAGDetails: React.FC<SelfRAGDetailsProps> = ({ selectedTechnique }) => {
-  const workflowSteps = [
-    'Assess retrieval necessity (predict whether external knowledge is needed).',
-    'Retrieve candidate passages (dense/sparse/hybrid) and optionally rerank.',
-    'Draft answer conditioned on top-k context and parametric knowledge.',
-    'Self-critique with reflection tokens: rate faithfulness, sufficiency, and usefulness of context and answer.',
-    'If low confidence or inconsistencies detected: refine query, re-retrieve, and regenerate.',
-    'Finalize answer with calibrated confidence and source attributions.'
+  const quickImplementation = {
+    steps: [
+      { num: '1', action: 'Retrieval Gate', detail: 'Assess whether external knowledge is needed for the query' },
+      { num: '2', action: 'Retrieve & Rank', detail: 'Fetch relevant passages and apply neural reranking' },
+      { num: '3', action: 'Generate Draft', detail: 'Create initial response using retrieved context' },
+      { num: '4', action: 'Self-Critique', detail: 'Use reflection tokens to evaluate response quality' },
+      { num: '5', action: 'Refine Output', detail: 'Iteratively improve based on self-assessment' }
+    ],
+    example: 'query → retrieval_gate → retrieve → generate → self_critique → [refine] → final_response'
+  };
+
+  const dosAndDonts = [
+    { type: 'do', text: 'Train models with reflection tokens ([Retrieve], [IsRel], [IsSup], [IsUse])', icon: '✅' },
+    { type: 'do', text: 'Implement retrieval necessity prediction to avoid unnecessary context', icon: '✅' },
+    { type: 'do', text: 'Use calibrated confidence thresholds for triggering refinement', icon: '✅' },
+    { type: 'do', text: 'Enforce citation requirements with evidence grounding', icon: '✅' },
+    { type: 'do', text: 'Cache reflection outputs and retrieval results for efficiency', icon: '✅' },
+    { type: 'dont', text: 'Allow unconstrained reflection tokens that become verbose', icon: '❌' },
+    { type: 'dont', text: 'Skip validation of self-critique calibration against ground truth', icon: '❌' },
+    { type: 'dont', text: 'Create infinite refinement loops without iteration limits', icon: '❌' },
+    { type: 'dont', text: 'Rely solely on self-assessment without external validation', icon: '❌' },
+    { type: 'dont', text: 'Ignore computational cost of multiple generation rounds', icon: '❌' }
   ];
 
-  const bestPractices = [
-    'Use retrieval-necessity gating to avoid unnecessary context pulls.',
-    'Employ strong rerankers and deduplication to improve context precision before generation.',
-    'Constrain critique format (scores + short rationale) to limit reflection drift and token bloat.',
-    'Enforce citation grounding: require evidence spans for factual claims.',
-    'Cache retrieval results and use semantic compression to control context size.',
-    'Track confidence thresholds to trigger re-retrieval vs. abstention/deferral.'
+  const usageGuide = {
+    useWhen: [
+      'Factual accuracy and verifiability are critical requirements',
+      'Domain expertise requires balancing parametric and retrieved knowledge',
+      'Applications need confidence calibration and uncertainty quantification',
+      'High-stakes decisions requiring explainable reasoning and citations',
+      'Knowledge-intensive tasks in medical, legal, or scientific domains'
+    ],
+    avoidWhen: [
+      'Simple queries where standard RAG provides sufficient accuracy',
+      'Real-time applications with strict latency constraints',
+      'Resource-constrained environments limiting multiple generation rounds',
+      'Domains with insufficient training data for reliable self-critique',
+      'Applications where citation overhead is unnecessary'
+    ]
+  };
+
+  const keyMetrics = [
+    { metric: 'Answer Faithfulness', measure: 'Factual accuracy and consistency with retrieved evidence' },
+    { metric: 'Reflection Calibration', measure: 'Correlation between confidence scores and actual accuracy' },
+    { metric: 'Retrieval Precision', measure: 'Proportion of retrieved passages that are genuinely useful' },
+    { metric: 'Citation Coverage', measure: 'Percentage of claims supported by retrieved evidence' },
+    { metric: 'Refinement Effectiveness', measure: 'Quality improvement through iterative self-correction' },
+    { metric: 'Computational Efficiency', measure: 'Quality gains per additional token or retrieval call' }
   ];
 
-  const whenNotToUse = [
-    'Simple factual queries where standard RAG provides sufficient accuracy.',
-    'Latency-sensitive applications that cannot afford the reflection and refinement overhead.',
-    'Domains where self-critique may be unreliable due to lack of training data.',
-    'Resource-constrained environments where multiple generation rounds are prohibitive.'
-  ];
-
-  const commonPitfalls = [
-    'Reflection tokens becoming verbose or drifting from useful critique patterns.',
-    'Over-reliance on self-assessment without external validation or ground truth.',
-    'Infinite loops in refinement when confidence thresholds are poorly calibrated.',
-    'Poor retrieval quality undermining the entire self-reflection process.',
-    'Insufficient training data for effective self-critique in specialized domains.'
-  ];
-
-  const keyFeatures = [
-    'Adaptive retrieval necessity assessment and selective context gathering',
-    'Self-reflection tokens for rating answer quality and context relevance',
-    'Iterative refinement with re-retrieval based on confidence assessment',
-    'Integrated citation generation with evidence grounding requirements',
-    'Calibrated confidence scoring for answer reliability estimation',
-    'Hybrid retrieval combining parametric and retrieved knowledge'
-  ];
-
-  const kpiMetrics = [
-    'Answer accuracy and factual correctness compared to ground truth.',
-    'Retrieval precision: proportion of retrieved passages that are actually useful.',
-    'Self-critique calibration: correlation between confidence scores and actual accuracy.',
-    'Citation coverage: percentage of claims supported by retrieved evidence.',
-    'Refinement effectiveness: improvement in quality through iterative loops.',
-    'Computational efficiency: quality gains per additional token or retrieval call.'
-  ];
-
-  const tokenUsage = [
-    'Base cost includes retrieval assessment, context processing, and initial generation.',
-    'Self-critique adds 200-800 tokens per reflection depending on format constraints.',
-    'Refinement loops can multiply total cost by 2-4x for complex queries.',
-    'Retrieved context compression can reduce input tokens by 30-50%.',
-    'Monitor refinement frequency and set maximum iteration limits to control costs.'
-  ];
-
-  const bestUseCases = [
-    'Factual question answering where accuracy and verifiability are critical.',
-    'Research and analysis tasks requiring high-quality source attribution.',
-    'Knowledge-intensive domains like medical, legal, or scientific information.',
-    'Applications where explaining reasoning and confidence levels adds value.',
-    'Systems that need to balance parametric knowledge with up-to-date retrieved information.'
+  const topUseCases = [
+    'Medical Q&A: Clinical decision support requiring high accuracy and evidence-based responses',
+    'Legal Research: Case law analysis with citation requirements and confidence assessment',
+    'Scientific Literature Review: Research synthesis with source attribution and uncertainty quantification',
+    'Financial Analysis: Investment research requiring balanced parametric and real-time market data',
+    'Educational Content: Academic tutoring with verified information and learning confidence tracking'
   ];
 
   const references = [
     {
-      title: 'Academic Papers',
+      title: 'Foundational Papers & Self-RAG Research',
       items: [
         { title: 'Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection (Asai et al., 2023)', url: 'https://arxiv.org/abs/2310.11511' },
         { title: 'SELF-REFINE: Iterative Refinement with Self-Feedback (Madaan et al., 2023)', url: 'https://arxiv.org/abs/2303.17651' },
-        { title: 'Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks (Lewis et al., 2020)', url: 'https://arxiv.org/abs/2005.11401' }
+        { title: 'Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks (Lewis et al., 2020)', url: 'https://arxiv.org/abs/2005.11401' },
+        { title: 'Teaching Language Models to Self-Correct via Reinforcement Learning (Welleck et al., 2023)', url: 'https://arxiv.org/abs/2305.09635' }
       ]
     },
     {
-      title: 'Implementation Guides',
+      title: 'Reflection Tokens & Training Methods',
       items: [
-        { title: 'LangChain: Self-Reflecting RAG Chains', url: 'https://python.langchain.com/docs/use_cases/question_answering/how_to/self_query' },
-        { title: 'LlamaIndex: Self-Reflection and Critique', url: 'https://docs.llamaindex.ai/en/stable/examples/agent/self_reflection_agent/' },
-        { title: 'Haystack: Self-Correcting RAG Pipelines', url: 'https://haystack.deepset.ai/tutorials/self-correcting-rag' }
+        { title: 'Self-RAG Official Implementation: Reflection Token Training', url: 'https://github.com/AkariAsai/self-rag' },
+        { title: 'Constitutional AI: Harmlessness from AI Feedback (Bai et al., 2022)', url: 'https://arxiv.org/abs/2212.08073' },
+        { title: 'Training Language Models with Language Feedback at Scale (Scheurer et al., 2023)', url: 'https://arxiv.org/abs/2303.16755' },
+        { title: 'Self-Consistency Improves Chain of Thought Reasoning (Wang et al., 2022)', url: 'https://arxiv.org/abs/2203.11171' }
       ]
     },
     {
-      title: 'Tools & Libraries',
+      title: 'Retrieval & Context Assessment',
       items: [
-        { title: 'Self-RAG official implementation and models', url: '#' },
-        { title: 'LangChain reflection and critique chains', url: '#' },
-        { title: 'Transformers library with self-reflection capabilities', url: '#' }
+        { title: 'When Not to Trust Language Models: Investigating Effectiveness of Parametric and Non-Parametric Memories (Mallen et al., 2023)', url: 'https://arxiv.org/abs/2212.10511' },
+        { title: 'Active Retrieval Augmented Generation (Jiang et al., 2023)', url: 'https://arxiv.org/abs/2305.06983' },
+        { title: 'FiD: Fusion-in-Decoder for Open-Domain Question Answering (Izacard & Grave, 2021)', url: 'https://arxiv.org/abs/2007.01282' },
+        { title: 'Dense Passage Retrieval for Open-Domain Question Answering (Karpukhin et al., 2020)', url: 'https://arxiv.org/abs/2004.04906' }
       ]
     },
     {
-      title: 'Community & Discussions',
+      title: 'Implementation Frameworks & Tools',
       items: [
-        { title: 'r/MachineLearning - Self-RAG discussions', url: 'https://www.reddit.com/r/MachineLearning/' },
-        { title: 'Hugging Face Forums - Self-reflection in NLP', url: 'https://discuss.huggingface.co/' },
-        { title: 'LangChain Community - RAG improvements', url: 'https://discord.gg/langchain' }
+        { title: 'LangChain Self-Query Retrieval and Reflection Chains', url: 'https://python.langchain.com/docs/use_cases/question_answering/how_to/self_query' },
+        { title: 'LlamaIndex Self-Reflection Agent Implementation', url: 'https://docs.llamaindex.ai/en/stable/examples/agent/self_reflection_agent/' },
+        { title: 'Haystack Self-Correcting RAG Pipeline Tutorial', url: 'https://haystack.deepset.ai/tutorials/self-correcting-rag' },
+        { title: 'Transformers Library: Self-RAG Model Integration', url: 'https://huggingface.co/models?other=self-rag' }
+      ]
+    },
+    {
+      title: 'Evaluation & Calibration Methods',
+      items: [
+        { title: 'RAGAS: Automated Evaluation of RAG Applications', url: 'https://github.com/explodinggradients/ragas' },
+        { title: 'TruLens: Evaluation and Observability for LLM Applications', url: 'https://www.trulens.org/trulens_eval/getting_started/core_concepts/rag_triad/' },
+        { title: 'Calibrating Sequence Likelihood Improves Conditional Language Generation (Zhao et al., 2022)', url: 'https://arxiv.org/abs/2210.00045' },
+        { title: 'Teaching Models to Express Their Uncertainty in Words (Lin et al., 2022)', url: 'https://arxiv.org/abs/2205.14334' }
+      ]
+    },
+    {
+      title: 'Production Deployment & Optimization',
+      items: [
+        { title: 'LangSmith: Monitoring and Evaluation for Self-RAG Systems', url: 'https://docs.smith.langchain.com/' },
+        { title: 'OpenAI Function Calling for Self-Critique Implementation', url: 'https://platform.openai.com/docs/guides/function-calling' },
+        { title: 'Anthropic Constitutional AI Training Methods', url: 'https://www.anthropic.com/news/constitutional-ai-harmlessness-from-ai-feedback' },
+        { title: 'Weights & Biases: Experiment Tracking for Self-RAG', url: 'https://wandb.ai/site/articles/rag-evaluation-with-ragas' }
       ]
     }
   ];
 
   return (
     <>
-      {/* Core Mechanism */}
-      <TechniqueSection
-        title="Core Mechanism"
-        colorClass="bg-blue-500"
-        gradient="from-purple-500/10 to-indigo-500/10"
-        borderClass="border-purple-500/20"
-      >
-        <p className="text-gray-200 text-base leading-relaxed">
-          Self-RAG augments generation with adaptive retrieval and self-reflection. The model decides if/what to retrieve, 
-          generates an answer, then critiques both retrieved context and its own output (via reflection/critique tokens) to 
-          improve factuality and relevance, optionally re-retrieving and refining before finalizing with citations.
-        </p>
-      </TechniqueSection>
-
-      {/* Workflow / Steps */}
-      <ListSection
-        title="Workflow / Steps"
-        items={workflowSteps}
-        colorClass="bg-purple-500"
-        ordered={true}
+      <QuickOverviewSection
+        pattern="RAG system with adaptive retrieval decisions and self-reflection using trained reflection tokens for quality assessment"
+        why="Improves factual accuracy and reduces hallucinations through iterative self-critique and selective knowledge retrieval"
+        keyInsight="Reflection tokens ([Retrieve], [IsRel], [IsSup], [IsUse]) enable models to assess retrieval necessity and response quality"
       />
 
-      {/* Best Practices */}
-      <BestPracticesSection practices={bestPractices} />
-
-      {/* When NOT to Use */}
-      <ListSection
-        title="When NOT to Use"
-        items={whenNotToUse}
-        colorClass="bg-red-500"
+      <QuickImplementationSection
+        steps={quickImplementation.steps}
+        example={quickImplementation.example}
       />
 
-      {/* Common Pitfalls */}
-      <ListSection
-        title="Common Pitfalls"
-        items={commonPitfalls}
-        colorClass="bg-amber-500"
+      <DosAndDontsSection items={dosAndDonts} />
+
+      <UsageGuideSection
+        useWhen={usageGuide.useWhen}
+        avoidWhen={usageGuide.avoidWhen}
       />
 
-      {/* Key Features */}
-      <KeyFeaturesSection features={keyFeatures} />
+      <KeyMetricsSection metrics={keyMetrics} />
 
-      {/* KPIs / Success Metrics */}
-      <ListSection
-        title="KPIs / Success Metrics"
-        items={kpiMetrics}
-        colorClass="bg-emerald-500"
-      />
+      <TopUseCasesSection useCases={topUseCases} />
 
-      {/* Token / Resource Usage */}
-      <ListSection
-        title="Token / Resource Usage"
-        items={tokenUsage}
-        colorClass="bg-indigo-500"
-      />
-
-      {/* Best Use Cases */}
-      <ListSection
-        title="Best Use Cases"
-        items={bestUseCases}
-        colorClass="bg-fuchsia-500"
-      />
-
-      {/* References & Further Reading */}
       <ReferencesSection categories={references} />
     </>
   );

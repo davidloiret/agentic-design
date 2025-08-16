@@ -265,24 +265,4 @@ export const reasoningTechniques: Technique[] = [
     complexity: 'high',
     example: 'Medical Diagnosis Challenge:\n\nProblem: "65-year-old patient with chest pain, elevated troponin, family history of heart disease"\n\nHybrid Reasoning Approach:\n\n1. Statistical Reasoning (40% weight):\n   • Age + symptoms = 78% cardiac event probability\n   • Troponin level = 85% myocardial infarction likelihood\n\n2. Symbolic Logic (30% weight):\n   • IF troponin > 0.04 AND chest_pain THEN probable_MI\n   • IF age > 60 AND family_history THEN increased_risk\n   • Logical conclusion: HIGH cardiac risk\n\n3. Case-Based Reasoning (20% weight):\n   • Similar case #1847: Outcome = MI, Treatment = immediate catheterization\n   • Similar case #2103: Outcome = stable angina, Treatment = medication\n   • Pattern match: 72% similarity to emergency cases\n\n4. Causal Reasoning (10% weight):\n   • Atherosclerosis → plaque rupture → vessel occlusion → tissue damage\n   • Troponin elevation indicates cellular damage\n\nFusion Result:\n• Confidence: 89% acute coronary syndrome\n• Recommendation: Immediate emergency intervention\n• Reasoning: Multi-paradigm consensus with high statistical and logical support\n\nAdvantages:\n• Robust conclusions from multiple perspectives\n• Handles uncertainty better than single approaches\n• Provides comprehensive reasoning justification\n• Adapts to available information types'
   },
-  {
-    id: 'contextual-self-refinement',
-    name: 'Contextual Self-Refinement',
-    abbr: 'CSR',
-    icon: '🔄',
-    color: 'from-purple-500 to-pink-600',
-    category: 'reasoning-techniques',
-    description: 'Iterative improvement of reasoning and context quality through self-evaluation, refinement, and adaptive optimization',
-    features: [
-      'Self-evaluation mechanisms',
-      'Iterative reasoning improvement',
-      'Quality assessment metrics',
-      'Adaptive refinement strategies',
-      'Context coherence optimization',
-      'Performance feedback loops'
-    ],
-    useCases: ['content-creation', 'research-synthesis', 'complex-reasoning', 'quality-assurance', 'knowledge-distillation'],
-    complexity: 'high',
-    example: 'Academic Paper Synthesis:\n\nInitial Context: Collection of 20 research papers on "AI Safety"\n\nRefinement Process:\n\n1. Initial Assembly (Iteration 1):\n   • Concatenate paper abstracts and conclusions\n   • Basic chronological ordering\n   • Context window: 80% utilized\n   • Quality score: 0.65 (coherence issues identified)\n\n2. Self-Evaluation:\n   • Detected: Conflicting terminology usage\n   • Identified: Missing key connections between papers\n   • Found: Redundant information in multiple papers\n   • Assessed: Insufficient depth in critical areas\n\n3. Refinement (Iteration 2):\n   • Standardize terminology across papers\n   • Extract and emphasize paper relationships\n   • Remove redundant content, add depth to key areas\n   • Reorganize by thematic clusters rather than chronology\n   • Quality score: 0.82 (significant improvement)\n\n4. Second Evaluation:\n   • Context coherence: Good\n   • Information density: Optimal\n   • Missing elements: Recent regulatory developments\n   • Refinement needed: Add policy implications\n\n5. Final Refinement (Iteration 3):\n   • Integrate recent regulatory context\n   • Add policy-technical bridges\n   • Optimize for synthesis task requirements\n   • Final quality score: 0.94\n\nResult: Highly coherent, comprehensive context optimized for synthesis\n\nImprovements:\n• 44% increase in context quality score\n• 25% better task performance\n• Reduced processing time through optimal organization\n• Enhanced logical flow and thematic coherence'
-  }
 ];

@@ -737,15 +737,15 @@ export const TechniqueDetails = ({
               ) : selectedTechnique.id === 'cognitive-pipelines' ? (
                 <CognitivePipelinesDetails />
               ) : selectedTechnique.id === 'agentic-rag-systems' ? (
-                <AgenticRagSystemsDetails />
+                <AgenticRagSystemsDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'multi-source-context-fusion' ? (
                <MultiSourceContextFusionDetails />
               ) : selectedTechnique.id === 'modular-rag' ? (
-               <ModularRagDetails />
+                <ModularRagDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'multimodal-rag' ? (
-                <MultimodalRagDetails />
+                <MultimodalRagDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'corrective-rag' ? (
-                <CorrectiveRagDetails />
+                <CorrectiveRagDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'conversational-rag' ? (
                 <ConversationalRagDetails />
               ) : selectedTechnique.id === 'chain-of-verification-rag' ? (

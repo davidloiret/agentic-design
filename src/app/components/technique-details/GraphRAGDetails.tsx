@@ -1,188 +1,160 @@
 'use client';
 
 import React from 'react';
-import TechniqueSection from './TechniqueSection';
-import BestPracticesSection from './shared/BestPracticesSection';
-import ListSection from './ListSection';
-import KeyFeaturesSection from './shared/KeyFeaturesSection';
 import ReferencesSection from './shared/ReferencesSection';
+import {
+  QuickOverviewSection,
+  QuickImplementationSection,
+  DosAndDontsSection,
+  UsageGuideSection,
+  KeyMetricsSection,
+  TopUseCasesSection
+} from './shared';
 
 interface GraphRAGDetailsProps {
   selectedTechnique: any;
 }
 
 export const GraphRAGDetails: React.FC<GraphRAGDetailsProps> = ({ selectedTechnique }) => {
-  const workflowSteps = [
-    'Ingestion: NER/RE to extract entities and relations; canonicalize with ontology/schema; de‑duplicate.',
-    'Graph construction: upsert nodes/edges; attach provenance, timestamps, and confidence scores.',
-    'Indexing: build graph indexes (IDs, labels, adjacency), hybrid text/vector indexes for nodes/docs.',
-    'Query understanding: detect entities/intent; map to node IDs; choose traversal strategy.',
-    'Retrieval: bounded multi‑hop traversal + neighborhood expansion; optional hybrid re‑rank.',
-    'Context assembly: summarize paths, merge evidence, dedupe, and format as factual statements.',
-    'Generation: prompt LLM with query + structured graph context; optionally cite sources.',
-    'Post‑processing: verify/critique, add citations, cache results, and update feedback signals.'
+  const quickImplementation = {
+    steps: [
+      { num: '1', action: 'Extract & Build', detail: 'NER/RE to extract entities and relations, build knowledge graph' },
+      { num: '2', action: 'Index & Store', detail: 'Create graph indexes and hybrid text-vector search capabilities' },
+      { num: '3', action: 'Query & Map', detail: 'Parse query entities and map to graph nodes' },
+      { num: '4', action: 'Traverse & Retrieve', detail: 'Multi-hop graph traversal with bounded expansion' },
+      { num: '5', action: 'Assemble & Generate', detail: 'Serialize graph context and generate response' }
+    ],
+    example: 'query → entity_linking → graph_traversal → subgraph_assembly → llm_generation → response'
+  };
+
+  const dosAndDonts = [
+    { type: 'do', text: 'Implement community detection algorithms for large-scale graph summarization', icon: '✅' },
+    { type: 'do', text: 'Use hierarchical indexing with global and local community summaries', icon: '✅' },
+    { type: 'do', text: 'Apply entity resolution and deduplication to maintain graph quality', icon: '✅' },
+    { type: 'do', text: 'Combine vector search with graph traversal for hybrid retrieval', icon: '✅' },
+    { type: 'do', text: 'Implement bounded traversal with explicit hop limits (1-3 hops)', icon: '✅' },
+    { type: 'dont', text: 'Allow uncontrolled graph traversal that leads to context explosion', icon: '❌' },
+    { type: 'dont', text: 'Skip entity linking validation and confidence scoring', icon: '❌' },
+    { type: 'dont', text: 'Neglect graph maintenance and consistency validation', icon: '❌' },
+    { type: 'dont', text: 'Create overly complex schemas that hinder query performance', icon: '❌' },
+    { type: 'dont', text: 'Ignore provenance tracking for graph edges and entity sources', icon: '❌' }
   ];
 
-  const bestPractices = [
-    'Keep traversals shallow by default (1–2 hops) with explicit caps; expand only on uncertainty.',
-    'Preserve provenance on every node/edge; make citations first‑class in prompts and outputs.',
-    'Combine graph traversal with vector search for recall, then re‑rank on path relevance.',
-    'Normalize schemas and entity IDs; resolve aliases; prevent node duplication at ingest.',
-    'Continuously validate graph quality (consistency rules, temporal sanity, schema constraints).',
-    'Introduce caching at multiple layers: entity mapping, subgraph retrieval, and context summaries.',
-    'Implement access controls and privacy filters at the graph level for sensitive data.'
+  const usageGuide = {
+    useWhen: [
+      'Complex multi-hop reasoning requiring entity relationship understanding',
+      'Knowledge-intensive domains with rich interconnected information',
+      'Enterprise data with well-defined entity schemas and relationships',
+      'Fact-checking and verification requiring structured evidence paths',
+      'Large-scale knowledge bases needing hierarchical summarization'
+    ],
+    avoidWhen: [
+      'Simple factual queries adequately served by document-based RAG',
+      'Domains with poor entity extraction and relation modeling quality',
+      'Real-time applications with strict latency requirements',
+      'Small datasets where graph complexity exceeds retrieval benefits',
+      'Applications lacking well-defined entity schemas or ontologies'
+    ]
+  };
+
+  const keyMetrics = [
+    { metric: 'Graph Construction Quality', measure: 'Precision/recall of extracted entities and relations' },
+    { metric: 'Community Detection Accuracy', measure: 'Coherence and relevance of detected communities' },
+    { metric: 'Retrieval Relevance', measure: 'Proportion of relevant subgraphs in query results' },
+    { metric: 'Multi-hop Reasoning', measure: 'Accuracy of complex relationship inference' },
+    { metric: 'Context Completeness', measure: 'Coverage of relevant graph neighborhoods' },
+    { metric: 'Query Response Time', measure: 'End-to-end latency including graph operations' }
   ];
 
-  const whenNotToUse = [
-    'Simple factual queries where document-based RAG provides sufficient context.',
-    'Domains where entity extraction and relation modeling are unreliable or low-quality.',
-    'Real-time applications that cannot afford the overhead of graph traversal and assembly.',
-    'Use cases where the complexity of graph maintenance exceeds the retrieval benefits.'
-  ];
-
-  const commonPitfalls = [
-    'Poor entity resolution leading to fragmented or duplicate nodes in the graph.',
-    'Uncontrolled traversal explosion causing performance issues and irrelevant context.',
-    'Low-quality relation extraction creating noisy or incorrect graph connections.',
-    'Inadequate schema design leading to inconsistent or hard-to-query graph structures.',
-    'Neglecting graph maintenance, resulting in stale or inconsistent knowledge over time.'
-  ];
-
-  const keyFeatures = [
-    'Knowledge graph construction from unstructured text and documents',
-    'Multi-hop traversal with bounded expansion for contextual retrieval',
-    'Entity and relation extraction with confidence scoring and provenance',
-    'Hybrid text-vector indexing for efficient graph search and retrieval',
-    'Path-based evidence assembly with structured context generation',
-    'Schema normalization and entity resolution for consistent knowledge representation'
-  ];
-
-  const kpiMetrics = [
-    'Graph quality: precision/recall of extracted entities and relations vs. gold standard.',
-    'Retrieval relevance: proportion of retrieved subgraphs that contain query-relevant information.',
-    'Answer accuracy: factual correctness and completeness compared to ground truth.',
-    'Path coherence: logical consistency and relevance of multi-hop reasoning chains.',
-    'Citation coverage: percentage of generated claims supported by graph evidence.',
-    'Query response time: end-to-end latency including graph traversal and context assembly.'
-  ];
-
-  const tokenUsage = [
-    'Variable cost depending on subgraph size and path complexity.',
-    'Entity linking and graph traversal add 200-1000 tokens for context assembly.',
-    'Path serialization can consume significant tokens for complex multi-hop queries.',
-    'Context compression through summarization reduces token usage by 30-60%.',
-    'Monitor subgraph size distribution and implement traversal limits to control costs.'
-  ];
-
-  const bestUseCases = [
-    'Knowledge-intensive domains requiring explicit entity and relation modeling.',
-    'Multi-hop reasoning tasks where document fragments lack sufficient context.',
-    'Enterprise knowledge graphs with complex interconnected information.',
-    'Fact-checking and verification applications needing structured evidence paths.',
-    'Research and analysis requiring comprehensive entity relationship exploration.'
+  const topUseCases = [
+    'Biomedical Research: Drug-disease-gene relationship exploration with scientific literature integration',
+    'Financial Analysis: Company-industry-market relationship modeling for investment research',
+    'Legal Research: Case law relationship mapping with precedent and citation analysis',
+    'Enterprise Knowledge: Organizational relationship modeling with department and project connections',
+    'Academic Research: Citation networks and research collaboration graph analysis'
   ];
 
   const references = [
     {
-      title: 'Academic Papers',
+      title: 'Foundational Papers & Microsoft GraphRAG',
       items: [
-        { title: 'Microsoft GraphRAG: A Modular Graph-based Retrieval-Augmented Generation System', url: 'https://arxiv.org/abs/2404.16130' },
-        { title: 'Knowledge Graph-Enhanced Large Language Models via Path Selection (Wang et al., 2023)', url: 'https://arxiv.org/abs/2308.12050' },
-        { title: 'Reasoning on Graphs: Faithful and Interpretable Large Language Model Reasoning (Luo et al., 2023)', url: 'https://arxiv.org/abs/2310.01061' }
+        { title: 'From Local to Global: A Graph RAG Approach to Query-Focused Summarization (Edge et al., 2024)', url: 'https://arxiv.org/abs/2404.16130' },
+        { title: 'GraphRAG: Unlocking LLM Discovery on Narrative Private Data (Microsoft Research, 2024)', url: 'https://www.microsoft.com/en-us/research/blog/graphrag-unlocking-llm-discovery-on-narrative-private-data/' },
+        { title: 'Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks (Lewis et al., 2020)', url: 'https://arxiv.org/abs/2005.11401' },
+        { title: 'Knowledge Graph-Enhanced Large Language Models via Path Selection (Wang et al., 2023)', url: 'https://arxiv.org/abs/2308.12050' }
       ]
     },
     {
-      title: 'Implementation Guides',
+      title: 'Community Detection & Graph Algorithms',
       items: [
-        { title: 'Microsoft GraphRAG Official Implementation', url: 'https://github.com/microsoft/graphrag' },
-        { title: 'LangChain Graph RAG Implementation', url: 'https://python.langchain.com/docs/use_cases/graph/graph_rag' },
-        { title: 'Neo4j Knowledge Graph RAG Tutorial', url: 'https://neo4j.com/developer/graph-data-science/applied-graph-ml/applied-graph-ml-rag/' }
+        { title: 'Leiden Algorithm for Community Detection in Large Networks (Traag et al., 2019)', url: 'https://arxiv.org/abs/1810.08473' },
+        { title: 'Fast Unfolding of Communities in Large Networks (Blondel et al., 2008)', url: 'https://arxiv.org/abs/0803.0476' },
+        { title: 'Graph Neural Networks: A Review of Methods and Applications (Zhou et al., 2020)', url: 'https://arxiv.org/abs/1812.08434' },
+        { title: 'Network Analysis and Graph Theory in Python (NetworkX Documentation)', url: 'https://networkx.org/documentation/stable/' }
       ]
     },
     {
-      title: 'Tools & Libraries',
+      title: 'Knowledge Graph Construction & NER/RE',
       items: [
-        { title: 'Neo4j graph database with vector search capabilities', url: '#' },
-        { title: 'NetworkX for graph processing and analysis in Python', url: '#' },
-        { title: 'SpaCy and REBEL for entity and relation extraction', url: '#' }
+        { title: 'REBEL: Relation Extraction By End-to-end Language generation (Huguet Cabot & Navigli, 2021)', url: 'https://arxiv.org/abs/2104.07650' },
+        { title: 'spaCy: Industrial-Strength Natural Language Processing', url: 'https://spacy.io/' },
+        { title: 'OpenIE: Open Information Extraction (Banko et al., 2007)', url: 'https://aclanthology.org/P07-1047/' },
+        { title: 'Stanford CoreNLP: A Java suite of core NLP tools', url: 'https://stanfordnlp.github.io/CoreNLP/' }
       ]
     },
     {
-      title: 'Community & Discussions',
+      title: 'Graph Database & Storage Solutions',
       items: [
-        { title: 'Neo4j Community Forum - Graph RAG discussions', url: 'https://community.neo4j.com/' },
-        { title: 'r/MachineLearning - Graph-based retrieval', url: 'https://www.reddit.com/r/MachineLearning/' },
-        { title: 'LangChain Community - Graph RAG implementations', url: 'https://discord.gg/langchain' }
+        { title: 'Neo4j Graph Database: Developer Guide and Best Practices', url: 'https://neo4j.com/developer/' },
+        { title: 'ArangoDB Multi-Model Database with Graph Capabilities', url: 'https://www.arangodb.com/' },
+        { title: 'Amazon Neptune: Fully Managed Graph Database Service', url: 'https://aws.amazon.com/neptune/' },
+        { title: 'TigerGraph: Scalable Graph Analytics Platform', url: 'https://www.tigergraph.com/' }
+      ]
+    },
+    {
+      title: 'Implementation Frameworks & Tools',
+      items: [
+        { title: 'Microsoft GraphRAG Official Implementation and Documentation', url: 'https://github.com/microsoft/graphrag' },
+        { title: 'LangChain Graph RAG Integration and Examples', url: 'https://python.langchain.com/docs/use_cases/graph/graph_rag' },
+        { title: 'LlamaIndex Knowledge Graph Implementation', url: 'https://docs.llamaindex.ai/en/stable/examples/index_structs/knowledge_graph/' },
+        { title: 'Neo4j Vector Search and Graph RAG Tutorial', url: 'https://neo4j.com/developer/graph-data-science/applied-graph-ml/applied-graph-ml-rag/' }
+      ]
+    },
+    {
+      title: 'Evaluation & Benchmarking',
+      items: [
+        { title: 'HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering', url: 'https://arxiv.org/abs/1809.09600' },
+        { title: 'ComplexWebQuestions: Multi-hop Question Answering over Knowledge Graphs', url: 'https://arxiv.org/abs/1803.06643' },
+        { title: 'KGQA: Knowledge Graph Question Answering Benchmark', url: 'https://github.com/salesforce/WikiTableQuestions' },
+        { title: 'Graph-based RAG Evaluation Metrics and Frameworks', url: 'https://github.com/explodinggradients/ragas' }
       ]
     }
   ];
 
   return (
     <>
-      {/* Core Mechanism */}
-      <TechniqueSection
-        title="Core Mechanism"
-        colorClass="bg-blue-500"
-        gradient="from-blue-500/10 to-purple-500/10"
-        borderClass="border-blue-500/20"
-      >
-        <p className="text-gray-200 text-base leading-relaxed">
-          Retrieval‑augmented generation over a knowledge graph. The system extracts entities/relations, retrieves a
-          relevant subgraph via graph traversal (often 1–2 hops plus neighborhood expansion), serializes salient facts/paths,
-          and conditions the LLM on that structured context to produce grounded, relation‑aware answers.
-        </p>
-      </TechniqueSection>
-
-      {/* Workflow / Steps */}
-      <ListSection
-        title="Workflow / Steps"
-        items={workflowSteps}
-        colorClass="bg-purple-500"
-        ordered={true}
+      <QuickOverviewSection
+        pattern="Knowledge graph-based RAG with community detection and hierarchical summarization for large-scale reasoning"
+        why="Enables complex multi-hop reasoning and relationship understanding through structured graph traversal"
+        keyInsight="Microsoft's approach uses community detection algorithms to create hierarchical summaries for global and local reasoning"
       />
 
-      {/* Best Practices */}
-      <BestPracticesSection practices={bestPractices} />
-
-      {/* When NOT to Use */}
-      <ListSection
-        title="When NOT to Use"
-        items={whenNotToUse}
-        colorClass="bg-red-500"
+      <QuickImplementationSection
+        steps={quickImplementation.steps}
+        example={quickImplementation.example}
       />
 
-      {/* Common Pitfalls */}
-      <ListSection
-        title="Common Pitfalls"
-        items={commonPitfalls}
-        colorClass="bg-amber-500"
+      <DosAndDontsSection items={dosAndDonts} />
+
+      <UsageGuideSection
+        useWhen={usageGuide.useWhen}
+        avoidWhen={usageGuide.avoidWhen}
       />
 
-      {/* Key Features */}
-      <KeyFeaturesSection features={keyFeatures} />
+      <KeyMetricsSection metrics={keyMetrics} />
 
-      {/* KPIs / Success Metrics */}
-      <ListSection
-        title="KPIs / Success Metrics"
-        items={kpiMetrics}
-        colorClass="bg-emerald-500"
-      />
+      <TopUseCasesSection useCases={topUseCases} />
 
-      {/* Token / Resource Usage */}
-      <ListSection
-        title="Token / Resource Usage"
-        items={tokenUsage}
-        colorClass="bg-indigo-500"
-      />
-
-      {/* Best Use Cases */}
-      <ListSection
-        title="Best Use Cases"
-        items={bestUseCases}
-        colorClass="bg-fuchsia-500"
-      />
-
-      {/* References & Further Reading */}
       <ReferencesSection categories={references} />
     </>
   );
