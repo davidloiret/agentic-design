@@ -387,20 +387,20 @@ export const categories: Category[] = [
 
   // Error Handling and Human Interaction
   { 
-    id: 'exception-handling-recovery', 
-    name: 'Exception Handling and Recovery', 
-    icon: '🚨', 
-    description: 'Error management and system recovery patterns',
-    detailedDescription: 'Exception handling and recovery patterns implement robust error management strategies that enable AI systems to gracefully handle failures, recover from errors, and maintain operational continuity. These patterns include proactive error prevention, reactive error handling, graceful degradation strategies, and recovery mechanisms that ensure system reliability and user experience quality even when things go wrong.',
+    id: 'fault-tolerance-infrastructure', 
+    name: 'Fault Tolerance Infrastructure', 
+    icon: '🏗️', 
+    description: 'Infrastructure-level fault tolerance patterns for AI system reliability',
+    detailedDescription: 'Fault tolerance infrastructure patterns provide the foundational systems and mechanisms that enable reliable operation of AI systems at scale. These patterns focus on infrastructure-level concerns including distributed system consensus, checkpoint recovery mechanisms, predictive failure detection, and communication fault tolerance. Unlike application-level error handling, these patterns address the unique challenges of AI infrastructure including GPU memory management, model serving reliability, distributed training resilience, and the probabilistic nature of AI system failures.',
     useCases: [
-      'API Failure Recovery: Handling external service failures with fallback mechanisms and retry strategies.',
-      'Data Quality Issues: Managing incomplete, corrupted, or inconsistent data inputs with validation and correction.',
-      'Resource Exhaustion: Handling memory, CPU, or quota limitations with graceful degradation and resource management.',
-      'Network Connectivity: Managing intermittent connectivity issues with offline capabilities and sync mechanisms.',
-      'Model Performance Degradation: Detecting and responding to declining model performance with fallback models.',
-      'User Input Errors: Handling malformed, inappropriate, or edge-case user inputs with helpful error messages.',
-      'System Overload: Managing high-traffic situations with load balancing, queuing, and priority systems.',
-      'Security Incidents: Responding to potential security threats with appropriate containment and recovery measures.'
+      'Large-Scale Model Training: GPU failure recovery during training of foundation models using checkpoint systems like Mnemosyne with minimal restart overhead.',
+      'Distributed AI Infrastructure: Byzantine fault tolerance for multi-node AI systems where some nodes may behave arbitrarily or maliciously.',
+      'Model Serving at Scale: Statistical algorithm-based fault tolerance for LLM inference services handling millions of requests per day.',
+      'Multi-Agent Network Resilience: Communication protocol fault tolerance for large-scale agent networks using Model Context Protocol (MCP).',
+      'Context State Infrastructure: Memory preservation systems that maintain agent context and reasoning state across hardware and software failures.',
+      'Predictive Infrastructure Monitoring: AI-driven systems that predict infrastructure failures before they impact model training or serving.',
+      'Cross-Region Model Deployment: Fault-tolerant architectures for globally distributed AI services with automatic failover capabilities.',
+      'Edge AI Deployment: Resilient inference systems for edge devices with intermittent connectivity and resource constraints.'
     ],
     whyImportant: 'Exception handling and recovery patterns are critical for building reliable, production-ready AI systems that users can depend on. They prevent small issues from becoming major system failures, maintain user trust through consistent behavior, and enable systems to operate effectively in unpredictable real-world conditions. These patterns are essential for applications where reliability and availability are important business requirements.',
     implementationGuide: {
@@ -430,7 +430,7 @@ export const categories: Category[] = [
         'Insufficient monitoring and alerting making it difficult to detect and respond to errors quickly'
       ]
     },
-    techniques: ['circuit-breaker', 'retry-backoff', 'graceful-degradation', 'health-monitoring']
+    techniques: ['llm-checkpoint-recovery', 'agent-context-preservation', 'predictive-agent-fault-tolerance', 'agent-communication-fault-tolerance']
   },
 
   { 
@@ -477,7 +477,7 @@ export const categories: Category[] = [
         'Inadequate handling of cases where relevant information cannot be retrieved'
       ]
     },
-    techniques: ['semantic-search', 'hybrid-retrieval', 'document-chunking', 'vector-databases', 'context-validation', 'graph-rag', 'node-rag', 'self-rag', 'corrective-rag', 'adaptive-rag', 'modular-rag', 'multimodal-rag', 'conversational-rag', 'hierarchical-rag', 'chain-of-verification-rag', 'agentic-rag-systems']
+    techniques: ['naive-rag', 'advanced-rag', 'modular-rag', 'self-rag', 'corrective-rag', 'graph-rag', 'multimodal-rag', 'agentic-rag-systems']
   },
   { 
     id: 'knowledge-representation', 

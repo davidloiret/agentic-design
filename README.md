@@ -1636,3 +1636,16 @@ https://www.anthropic.com/engineering/claude-code-best-practices
 # Kortexya
 - Mise en place de workflow de dev avec claude code ou autre model open weight pour améliorer le dev
 Traitement des mails
+
+privacy => agent local => traitement distant
+
+
+  Current Canonical Techniques (verified):
+  1. Naive RAG (NRAG) - low complexity
+  2. Advanced RAG (ARAG) - medium complexity
+  3. Modular RAG (MRAG) - high complexity
+  4. Self-RAG (SRAG) - high complexity
+  5. Corrective RAG (CRAG) - high complexity
+  6. Graph RAG (GRAG) - high complexity
+  7. Multimodal RAG (MMRAG) - high complexity
+  8. Agentic RAG (AgRAG) - high complexity

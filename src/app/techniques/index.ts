@@ -16,7 +16,7 @@ import { multiAgentTechniques } from './multi-agent';
 import { resourceAwareOptimizationTechniques } from './resource-aware-optimization';
 import { contextOrchestrationTechniques } from './context-orchestration';
 import { evaluationMonitoringTechniques } from './evaluation-monitoring';
-import { exceptionHandlingRecoveryTechniques } from './exception-handling-recovery';
+import { faultToleranceInfrastructureTechniques } from './fault-tolerance-infrastructure';
 import { explorationDiscoveryTechniques } from './exploration-discovery';
 import { learningAdaptationTechniques } from './learning-adaptation';
 import { prioritizationTechniques } from './prioritization';
@@ -47,7 +47,7 @@ export const techniques: Technique[] = [
   ...resourceAwareOptimizationTechniques,
   ...contextOrchestrationTechniques,
   ...evaluationMonitoringTechniques,
-  ...exceptionHandlingRecoveryTechniques,
+  ...faultToleranceInfrastructureTechniques,
   ...explorationDiscoveryTechniques,
   ...learningAdaptationTechniques,
   ...prioritizationTechniques,

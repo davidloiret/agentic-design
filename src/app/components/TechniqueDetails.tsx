@@ -185,6 +185,12 @@ import { SupervisedLearningAdaptationDetails } from './technique-details/Supervi
 import { UnsupervisedLearningAdaptationDetails } from './technique-details/UnsupervisedLearningAdaptationDetails';
 import { OnlineLearningAdaptationDetails } from './technique-details/OnlineLearningAdaptationDetails';
 import { MemoryBasedLearningDetails } from './technique-details/MemoryBasedLearningDetails';
+import { LlmCheckpointRecoveryDetails } from './technique-details/LlmCheckpointRecoveryDetails';
+import { AgentContextPreservationDetails } from './technique-details/AgentContextPreservationDetails';
+import { PredictiveAgentFaultToleranceDetails } from './technique-details/PredictiveAgentFaultToleranceDetails';
+import { AgentCommunicationFaultToleranceDetails } from './technique-details/AgentCommunicationFaultToleranceDetails';
+import { NaiveRagDetails } from './technique-details/NaiveRagDetails';
+import { AdvancedRagDetails } from './technique-details/AdvancedRagDetails';
 
 interface TechniqueDetailsProps {
   selectedTechnique: any;
@@ -390,6 +396,10 @@ export const TechniqueDetails = ({
                 <GraphOfThoughtDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'tot' ? (
                 <TreeOfThoughtDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'naive-rag' ? (
+                <NaiveRagDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'advanced-rag' ? (
+                <AdvancedRagDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'adaptive-rag' ? (
                 <AdaptiveRAGDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'self-rag' ? (
@@ -482,6 +492,14 @@ export const TechniqueDetails = ({
                 <OnlineLearningAdaptationDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'memory-based-learning' ? (
                 <MemoryBasedLearningDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'llm-checkpoint-recovery' ? (
+                <LlmCheckpointRecoveryDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'agent-context-preservation' ? (
+                <AgentContextPreservationDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'predictive-agent-fault-tolerance' ? (
+                <PredictiveAgentFaultToleranceDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'agent-communication-fault-tolerance' ? (
+                <AgentCommunicationFaultToleranceDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'cod' ? (
                 <>
                   {/* Core Mechanism */}
