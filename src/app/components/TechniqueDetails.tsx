@@ -765,7 +765,7 @@ export const TechniqueDetails = ({
               ) : selectedTechnique.id === 'constraint-satisfaction' ? (
                 <ConstraintSatisfactionDetails />
               ) : selectedTechnique.id === 'goal-decomposition' ? (
-                <GoalDecompositionDetails />
+                <GoalDecompositionDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'scenario-planning' ? (
                 <ScenarioPlanningDetails />
               ) : selectedTechnique.id === 'memory-consolidation' ? (
@@ -797,7 +797,7 @@ export const TechniqueDetails = ({
               ) : selectedTechnique.id === 'meta-reasoning-orchestration' ? (
                 <MetaReasoningOrchestrationDetails />
               ) : selectedTechnique.id === 'peer-collaboration' ? (
-                <PeerCollaborationDetails />
+                <PeerCollaborationDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'latent-memory-networks' ? (
                 <LatentMemoryNetworks />
               ) : selectedTechnique.id === 'adaptive-compute-scaling' ? (
@@ -819,7 +819,7 @@ export const TechniqueDetails = ({
               ) : selectedTechnique.id === 'actor-frameworks' ? (
                 <ActorFrameworksDetails />
               ) : selectedTechnique.id === 'consensus-algorithms' ? (
-                <ConsensusAlgorithmsDetails />
+                <ConsensusAlgorithmsDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'agent-communication-protocols' ? (
                 <AgentCommunicationProtocolsDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'reinforcement-learning-adaptation' ? (
@@ -831,13 +831,13 @@ export const TechniqueDetails = ({
               ) : selectedTechnique.id === 'distributed-coordination' ? (
                 <DistributedCoordinationDetails />
               ) : selectedTechnique.id === 'hierarchical-coordination' ? (
-                <HierarchicalCoordinationDetails />
+                <HierarchicalCoordinationDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'json-schema' ? (
                 <JsonSchemaDetails />
               ) : selectedTechnique.id === 'api-integration' ? (
                 <ApiIntegrationDetails />
               ) : selectedTechnique.id === 'code-execution' ? (
-                <CodeExecutionDetails />
+                <CodeExecutionDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'plugin-architecture' ? (
                 <PluginArchitectureDetails />
               ) : selectedTechnique.id === 'rest-apis' ? (
@@ -859,9 +859,9 @@ export const TechniqueDetails = ({
               ) : selectedTechnique.id === 'message-queuing' ? (
                 <MessageQueuingDetails />
               ) : selectedTechnique.id === 'model-context-protocol' ? (
-                <ModelContextProtocolDetails />
+                <ModelContextProtocolDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'a2a-protocol' ? (
-                <A2aProtocolDetails />
+                <A2aProtocolDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'parallel-synthesis' ? (
                 <ParallelSynthesisDetails />
               ) : selectedTechnique.id === 'context-routing' ? (

@@ -8,7 +8,7 @@ export interface Technique {
   description: string;
   features: string[];
   useCases: string[];
-  complexity: 'low' | 'medium' | 'high';
+  complexity: 'low' | 'medium' | 'high' | 'very-high';
   example: string;
   references?: string[];
 }

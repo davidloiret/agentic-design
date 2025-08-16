@@ -8,7 +8,7 @@ export interface NavigationItem {
   id: string;
   name: string;
   category: string;
-  complexity?: 'low' | 'medium' | 'high';
+  complexity?: 'low' | 'medium' | 'high' | 'very-high';
   icon?: ReactNode;
   href: string;
   // Additional fields for flexibility
