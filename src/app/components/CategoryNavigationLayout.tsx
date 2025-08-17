@@ -210,7 +210,7 @@ export const CategoryNavigationLayout = ({
                 </h4>
                 <div className={`flex items-center gap-2 ${isSelected ? 'text-white/70' : 'text-gray-500'}`}>
                   {item.complexity && (
-                    <span className={`text-xs px-2 py-0.5 rounded-full ${getComplexityColor(item.complexity)}`}>
+                    <span className={` flex-nowrap text-xs px-2 py-0.5 rounded-full ${getComplexityColor(item.complexity)}`}>
                       {item.complexity}
                     </span>
                   )}

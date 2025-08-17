@@ -42,46 +42,6 @@ export const humanAiCollaborationTechniques: Technique[] = [
     example: 'Autonomous Trading System:\n\nNormal Operation (Human On the Loop):\n\n1. AI Trading Activity:\n   • Executes 1,200 trades per hour automatically\n   • Follows programmed strategies and risk parameters\n   • Maintains portfolio within defined risk limits\n   • Performance: +2.3% daily return\n\n2. Human Monitoring:\n   • Trader monitors via real-time dashboard\n   • Watches key metrics: P&L, volume, risk exposure\n   • Reviews automated alerts and warnings\n   • No intervention needed - system operating normally\n\n3. Exception Scenario:\n   • Market volatility spikes unexpectedly\n   • AI system detects unusual market conditions\n   • Automated alert: "High volatility detected - review recommended"\n   • Risk exposure approaching upper limit\n\n4. Human Intervention:\n   • Trader reviews situation in 30 seconds\n   • Decides market conditions are too volatile\n   • Takes manual control: "Override - reduce position size by 50%"\n   • AI continues with new human-set parameters\n\n5. Return to Autonomy:\n   • Market conditions stabilize after 2 hours\n   • Trader approves return to full autonomous operation\n   • AI resumes normal trading with lessons learned\n\nMonitoring Features:\n• Real-time performance dashboard\n• Configurable alert thresholds\n• One-click intervention capabilities\n• Audit trail of all human interventions\n• Automated reporting and analysis\n\nBenefits:\n• Enables high-speed autonomous operation\n• Human expertise available when needed\n• Reduces human workload (95% autonomous time)\n• Maintains ultimate human control and accountability\n• Allows humans to focus on strategic decisions'
   },
   {
-    id: 'human-ai-team-formation',
-    name: 'Human-AI Team Formation',
-    abbr: 'HATF',
-    icon: '🤝',
-    color: 'from-indigo-500 to-purple-600',
-    category: 'human-ai-collaboration',
-    description: 'Dynamic formation of mixed human-AI teams based on task requirements and expertise',
-    features: [
-      'Dynamic team composition',
-      'Expertise-based matching',
-      'Role specialization',
-      'Complementary skill pairing',
-      'Adaptive team restructuring',
-      'Performance-based optimization'
-    ],
-    useCases: ['research-projects', 'creative-work', 'complex-analysis', 'innovation-labs', 'consulting-teams'],
-    complexity: 'high',
-    example: 'Market Research Project:\n\nTask: "Analyze emerging trends in sustainable packaging"\n\nTeam Formation Algorithm:\n1. Skill Requirements Analysis:\n   • Data analysis: High\n   • Domain expertise: Medium\n   • Creative synthesis: High\n   • Technical writing: Medium\n\n2. Optimal Team Composition:\n   • AI Agent: Data Mining Specialist\n     - Processes 10K+ industry reports\n     - Identifies statistical patterns\n     - Generates quantitative insights\n   \n   • Human Expert: Sustainability Consultant\n     - 15 years packaging industry experience\n     - Validates AI findings\n     - Provides strategic context\n   \n   • AI Agent: Creative Synthesis AI\n     - Combines insights from multiple sources\n     - Generates innovative concepts\n     - Creates presentation materials\n\n3. Collaboration Workflow:\n   • Phase 1: AI data collection + Human validation\n   • Phase 2: Joint analysis and interpretation\n   • Phase 3: AI synthesis + Human strategic review\n\nResult: 40% faster project completion with higher quality insights'
-  },
-  {
-    id: 'augmented-decision-making',
-    name: 'Augmented Decision Making',
-    abbr: 'ADM',
-    icon: '🎯',
-    color: 'from-purple-500 to-pink-600',
-    category: 'human-ai-collaboration',
-    description: 'AI enhances human decision-making by providing data-driven insights and scenario analysis',
-    features: [
-      'Real-time insight provision',
-      'Scenario simulation',
-      'Risk assessment integration',
-      'Decision support visualization',
-      'Bias detection and mitigation',
-      'Outcome prediction modeling'
-    ],
-    useCases: ['strategic-planning', 'investment-decisions', 'policy-making', 'clinical-decisions', 'business-strategy'],
-    complexity: 'high',
-    example: 'Investment Portfolio Decision:\n\nHuman Goal: "Rebalance portfolio for 2024 market conditions"\n\nAI Augmentation:\n1. Market Analysis:\n   • Processes 50K+ financial data points\n   • Identifies: Tech sector volatility ↑15%, Energy sector stability ↑8%\n   • Predicts: Interest rate impact on REITs\n\n2. Scenario Modeling:\n   • Scenario A (40% probability): Continued inflation\n     → Recommend: Gold +5%, Tech -10%\n   • Scenario B (35% probability): Economic stability  \n     → Recommend: Maintain current allocation\n   • Scenario C (25% probability): Market correction\n     → Recommend: Cash +15%, Defensive stocks +8%\n\n3. Risk Assessment:\n   • Current portfolio risk: 7.2/10\n   • Proposed adjustments reduce risk to 5.8/10\n   • Maintains expected return within 2% of target\n\n4. Human Decision Process:\n   • Reviews AI analysis and scenarios\n   • Adds personal risk tolerance (moderate)\n   • Considers life circumstances (approaching retirement)\n   • Final decision: Blend of Scenario A & C recommendations\n\nOutcome: Data-informed decision with human judgment and personal context'
-  },
-  {
     id: 'collaborative-learning',
     name: 'Collaborative Learning',
     abbr: 'CL',
@@ -100,66 +60,6 @@ export const humanAiCollaborationTechniques: Technique[] = [
     useCases: ['personalized-education', 'skill-development', 'research-collaboration', 'creative-projects', 'professional-training'],
     complexity: 'high',
     example: 'Legal Research Collaboration:\n\nWeek 1 - Initial State:\n• AI: Strong at case law search, weak at legal strategy\n• Lawyer: Expert in strategy, slower at document review\n\nCollaborative Learning Process:\n\n1. AI Learning from Human:\n   • Lawyer explains why certain precedents are more relevant\n   • AI learns strategic thinking patterns: "Constitutional cases trump statutory when fundamental rights involved"\n   • Updates weighting algorithms based on lawyer feedback\n\n2. Human Learning from AI:\n   • AI identifies overlooked case: "Smith v. Jones (2019) - similar fact pattern"\n   • Lawyer discovers new legal research strategies\n   • Adopts AI\'s systematic approach to citation analysis\n\n3. Mutual Improvement:\n   • AI develops better legal reasoning (strategy accuracy: 65% → 78%)\n   • Lawyer increases research efficiency (time per case: 4h → 2.5h)\n   • Together they discover novel legal arguments\n\nWeek 12 Results:\n• Case success rate improved 23%\n• Research time reduced 40%\n• Both human and AI capabilities enhanced\n• New hybrid legal strategies developed\n\nKey Success Factors:\n• Regular feedback exchange\n• Shared performance metrics\n• Complementary strength recognition\n• Trust building over time'
-  },
-  {
-    id: 'explainable-ai-interaction',
-    name: 'Explainable AI Interaction',
-    abbr: 'XAI',
-    icon: '💡',
-    color: 'from-red-500 to-orange-600',
-    category: 'human-ai-collaboration',
-    description: 'AI systems that can explain their reasoning and decisions to human collaborators',
-    features: [
-      'Natural language explanations',
-      'Visual reasoning displays',
-      'Interactive exploration tools',
-      'Confidence level communication',
-      'Alternative pathway showing',
-      'Uncertainty transparency'
-    ],
-    useCases: ['scientific-research', 'medical-diagnosis', 'judicial-decisions', 'financial-analysis', 'educational-tools'],
-    complexity: 'high',
-    example: 'Drug Discovery Research:\n\nAI Recommendation: "Compound X-47 shows 78% probability of success for treating Type 2 diabetes"\n\nExplainable Interaction:\n\n1. High-Level Explanation:\n   "I recommend X-47 because it has structural similarity to successful diabetes drugs and shows favorable molecular interactions with insulin receptors."\n\n2. Detailed Reasoning (on request):\n   • Molecular Structure Analysis:\n     - 87% similarity to Metformin (known effective drug)\n     - Contains glucose-binding motif found in 6/8 successful compounds\n   \n   • Biological Pathway Analysis:\n     - Targets AMPK pathway (validated for diabetes)\n     - Low off-target effects predicted (toxicity risk: 12%)\n   \n   • Historical Data Correlation:\n     - Similar compounds: 71% Phase II success rate\n     - Better safety profile than current alternatives\n\n3. Interactive Exploration:\n   Human: "What if we modify the benzene ring?"\n   AI: "Modifying position 4 increases potency 15% but raises toxicity to 18%. Position 6 modification maintains safety with 8% potency gain."\n\n4. Uncertainty Communication:\n   • Confidence breakdown:\n     - Efficacy prediction: 78% ± 12%\n     - Safety prediction: 85% ± 8%\n     - Market viability: 65% ± 20%\n   • Key uncertainties: Long-term effects, drug interactions\n\n5. Alternative Options:\n   "Second choice: Compound Y-23 (72% success probability, higher safety margin)"\n\nBenefits:\n• Builds scientist trust through transparency\n• Enables informed human decision-making\n• Accelerates research through guided exploration\n• Maintains human oversight in critical decisions'
-  },
-  {
-    id: 'approval-workflows',
-    name: 'Approval Workflows',
-    abbr: 'AW',
-    icon: '✅',
-    color: 'from-green-500 to-emerald-600',
-    category: 'human-ai-collaboration',
-    description: 'Structured approval processes where human reviewers validate and approve AI-generated outputs or decisions',
-    features: [
-      'Multi-stage approval processes',
-      'Role-based review assignments',
-      'Automated routing and escalation',
-      'Audit trails and documentation',
-      'Conditional approval workflows',
-      'Batch processing capabilities'
-    ],
-    useCases: ['content-publishing', 'financial-transactions', 'medical-decisions', 'legal-documents', 'policy-changes'],
-    complexity: 'medium',
-    example: 'Content Publishing Workflow:\n\nAI Content Generation:\n• AI creates blog post draft: "10 Tips for Remote Work Productivity"\n• Content quality score: 8.2/10\n• SEO optimization: 85% complete\n• Brand alignment: 92% match\n\nApproval Workflow:\n1. Tier 1 Review (Content Editor):\n   • Reviews for grammar, style, accuracy\n   • Checks brand voice consistency\n   • Decision: Approved with minor edits\n   • Time: 15 minutes\n\n2. Tier 2 Review (Subject Matter Expert):\n   • Validates technical accuracy of productivity tips\n   • Confirms practical applicability\n   • Decision: Approved\n   • Time: 10 minutes\n\n3. Final Review (Marketing Manager):\n   • Strategic alignment check\n   • Publication timing approval\n   • Decision: Approved for immediate publication\n   • Time: 5 minutes\n\nWorkflow Features:\n• Parallel reviews where possible\n• Automatic escalation for rejections\n• Version control and change tracking\n• Performance metrics for review times\n\nResult: High-quality, brand-aligned content published with full human oversight in 30 minutes'
-  },
-  {
-    id: 'collaborative-filtering',
-    name: 'Collaborative Filtering',
-    abbr: 'CF',
-    icon: '🔍',
-    color: 'from-blue-500 to-cyan-600',
-    category: 'human-ai-collaboration',
-    description: 'Human-AI collaborative approach to filtering, ranking, and curating content or decisions based on combined judgments',
-    features: [
-      'Human-AI preference alignment',
-      'Collaborative ranking systems',
-      'Learning from human feedback',
-      'Quality score combination',
-      'Bias detection and correction',
-      'Iterative improvement cycles'
-    ],
-    useCases: ['content-curation', 'recommendation-systems', 'talent-screening', 'research-prioritization', 'risk-assessment'],
-    complexity: 'high',
-    example: 'Research Paper Curation:\n\nTask: Curate top 20 papers on "sustainable energy storage" from 500 candidates\n\nCollaborative Filtering Process:\n\n1. AI Initial Filtering:\n   • Semantic relevance scoring (0-1.0)\n   • Citation impact analysis\n   • Recency weighting (2020-2024)\n   • Technical quality indicators\n   • Reduces 500 papers to 100 candidates\n\n2. Human Expert Review:\n   • Domain expert reviews AI shortlist\n   • Adds domain-specific criteria:\n     - Commercial viability potential\n     - Environmental impact significance\n     - Technical feasibility assessment\n   • Flags 3 highly relevant papers AI missed\n   • Removes 15 papers with technical issues AI couldn\'t detect\n\n3. Collaborative Scoring:\n   • AI technical metrics: 40% weight\n   • Human domain expertise: 35% weight\n   • Combined impact prediction: 25% weight\n   • Final ranking incorporates both perspectives\n\n4. Iterative Refinement:\n   • Human feedback trains AI on domain preferences\n   • AI learns to weight technical vs. practical factors\n   • System improves with each curation cycle\n\nFinal Curation:\n• 20 high-quality papers selected\n• Balanced technical rigor and practical relevance\n• 90% expert satisfaction rate\n• 30% time reduction vs. manual curation\n\nBenefits:\n• Combines AI scale with human domain expertise\n• Learns and improves from collaboration\n• Reduces expert workload while maintaining quality\n• Provides explainable curation decisions'
   },
   {
     id: 'escalation-procedures',

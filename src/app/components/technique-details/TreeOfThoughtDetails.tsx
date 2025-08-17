@@ -1,220 +1,148 @@
 'use client';
 
 import React from 'react';
-import { Check } from 'lucide-react';
+import ReferencesSection from './shared/ReferencesSection';
+import {
+  QuickOverviewSection,
+  QuickImplementationSection,
+  DosAndDontsSection,
+  UsageGuideSection,
+  KeyMetricsSection,
+  TopUseCasesSection
+} from './shared';
 
 interface TreeOfThoughtDetailsProps {
   selectedTechnique: any;
 }
 
 export const TreeOfThoughtDetails: React.FC<TreeOfThoughtDetailsProps> = ({ selectedTechnique }) => {
+  // Quick Implementation Recipe
+  const quickImplementation = {
+    steps: [
+      { num: '1', action: 'Define Tree', detail: 'Set branching factor K & max depth' },
+      { num: '2', action: 'Generate', detail: 'Create K candidate thoughts per node' },
+      { num: '3', action: 'Evaluate', detail: 'Score each candidate (rubrics/verifier)' },
+      { num: '4', action: 'Prune', detail: 'Keep top candidates, discard weak paths' },
+      { num: '5', action: 'Search', detail: 'BFS/DFS/beam until solution found' }
+    ],
+    example: 'Problem → [Branch 1, Branch 2, Branch 3] → Evaluate → Prune → Expand best → Solution'
+  };
+
+  // Combined Do's and Don'ts
+  const dosAndDonts = [
+    { type: 'do', text: 'Use small branching factor (K=3-5) to control costs', icon: '✅' },
+    { type: 'do', text: 'Implement explicit evaluation criteria/rubrics', icon: '✅' },
+    { type: 'do', text: 'Cache and deduplicate equivalent states', icon: '✅' },
+    { type: 'do', text: 'Set budget limits (max tokens/time) with fallbacks', icon: '✅' },
+    { type: 'do', text: 'Use beam search for balanced exploration', icon: '✅' },
+    { type: 'dont', text: 'Allow unlimited branching (combinatorial explosion)', icon: '❌' },
+    { type: 'dont', text: 'Skip evaluation steps (leads to random exploration)', icon: '❌' },
+    { type: 'dont', text: 'Use for simple problems (overkill vs CoT)', icon: '❌' },
+    { type: 'dont', text: 'Ignore cycles/loops in reasoning paths', icon: '❌' },
+    { type: 'dont', text: 'Over-prune early promising paths', icon: '❌' }
+  ];
+
+  // When to Use vs When to Avoid
+  const usageGuide = {
+    useWhen: [
+      'Complex problems with multiple solution paths',
+      'Strategic planning requiring lookahead',
+      'Creative tasks needing exploration',
+      'Puzzles with critical early decisions',
+      'When backtracking adds value'
+    ],
+    avoidWhen: [
+      'Simple linear reasoning tasks',
+      'Real-time/low-latency requirements',
+      'Tight computational budgets',
+      'Tasks without clear evaluation criteria',
+      'When CoT already works well'
+    ]
+  };
+
+  // Key Metrics
+  const keyMetrics = [
+    { metric: 'Solution Quality', measure: 'Accuracy vs CoT baseline' },
+    { metric: 'Search Efficiency', measure: 'Nodes explored per solution' },
+    { metric: 'Token Cost', measure: 'Total tokens vs linear approaches' },
+    { metric: 'Path Diversity', measure: 'Unique reasoning strategies explored' },
+    { metric: 'Evaluation Accuracy', measure: 'Pruning quality (keep good, discard bad)' },
+    { metric: 'Budget Utilization', measure: '% of max depth/tokens used' }
+  ];
+
+  // Top Use Cases
+  const topUseCases = [
+    'Game of 24: Explore different operator combinations → evaluate validity → prune impossible paths',
+    'Strategic Planning: Generate scenario branches → assess outcomes → select optimal strategy',
+    'Creative Writing: Develop plot alternatives → evaluate narrative coherence → pursue best storylines',
+    'Math Puzzles: Try multiple solution approaches → verify correctness → backtrack if needed',
+    'Code Architecture: Explore design patterns → evaluate trade-offs → select best approach'
+  ];
+
+  const references = [
+    {
+      title: 'Academic Papers',
+      items: [
+        { title: 'Tree of Thoughts: Deliberate Problem Solving with Large Language Models (Yao et al., 2023)', url: 'https://arxiv.org/abs/2305.10601' },
+        { title: 'Chain-of-Thought Prompting Elicits Reasoning in Large Language Models (Wei et al., 2022)', url: 'https://arxiv.org/abs/2201.11903' },
+        { title: 'When Tree of Thoughts Succeeds: Larger Models Excel in Generation (Chen et al., 2024)', url: 'https://arxiv.org/abs/2410.17820' },
+        { title: 'Tree of Thoughts for Multi-step Problem Solving (Hulbert, 2023)', url: 'https://arxiv.org/abs/2305.08291' }
+      ]
+    },
+    {
+      title: 'Implementation Guides',
+      items: [
+        { title: 'Hugging Face: Understanding and Implementing Tree of Thoughts', url: 'https://huggingface.co/blog/sadhaklal/tree-of-thoughts' },
+        { title: 'Deepgram: Tree-of-Thoughts Prompting Guide', url: 'https://deepgram.com/learn/tree-of-thoughts-prompting' },
+        { title: 'Prompt Engineering Guide: Tree of Thoughts', url: 'https://www.promptingguide.ai/techniques/tot' },
+        { title: 'GeeksforGeeks: Tree-of-Thought Prompting Explained', url: 'https://www.geeksforgeeks.org/artificial-intelligence/tree-of-thought-tot-prompting/' }
+      ]
+    },
+    {
+      title: 'Tools & Libraries',
+      items: [
+        { title: 'Princeton NLP: tree-of-thought-llm (Official Implementation)', url: 'https://github.com/princeton-nlp/tree-of-thought-llm' },
+        { title: 'LangGraph: Graph-based Reasoning Workflows', url: 'https://python.langchain.com/docs/expression_language/how_to/graph' },
+        { title: 'Microsoft Guidance: Structured Generation Library', url: 'https://github.com/microsoft/guidance' },
+        { title: 'DSPy: Programming with Language Models', url: 'https://dspy-docs.vercel.app/' }
+      ]
+    },
+    {
+      title: 'Community & Discussions',
+      items: [
+        { title: 'OpenAI Developer Community - Reasoning Techniques', url: 'https://community.openai.com/c/prompting/8' },
+        { title: 'LangChain Discord Community', url: 'https://discord.gg/langchain' },
+        { title: 'Hugging Face Forums: Reasoning & Prompting', url: 'https://discuss.huggingface.co/' },
+        { title: 'r/MachineLearning - Tree of Thoughts Discussions', url: 'https://www.reddit.com/r/MachineLearning/' }
+      ]
+    }
+  ];
+
   return (
     <>
-      {/* Core Mechanism */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
-          Core Mechanism
-        </h2>
-        <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border border-green-500/20 rounded-xl p-6">
-          <p className="text-gray-200 text-base leading-relaxed">
-            Structures reasoning as a branching tree of coherent thoughts. From each state, the model generates multiple
-            candidate thoughts, evaluates them, prunes weak paths, and continues expanding promising ones with
-            lookahead and backtracking as needed. Generalizes linear Chain-of-Thought by enabling exploration of
-            alternatives under a search policy (e.g., breadth-first, depth-first, beam).
-          </p>
-        </div>
-      </section>
+      <QuickOverviewSection
+        pattern="Explore multiple reasoning paths through branching tree structure with evaluation and pruning"
+        why="Enables backtracking, lookahead, and exploration of alternatives for complex problem-solving"
+        keyInsight="Generate K candidates → Evaluate → Prune weak paths → Expand promising ones → Repeat until solution"
+      />
 
-      {/* Workflow / Steps */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
-          Workflow / Steps
-        </h2>
-        <div className="bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 rounded-xl p-6">
-          <ol className="list-decimal list-inside space-y-2 text-gray-200 text-sm">
-            <li>Define thought granularity and goal state; set width/depth, budget, and stopping criteria.</li>
-            <li>Generate K candidate thoughts at each state (diverse sampling or guided templates).</li>
-            <li>Score/evaluate states using rubrics, verifiers, or value prompts; retain top candidates.</li>
-            <li>Expand according to a search policy (BFS/DFS/beam); deduplicate and avoid loops.</li>
-            <li>Backtrack if progress stalls; continue until solution, max depth, or budget reached.</li>
-          </ol>
-        </div>
-      </section>
+      <QuickImplementationSection
+        steps={quickImplementation.steps}
+        example={quickImplementation.example}
+      />
 
-      {/* Best Practices */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-green-500 rounded-full"></div>
-          Best Practices
-        </h2>
-        <div className="grid gap-3">
-          {[
-            'Right-size thought steps; avoid too coarse (miss lookahead) or too fine (token blow-up).',
-            'Use explicit evaluation rubrics or verifier prompts; separate generation vs. evaluation roles.',
-            'Limit branching factor and depth; prefer beam search with small K and early stopping.',
-            'Encourage diversity with temperature, nucleus sampling, or paraphrased thought prompts.',
-            'Cache evaluated states; deduplicate equivalent states to prevent cycles.',
-            'Set budget-aware halting (token/time caps) and fail-safe fallbacks to linear CoT.',
-            'For factual tasks, ground evaluation with retrieval or external verifiers when possible.',
-          ].map((tip) => (
-            <div key={tip} className="flex items-start gap-3 p-3 bg-gray-800/40 rounded-lg">
-              <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
-              <span className="text-gray-300 text-sm leading-relaxed">{tip}</span>
-            </div>
-          ))}
-        </div>
-      </section>
+      <DosAndDontsSection items={dosAndDonts} />
 
-      {/* When NOT to Use */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-red-500 rounded-full"></div>
-          When NOT to Use
-        </h2>
-        <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-          <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-            <li>Simple queries where linear CoT or direct answering meets quality and latency goals.</li>
-            <li>Strict real-time or tight SLO paths where branching overhead violates latency/cost budgets.</li>
-            <li>Tasks lacking reliable evaluation criteria or verifiable intermediate states.</li>
-          </ul>
-        </div>
-      </section>
+      <UsageGuideSection
+        useWhen={usageGuide.useWhen}
+        avoidWhen={usageGuide.avoidWhen}
+      />
 
-      {/* Common Pitfalls */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
-          Common Pitfalls
-        </h2>
-        <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-          <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-            <li>Combinatorial explosion from large K/depth without pruning or halting policies.</li>
-            <li>Mode collapse: insufficient diversity causing repeated or redundant branches.</li>
-            <li>Over-pruning early: discarding viable paths due to weak or biased evaluators.</li>
-            <li>Looping states and circular reasoning without deduplication or cycle checks.</li>
-            <li>Unverified claims when evaluation lacks grounding or external checks.</li>
-          </ul>
-        </div>
-      </section>
+      <KeyMetricsSection metrics={keyMetrics} />
 
-      {/* Key Features */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-cyan-500 rounded-full"></div>
-          Key Features
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {[
-            'Branching exploration of alternative reasoning paths',
-            'Backtracking and lookahead for global decision quality',
-            'Evaluator-guided pruning and selection',
-            'Search-policy control (BFS/DFS/beam) and budgets',
-            'Separation of generation and evaluation prompts',
-            'Compatibility with self-consistency and verification',
-          ].map((feat) => (
-            <div key={feat} className="p-3 bg-gray-800/40 rounded-lg text-gray-300 text-sm border border-gray-700/40">
-              {feat}
-            </div>
-          ))}
-        </div>
-      </section>
+      <TopUseCasesSection useCases={topUseCases} />
 
-      {/* KPIs / Success Metrics */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-emerald-500 rounded-full"></div>
-          KPIs / Success Metrics
-        </h2>
-        <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-          <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-            <li>Task success/accuracy on reasoning benchmarks (e.g., puzzles, math, planning).</li>
-            <li>Compute efficiency: tokens, steps, and wall-clock per solved instance.</li>
-            <li>Diversity/coverage of explored paths vs. redundancy rate.</li>
-            <li>Verifier agreement/consistency across branches (if using judges/verifiers).</li>
-          </ul>
-        </div>
-      </section>
-
-      {/* Token / Resource Usage */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-indigo-500 rounded-full"></div>
-          Token / Resource Usage
-        </h2>
-        <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-          <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-            <li>Cost scales with branching factor (K), depth (D), and evaluation overhead.</li>
-            <li>Use beam search, early stopping, and evaluator filters to cap expansion.</li>
-            <li>Cache intermediate thoughts and scores; dedupe states to reduce waste.</li>
-            <li>Adopt budget-aware routing: fall back to CoT when uncertainty/budget is low.</li>
-          </ul>
-        </div>
-      </section>
-
-      {/* Best Use Cases */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-fuchsia-500 rounded-full"></div>
-          Best Use Cases
-        </h2>
-        <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40">
-          <ul className="list-disc list-inside space-y-2 text-gray-300 text-sm">
-            <li>Combinatorial puzzles and math word problems with pivotal early choices.</li>
-            <li>Strategic planning and multi-step decision-making with lookahead.</li>
-            <li>Creative ideation where exploring alternatives improves quality.</li>
-          </ul>
-        </div>
-      </section>
-
-      {/* References & Further Reading */}
-      <section>
-        <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
-          <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
-          References & Further Reading
-        </h2>
-        <div className="bg-gray-800/40 rounded-lg p-6 border border-gray-700/40 space-y-4">
-          <div>
-            <h3 className="text-white font-semibold mb-2 text-sm">Academic Papers</h3>
-            <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
-              <li>
-                <a href="https://arxiv.org/abs/2305.10601" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Yao et al. (2023): Tree of Thoughts — Deliberate Problem Solving with LLMs</a>
-              </li>
-              <li>
-                <a href="https://arxiv.org/abs/2201.11903" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Wei et al. (2022): Chain-of-Thought Prompting Elicits Reasoning</a>
-              </li>
-              <li>
-                <a href="https://arxiv.org/abs/2410.17820" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Chen et al. (2024): When ToT Succeeds — Larger Models Excel in Generation</a>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-white font-semibold mb-2 text-sm">Implementation Guides</h3>
-            <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
-              <li><a href="https://huggingface.co/blog/sadhaklal/tree-of-thoughts" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Hugging Face Blog: Understanding and Implementing ToT</a></li>
-              <li><a href="https://deepgram.com/learn/tree-of-thoughts-prompting" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Deepgram: Tree-of-Thoughts Prompting</a></li>
-              <li><a href="https://www.geeksforgeeks.org/artificial-intelligence/tree-of-thought-tot-prompting/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">GeeksforGeeks: Tree-of-Thought Prompting</a></li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-white font-semibold mb-2 text-sm">Tools & Libraries</h3>
-            <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
-              <li><a href="https://github.com/princeton-nlp/tree-of-thought-llm" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Princeton NLP: tree-of-thought-llm (reference implementation)</a></li>
-              <li><a href="https://python.langchain.com/docs/expression_language/how_to/graph" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangChain/LangGraph: Graph workflows for branching reasoning</a></li>
-              <li><a href="https://github.com/microsoft/guidance" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Microsoft Guidance: Structured generation to orchestrate search</a></li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-white font-semibold mb-2 text-sm">Community & Discussions</h3>
-            <ul className="list-disc list-inside space-y-1 text-gray-300 text-sm">
-              <li><a href="https://discuss.huggingface.co/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">Hugging Face Forums: Reasoning & prompting</a></li>
-              <li><a href="https://discord.gg/langchain" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">LangChain Community</a></li>
-              <li><a href="https://www.reddit.com/r/MachineLearning/" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300">r/MachineLearning - ToT discussions</a></li>
-            </ul>
-          </div>
-        </div>
-      </section>
+      <ReferencesSection categories={references} />
     </>
   );
 };

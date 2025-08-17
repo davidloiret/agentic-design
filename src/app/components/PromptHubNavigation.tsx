@@ -285,7 +285,7 @@ export const PromptHubNavigation = () => {
             </h4>
             <div className={`flex items-center gap-2 ${isSelected ? 'text-white/70' : 'text-gray-500'}`}>
               {item.complexity && (
-                <span className={`text-xs px-2 py-0.5 rounded-full ${
+                <span className={` flex-nowrap text-xs px-2 py-0.5 rounded-full ${
                   item.complexity === 'low' ? 'bg-green-500/20 text-green-400' :
                   item.complexity === 'medium' ? 'bg-yellow-500/20 text-yellow-400' :
                   'bg-red-500/20 text-red-400'

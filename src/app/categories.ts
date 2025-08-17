@@ -523,7 +523,7 @@ export const categories: Category[] = [
         'Mixing incompatible reasoning paradigms without clear transition mechanisms'
       ]
     },
-    techniques: ['cot', 'tot', 'self-correction', 'palm', 'react', 'cod', 'god', 'rlvr', 'lrt', 'got', 'neuro-symbolic-reasoning', 'symbolic-program-synthesis', 'hybrid-reasoning-fusion']
+    techniques: ['cot', 'tot', 'got', 'react', 'fot', 'metacognitive-monitoring', 'test-time-compute', 'reflective-mcts', 'least-to-most', 'analogical-reasoning', 'causal-reasoning', 'abductive-reasoning', 'step-back-prompting', 'buffer-of-thoughts', 'skeleton-of-thoughts']
   },
   { 
     id: 'guardrails-safety', 

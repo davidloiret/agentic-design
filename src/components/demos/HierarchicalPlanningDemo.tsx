@@ -500,12 +500,12 @@ const HierarchicalPlanningDemo: React.FC = () => {
                       <div>
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-white">{task.name}</span>
-                          <span className={`text-xs px-2 py-0.5 rounded-full ${
+                          <span className={` flex-nowrap text-xs px-2 py-0.5 rounded-full ${
                             isLevel1 ? 'bg-blue-600/20 text-blue-300' : 'bg-green-600/20 text-green-300'
                           }`}>
                             Level {task.level}
                           </span>
-                          <span className={`text-xs px-2 py-0.5 rounded-full bg-opacity-20 ${getPriorityColor(task.priority)}`}>
+                          <span className={` flex-nowrap text-xs px-2 py-0.5 rounded-full bg-opacity-20 ${getPriorityColor(task.priority)}`}>
                             {task.priority}
                           </span>
                         </div>

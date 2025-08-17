@@ -27,6 +27,21 @@ import { GoalDecompositionDetails } from './technique-details/GoalDecompositionD
 import { InteractivePatternFlow } from '../../components/InteractivePatternFlow';
 import { ActorFrameworksDetails } from './technique-details/ActorFrameworksDetails';
 import { LatentKnowledgeRetrievalDetails } from './technique-details/LatentKnowledgeRetrievalDetails';
+import { MlcommonsAiSafetyDetails } from './technique-details/MlcommonsAiSafetyDetails';
+import { AgentBenchDetails } from './technique-details/AgentBenchDetails';
+import { TheAgentCompanyDetails } from './technique-details/TheAgentCompanyDetails';
+import { MlrBenchDetails } from './technique-details/MlrBenchDetails';
+import { TwelveFactorAgentDetails } from './technique-details/TwelveFactorAgentDetails';
+import { NistAriaDetails } from './technique-details/NistAriaDetails';
+import { HelmAgentEvaluationDetails } from './technique-details/HelmAgentEvaluationDetails';
+import { HulaFrameworkDetails } from './technique-details/HulaFrameworkDetails';
+import { CybersecEval3Details } from './technique-details/CybersecEval3Details';
+import { MetrReBenchDetails } from './technique-details/MetrReBenchDetails';
+import { SweBenchSuiteDetails } from './technique-details/SweBenchSuiteDetails';
+import { GaiaBenchmarkDetails } from './technique-details/GaiaBenchmarkDetails';
+import { MmauBenchmarkDetails } from './technique-details/MmauBenchmarkDetails';
+import { WebArenaSuiteDetails } from './technique-details/WebArenaSuiteDetails';
+import { EuAiActFrameworkDetails } from './technique-details/EuAiActFrameworkDetails';
 import { ConsensusAlgorithmsDetails } from './technique-details/ConsensusAlgorithmsDetails';
 import { AgentCommunicationProtocolsDetails } from './technique-details/AgentCommunicationProtocolsDetails';
 import { ContinuousLearningDetails } from './technique-details/ContinuousLearningDetails';
@@ -191,6 +206,28 @@ import { PredictiveAgentFaultToleranceDetails } from './technique-details/Predic
 import { AgentCommunicationFaultToleranceDetails } from './technique-details/AgentCommunicationFaultToleranceDetails';
 import { NaiveRagDetails } from './technique-details/NaiveRagDetails';
 import { AdvancedRagDetails } from './technique-details/AdvancedRagDetails';
+import ReactDetails from './technique-details/ReactDetails';
+import ForestOfThoughtsDetails from './technique-details/ForestOfThoughtsDetails';
+import MetacognitiveMonitoringDetails from './technique-details/MetacognitiveMonitoringDetails';
+import TestTimeComputeScalingDetails from './technique-details/TestTimeComputeScalingDetails';
+import ReflectiveMctsDetails from './technique-details/ReflectiveMctsDetails';
+import LeastToMostPromptingDetails from './technique-details/LeastToMostPromptingDetails';
+import AnalogicalReasoningDetails from './technique-details/AnalogicalReasoningDetails';
+import CausalReasoningDetails from './technique-details/CausalReasoningDetails';
+import AbductiveReasoningDetails from './technique-details/AbductiveReasoningDetails';
+import StepBackPromptingDetails from './technique-details/StepBackPromptingDetails';
+import BufferOfThoughtsDetails from './technique-details/BufferOfThoughtsDetails';
+import SkeletonOfThoughtsDetails from './technique-details/SkeletonOfThoughtsDetails';
+import LayeredDefensePatternDetails from './technique-details/LayeredDefensePatternDetails';
+import ContextualGuardrailingDetails from './technique-details/ContextualGuardrailingDetails';
+import GuardAgentPatternDetails from './technique-details/GuardAgentPatternDetails';
+import IntrinsicAlignmentPatternDetails from './technique-details/IntrinsicAlignmentPatternDetails';
+import MemoryPoisoningPreventionDetails from './technique-details/MemoryPoisoningPreventionDetails';
+import ToolMisusePreventionDetails from './technique-details/ToolMisusePreventionDetails';
+import PrivilegeCompromiseMitigationDetails from './technique-details/PrivilegeCompromiseMitigationDetails';
+import AgrailAdaptivePatternDetails from './technique-details/AgrailAdaptivePatternDetails';
+import MaestroMultiAgentSecurityDetails from './technique-details/MaestroMultiAgentSecurityDetails';
+import SystemPromptProtectionDetails from './technique-details/SystemPromptProtectionDetails';
 
 interface TechniqueDetailsProps {
   selectedTechnique: any;
@@ -396,6 +433,30 @@ export const TechniqueDetails = ({
                 <GraphOfThoughtDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'tot' ? (
                 <TreeOfThoughtDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'react' ? (
+                <ReactDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'fot' ? (
+                <ForestOfThoughtsDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'metacognitive-monitoring' ? (
+                <MetacognitiveMonitoringDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'test-time-compute' ? (
+                <TestTimeComputeScalingDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'reflective-mcts' ? (
+                <ReflectiveMctsDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'least-to-most' ? (
+                <LeastToMostPromptingDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'analogical-reasoning' ? (
+                <AnalogicalReasoningDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'causal-reasoning' ? (
+                <CausalReasoningDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'abductive-reasoning' ? (
+                <AbductiveReasoningDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'step-back-prompting' ? (
+                <StepBackPromptingDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'buffer-of-thoughts' ? (
+                <BufferOfThoughtsDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'skeleton-of-thoughts' ? (
+                <SkeletonOfThoughtsDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'naive-rag' ? (
                 <NaiveRagDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'advanced-rag' ? (
@@ -892,6 +953,56 @@ export const TechniqueDetails = ({
                 <ConcurrentOrchestrationDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'handoff-orchestration' ? (
                 <HandoffOrchestrationDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'layered-defense-pattern' ? (
+                <LayeredDefensePatternDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'contextual-guardrailing' ? (
+                <ContextualGuardrailingDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'guardagent-pattern' ? (
+                <GuardAgentPatternDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'intrinsic-alignment-pattern' ? (
+                <IntrinsicAlignmentPatternDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'memory-poisoning-prevention' ? (
+                <MemoryPoisoningPreventionDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'tool-misuse-prevention' ? (
+                <ToolMisusePreventionDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'privilege-compromise-mitigation' ? (
+                <PrivilegeCompromiseMitigationDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'agrail-adaptive-pattern' ? (
+                <AgrailAdaptivePatternDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'maestro-multi-agent-security' ? (
+                <MaestroMultiAgentSecurityDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'system-prompt-protection' ? (
+                <SystemPromptProtectionDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'mlcommons-ai-safety' ? (
+                <MlcommonsAiSafetyDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'agentbench' ? (
+                <AgentBenchDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'theagentcompany' ? (
+                <TheAgentCompanyDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'mlr-bench' ? (
+                <MlrBenchDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'twelve-factor-agent' ? (
+                <TwelveFactorAgentDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'nist-aria' ? (
+                <NistAriaDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'helm-agent-eval' ? (
+                <HelmAgentEvaluationDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'hula-framework' ? (
+                <HulaFrameworkDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'cyberseceval3' ? (
+                <CybersecEval3Details selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'metr-re-bench' ? (
+                <MetrReBenchDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'swe-bench-suite' ? (
+                <SweBenchSuiteDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'gaia-benchmark' ? (
+                <GaiaBenchmarkDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'mmau-benchmark' ? (
+                <MmauBenchmarkDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'webarena-suite' ? (
+                <WebArenaSuiteDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'eu-ai-act-framework' ? (
+                <EuAiActFrameworkDetails selectedTechnique={selectedTechnique} />
               ) : (
                 <section>
                   <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">

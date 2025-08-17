@@ -1840,3 +1840,95 @@ Your **Product Review** scenario is a good anchor. Add one *enterprise* case (e.
 
 https://gemini.google.com/
 https://chat.qwen.ai/c/ef172b9a-1556-43c2-a4c3-a6eff9dbb2fe
+
+
+  Process/Outcome Supervision = Méthodes d'entraînement/évaluation
+  o1-Style Reasoning = Architecture de modèle, pas technique de raisonnement
+  Quiet-STaR = Méthode d'auto-apprentissage
+  Step-Back Prompting = Stratégie de prompting
+  Buffer/Skeleton of Thoughts = Structures de données/templates
+
+
+  ----
+
+    15 Techniques Canoniques Ajoutées :
+
+  Core Foundational (8):
+
+  - Chain-of-Thought (CoT)
+  - Tree-of-Thought (ToT)
+  - Graph-of-Thought (GoT)
+  - ReAct
+  - Forest-of-Thoughts (FoT)
+  - Metacognitive Monitoring
+  - Test-Time Compute Scaling
+  - Reflective Monte Carlo Tree Search
+
+  Advanced Reasoning (7):
+
+  - Least-to-Most Prompting - Décomposition progressive
+  - Analogical Reasoning - Raisonnement par analogie
+  - Causal Reasoning - Chaînes cause-effet
+  - Abductive Reasoning - Inférence meilleure explication
+  - Step-Back Prompting - Abstraction vers principes
+  - Buffer of Thoughts - Buffer de patterns réutilisables
+  - Skeleton of Thoughts - Frameworks adaptatifs
+
+  Toutes avec grounding académique 2022-2025, exemples détaillés et focus sur systèmes agentiques. La
+  collection est maintenant exhaustive et canonique !
+
+
+  Maybe we need to add back ressource aware etc
+
+
+  Reduce cognitive load == better result
+
+
+  CONTEXT MANAGEMENT
+  - CONTEXT SLIDING
+  - SEMANTIQUE COMPRESSION 
+
+
+  Leaderboards ?
+
+
+  copy papers schema to mermaid or react flow
+
+  improve with boundaryML video => context engineering tips
+  Special vibe coding category
+
+  compare different cli, gemini, claude etc
+wortree etc
+
+  remove "pattern" in name ? as technique
+
+  we should have all bench
+  methodo / techniques
+
+  in Evaluation and Monitoring detail we should add detail of the reference
+
+  Don't add flow and example and code if not needded
+
+  we focus on framework agnistic except for evaluation ? (general framework) for agentic ai system
+
+  back all information by authoritative sources
+
+  agent to keep patterns and techniques up to date
+
+  Le format est pas forcement tres bien adapté
+
+
+  12-Factor Agent Methodology is more general and should be in other cateory
+
+  pin patterns / set favoris
+
+  NIST Aria program => to be removed or reclassed
+
+  we need more details / completness on each 
+  try to not be to opiniod or l'inverse N
+
+Vary by dmain
+
+  Do we really need other categories than Human In The Loop and Human On The loop ?
+
+  Take Massive Multitask Agent Understanding to ensure we cover all patterns in the site

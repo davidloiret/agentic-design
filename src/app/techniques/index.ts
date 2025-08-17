@@ -21,6 +21,7 @@ import { explorationDiscoveryTechniques } from './exploration-discovery';
 import { learningAdaptationTechniques } from './learning-adaptation';
 import { prioritizationTechniques } from './prioritization';
 import { reflectionTechniques } from './reflection-techniques';
+import { guardrailsSafetyPatterns } from './guardrails-safety-patterns';
 
 export * from './types';
 
@@ -52,6 +53,7 @@ export const techniques: Technique[] = [
   ...learningAdaptationTechniques,
   ...prioritizationTechniques,
   ...reflectionTechniques,
+  ...guardrailsSafetyPatterns,
   ...remainingTechniques,
 ];
 

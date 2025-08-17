@@ -227,7 +227,7 @@ export const CategoryDetails = ({ category, onBack, techniques = [], onTechnique
                             )}
                           </h3>
                           <div className="flex items-center gap-2">
-                            <span className={`text-xs px-2 py-0.5 rounded-full ${
+                            <span className={` flex-nowrap text-xs px-2 py-0.5 rounded-full ${
                               technique.complexity === 'low' ? 'bg-green-500/20 text-green-400' :
                               technique.complexity === 'medium' ? 'bg-yellow-500/20 text-yellow-400' :
                               technique.complexity === 'high' ? 'bg-orange-500/20 text-orange-400' :
