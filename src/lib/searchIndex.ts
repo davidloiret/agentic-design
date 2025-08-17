@@ -1352,21 +1352,6 @@ export const searchIndex: SearchableContent[] = [
     ]
   },
   {
-    "id": "technique-collaborative-learning",
-    "title": "Collaborative Learning",
-    "description": "Continuous mutual learning between humans and AI systems to improve performance over time",
-    "content": "{\n    id: 'collaborative-learning',\n    name: 'Collaborative Learning',\n    abbr: 'CL',\n    icon: '📚',\n    color: 'from-pink-500 to-red-600',\n    category: 'human-ai-collaboration',\n    description: 'Continuous mutual learning between humans and AI systems to improve performance over time',\n    features: [\n      'Bidirectional knowledge transfer',\n      'Incremental skill development',\n      'Feedback-driven improvement',\n      'Adaptive learning rates',\n      'Knowledge gap identification',\n      'Performance co-evolution'\n    ],\n    useCases: ['personalized-education', 'skill-development', 'research-collaboration', 'creative-projects', 'professional-training'],\n    complexity: 'high',\n    example: 'Legal Research Collaboration:\\n\\nWeek 1 - Initial State:\\n• AI: Strong at case law search, weak at legal strategy\\n• Lawyer: Expert in strategy, slower at document review\\n\\nCollaborative Learning Process:\\n\\n1. AI Learning from Human:\\n   • Lawyer explains why certain precedents are more relevant\\n   • AI learns strategic thinking patterns: \"Constitutional cases trump statutory when fundamental rights involved\"\\n   • Updates weighting algorithms based on lawyer feedback\\n\\n2. Human Learning from AI:\\n   • AI identifies overlooked case: \"Smith v. Jones (2019) - similar fact pattern\"\\n   • Lawyer discovers new legal research strategies\\n   • Adopts AI\\'s systematic approach to citation analysis\\n\\n3. Mutual Improvement:\\n   • AI develops better legal reasoning (strategy accuracy: 65% → 78%)\\n   • Lawyer increases research efficiency (time per case: 4h → 2.5h)\\n   • Together they discover novel legal arguments\\n\\nWeek 12 Results:\\n• Case success rate improved 23%\\n• Research time reduced 40%\\n• Both human and AI capabilities enhanced\\n• New hybrid legal strategies developed\\n\\nKey Success Factors:\\n• Regular feedback exchange\\n• Shared performance metrics\\n• Complementary strength recognition\\n• Trust building over time'\n  }",
-    "url": "/patterns/reasoning-techniques/collaborative-learning",
-    "category": "patterns",
-    "subcategory": "reasoning",
-    "type": "technique",
-    "tags": [
-      "human ai collaboration",
-      "technique",
-      "pattern"
-    ]
-  },
-  {
     "id": "technique-explainable-ai-interaction",
     "title": "Explainable AI Interaction",
     "description": "AI systems that can explain their reasoning and decisions to human collaborators",

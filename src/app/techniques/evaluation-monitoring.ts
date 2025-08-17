@@ -66,7 +66,7 @@ export const evaluationMonitoringTechniques: Technique[] = [
       'Comprehensive task diversity'
     ],
     useCases: ['enterprise-readiness', 'work-automation', 'capability-testing', 'production-evaluation'],
-    complexity: 'very-high',
+    complexity: 'high',
     example: 'TheAgentCompany Evaluation:\n\nAgent: Gemini 2.5 Pro\nTasks: Software Engineering Suite\n\nTask Completion Results:\n• Code Review & Refactoring: 42%\n• API Documentation: 38%\n• Bug Investigation: 28%\n• Database Migration: 31%\n• CI/CD Pipeline Setup: 25%\n• Security Audit: 22%\n\nOverall Metrics:\n• Full Completion: 30.3%\n• Partial Credit Score: 39.3%\n• Avg Time per Task: 18.5 min\n\nInsights:\n- Best at structured tasks\n- Struggles with ambiguity\n- Partial progress valuable',
     references: [
       'TheAgentCompany: Benchmarking LLM Agents on Consequential Real World Tasks (2024)',
@@ -89,7 +89,7 @@ export const evaluationMonitoringTechniques: Technique[] = [
       'Modular research agent scaffold'
     ],
     useCases: ['research-automation', 'ml-development', 'scientific-evaluation', 'academic-benchmarking'],
-    complexity: 'very-high',
+    complexity: 'high',
     example: 'MLR-Bench Evaluation:\n\nAgent: Research Assistant v2\nTasks: 201 ML research tasks\n\nPerformance by Topic:\n• LLMs/VLMs: 42.8%\n• AI for Science: 38.2%\n• ML Theory: 28.9%\n• Trustworthy AI: 35.6%\n• Computer Vision: 41.3%\n• ML Systems: 33.7%\n• Multimodality: 37.9%\n• Reinforcement Learning: 31.2%\n• Emerging Topics: 29.8%\n\nMLR-Judge Scores:\n• Methodology: 7.2/10\n• Implementation: 6.8/10\n• Analysis: 6.5/10\n• Writing: 7.8/10\n\nCapable of junior researcher tasks',
     references: [
       'MLR-Bench: Evaluating AI Agents on Open-Ended Machine Learning Research (2025)',
@@ -137,7 +137,7 @@ export const evaluationMonitoringTechniques: Technique[] = [
   //     'AI Risk Management Framework integration'
   //   ],
   //   useCases: ['regulatory-compliance', 'government-evaluation', 'safety-assessment', 'pre-deployment-testing'],
-  //   complexity: 'very-high',
+  //   complexity: 'high',
   //   example: 'NIST ARIA Evaluation:\n\nAgent: Enterprise AI Assistant\nEvaluation Program: ARIA 0.1\n\nLayer 1 - General Testing:\n• Capability assessment: 85%\n• Performance benchmarks: Passed\n• Technical compliance: ✓\n\nLayer 2 - Red Teaming:\n• Adversarial robustness: 78%\n• Security vulnerabilities: 3 found\n• Jailbreak resistance: 92%\n\nLayer 3 - Field Testing:\n• Real-world deployment: 6 months\n• User feedback: 4.2/5\n• Incident rate: 0.02%\n\nFinal Assessment: Approved for deployment\nRisk Level: Low-Medium',
   //   references: [
   //     'NIST ARIA Program Launch (2024)',
@@ -211,7 +211,7 @@ export const evaluationMonitoringTechniques: Technique[] = [
       'Threat modeling for AI agents'
     ],
     useCases: ['security-testing', 'vulnerability-assessment', 'compliance-verification', 'risk-management'],
-    complexity: 'very-high',
+    complexity: 'high',
     example: 'CybersecEval 3 Assessment:\n\nAgent: Enterprise Security Bot\nEvaluation: Multi-agent security\n\nSecurity Domains:\n• Code security: 89% secure\n• Data privacy: 94% compliant\n• Access control: 87% proper\n• Injection attacks: 91% resistant\n• Social engineering: 78% resistant\n\nMulti-Agent Risks:\n• Agent-to-agent communication: Secure\n• Privilege escalation: 2 vulnerabilities\n• Information leakage: Low risk\n• Coordination attacks: Medium risk\n\nOverall Security Score: 86%\nRecommendation: Deploy with monitoring\nRequired fixes: 2 high-priority items',
     references: [
       'CybersecEval 3: Meta\'s AI Agent Security Benchmark (2024)',
@@ -235,7 +235,7 @@ export const evaluationMonitoringTechniques: Technique[] = [
       'Comprehensive task diversity'
     ],
     useCases: ['research-capability-testing', 'frontier-model-evaluation', 'productivity-assessment', 'expert-comparison'],
-    complexity: 'very-high',
+    complexity: 'high',
     example: 'METR RE-Bench Evaluation:\n\nAgent: Claude 3.5 Sonnet\nComparison: 71 human experts\nTasks: ML research engineering\n\nPerformance Comparison:\n• Task completion: 42% (vs 78% human)\n• Code quality: 3.2/5 (vs 4.1/5 human)\n• Research insights: 2.8/5 (vs 4.3/5 human)\n• Time efficiency: 0.8x human speed\n• Novel approaches: 15% (vs 45% human)\n\nSpecific Capabilities:\n• Data preprocessing: 89%\n• Model implementation: 67%\n• Experiment design: 34%\n• Result analysis: 56%\n• Paper writing: 23%\n\nGap Analysis: Significant gap remains\nvs. expert researchers',
     references: [
       'METR RE-Bench: Evaluating R&D Capabilities of LLMs (2024)',
@@ -284,7 +284,7 @@ export const evaluationMonitoringTechniques: Technique[] = [
       'Human baseline: 92% vs GPT-4: 15%'
     ],
     useCases: ['general-ai-assessment', 'reasoning-evaluation', 'tool-use-testing', 'multi-modal-agents'],
-    complexity: 'very-high',
+    complexity: 'high',
     example: 'GAIA Benchmark Results:\n\nAgent: h2oGPTe (H2O.ai)\nOverall Score: 65% (Rank #1)\n\nLevel Breakdown:\n• Level 1: 78.5%\n• Level 2: 62.3%\n• Level 3: 41.7%\n\nCapability Analysis:\n• Reasoning: 72%\n• Multi-modal: 58%\n• Tool-use: 69%\n• Web browsing: 54%\n\nComparison to Other Systems:\n• Google Langfun Agent: 49%\n• Microsoft Research: 38%\n• Hugging Face: 33%\n• Human Performance: 92%\n\nGap to Human-Level AGI: 27%',
     references: [
       'GAIA: a benchmark for General AI Assistants (arXiv:2311.12983)',
@@ -309,7 +309,7 @@ export const evaluationMonitoringTechniques: Technique[] = [
       'No complex environment setup required'
     ],
     useCases: ['comprehensive-agent-assessment', 'capability-analysis', 'academic-research', 'model-comparison'],
-    complexity: 'very-high',
+    complexity: 'high',
     example: 'MMAU Evaluation:\n\nAgent: GPT-4 Turbo\nTasks: 20 across 5 domains\n\nDomain Performance:\n• Tool-use: 73.2%\n• DAG QA: 68.7%\n• Data Science: 62.4%\n• Programming: 71.8%\n• Mathematics: 59.3%\n\nCapability Scores:\n• Understanding: 74.1%\n• Reasoning: 65.8%\n• Planning: 61.2%\n• Problem-solving: 67.9%\n• Self-correction: 58.6%\n\nOverall MMAU Score: 66.5%\nStrengths: Tool-use, Programming\nWeaknesses: Self-correction, Mathematics',
     references: [
       'MMAU: A Holistic Benchmark of Agent Capabilities Across Diverse Domains (arXiv:2407.18961)',
@@ -358,7 +358,7 @@ export const evaluationMonitoringTechniques: Technique[] = [
       'Systematic risk assessment protocols'
     ],
     useCases: ['regulatory-compliance', 'eu-deployment', 'risk-assessment', 'legal-compliance'],
-    complexity: 'very-high',
+    complexity: 'high',
     example: 'EU AI Act Compliance Assessment:\n\nAgent: Enterprise AI Assistant\nClassification: High-Risk AI System\n\nCompliance Requirements:\n• Risk assessment: ✓ Completed\n• Data governance: ✓ Implemented\n• Technical documentation: ✓ Prepared\n• Human oversight: ✓ Configured\n• Accuracy requirements: ✓ Met (94.7%)\n• Robustness testing: ✓ Passed\n• Cybersecurity measures: ✓ Deployed\n\nGPAI Model (>10^25 FLOPs):\n• Model evaluation: ✓ Conducted\n• Adversarial testing: ✓ Performed\n• Risk mitigation: ✓ Implemented\n• EU Commission notification: ✓ Filed\n\nDeployment Status: Approved for EU market\nNext review: August 2025',
     references: [
       'EU Artificial Intelligence Act (Official Text 2024)',
@@ -384,7 +384,7 @@ export const evaluationMonitoringTechniques: Technique[] = [
       'Risk-based evaluation tiers'
     ],
     useCases: ['frontier-ai-testing', 'government-compliance', 'international-coordination', 'safety-verification'],
-    complexity: 'very-high',
+    complexity: 'high',
     example: 'AISI Evaluation Process:\n\nSystem: Frontier AI Model v4.0\nEvaluation Tier: High-Risk\n\nCapability Assessment:\n• Advanced reasoning: 94.2%\n• Scientific knowledge: 91.7%\n• Code generation: 89.3%\n• Multi-modal understanding: 87.6%\n• Tool use: 92.1%\n\nSafety Evaluation:\n• Dual-use risk: Medium\n• Autonomous capability: Limited\n• Alignment testing: 88.9%\n• Robustness: 91.4%\n• Interpretability: 76.2%\n\nRegulatory Assessment:\n• NIST ARIA compliance: ✓ Passed\n• International standards: ✓ Met\n• Safety documentation: ✓ Complete\n\nRecommendation: Conditional approval\nMonitoring period: 6 months',
     references: [
       'AI Safety Institute Evaluation Framework (2024)',
@@ -409,7 +409,7 @@ export const evaluationMonitoringTechniques: Technique[] = [
       'Real-world multilingual task scenarios'
     ],
     useCases: ['multilingual-agents', 'global-deployment', 'cultural-bias-testing', 'international-compliance'],
-    complexity: 'very-high',
+    complexity: 'high',
     example: 'MAPS Evaluation Results:\n\nAgent: GPT-4 Multilingual\nLanguages: 12 (EN, ES, FR, DE, ZH, JA, AR, HI, PT, RU, KO, IT)\n\nPerformance by Language:\n• English: 82.4%\n• Spanish: 76.8%\n• French: 74.2%\n• German: 71.9%\n• Chinese: 69.3%\n• Japanese: 65.7%\n• Arabic: 58.4%\n• Hindi: 54.2%\n• Portuguese: 73.1%\n• Russian: 61.8%\n• Korean: 59.6%\n• Italian: 72.5%\n\nSecurity Assessment:\n• Cross-lingual jailbreak resistance: 87%\n• Cultural bias detection: 12 instances\n• Information leakage: Low risk\n\nOverall MAPS Score: 67.8%\nLanguage Parity Gap: 28.2%',
     references: [
       'MAPS: A Multilingual Benchmark for Agent Performance and Security (arXiv:2505.15935)',
@@ -433,7 +433,7 @@ export const evaluationMonitoringTechniques: Technique[] = [
       '3000+ hours of red team testing'
     ],
     useCases: ['ai-safety', 'jailbreak-prevention', 'harmlessness-testing', 'constitutional-alignment'],
-    complexity: 'very-high',
+    complexity: 'high',
     example: 'Constitutional AI Evaluation:\n\nAgent: Claude 3.5 Sonnet\nEvaluation: Constitutional Classifiers\n\nJailbreak Resistance Testing:\n• Baseline (no protection): 14% blocked\n• With Constitutional Classifiers: 95.6% blocked\n• Advanced jailbreak attempts: 4.4% success\n• Red team participants: 183\n• Testing hours: 3,000+\n\nConstitutional Adherence:\n• Helpfulness: 8.9/10\n• Harmlessness: 9.4/10\n• Honesty: 9.1/10\n• Constitutional violations: 0.3%\n\nSafety Categories:\n• Harmful content: 99.2% refused\n• Illegal activities: 99.8% refused\n• Bias/discrimination: 97.4% avoided\n\nOverall Safety Score: 9.5/10',
     references: [
       'Constitutional AI: Harmlessness from AI Feedback - Anthropic (2022)',

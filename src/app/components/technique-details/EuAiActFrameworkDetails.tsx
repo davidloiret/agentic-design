@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import ReferencesSection from './shared/ReferencesSection';
 import {
   QuickOverviewSection,
@@ -16,7 +16,6 @@ interface EuAiActFrameworkDetailsProps {
 }
 
 export const EuAiActFrameworkDetails: React.FC<EuAiActFrameworkDetailsProps> = ({ selectedTechnique }) => {
-  const [activeTab, setActiveTab] = useState('overview');
   // Quick Implementation Recipe
   const quickImplementation = {
     steps: [

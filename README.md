@@ -1932,3 +1932,20 @@ Vary by dmain
   Do we really need other categories than Human In The Loop and Human On The loop ?
 
   Take Massive Multitask Agent Understanding to ensure we cover all patterns in the site
+
+  add ressource aware ?
+  should we have a separate "Compliance" category ? or is it ok in eval or should we have subcategory
+
+
+  # Kortexya
+  => specialization red teaming => ajouter sur le site
+
+  mettre a jour la recgercge etc et SEO
+
+  check seo avec technique top tier
+
+
+Eval est domain dependant.
+
+
+Faire une page overview avant toute les autres techniques pour que ca soit plus clair au lieu de juste cliquer sur category

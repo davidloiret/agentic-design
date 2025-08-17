@@ -42,6 +42,11 @@ import { GaiaBenchmarkDetails } from './technique-details/GaiaBenchmarkDetails';
 import { MmauBenchmarkDetails } from './technique-details/MmauBenchmarkDetails';
 import { WebArenaSuiteDetails } from './technique-details/WebArenaSuiteDetails';
 import { EuAiActFrameworkDetails } from './technique-details/EuAiActFrameworkDetails';
+import { AISIEvaluationFrameworkDetails } from './technique-details/AISIEvaluationFrameworkDetails';
+import { MapsBenchmarkDetails } from './technique-details/MapsBenchmarkDetails';
+import { ConstitutionalAiEvaluationDetails } from './technique-details/ConstitutionalAiEvaluationDetails';
+import { HumanInTheLoopDetails } from './technique-details/HumanInTheLoopDetails';
+import { HumanOnTheLoopDetails } from './technique-details/HumanOnTheLoopDetails';
 import { ConsensusAlgorithmsDetails } from './technique-details/ConsensusAlgorithmsDetails';
 import { AgentCommunicationProtocolsDetails } from './technique-details/AgentCommunicationProtocolsDetails';
 import { ContinuousLearningDetails } from './technique-details/ContinuousLearningDetails';
@@ -233,8 +238,8 @@ interface TechniqueDetailsProps {
   selectedTechnique: any;
   categories: any[];
   useCases: any[];
-  detailsTab?: 'overview' | 'flow' | 'interactive' | 'code';
-  setDetailsTab?: (tab: 'overview' | 'flow' | 'interactive' | 'code') => void;
+  detailsTab?: 'overview' | 'flow' | 'interactive' | 'code' | 'deepdive';
+  setDetailsTab?: (tab: 'overview' | 'flow' | 'interactive' | 'code' | 'deepdive') => void;
   selectedLanguage?: LanguageType;
   setSelectedLanguage?: (lang: LanguageType) => void;
 }
@@ -248,7 +253,7 @@ export const TechniqueDetails = ({
   selectedLanguage: propSelectedLanguage,
   setSelectedLanguage: propSetSelectedLanguage,
 }: TechniqueDetailsProps) => {
-  const [localDetailsTab, setLocalDetailsTab] = useState<'overview' | 'flow' | 'interactive' | 'code'>('overview');
+  const [localDetailsTab, setLocalDetailsTab] = useState<'overview' | 'flow' | 'interactive' | 'code' | 'deepdive'>('overview');
   const [localSelectedLanguage, setLocalSelectedLanguage] = useState<LanguageType>('typescript');
   const { user, loading } = useAuth();
   const router = useRouter();
@@ -259,7 +264,7 @@ export const TechniqueDetails = ({
   const setSelectedLanguage = propSetSelectedLanguage || setLocalSelectedLanguage;
 
   // Handle tab switching with auth checks
-  const handleTabChange = (tab: 'overview' | 'flow' | 'interactive' | 'code') => {
+  const handleTabChange = (tab: 'overview' | 'flow' | 'interactive' | 'code' | 'deepdive') => {
     // Check if user is trying to access protected content
     if ((tab === 'interactive' || tab === 'code') && !user) {
       // Don't switch tab, let the content section handle showing auth prompt
@@ -320,6 +325,19 @@ export const TechniqueDetails = ({
         <div className="border-b border-gray-700/30">
           {/* Desktop tabs */}
           <div className="hidden md:flex gap-6 px-6">
+            {selectedTechnique.id === 'eu-ai-act-framework' && (
+              <button
+                onClick={() => handleTabChange('deepdive')}
+                className={`cursor-pointer py-4 px-3 font-medium transition-all border-b-2 ${
+                  detailsTab === 'deepdive'
+                    ? 'text-emerald-400 border-emerald-400'
+                    : 'text-gray-400 border-transparent hover:text-gray-200'
+                }`}
+              >
+                <Sparkles className="w-4 h-4 inline mr-2" />
+                Deep Dive
+              </button>
+            )}
             <button
               onClick={() => handleTabChange('overview')}
               className={`cursor-pointer py-4 px-3 font-medium transition-all border-b-2 ${
@@ -368,7 +386,20 @@ export const TechniqueDetails = ({
 
           {/* Mobile tabs */}
           <div className="md:hidden px-4 py-3">
-            <div className="grid grid-cols-2 gap-2">
+            <div className={`grid gap-2 ${selectedTechnique.id === 'eu-ai-act-framework' ? 'grid-cols-3' : 'grid-cols-2'}`}>
+              {selectedTechnique.id === 'eu-ai-act-framework' && (
+                <button
+                  onClick={() => handleTabChange('deepdive')}
+                  className={`py-4 px-3 rounded-lg font-medium transition-all text-sm min-h-[48px] ${
+                    detailsTab === 'deepdive'
+                      ? 'bg-emerald-600 text-white'
+                      : 'bg-gray-800/50 text-gray-400 hover:text-gray-200 hover:bg-gray-700/50'
+                  }`}
+                >
+                  <Sparkles className="w-4 h-4 inline mr-1" />
+                  Deep Dive
+                </button>
+              )}
               <button
                 onClick={() => handleTabChange('overview')}
                 className={`py-4 px-3 rounded-lg font-medium transition-all text-sm min-h-[48px] ${
@@ -1003,6 +1034,16 @@ export const TechniqueDetails = ({
                 <WebArenaSuiteDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'eu-ai-act-framework' ? (
                 <EuAiActFrameworkDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'aisi-evaluation-framework' ? (
+                <AISIEvaluationFrameworkDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'maps-benchmark' ? (
+                <MapsBenchmarkDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'constitutional-ai-evaluation' ? (
+                <ConstitutionalAiEvaluationDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'human-in-the-loop' ? (
+                <HumanInTheLoopDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'human-on-the-loop' ? (
+                <HumanOnTheLoopDetails selectedTechnique={selectedTechnique} />
               ) : (
                 <section>
                   <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">
@@ -1294,7 +1335,7 @@ export const TechniqueDetails = ({
               </div>
             </div>
             )
-          ) : (
+          ) : detailsTab === 'code' ? (
             !user ? (
               <div className="min-h-screen bg-gray-950 relative overflow-hidden">
                 {/* Background gradient effects */}
@@ -1390,7 +1431,234 @@ export const TechniqueDetails = ({
               )}
             </div>
             )
-          )}
+          ) : detailsTab === 'deepdive' && selectedTechnique.id === 'eu-ai-act-framework' ? (
+            <div className="space-y-8">
+              {/* Deep Dive Content for EU AI Act */}
+              {/* Risk Classification Deep Dive */}
+              <section>
+                <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+                  <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                  Risk-Based Classification System
+                </h3>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="bg-gray-800 rounded-lg p-6">
+                    <h4 className="text-lg font-medium text-red-400 mb-3">🚫 Prohibited (Unacceptable Risk)</h4>
+                    <ul className="space-y-2 text-gray-300">
+                      <li>• <strong>Social scoring systems</strong> by public authorities</li>
+                      <li>• <strong>Manipulative AI</strong> exploiting psychological vulnerabilities</li>
+                      <li>• <strong>Real-time biometric identification</strong> in public spaces (with exceptions)</li>
+                      <li>• <strong>Biometric categorization</strong> inferring sensitive attributes</li>
+                      <li>• <strong>Emotion recognition</strong> in workplaces and educational institutions</li>
+                    </ul>
+                  </div>
+                  
+                  <div className="bg-gray-800 rounded-lg p-6">
+                    <h4 className="text-lg font-medium text-orange-400 mb-3">⚠️ High-Risk AI Systems</h4>
+                    <ul className="space-y-2 text-gray-300">
+                      <li>• <strong>Biometric identification</strong> and categorization</li>
+                      <li>• <strong>Critical infrastructure</strong> management (transport, utilities)</li>
+                      <li>• <strong>Educational/vocational training</strong> assessment systems</li>
+                      <li>• <strong>Employment decisions</strong> (recruitment, promotion, termination)</li>
+                      <li>• <strong>Essential services</strong> (creditworthiness, insurance, healthcare)</li>
+                      <li>• <strong>Law enforcement</strong> (risk assessment, polygraph, crime analytics)</li>
+                      <li>• <strong>Migration/asylum</strong> management systems</li>
+                      <li>• <strong>Democratic processes</strong> (election management)</li>
+                    </ul>
+                  </div>
+                </div>
+              </section>
+
+              {/* GPAI Model Requirements Deep Dive */}
+              <section>
+                <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+                  <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                  GPAI Models: 10²⁵ FLOPs Threshold Requirements
+                </h3>
+                <div className="bg-gray-800 rounded-lg p-6">
+                  <div className="grid md:grid-cols-3 gap-6 mb-6">
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-blue-400">11</div>
+                      <div className="text-gray-400">Global providers exceed threshold</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-green-400">€10M+</div>
+                      <div className="text-gray-400">Estimated training cost</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-purple-400">2 weeks</div>
+                      <div className="text-gray-400">Notification deadline</div>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <h4 className="text-lg font-medium text-white">Mandatory Obligations for Systemic Risk Models:</h4>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                          <span className="text-gray-300">Model evaluation with standardized protocols</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                          <span className="text-gray-300">Adversarial testing and red teaming</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                          <span className="text-gray-300">Systematic risk assessment and mitigation</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                          <span className="text-gray-300">Serious incident tracking and reporting</span>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                          <span className="text-gray-300">Cybersecurity protection measures</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                          <span className="text-gray-300">Technical documentation maintenance</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                          <span className="text-gray-300">Copyright material disclosure</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                          <span className="text-gray-300">EU Commission notification</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              {/* Implementation Timeline Deep Dive */}
+              <section>
+                <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+                  <div className="w-1 h-6 bg-yellow-500 rounded-full"></div>
+                  Implementation Timeline & Enforcement
+                </h3>
+                <div className="space-y-4">
+                  <div className="grid gap-4">
+                    <div className="bg-gray-800 rounded-lg p-4 border-l-4 border-green-500">
+                      <div className="flex justify-between items-center mb-2">
+                        <h4 className="font-medium text-green-400">August 1, 2024 - Act in Force</h4>
+                        <span className="text-xs bg-green-500 text-white px-2 py-1 rounded">✓ ACTIVE</span>
+                      </div>
+                      <p className="text-gray-300 text-sm">EU AI Act officially entered into force</p>
+                    </div>
+                    
+                    <div className="bg-gray-800 rounded-lg p-4 border-l-4 border-green-500">
+                      <div className="flex justify-between items-center mb-2">
+                        <h4 className="font-medium text-green-400">February 2, 2025 - Prohibitions Active</h4>
+                        <span className="text-xs bg-green-500 text-white px-2 py-1 rounded">✓ ACTIVE</span>
+                      </div>
+                      <p className="text-gray-300 text-sm">Prohibitions and AI literacy obligations became enforceable</p>
+                    </div>
+                    
+                    <div className="bg-gray-800 rounded-lg p-4 border-l-4 border-blue-500">
+                      <div className="flex justify-between items-center mb-2">
+                        <h4 className="font-medium text-blue-400">August 2, 2025 - GPAI Rules</h4>
+                        <span className="text-xs bg-blue-500 text-white px-2 py-1 rounded">✓ CURRENT</span>
+                      </div>
+                      <p className="text-gray-300 text-sm">GPAI model obligations and governance rules became applicable</p>
+                    </div>
+                    
+                    <div className="bg-gray-800 rounded-lg p-4 border-l-4 border-orange-500">
+                      <div className="flex justify-between items-center mb-2">
+                        <h4 className="font-medium text-orange-400">August 2, 2026 - Full Enforcement</h4>
+                        <span className="text-xs bg-orange-500 text-white px-2 py-1 rounded">UPCOMING</span>
+                      </div>
+                      <p className="text-gray-300 text-sm">AI Office gains full enforcement powers and penalty authority</p>
+                    </div>
+                    
+                    <div className="bg-gray-800 rounded-lg p-4 border-l-4 border-purple-500">
+                      <div className="flex justify-between items-center mb-2">
+                        <h4 className="font-medium text-purple-400">August 2, 2027 - High-Risk Systems</h4>
+                        <span className="text-xs bg-purple-500 text-white px-2 py-1 rounded">FUTURE</span>
+                      </div>
+                      <p className="text-gray-300 text-sm">High-risk AI systems must comply (extended transition period)</p>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              {/* Enforcement & Penalties Deep Dive */}
+              <section>
+                <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+                  <div className="w-1 h-6 bg-red-500 rounded-full"></div>
+                  Enforcement & Financial Penalties
+                </h3>
+                <div className="bg-gray-800 rounded-lg p-6">
+                  <div className="grid md:grid-cols-3 gap-6 mb-6">
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-red-400">€35M</div>
+                      <div className="text-gray-400">Maximum fine amount</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-red-400">7%</div>
+                      <div className="text-gray-400">Global annual turnover</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-yellow-400">CE</div>
+                      <div className="text-gray-400">Marking required</div>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <h4 className="text-lg font-medium text-white">Penalty Structure:</h4>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center p-3 bg-gray-700 rounded">
+                        <span className="text-gray-300">Prohibited AI practices</span>
+                        <span className="text-red-400 font-medium">€35M or 7% turnover</span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-gray-700 rounded">
+                        <span className="text-gray-300">GPAI model non-compliance</span>
+                        <span className="text-orange-400 font-medium">€15M or 3% turnover</span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-gray-700 rounded">
+                        <span className="text-gray-300">Inaccurate/incomplete information</span>
+                        <span className="text-yellow-400 font-medium">€7.5M or 1.5% turnover</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              {/* Global Impact Deep Dive */}
+              <section>
+                <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+                  <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                  Global Impact & International Alignment
+                </h3>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="bg-gray-800 rounded-lg p-6">
+                    <h4 className="text-lg font-medium text-purple-400 mb-3">International Coordination</h4>
+                    <ul className="space-y-2 text-gray-300">
+                      <li>• <strong>US Executive Order</strong> alignment on dual-use foundation models</li>
+                      <li>• <strong>UK AI regulation</strong> framework influence</li>
+                      <li>• <strong>G7/G20 cooperation</strong> on AI governance</li>
+                      <li>• <strong>OECD AI Principles</strong> integration</li>
+                      <li>• <strong>ISO/IEC standards</strong> harmonization</li>
+                    </ul>
+                  </div>
+                  
+                  <div className="bg-gray-800 rounded-lg p-6">
+                    <h4 className="text-lg font-medium text-blue-400 mb-3">Brussels Effect</h4>
+                    <ul className="space-y-2 text-gray-300">
+                      <li>• <strong>Global compliance</strong> for EU market access</li>
+                      <li>• <strong>De facto standard</strong> for AI regulation worldwide</li>
+                      <li>• <strong>Supply chain impact</strong> on international AI providers</li>
+                      <li>• <strong>Investment influence</strong> in AI development priorities</li>
+                      <li>• <strong>Risk assessment</strong> becoming global best practice</li>
+                    </ul>
+                  </div>
+                </div>
+              </section>
+            </div>
+          ) : null}
         </div>
       </div>
     </div>
