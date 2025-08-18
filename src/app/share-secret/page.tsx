@@ -1,13 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import { motion } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 import { Link, Shield, Clock, Eye, Copy, Check, AlertTriangle, Key, Send, Download, Unlock, Trash2 } from "lucide-react";
 
 type HoddorModule = typeof import("@gatewatcher/hoddor");
 
-export default function ShareSecretPage() {
+function ShareSecretContent() {
 	const [isReady, setIsReady] = React.useState(false);
 	const [initError, setInitError] = React.useState<string | null>(null);
 	const [secretText, setSecretText] = React.useState("");
@@ -760,5 +760,20 @@ export default function ShareSecretPage() {
 				</motion.div>
 			</div>
 		</div>
+	);
+}
+
+export default function ShareSecretPage() {
+	return (
+		<Suspense fallback={
+			<div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-900 to-gray-800 flex items-center justify-center">
+				<div className="text-center">
+					<div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4" />
+					<p className="text-gray-400">Loading...</p>
+				</div>
+			</div>
+		}>
+			<ShareSecretContent />
+		</Suspense>
 	);
 }

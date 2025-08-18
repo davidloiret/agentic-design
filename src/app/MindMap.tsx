@@ -485,7 +485,6 @@ export const MindMap = ({
     // Disable relationship connections to keep clean XMind appearance
     // (Can be re-enabled by setting showRelationships, but disabled by default for cleaner layout)
 
-    console.log('Mind Map Data:', { nodeCount: nodeList.length, edgeCount: edgeList.length, edges: edgeList });
     return { nodes: nodeList, edges: edgeList };
   }, [categories, techniques, useCases, expandedCategories, showRelationships, onTechniqueSelect, toggleCategoryExpansion]);
 
