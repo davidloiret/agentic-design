@@ -58,6 +58,11 @@ import { ThreatDetectionResponseDetails } from './technique-details/ThreatDetect
 import { ComplianceAutomationPatternsDetails } from './technique-details/ComplianceAutomationPatternsDetails';
 import { SecureMultiPartyComputationDetails } from './technique-details/SecureMultiPartyComputationDetails';
 import { ZeroTrustAgentArchitectureDetails } from './technique-details/ZeroTrustAgentArchitectureDetails';
+import { DifferentialPrivacyPatternsDetails } from './technique-details/DifferentialPrivacyPatternsDetails';
+import { DataAnonymizationPatternsDetails } from './technique-details/DataAnonymizationPatternsDetails';
+import { ConfidentialComputingPatternsDetails } from './technique-details/ConfidentialComputingPatternsDetails';
+import HybridSecretCacheManagementDetails from './technique-details/HybridSecretCacheManagementDetails';
+import LocalDistantAgentDataProtectionDetails from './technique-details/LocalDistantAgentDataProtectionDetails';
 import { AgentCommunicationProtocolsDetails } from './technique-details/AgentCommunicationProtocolsDetails';
 import { ContinuousLearningDetails } from './technique-details/ContinuousLearningDetails';
 import { ReinforcementLearningAdaptationDetails } from './technique-details/ReinforcementLearningAdaptationDetails';
@@ -1004,6 +1009,16 @@ export const TechniqueDetails = ({
                 <SecureMultiPartyComputationDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'zero-trust-agent-architecture' ? (
                 <ZeroTrustAgentArchitectureDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'differential-privacy-patterns' ? (
+                <DifferentialPrivacyPatternsDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'data-anonymization-patterns' ? (
+                <DataAnonymizationPatternsDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'confidential-computing-patterns' ? (
+                <ConfidentialComputingPatternsDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'hybrid-secret-cache-management' ? (
+                <HybridSecretCacheManagementDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'local-distant-agent-data-protection' ? (
+                <LocalDistantAgentDataProtectionDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'agent-communication-protocols' ? (
                 <AgentCommunicationProtocolsDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'reinforcement-learning-adaptation' ? (
@@ -1078,9 +1093,9 @@ export const TechniqueDetails = ({
                 <HandoffOrchestrationDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'layered-defense-pattern' ? (
                 <LayeredDefensePatternDetails selectedTechnique={selectedTechnique} />
-              ) : selectedTechnique.id === 'contextual-guardrailing' ? (
+              ) : selectedTechnique.id === 'contextual-guardrailing-pattern' ? (
                 <ContextualGuardrailingDetails selectedTechnique={selectedTechnique} />
-              ) : selectedTechnique.id === 'guardagent-pattern' ? (
+              ) : selectedTechnique.id === 'guard-agent-pattern' ? (
                 <GuardAgentPatternDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'intrinsic-alignment-pattern' ? (
                 <IntrinsicAlignmentPatternDetails selectedTechnique={selectedTechnique} />

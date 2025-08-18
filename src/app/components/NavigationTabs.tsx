@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { BookOpen, Lightbulb, Share2, FlaskConical, Brain, Boxes, Newspaper, FolderOpen, Cpu, Settings, ChevronDown, Menu, X, GraduationCap, Shield, FileText, FlaskRound } from 'lucide-react';
+import { BookOpen, Lightbulb, Share2, FlaskConical, Brain, Boxes, Newspaper, FolderOpen, Cpu, Settings, ChevronDown, Menu, X, GraduationCap, Shield, FileText, FlaskRound, Target } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -97,6 +97,7 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
 
     const colorMap = {
       'patterns': 'text-blue-400',
+      'recommendations': 'text-cyan-400',
       'learning-hub': 'text-rose-400',
       'fine-tuning': 'text-violet-400',
       'ai-inference': 'text-indigo-400',
@@ -113,6 +114,7 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
   const getActiveIndicatorColor = (tabId: string) => {
     const colorMap = {
       'patterns': 'bg-blue-400',
+      'recommendations': 'bg-cyan-400',
       'learning-hub': 'bg-rose-400',
       'fine-tuning': 'bg-violet-400',
       'ai-inference': 'bg-indigo-400',
@@ -131,6 +133,7 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
       name: 'Learn',
       tabs: [
         { id: 'patterns', label: 'Patterns', icon: BookOpen, description: 'Browse AI design patterns', route: '/patterns' },
+        { id: 'recommendations', label: 'Recommendations', icon: Target, description: 'Get pattern suggestions for your use case', route: '/recommendations' },
         { id: 'fine-tuning', label: 'Fine Tuning', icon: Settings, description: 'Model optimization', route: '/fine-tuning' },
         { id: 'ai-inference', label: 'AI Inference', icon: Cpu, description: 'Inference strategies', route: '/ai-inference' },
       ]

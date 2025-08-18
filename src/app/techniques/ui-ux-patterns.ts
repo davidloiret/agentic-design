@@ -178,7 +178,7 @@ export const uiUxPatterns: Technique[] = [
     icon: '🎯',
     color: 'from-pink-500 to-red-600',
     category: 'ui-ux-patterns',
-    description: 'Dynamic UI/UX adaptation patterns that personalize agent interfaces based on user context, behavior, and preferences',
+    description: 'Dynamic UI/UX adaptation and creation patterns that personalize agent interfaces based on user context, behavior, and preferences',
     features: [
       'Real-time interface adaptation based on user context',
       'Personalization engines with behavioral learning',

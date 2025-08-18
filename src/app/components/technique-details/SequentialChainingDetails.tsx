@@ -2,6 +2,7 @@
 
 import React from 'react';
 import ReferencesSection from './shared/ReferencesSection';
+import { PatternRelationships, RelationshipData } from '../shared/PatternRelationships';
 import {
   QuickOverviewSection,
   QuickImplementationSection,
@@ -77,6 +78,286 @@ export const SequentialChainingDetails: React.FC<SequentialChainingDetailsProps>
     'Report Generation: fetch → process → format → deliver (cache all but delivery)'
   ];
 
+  // Comprehensive Relationship Data
+  const relationshipData: RelationshipData = {
+    // Learning & Progression
+    prerequisites: [],
+    nextSteps: [
+      {
+        id: 'parallel-chaining',
+        name: 'Parallel Chaining',
+        category: 'prompt-chaining',
+        description: 'Execute multiple chains concurrently for speed and multi-perspective analysis',
+        icon: '⚡',
+        complexity: 'medium',
+        reason: 'Natural next step to add concurrency to your linear chains'
+      },
+      {
+        id: 'map-reduce',
+        name: 'Map-Reduce',
+        category: 'parallelization',
+        description: 'Parallel processing followed by aggregation - perfect evolution of sequential chains',
+        icon: '🗺️',
+        complexity: 'medium',
+        reason: 'Scale your sequential logic to handle parallel data streams'
+      },
+      {
+        id: 'scatter-gather',
+        name: 'Scatter-Gather',
+        category: 'parallelization',
+        description: 'Distribute sequential steps across multiple agents and gather results',
+        icon: '📡',
+        complexity: 'medium',
+        reason: 'Transform linear chains into parallel distribution patterns'
+      },
+      {
+        id: 'fork-join',
+        name: 'Fork-Join',
+        category: 'parallelization',
+        description: 'Fork sequential tasks into parallel subtasks and join when complete',
+        icon: '🍴',
+        complexity: 'medium',
+        reason: 'Add sophisticated parallel execution with synchronization points'
+      },
+      {
+        id: 'stateful-graph-workflows',
+        name: 'Stateful Graph Workflows',
+        category: 'workflow-orchestration',
+        description: 'DAG-based workflows with complex branching logic',
+        icon: '🕸️',
+        complexity: 'very-high',
+        reason: 'Advanced evolution for complex non-linear workflows'
+      }
+    ],
+    alternatives: [
+      {
+        id: 'cot',
+        name: 'Chain-of-Thought',
+        category: 'reasoning-techniques',
+        description: 'Single-prompt step-by-step reasoning without explicit chaining',
+        icon: '🔗',
+        complexity: 'low',
+        reason: 'Simpler approach when you don\'t need separate API calls for each step'
+      },
+      {
+        id: 'react',
+        name: 'ReAct (Reasoning + Acting)',
+        category: 'tool-use',
+        description: 'Interleaves reasoning and action steps with tool use',
+        icon: '🎭',
+        complexity: 'medium',
+        reason: 'Better when you need dynamic tool usage throughout the workflow'
+      }
+    ],
+
+    // Combination & Synergy
+    combinesWith: [
+      {
+        id: 'self-critique',
+        name: 'Self-Critique',
+        category: 'reflection-techniques',
+        description: 'Add validation and error correction to each chain step',
+        icon: '🔄',
+        complexity: 'medium',
+        reason: 'Perfect combination - validate and fix outputs at each stage'
+      },
+      {
+        id: 'advanced-rag',
+        name: 'Advanced RAG',
+        category: 'knowledge-retrieval',
+        description: 'Dynamically retrieve relevant information for each step',
+        icon: '📚',
+        complexity: 'high',
+        reason: 'Each chain step can retrieve different types of information as needed'
+      },
+      {
+        id: 'function-calling',
+        name: 'Function Calling',
+        category: 'tool-use',
+        description: 'Integrate structured tool calls within chain steps',
+        icon: '🔧',
+        complexity: 'medium',
+        reason: 'Each step can call specialized tools and APIs for data processing'
+      }
+    ],
+    enhancedBy: [
+      {
+        id: 'semantic-validation',
+        name: 'Semantic Validation',
+        category: 'evaluation-monitoring',
+        description: 'Enforce structured outputs between chain steps',
+        icon: '📋',
+        complexity: 'low',
+        reason: 'Critical for reliable data flow between steps'
+      },
+      {
+        id: 'error-recovery-patterns',
+        name: 'Error Recovery Patterns',
+        category: 'fault-tolerance-infrastructure',
+        description: 'Handle failures gracefully in chain execution',
+        icon: '🔁',
+        complexity: 'low',
+        reason: 'Essential for production chain reliability'
+      },
+      {
+        id: 'predictive-agent-fault-tolerance',
+        name: 'Predictive Agent Fault Tolerance',
+        category: 'fault-tolerance-infrastructure',
+        description: 'Prevent cascade failures in chain execution',
+        icon: '⚡',
+        complexity: 'medium',
+        reason: 'Protects downstream steps when upstream steps consistently fail'
+      }
+    ],
+    enhances: [
+      {
+        id: 'cot',
+        name: 'Chain-of-Thought',
+        category: 'reasoning-techniques',
+        description: 'Turn single-prompt CoT into multi-step executable workflow',
+        icon: '🔗',
+        complexity: 'low',
+        reason: 'Makes CoT reasoning actionable with real intermediate outputs'
+      },
+      {
+        id: 'function-calling',
+        name: 'Function Calling',
+        category: 'tool-use',
+        description: 'Organize tool usage into structured workflows',
+        icon: '🛠️',
+        complexity: 'medium',
+        reason: 'Transforms ad-hoc tool usage into systematic workflows'
+      }
+    ],
+
+    // Evolution & Variants
+    evolvesTo: [
+      {
+        id: 'conversational-orchestration',
+        name: 'Conversational Orchestration',
+        category: 'workflow-orchestration',
+        description: 'Full-featured workflow engine with state management',
+        icon: '🎼',
+        complexity: 'high',
+        reason: 'Natural evolution when you need complex state management and routing'
+      },
+      {
+        id: 'stateful-graph-workflows',
+        name: 'Stateful Graph Workflows',
+        category: 'workflow-orchestration',
+        description: 'DAG-based workflows with complex branching logic',
+        icon: '🕸️',
+        complexity: 'very-high',
+        reason: 'Advanced evolution for complex non-linear workflows'
+      }
+    ],
+    variants: [
+      {
+        id: 'parallel-chaining',
+        name: 'Parallel Chaining',
+        category: 'prompt-chaining',
+        description: 'Chains with concurrent execution and aggregation',
+        icon: '⚡',
+        complexity: 'medium',
+        reason: 'Parallel variant for speed and multi-perspective analysis'
+      },
+      {
+        id: 'map-reduce',
+        name: 'Map-Reduce Pattern',
+        category: 'parallelization',
+        description: 'Parallel processing followed by aggregation step',
+        icon: '🗺️',
+        complexity: 'medium',
+        reason: 'Parallel variant for processing large datasets'
+      },
+      {
+        id: 'scatter-gather',
+        name: 'Scatter-Gather',
+        category: 'parallelization',
+        description: 'Distribute requests and collect responses in parallel',
+        icon: '📡',
+        complexity: 'medium',
+        reason: 'Parallel variant that distributes chain steps across multiple services'
+      },
+      {
+        id: 'async-await',
+        name: 'Async-Await',
+        category: 'parallelization',
+        description: 'Non-blocking asynchronous execution with promise coordination',
+        icon: '⏳',
+        complexity: 'low',
+        reason: 'Asynchronous variant for non-blocking sequential operations'
+      }
+    ],
+
+    // Conflicts & Considerations
+    conflictsWith: [],
+
+    // Industry Applications - Real world use cases without fake pattern IDs
+    industryApplications: [
+      {
+        domain: 'Financial Services',
+        description: 'Multi-stage analysis and decision-making workflows using sequential chains',
+        patterns: [
+          {
+            id: 'multi-criteria-decision',
+            name: 'Multi-Criteria Decision Making',
+            category: 'planning-execution',
+            description: 'Data gathering → Analysis → Scoring → Recommendation workflow',
+            icon: '📊'
+          },
+          {
+            id: 'llm-as-judge',
+            name: 'LLM-as-Judge',
+            category: 'evaluation-monitoring',
+            description: 'Sequential evaluation and scoring in risk assessment pipelines',
+            icon: '⚖️'
+          }
+        ]
+      },
+      {
+        domain: 'Content & Knowledge',
+        description: 'Sequential processing for document analysis and knowledge extraction',
+        patterns: [
+          {
+            id: 'advanced-rag',
+            name: 'Advanced RAG',
+            category: 'knowledge-retrieval',
+            description: 'Multi-step retrieval and generation in document processing chains',
+            icon: '📚'
+          },
+          {
+            id: 'hierarchical-planning',
+            name: 'Hierarchical Planning',
+            category: 'planning-execution',
+            description: 'Break down complex content tasks into sequential sub-goals',
+            icon: '🗂️'
+          }
+        ]
+      },
+      {
+        domain: 'Software Development',
+        description: 'Code analysis and generation workflows',
+        patterns: [
+          {
+            id: 'code-execution',
+            name: 'Code Execution',
+            category: 'tool-use',
+            description: 'Sequential code generation, testing, and refinement workflows',
+            icon: '💻'
+          },
+          {
+            id: 'swe-bench-suite',
+            name: 'SWE-Bench Suite',
+            category: 'evaluation-monitoring',
+            description: 'Sequential evaluation patterns for software engineering tasks',
+            icon: '🔧'
+          }
+        ]
+      }
+    ]
+  };
+
   const references = [
     {
       title: 'Academic Papers',
@@ -139,6 +420,13 @@ export const SequentialChainingDetails: React.FC<SequentialChainingDetailsProps>
       <KeyMetricsSection metrics={keyMetrics} />
 
       <TopUseCasesSection useCases={topUseCases} />
+
+      <PatternRelationships
+        currentPatternId="sequential-chaining"
+        currentPatternName="Sequential Chaining"
+        relationships={relationshipData}
+        className="mt-8"
+      />
 
       <ReferencesSection categories={references} />
     </>

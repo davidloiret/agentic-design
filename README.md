@@ -2036,3 +2036,72 @@ RAG par exemple n'est pas dupliqué pck il a sa propre technique
   Demo to production
 
   replace supaabse bykeycloak and postgresql
+
+=================
+
+
+Should we move EU AI Act Compliance Framework to Security & Privacy Patterns, or is it good in evaluation & monitoring ?
+
+
+================
+In AI inference
+Distributed Inference
+================
+
+  The EU AI Act Framework is more about governance, assessment, and compliance processes rather than technical security 
+  implementation patterns. It fits naturally with other evaluation frameworks like NIST ARIA, AISI Evaluation, and
+  Constitutional AI Evaluation.
+
+
+  ==========
+
+  Add back system builder => Visual Flow Builder: Drag-and-drop interface to design multi-agent workflows
+  Add Pattern Recommender: AI-powered suggestions based on use case (chat)
+  Roadmap to skill => skill referencement => learning hub
+
+
+  =============
+
+    - Industry Examples: How Netflix/Uber/Google implement these patterns
+
+
+
+    In system builder, auto suggest patterns based on construction
+
+    for learner and practicioner
+
+
+    ==========
+
+    something very usefull for learner and agentic AI systems builder
+
+    We need to make a indicator about Token Cost / Ressource usage in the header of each technique
+
+    mindmap
+
+
+  ==============
+  System study from provider like linkedin, netflix or google based on public information, AI systems etc.
+  Make it templates but how we make explanation ?
+
+
+  Try complete systems
+  BAML => only test one prompt
+  Here I want to test the pipeline
+
+
+  We need to see data flow and transformation
+  We need vizual to create design system like architecture do
+
+
+    Decision: No need to add workflow-orchestration category - there's clear, logical overlap with existing categories that better
+   organize these techniques according to their core purpose (agent coordination vs. workflow planning).
+
+   swarm ?
+   model visual
+
+
+   http://agentic-design.ai/brain-mascot-demo
+   https://agentic-design.ai/pattern-card-game
+   https://agentic-design.ai/pattern-cards
+   https://agentic-design.ai/workshops

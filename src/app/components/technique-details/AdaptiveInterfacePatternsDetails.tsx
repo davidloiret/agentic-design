@@ -114,7 +114,7 @@ export const AdaptiveInterfacePatternsDetails: React.FC<AdaptiveInterfacePattern
   return (
     <>
       <QuickOverviewSection
-        pattern="Dynamic UI/UX adaptation based on user context, behavior, and real-time needs"
+        pattern="Dynamic UI/UX adaptation and creation based on user context, behavior, and real-time needs"
         why="One-size-fits-all interfaces fail to serve diverse users with varying contexts and abilities"
         keyInsight="Combine multiple signals (intent, environment, accessibility needs) for intelligent interface personalization"
       />

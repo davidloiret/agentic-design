@@ -14,6 +14,9 @@ import ReactFlow, {
   NodeTypes,
   Handle,
   Position,
+  getBezierPath,
+  EdgeProps,
+  BaseEdge,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { Code, Database, Server, Globe, User, Cpu, Layers, FileText, Zap, Shield, Archive, Edit3, X, Save, Terminal, Maximize2 } from 'lucide-react';
@@ -564,7 +567,88 @@ const NodeDetailModal = ({ node, isOpen, onClose, onSave, onOpenCodeEditor }: {
   );
 };
 
-// Custom node components
+// Zone/Group Node for visual boundaries
+const ZoneNode = ({ data }: {data: any}) => {
+  const getZoneStyle = () => {
+    switch (data.zone) {
+      case 'internet':
+        return {
+          bg: 'bg-blue-900/10',
+          border: 'border-blue-500/30',
+          text: 'text-blue-400',
+          label: '🌐 Internet Zone'
+        };
+      case 'dmz':
+        return {
+          bg: 'bg-red-900/10',
+          border: 'border-red-500/30',
+          text: 'text-red-400',
+          label: '🛡️ DMZ (Demilitarized Zone)'
+        };
+      case 'application':
+        return {
+          bg: 'bg-purple-900/10',
+          border: 'border-purple-500/30',
+          text: 'text-purple-400',
+          label: '⚙️ Application Layer'
+        };
+      case 'data':
+        return {
+          bg: 'bg-green-900/10',
+          border: 'border-green-500/30',
+          text: 'text-green-400',
+          label: '💾 Data Layer'
+        };
+      case 'infrastructure':
+        return {
+          bg: 'bg-gray-900/10',
+          border: 'border-gray-500/30',
+          text: 'text-gray-400',
+          label: '🏗️ Infrastructure'
+        };
+      case 'external':
+        return {
+          bg: 'bg-cyan-900/10',
+          border: 'border-cyan-500/30',
+          text: 'text-cyan-400',
+          label: '☁️ External Services'
+        };
+      case 'monitoring':
+        return {
+          bg: 'bg-yellow-900/10',
+          border: 'border-yellow-500/30',
+          text: 'text-yellow-400',
+          label: '📊 Monitoring & Observability'
+        };
+      default:
+        return {
+          bg: 'bg-gray-900/10',
+          border: 'border-gray-500/30',
+          text: 'text-gray-400',
+          label: data.label
+        };
+    }
+  };
+
+  const style = getZoneStyle();
+
+  return (
+    <div 
+      className={`${style.bg} ${style.border} border-2 border-dashed rounded-xl`}
+      style={{
+        width: data.width || 400,
+        height: data.height || 300,
+        pointerEvents: 'none'
+      }}
+    >
+      <div className={`${style.text} text-sm font-semibold px-3 py-1`}>
+        {style.label}
+      </div>
+    </div>
+  );
+};
+
+// Custom node components with enhanced visual hierarchy
 const PatternNode = ({ data, selected }: {data: any; selected: boolean}) => {
   const getComplexityColor = (complexity: string) => {
     switch (complexity?.toLowerCase()) {
@@ -629,27 +713,87 @@ const DataNode = ({ data, selected }: {data: any; selected: boolean}) => {
 };
 
 const DatabaseNode = ({ data, selected }: {data: any; selected: boolean}) => {
+  const getDbColors = () => {
+    const dbType = data.dbType?.toLowerCase() || '';
+    const label = data.label?.toLowerCase() || '';
+    
+    // Vector databases - Teal
+    if (dbType.includes('vector') || dbType.includes('pinecone') || dbType.includes('weaviate')) {
+      return {
+        border: selected ? 'border-teal-400' : 'border-teal-600',
+        bg: selected ? 'bg-teal-900/70' : 'bg-teal-800/50',
+        icon: 'text-teal-300',
+        glow: 'shadow-teal-500/30'
+      };
+    }
+    
+    // Graph databases - Emerald
+    if (dbType.includes('graph') || dbType.includes('neo4j')) {
+      return {
+        border: selected ? 'border-emerald-400' : 'border-emerald-600',
+        bg: selected ? 'bg-emerald-900/70' : 'bg-emerald-800/50',
+        icon: 'text-emerald-300',
+        glow: 'shadow-emerald-500/30'
+      };
+    }
+    
+    // Memory stores - Sky
+    if (label.includes('memory') || dbType.includes('redis')) {
+      return {
+        border: selected ? 'border-sky-400' : 'border-sky-600',
+        bg: selected ? 'bg-sky-900/70' : 'bg-sky-800/50',
+        icon: 'text-sky-300',
+        glow: 'shadow-sky-500/30'
+      };
+    }
+    
+    // Time series - Violet
+    if (dbType.includes('influx') || label.includes('episodic')) {
+      return {
+        border: selected ? 'border-violet-400' : 'border-violet-600',
+        bg: selected ? 'bg-violet-900/70' : 'bg-violet-800/50',
+        icon: 'text-violet-300',
+        glow: 'shadow-violet-500/30'
+      };
+    }
+    
+    // Default SQL - Blue
+    return {
+      border: selected ? 'border-blue-400' : 'border-blue-600',
+      bg: selected ? 'bg-blue-900/70' : 'bg-blue-800/50',
+      icon: 'text-blue-300',
+      glow: 'shadow-blue-500/30'
+    };
+  };
+
+  const colors = getDbColors();
+
   return (
-    <div className={`px-3 py-2 shadow-lg rounded border-2 min-w-[140px] ${
-      selected 
-        ? 'border-emerald-400 bg-emerald-900/50' 
-        : 'border-gray-600 bg-gray-700'
-    }`}>
-      <Handle type="target" position={Position.Top} className="w-3 h-3" />
+    <div className={`px-4 py-3 shadow-xl rounded-lg border-2 min-w-[160px] ${colors.border} ${colors.bg} ${colors.glow} hover:shadow-2xl transition-all duration-200`}>
+      <Handle 
+        type="target" 
+        position={Position.Top} 
+        className={`w-3 h-3 ${colors.border.replace('border-', 'bg-')}`}
+      />
       <div className="text-center">
-        <Database className="w-4 h-4 mx-auto mb-1 text-emerald-400" />
-        <div className="font-medium text-white text-sm">{data.label}</div>
-        <div className="text-xs text-gray-400">{data.dbType || 'Database'}</div>
+        <Database className={`w-5 h-5 mx-auto mb-1 ${colors.icon}`} />
+        <div className="font-semibold text-white text-sm">{data.label}</div>
+        <div className="text-xs text-gray-300 opacity-80">{data.dbType || 'Database'}</div>
         {data.tables && (
-          <div className="text-xs text-gray-500 mt-1 border-t border-gray-600 pt-1">
+          <div className="text-xs text-gray-400 mt-2 pt-2 border-t border-gray-600/50">
+            <div className="font-semibold mb-1">Tables:</div>
             {data.tables.slice(0, 2).map((table: string, i: number) => (
-              <div key={i}>📄 {table}</div>
+              <div key={i}>• {table}</div>
             ))}
-            {data.tables.length > 2 && <div>+{data.tables.length - 2} more</div>}
+            {data.tables.length > 2 && <div className="italic">+{data.tables.length - 2} more</div>}
           </div>
         )}
       </div>
-      <Handle type="source" position={Position.Bottom} className="w-3 h-3" />
+      <Handle 
+        type="source" 
+        position={Position.Bottom} 
+        className={`w-3 h-3 ${colors.border.replace('border-', 'bg-')}`}
+      />
     </div>
   );
 };
@@ -664,71 +808,199 @@ const ServiceNode = ({ data, selected }: {data: any; selected: boolean}) => {
     }
   };
 
+  // Enhanced color scheme based on service layer
+  const getServiceColors = () => {
+    const label = data.label?.toLowerCase() || '';
+    const serviceType = data.serviceType?.toLowerCase() || '';
+    
+    // Layer 1: Entry points & Gateway - Blue theme
+    if (label.includes('gateway') || label.includes('balancer')) {
+      return {
+        border: selected ? 'border-blue-400' : 'border-blue-600',
+        bg: selected ? 'bg-blue-900/70' : 'bg-blue-800/50',
+        icon: 'text-blue-300',
+        glow: 'shadow-blue-500/30'
+      };
+    }
+    
+    // Layer 2: Security - Red theme
+    if (label.includes('validator') || label.includes('guard') || label.includes('filter') || label.includes('audit')) {
+      return {
+        border: selected ? 'border-red-400' : 'border-red-600',
+        bg: selected ? 'bg-red-900/70' : 'bg-red-800/50',
+        icon: 'text-red-300',
+        glow: 'shadow-red-500/30'
+      };
+    }
+    
+    // Layer 3: Core Orchestration - Purple theme
+    if (label.includes('orchestrator') || label.includes('dispatcher') || label.includes('registry') || label.includes('queue') || label.includes('config')) {
+      return {
+        border: selected ? 'border-purple-400' : 'border-purple-600',
+        bg: selected ? 'bg-purple-900/70' : 'bg-purple-800/50',
+        icon: 'text-purple-300',
+        glow: 'shadow-purple-500/30'
+      };
+    }
+    
+    // Layer 4: AI Agents - Green theme
+    if (label.includes('agent') && serviceType.includes('llm')) {
+      return {
+        border: selected ? 'border-green-400' : 'border-green-600',
+        bg: selected ? 'bg-green-900/70' : 'bg-green-800/50',
+        icon: 'text-green-300',
+        glow: 'shadow-green-500/30'
+      };
+    }
+    
+    // Layer 5: Tool Services - Orange theme
+    if (label.includes('tool') || label.includes('executor') || label.includes('scraper')) {
+      return {
+        border: selected ? 'border-orange-400' : 'border-orange-600',
+        bg: selected ? 'bg-orange-900/70' : 'bg-orange-800/50',
+        icon: 'text-orange-300',
+        glow: 'shadow-orange-500/30'
+      };
+    }
+    
+    // Layer 6: Learning Systems - Pink theme
+    if (label.includes('feedback') || label.includes('learner') || label.includes('trainer')) {
+      return {
+        border: selected ? 'border-pink-400' : 'border-pink-600',
+        bg: selected ? 'bg-pink-900/70' : 'bg-pink-800/50',
+        icon: 'text-pink-300',
+        glow: 'shadow-pink-500/30'
+      };
+    }
+    
+    // External Services - Cyan theme
+    if (label.includes('llm provider') || label.includes('external')) {
+      return {
+        border: selected ? 'border-cyan-400' : 'border-cyan-600',
+        bg: selected ? 'bg-cyan-900/70' : 'bg-cyan-800/50',
+        icon: 'text-cyan-300',
+        glow: 'shadow-cyan-500/30'
+      };
+    }
+    
+    // Monitoring - Yellow theme
+    if (label.includes('logger') || serviceType.includes('telemetry')) {
+      return {
+        border: selected ? 'border-yellow-400' : 'border-yellow-600',
+        bg: selected ? 'bg-yellow-900/70' : 'bg-yellow-800/50',
+        icon: 'text-yellow-300',
+        glow: 'shadow-yellow-500/30'
+      };
+    }
+    
+    // Default
+    return {
+      border: selected ? 'border-gray-400' : 'border-gray-600',
+      bg: selected ? 'bg-gray-800' : 'bg-gray-700',
+      icon: 'text-gray-400',
+      glow: 'shadow-gray-500/20'
+    };
+  };
+
+  const colors = getServiceColors();
+  const isOrchestrator = data.label?.includes('Master Orchestrator');
+  const size = isOrchestrator ? 'min-w-[180px] min-h-[80px]' : 'min-w-[160px]';
+
   return (
-    <div className={`px-3 py-2 shadow-lg rounded border-2 min-w-[140px] ${
-      selected 
-        ? 'border-purple-400 bg-purple-900/50' 
-        : 'border-gray-600 bg-gray-700'
+    <div className={`px-4 py-3 shadow-xl rounded-lg border-2 ${size} ${colors.border} ${colors.bg} ${colors.glow} hover:shadow-2xl transition-all duration-200 ${
+      isOrchestrator ? 'ring-2 ring-purple-500/30' : ''
     }`}>
-      <Handle type="target" position={Position.Top} className="w-3 h-3" />
+      <Handle 
+        type="target" 
+        position={Position.Top} 
+        className={`w-3 h-3 ${colors.border.replace('border-', 'bg-')}`}
+      />
       <div className="text-center">
         <div className="flex items-center justify-center gap-1 mb-1">
-          <Server className="w-4 h-4 text-purple-400" />
+          <Server className={`w-5 h-5 ${colors.icon}`} />
           {data.cost && <span className="text-xs">{getCostIndicator(data.cost)}</span>}
         </div>
-        <div className="font-medium text-white text-sm">{data.label}</div>
-        <div className="text-xs text-gray-400">{data.serviceType || 'Service'}</div>
+        <div className={`font-semibold text-white ${isOrchestrator ? 'text-base' : 'text-sm'}`}>
+          {data.label}
+        </div>
+        <div className="text-xs text-gray-300 opacity-80">{data.serviceType || 'Service'}</div>
         {data.reliability && (
-          <div className="text-xs text-blue-400 mt-1">
+          <div className="text-xs text-blue-300 mt-1 opacity-90">
             {data.reliability} reliability
           </div>
         )}
-        {data.endpoints && (
-          <div className="text-xs text-gray-500 mt-1 border-t border-gray-600 pt-1">
+        {data.endpoints && data.endpoints.length > 0 && (
+          <div className="text-xs text-gray-400 mt-2 pt-2 border-t border-gray-600/50">
+            <div className="font-semibold mb-1">Endpoints:</div>
             {data.endpoints.slice(0, 2).map((endpoint: string, i: number) => (
-              <div key={i}>🔗 {endpoint}</div>
+              <div key={i} className="truncate">• {endpoint}</div>
             ))}
-            {data.endpoints.length > 2 && <div>+{data.endpoints.length - 2} more</div>}
+            {data.endpoints.length > 2 && <div className="italic">+{data.endpoints.length - 2} more</div>}
           </div>
         )}
       </div>
-      <Handle type="source" position={Position.Bottom} className="w-3 h-3" />
+      <Handle 
+        type="source" 
+        position={Position.Bottom} 
+        className={`w-3 h-3 ${colors.border.replace('border-', 'bg-')}`}
+      />
     </div>
   );
 };
 
 const InterfaceNode = ({ data, selected }: {data: any; selected: boolean}) => {
   return (
-    <div className={`px-3 py-2 shadow-lg rounded border-2 min-w-[140px] ${
+    <div className={`px-4 py-3 shadow-xl rounded-lg border-2 min-w-[160px] ${
       selected 
-        ? 'border-cyan-400 bg-cyan-900/50' 
-        : 'border-gray-600 bg-gray-700'
-    }`}>
-      <Handle type="target" position={Position.Top} className="w-3 h-3" />
+        ? 'border-indigo-400 bg-indigo-900/70 shadow-indigo-500/40' 
+        : 'border-indigo-600 bg-indigo-800/50 shadow-indigo-500/20'
+    } hover:shadow-2xl transition-all duration-200`}>
+      <Handle 
+        type="target" 
+        position={Position.Top} 
+        className="w-3 h-3 bg-indigo-500"
+      />
       <div className="text-center">
-        <Globe className="w-4 h-4 mx-auto mb-1 text-cyan-400" />
-        <div className="font-medium text-white text-sm">{data.label}</div>
-        <div className="text-xs text-gray-400">{data.interfaceType || 'Interface'}</div>
+        <Globe className="w-5 h-5 mx-auto mb-1 text-indigo-300" />
+        <div className="font-semibold text-white text-sm">{data.label}</div>
+        <div className="text-xs text-indigo-200 opacity-80">{data.interfaceType || 'Interface'}</div>
+        {data.framework && (
+          <div className="text-xs text-indigo-300 mt-1">
+            {data.framework}
+          </div>
+        )}
       </div>
-      <Handle type="source" position={Position.Bottom} className="w-3 h-3" />
+      <Handle 
+        type="source" 
+        position={Position.Bottom} 
+        className="w-3 h-3 bg-indigo-500"
+      />
     </div>
   );
 };
 
 const ActorNode = ({ data, selected }: {data: any; selected: boolean}) => {
   return (
-    <div className={`px-3 py-2 shadow-lg rounded border-2 min-w-[120px] ${
+    <div className={`px-4 py-3 shadow-2xl rounded-full border-3 min-w-[140px] ${
       selected 
-        ? 'border-yellow-400 bg-yellow-900/50' 
-        : 'border-gray-600 bg-gray-700'
-    }`}>
-      <Handle type="target" position={Position.Top} className="w-3 h-3" />
+        ? 'border-amber-400 bg-amber-900/80 shadow-amber-500/50 ring-2 ring-amber-400/30' 
+        : 'border-amber-500 bg-amber-800/60 shadow-amber-500/30'
+    } hover:shadow-3xl transition-all duration-200`}>
+      <Handle 
+        type="target" 
+        position={Position.Top} 
+        className="w-3 h-3 bg-amber-500"
+      />
       <div className="text-center">
-        <User className="w-4 h-4 mx-auto mb-1 text-yellow-400" />
-        <div className="font-medium text-white text-sm">{data.label}</div>
-        <div className="text-xs text-gray-400">{data.role || 'Actor'}</div>
+        <User className="w-6 h-6 mx-auto mb-1 text-amber-300" />
+        <div className="font-bold text-white text-base">{data.label}</div>
+        <div className="text-xs text-amber-200">{data.role || 'Actor'}</div>
       </div>
-      <Handle type="source" position={Position.Bottom} className="w-3 h-3" />
+      <Handle 
+        type="source" 
+        position={Position.Bottom} 
+        className="w-3 h-3 bg-amber-500"
+      />
     </div>
   );
 };
@@ -752,18 +1024,35 @@ const ProcessNode = ({ data, selected }: {data: any; selected: boolean}) => {
 };
 
 const EvaluationNode = ({ data, selected }: {data: any; selected: boolean}) => {
+  const getEvalIcon = () => {
+    const label = data.label?.toLowerCase() || '';
+    if (label.includes('performance')) return '⚡';
+    if (label.includes('cost')) return '💰';
+    if (label.includes('error')) return '🚨';
+    return '📊';
+  };
+
   return (
-    <div className={`px-3 py-2 shadow-lg rounded border-2 min-w-[140px] ${
+    <div className={`px-4 py-3 shadow-xl rounded-lg border-2 min-w-[160px] ${
       selected 
-        ? 'border-orange-400 bg-orange-900/50' 
-        : 'border-gray-600 bg-gray-700'
-    }`}>
-      <Handle type="target" position={Position.Top} className="w-3 h-3" />
+        ? 'border-yellow-400 bg-yellow-900/70 shadow-yellow-500/40' 
+        : 'border-yellow-600 bg-yellow-800/50 shadow-yellow-500/20'
+    } hover:shadow-2xl transition-all duration-200`}>
+      <Handle 
+        type="target" 
+        position={Position.Top} 
+        className="w-3 h-3 bg-yellow-500"
+      />
       <div className="text-center">
-        <div className="font-medium text-white text-sm">{data.label}</div>
-        <div className="text-xs text-gray-400">Evaluation</div>
+        <div className="text-2xl mb-1">{getEvalIcon()}</div>
+        <div className="font-semibold text-white text-sm">{data.label}</div>
+        <div className="text-xs text-yellow-300 opacity-80">{data.type || 'Monitoring'}</div>
       </div>
-      <Handle type="source" position={Position.Bottom} className="w-3 h-3" />
+      <Handle 
+        type="source" 
+        position={Position.Bottom} 
+        className="w-3 h-3 bg-yellow-500"
+      />
     </div>
   );
 };
@@ -1076,6 +1365,68 @@ const CodeNode = ({ id, data, selected, onUpdateNode }: {id: string; data: any; 
   );
 };
 
+// Custom edge component with animated gradient
+const CustomEdge = ({
+  id,
+  sourceX,
+  sourceY,
+  targetX,
+  targetY,
+  sourcePosition,
+  targetPosition,
+  style = {},
+  data,
+  selected,
+}: EdgeProps) => {
+  const [edgePath] = getBezierPath({
+    sourceX,
+    sourceY,
+    sourcePosition,
+    targetX,
+    targetY,
+    targetPosition,
+  });
+
+  const getEdgeColor = () => {
+    // Priority/critical paths
+    if (data?.priority === 'high') return '#ef4444'; // Red
+    if (data?.type === 'security') return '#dc2626'; // Dark red
+    if (data?.type === 'llm') return '#10b981'; // Green
+    if (data?.type === 'data') return '#3b82f6'; // Blue
+    if (data?.type === 'monitoring') return '#eab308'; // Yellow
+    return '#6b7280'; // Gray default
+  };
+
+  const edgeColor = getEdgeColor();
+
+  return (
+    <>
+      <defs>
+        <linearGradient id={`gradient-${id}`} x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor={edgeColor} stopOpacity="0.3" />
+          <stop offset="50%" stopColor={edgeColor} stopOpacity="0.8" />
+          <stop offset="100%" stopColor={edgeColor} stopOpacity="0.3" />
+        </linearGradient>
+      </defs>
+      <BaseEdge 
+        id={id} 
+        path={edgePath}
+        style={{
+          stroke: selected ? edgeColor : `url(#gradient-${id})`,
+          strokeWidth: selected ? 3 : 2,
+          filter: selected ? 'drop-shadow(0 0 4px rgba(255,255,255,0.3))' : 'none',
+          ...style
+        }}
+      />
+      {selected && (
+        <circle r="3" fill={edgeColor}>
+          <animateMotion dur="3s" repeatCount="indefinite" path={edgePath} />
+        </circle>
+      )}
+    </>
+  );
+};
+
 // Base node types without the code node (will be added inside component)
 const baseNodeTypes = {
   pattern: PatternNode,
@@ -1086,6 +1437,11 @@ const baseNodeTypes = {
   actor: ActorNode,
   process: ProcessNode,
   evaluation: EvaluationNode,
+  zone: ZoneNode,
+};
+
+const edgeTypes = {
+  custom: CustomEdge,
 };
 
 const initialNodes: Node[] = [
@@ -1277,6 +1633,150 @@ export const SystemBuilder = ({ techniques }: SystemBuilderProps) => {
           { id: 'e2', source: 'preprocess', target: 'train' },
           { id: 'e3', source: 'train', target: 'model' },
           { id: 'e4', source: 'model', target: 'monitor' },
+        ];
+        break;
+      case 'agentic-ai-system':
+        // Complete redesign with proper grid layout and spacing
+        const nodeWidth = 200;
+        const nodeHeight = 120;
+        const xPadding = 100;
+        const yPadding = 50;
+        const xGap = 50;
+        const yGap = 50;
+        
+        templateNodes = [
+          // Zone definitions - properly sized to contain all nodes
+          { id: 'zone-internet', type: 'zone', position: { x: 0, y: 0 }, data: { zone: 'internet', width: 1100, height: 250 }, draggable: false, selectable: false },
+          { id: 'zone-dmz', type: 'zone', position: { x: 0, y: 270 }, data: { zone: 'dmz', width: 1100, height: 200 }, draggable: false, selectable: false },
+          { id: 'zone-application', type: 'zone', position: { x: 0, y: 490 }, data: { zone: 'application', width: 1800, height: 700 }, draggable: false, selectable: false },
+          { id: 'zone-data', type: 'zone', position: { x: 0, y: 1210 }, data: { zone: 'data', width: 1800, height: 250 }, draggable: false, selectable: false },
+          { id: 'zone-infrastructure', type: 'zone', position: { x: 0, y: 1480 }, data: { zone: 'infrastructure', width: 1100, height: 450 }, draggable: false, selectable: false },
+          { id: 'zone-external', type: 'zone', position: { x: 1850, y: 270 }, data: { zone: 'external', width: 400, height: 920 }, draggable: false, selectable: false },
+          { id: 'zone-monitoring', type: 'zone', position: { x: 1150, y: 1480 }, data: { zone: 'monitoring', width: 1100, height: 450 }, draggable: false, selectable: false },
+          
+          // Internet Zone - Public facing (3 nodes in a row)
+          { id: 'chat-ui', type: 'interface', position: { x: 100, y: 80 }, data: { label: 'Chat Interface', interfaceType: 'React App', framework: 'React', pages: ['chat', 'history'] } },
+          { id: 'user', type: 'actor', position: { x: 450, y: 80 }, data: { label: 'User', role: 'End User' } },
+          { id: 'dashboard', type: 'interface', position: { x: 800, y: 80 }, data: { label: 'Admin Dashboard', interfaceType: 'Web App', framework: 'React', pages: ['dashboard', 'agents', 'logs'] } },
+          
+          // DMZ Zone - Network & Gateway (2 nodes centered)
+          { id: 'load-balancer', type: 'service', position: { x: 250, y: 330 }, data: { label: 'Load Balancer', serviceType: 'HAProxy', endpoints: ['/balance', '/health', '/route'], complexity: 'low', reliability: 'critical' } },
+          { id: 'api-gateway', type: 'service', position: { x: 650, y: 330 }, data: { label: 'API Gateway', serviceType: 'Kong/Nginx', endpoints: ['/api/chat', '/api/agents', '/api/tools'], complexity: 'medium', reliability: 'high' } },
+          
+          // Application Zone - Security Layer (4 nodes in first row)
+          { id: 'input-validator', type: 'service', position: { x: 100, y: 560 }, data: { label: 'Input Validator', serviceType: 'Python', endpoints: ['/validate', '/sanitize', '/filter'], complexity: 'medium', reliability: 'critical' } },
+          { id: 'guard-agent', type: 'service', position: { x: 450, y: 560 }, data: { label: 'Guard Agent', serviceType: 'Python', endpoints: ['/validate', '/filter', '/block'], complexity: 'medium', reliability: 'critical' } },
+          { id: 'output-filter', type: 'service', position: { x: 800, y: 560 }, data: { label: 'Output Filter', serviceType: 'Python', endpoints: ['/filter', '/scan', '/approve'], complexity: 'medium', reliability: 'critical' } },
+          { id: 'audit-logger', type: 'service', position: { x: 1150, y: 560 }, data: { label: 'Audit Logger', serviceType: 'Go', endpoints: ['/log', '/audit', '/trace'], complexity: 'low', reliability: 'critical' } },
+          
+          // Application Zone - Core Orchestration (3 nodes in second row)
+          { id: 'agent-registry', type: 'service', position: { x: 275, y: 740 }, data: { label: 'Agent Registry', serviceType: 'Go', endpoints: ['/register', '/discover', '/health'], complexity: 'medium', reliability: 'high' } },
+          { id: 'master-orchestrator', type: 'service', position: { x: 625, y: 740 }, data: { label: 'Master Orchestrator', serviceType: 'Node.js', endpoints: ['/orchestrate', '/delegate', '/coordinate'], complexity: 'high', reliability: 'critical' } },
+          { id: 'task-dispatcher', type: 'service', position: { x: 975, y: 740 }, data: { label: 'Task Dispatcher', serviceType: 'Python', endpoints: ['/dispatch', '/queue', '/priority'], complexity: 'medium', reliability: 'high' } },
+          
+          // Infrastructure Zone - Services (properly spaced)
+          { id: 'message-queue', type: 'service', position: { x: 100, y: 1560 }, data: { label: 'Message Queue', serviceType: 'RabbitMQ/Kafka', endpoints: ['/publish', '/subscribe', '/dlq'], complexity: 'medium', reliability: 'high' } },
+          { id: 'config-manager', type: 'service', position: { x: 450, y: 1560 }, data: { label: 'Config Manager', serviceType: 'Consul/etcd', endpoints: ['/config', '/secrets', '/watch'], complexity: 'low', reliability: 'high' } },
+          
+          // Application Zone - Specialized Agents (5 nodes in third row, 1 in fourth)
+          { id: 'planning-agent', type: 'service', position: { x: 100, y: 920 }, data: { label: 'Planning Agent', serviceType: 'Python + LLM', endpoints: ['/plan', '/decompose', '/goals'], complexity: 'high', reliability: 'high' } },
+          { id: 'execution-agent', type: 'service', position: { x: 450, y: 920 }, data: { label: 'Execution Agent', serviceType: 'Python', endpoints: ['/execute', '/action', '/result'], complexity: 'high', reliability: 'high' } },
+          { id: 'memory-agent', type: 'service', position: { x: 800, y: 920 }, data: { label: 'Memory Agent', serviceType: 'Python + Vector DB', endpoints: ['/store', '/retrieve', '/update'], complexity: 'high', reliability: 'critical' } },
+          { id: 'tool-agent', type: 'service', position: { x: 1150, y: 920 }, data: { label: 'Tool Agent', serviceType: 'Python', endpoints: ['/tools', '/call', '/validate'], complexity: 'medium', reliability: 'high' } },
+          { id: 'evaluation-agent', type: 'service', position: { x: 1500, y: 920 }, data: { label: 'Evaluation Agent', serviceType: 'Python + LLM', endpoints: ['/evaluate', '/score', '/feedback'], complexity: 'medium', reliability: 'high' } },
+          { id: 'reflection-agent', type: 'service', position: { x: 625, y: 1100 }, data: { label: 'Reflection Agent', serviceType: 'Python + LLM', endpoints: ['/reflect', '/learn', '/improve'], complexity: 'high', reliability: 'standard' } },
+          
+          // Data Zone - Memory Systems (5 databases in a row)
+          { id: 'vector-db', type: 'database', position: { x: 100, y: 1280 }, data: { label: 'Vector Database', dbType: 'Pinecone/Weaviate', tables: ['embeddings', 'metadata'], complexity: 'medium', reliability: 'high' } },
+          { id: 'knowledge-graph', type: 'database', position: { x: 450, y: 1280 }, data: { label: 'Knowledge Graph', dbType: 'Neo4j', tables: ['entities', 'relationships'], complexity: 'high', reliability: 'high' } },
+          { id: 'short-term-memory', type: 'database', position: { x: 800, y: 1280 }, data: { label: 'Short-term Memory', dbType: 'Redis', tables: ['conversations', 'context'], complexity: 'low', reliability: 'high' } },
+          { id: 'long-term-memory', type: 'database', position: { x: 1150, y: 1280 }, data: { label: 'Long-term Memory', dbType: 'PostgreSQL', tables: ['knowledge', 'experiences'], complexity: 'medium', reliability: 'critical' } },
+          { id: 'episodic-memory', type: 'database', position: { x: 1500, y: 1280 }, data: { label: 'Episodic Memory', dbType: 'InfluxDB', tables: ['episodes', 'timeseries'], complexity: 'medium', reliability: 'standard' } },
+          
+          // Infrastructure Zone - Tool Services (properly spaced second row)
+          { id: 'tool-registry', type: 'service', position: { x: 800, y: 1560 }, data: { label: 'Tool Registry', serviceType: 'Go', endpoints: ['/tools', '/register', '/catalog'], complexity: 'low', reliability: 'high' } },
+          { id: 'code-executor', type: 'service', position: { x: 275, y: 1740 }, data: { label: 'Code Executor', serviceType: 'Docker + Python', endpoints: ['/execute', '/sandbox', '/result'], complexity: 'high', reliability: 'high' } },
+          { id: 'web-scraper', type: 'service', position: { x: 625, y: 1740 }, data: { label: 'Web Scraper', serviceType: 'Python + Selenium', endpoints: ['/scrape', '/extract', '/clean'], complexity: 'medium', reliability: 'standard' } },
+          
+          // Monitoring Zone - Learning Systems (properly spaced)
+          { id: 'feedback-collector', type: 'service', position: { x: 1250, y: 1560 }, data: { label: 'Feedback Collector', serviceType: 'Python', endpoints: ['/feedback', '/rating', '/analytics'], complexity: 'low', reliability: 'standard' } },
+          { id: 'preference-learner', type: 'service', position: { x: 1600, y: 1560 }, data: { label: 'Preference Learner', serviceType: 'Python + ML', endpoints: ['/learn', '/adapt', '/preferences'], complexity: 'high', reliability: 'standard' } },
+          { id: 'model-trainer', type: 'service', position: { x: 1950, y: 1560 }, data: { label: 'Model Trainer', serviceType: 'Python + GPU', endpoints: ['/train', '/finetune', '/validate'], complexity: 'critical', reliability: 'standard' } },
+          
+          // External Zone - Services (vertically aligned)
+          { id: 'llm-provider', type: 'service', position: { x: 1950, y: 550 }, data: { label: 'LLM Provider', serviceType: 'OpenAI/Anthropic', endpoints: ['/completions', '/embeddings', '/models'], complexity: 'low', reliability: 'high', cost: 'high' } },
+          { id: 'external-apis', type: 'service', position: { x: 1950, y: 850 }, data: { label: 'External APIs', serviceType: 'REST/GraphQL', endpoints: ['/weather', '/news', '/finance'], complexity: 'low', reliability: 'standard' } },
+          
+          // Monitoring Zone - Observability (properly spaced second row)
+          { id: 'performance-monitor', type: 'evaluation', position: { x: 1250, y: 1740 }, data: { label: 'Performance Monitor', type: 'Monitoring' } },
+          { id: 'trace-logger', type: 'service', position: { x: 1600, y: 1740 }, data: { label: 'Trace Logger', serviceType: 'OpenTelemetry', endpoints: ['/trace', '/metrics', '/logs'], complexity: 'medium', reliability: 'high' } },
+          { id: 'cost-tracker', type: 'evaluation', position: { x: 1950, y: 1740 }, data: { label: 'Cost Tracker', type: 'Analytics' } },
+          { id: 'error-monitor', type: 'evaluation', position: { x: 1775, y: 1740 }, data: { label: 'Error Monitor', type: 'Alerting' } },
+        ];
+        
+        templateEdges = [
+          // Layer 1: User Flow
+          { id: 'e1', source: 'user', target: 'chat-ui', type: 'custom', animated: true },
+          { id: 'e2', source: 'user', target: 'dashboard', type: 'custom', animated: true },
+          { id: 'e3', source: 'chat-ui', target: 'load-balancer', type: 'custom' },
+          { id: 'e4', source: 'dashboard', target: 'load-balancer', type: 'custom' },
+          { id: 'e5', source: 'load-balancer', target: 'api-gateway', type: 'custom' },
+          
+          // Layer 2: Security Flow - High Priority
+          { id: 'e6', source: 'api-gateway', target: 'input-validator', type: 'custom', data: { type: 'security', priority: 'high' } },
+          { id: 'e7', source: 'input-validator', target: 'guard-agent', type: 'custom', data: { type: 'security', priority: 'high' } },
+          { id: 'e8', source: 'guard-agent', target: 'output-filter', type: 'custom', data: { type: 'security' } },
+          { id: 'e9', source: 'output-filter', target: 'audit-logger', type: 'custom', data: { type: 'security' } },
+          
+          // Layer 3: Orchestration Flow  
+          { id: 'e10', source: 'guard-agent', target: 'master-orchestrator', type: 'custom', data: { priority: 'high' } },
+          { id: 'e11', source: 'agent-registry', target: 'master-orchestrator', type: 'custom' },
+          { id: 'e12', source: 'master-orchestrator', target: 'task-dispatcher', type: 'custom', data: { priority: 'high' }, animated: true },
+          { id: 'e13', source: 'task-dispatcher', target: 'message-queue', type: 'custom' },
+          { id: 'e14', source: 'config-manager', target: 'master-orchestrator', type: 'custom' },
+          
+          // Layer 4: Agent Coordination
+          { id: 'e15', source: 'task-dispatcher', target: 'planning-agent', type: 'custom', animated: true },
+          { id: 'e16', source: 'task-dispatcher', target: 'execution-agent', type: 'custom', animated: true },
+          { id: 'e17', source: 'task-dispatcher', target: 'memory-agent', type: 'custom', animated: true },
+          { id: 'e18', source: 'task-dispatcher', target: 'tool-agent', type: 'custom', animated: true },
+          { id: 'e19', source: 'task-dispatcher', target: 'evaluation-agent', type: 'custom', animated: true },
+          { id: 'e20', source: 'task-dispatcher', target: 'reflection-agent', type: 'custom', animated: true },
+          
+          // Layer 5: Memory Systems
+          { id: 'e21', source: 'memory-agent', target: 'vector-db', type: 'custom', data: { type: 'data' } },
+          { id: 'e22', source: 'memory-agent', target: 'knowledge-graph', type: 'custom', data: { type: 'data' } },
+          { id: 'e23', source: 'memory-agent', target: 'short-term-memory', type: 'custom', data: { type: 'data' } },
+          { id: 'e24', source: 'memory-agent', target: 'long-term-memory', type: 'custom', data: { type: 'data' } },
+          { id: 'e25', source: 'memory-agent', target: 'episodic-memory', type: 'custom', data: { type: 'data' } },
+          
+          // Layer 6: Tool Integration
+          { id: 'e26', source: 'tool-agent', target: 'tool-registry', type: 'custom' },
+          { id: 'e27', source: 'tool-agent', target: 'code-executor', type: 'custom' },
+          { id: 'e28', source: 'tool-agent', target: 'web-scraper', type: 'custom' },
+          { id: 'e29', source: 'tool-agent', target: 'external-apis', type: 'custom' },
+          
+          // Layer 7: Learning Systems
+          { id: 'e30', source: 'evaluation-agent', target: 'feedback-collector', type: 'custom' },
+          { id: 'e31', source: 'feedback-collector', target: 'preference-learner', type: 'custom' },
+          { id: 'e32', source: 'preference-learner', target: 'model-trainer', type: 'custom' },
+          
+          // LLM Integration - Green for AI
+          { id: 'e33', source: 'planning-agent', target: 'llm-provider', type: 'custom', data: { type: 'llm' }, animated: true },
+          { id: 'e34', source: 'execution-agent', target: 'llm-provider', type: 'custom', data: { type: 'llm' }, animated: true },
+          { id: 'e35', source: 'evaluation-agent', target: 'llm-provider', type: 'custom', data: { type: 'llm' }, animated: true },
+          { id: 'e36', source: 'reflection-agent', target: 'llm-provider', type: 'custom', data: { type: 'llm' }, animated: true },
+          
+          // Monitoring & Observability - Yellow
+          { id: 'e37', source: 'master-orchestrator', target: 'performance-monitor', type: 'custom', data: { type: 'monitoring' } },
+          { id: 'e38', source: 'llm-provider', target: 'cost-tracker', type: 'custom', data: { type: 'monitoring' } },
+          { id: 'e39', source: 'master-orchestrator', target: 'error-monitor', type: 'custom', data: { type: 'monitoring' } },
+          { id: 'e40', source: 'master-orchestrator', target: 'trace-logger', type: 'custom', data: { type: 'monitoring' } },
+          
+          // Cross-layer connections
+          { id: 'e41', source: 'planning-agent', target: 'execution-agent', type: 'custom' },
+          { id: 'e42', source: 'execution-agent', target: 'evaluation-agent', type: 'custom' },
+          { id: 'e43', source: 'evaluation-agent', target: 'reflection-agent', type: 'custom' },
         ];
         break;
       default:
@@ -1560,6 +2060,22 @@ export const SystemBuilder = ({ techniques }: SystemBuilderProps) => {
           <h3 className="text-lg font-semibold text-white mb-3">Templates</h3>
           <div className="space-y-2">
             <button
+              onClick={() => loadTemplate('agentic-ai-system')}
+              className="w-full text-left px-3 py-3 bg-gradient-to-r from-purple-900/50 to-blue-900/50 hover:from-purple-800/60 hover:to-blue-800/60 rounded border border-purple-500/30 hover:border-purple-400/50 transition-colors relative overflow-hidden group"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-blue-500/10 group-hover:from-purple-500/20 group-hover:to-blue-500/20 transition-all"></div>
+              <div className="relative flex items-center gap-2">
+                <div className="flex items-center justify-center w-8 h-8 bg-purple-500/20 rounded-full">
+                  <span className="text-sm">🤖</span>
+                </div>
+                <div>
+                  <div className="text-white text-sm font-bold">Complete Agentic AI System</div>
+                  <div className="text-purple-300 text-xs">Full enterprise-grade architecture</div>
+                  <div className="text-gray-400 text-xs mt-1">40+ components, 9 layers, production-ready</div>
+                </div>
+              </div>
+            </button>
+            <button
               onClick={() => loadTemplate('web-app')}
               className="w-full text-left px-3 py-2 bg-gray-800 hover:bg-gray-700 rounded border border-gray-600 transition-colors"
             >
@@ -1749,11 +2265,16 @@ export const SystemBuilder = ({ techniques }: SystemBuilderProps) => {
             setEditingNode(node);
           }}
           nodeTypes={nodeTypes}
+          edgeTypes={edgeTypes}
           className="bg-gray-950"
           nodesDraggable={true}
           nodesConnectable={true}
           elementsSelectable={true}
           selectNodesOnDrag={false}
+          defaultEdgeOptions={{
+            type: 'custom',
+            animated: false,
+          }}
         >
           <Controls className="bg-gray-800 border-gray-600" />
           <MiniMap 

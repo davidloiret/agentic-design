@@ -107,7 +107,7 @@ const WorkshopExperience: React.FC<{ workshopId: string; sessionId?: string; ses
   useEffect(() => {
     if (!sessionId || !user) return
 
-    const newSocket = io(`${process.env.NEXT_PUBLIC_API_URL}/workshop`)
+    const newSocket = io(`/api/v1/workshop`)
 
     newSocket.on('connect', () => {
       console.log('Connected to workshop')

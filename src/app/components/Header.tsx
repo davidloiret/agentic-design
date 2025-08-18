@@ -1,6 +1,6 @@
 'use client';
 
-import { Sparkles, Search, Command, GraduationCap, Star, Flame } from 'lucide-react';
+import { Sparkles, Search, Command, GraduationCap, Star, Flame, Cpu } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLearningHub } from '@/contexts/LearningHubContext';
 import { UserMenu } from './UserMenu';
@@ -71,6 +71,7 @@ export const Header = () => {
   const router = useRouter();
   const pathname = usePathname();
   const isLearningHubActive = pathname === '/learning-hub' || pathname.startsWith('/learning-hub/');
+  const isSystemBuilderActive = pathname === '/system-builder' || pathname.startsWith('/system-builder/');
   const [logoExpression, setLogoExpression] = useState<BrainExpression>('happy');
 
   useEffect(() => {
@@ -160,7 +161,7 @@ export const Header = () => {
             </button>
           </motion.div>
 
-          {/* Right side - Learning Hub, Status and User menu */}
+          {/* Right side - Learning Hub, System Builder, Status and User menu */}
           <div className="flex items-center space-x-3 flex-shrink-0">
             {/* Learning Hub - Gamified button with animations */}
             <motion.button
@@ -290,6 +291,105 @@ export const Header = () => {
                   </motion.div>
                 )}
               </AnimatePresence>
+            </motion.button>
+
+            {/* System Builder - Professional builder button */}
+            <motion.button
+              id="system-builder-button"
+              onClick={() => router.push('/system-builder')}
+              className={`relative flex items-center space-x-2 px-4 py-2 font-medium rounded-lg shadow-lg overflow-hidden ${
+                isSystemBuilderActive 
+                  ? 'bg-gradient-to-r from-blue-600 to-cyan-700 text-white shadow-xl ring-2 ring-blue-400/50' 
+                  : 'bg-gradient-to-r from-blue-500 to-cyan-600 text-white'
+              }`}
+              layout
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              animate={isSystemBuilderActive ? {
+                boxShadow: [
+                  '0 0 20px rgba(59, 130, 246, 0.3)',
+                  '0 0 40px rgba(59, 130, 246, 0.5)',
+                  '0 0 20px rgba(59, 130, 246, 0.3)',
+                ],
+              } : {}}
+              transition={{
+                layout: isSystemBuilderActive ? {
+                  type: "spring",
+                  stiffness: 500,
+                  damping: 40,
+                  duration: 0.3
+                } : {
+                  type: "tween",
+                  duration: 0.25,
+                  ease: [0.4, 0, 0.2, 1]
+                },
+                boxShadow: {
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }
+              }}
+            >
+              {/* Animated background particles */}
+              <AnimatePresence>
+                {isSystemBuilderActive && (
+                  <>
+                    {[...Array(3)].map((_, i) => (
+                      <motion.div
+                        key={i}
+                        className="absolute w-1 h-1 bg-white rounded-full"
+                        initial={{ 
+                          x: (i - 1) * 30, 
+                          y: 20,
+                          opacity: 0 
+                        }}
+                        animate={{ 
+                          x: (i - 1) * 30, 
+                          y: -20,
+                          opacity: [0, 1, 0]
+                        }}
+                        transition={{
+                          duration: 2,
+                          delay: i * 0.3,
+                          repeat: Infinity,
+                          ease: "easeOut"
+                        }}
+                      />
+                    ))}
+                  </>
+                )}
+              </AnimatePresence>
+
+              {/* Shimmer effect */}
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                animate={{
+                  x: ['-100%', '100%'],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  repeatDelay: 2,
+                  ease: "easeInOut"
+                }}
+              />
+
+              {/* Icon with pulse animation */}
+              <motion.div
+                animate={isSystemBuilderActive ? {
+                  scale: [1, 1.1, 1],
+                } : {}}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  repeatDelay: 1.5,
+                }}
+              >
+                <Cpu className="w-4 h-4 relative z-10" />
+              </motion.div>
+              
+              {/* Text */}
+              <span className="text-sm relative z-10">System Builder</span>
             </motion.button>
                     
             {/* Auth section - Last item on the right */}
@@ -441,6 +541,71 @@ export const Header = () => {
                     </motion.div>
                   )}
                 </AnimatePresence>
+              </motion.button>
+              <motion.button
+                id="system-builder-button-mobile"
+                onClick={() => router.push('/system-builder')}
+                className={`relative flex items-center space-x-1 px-3 py-1.5 font-medium rounded-lg shadow-lg overflow-hidden ${
+                  isSystemBuilderActive 
+                    ? 'bg-gradient-to-r from-blue-600 to-cyan-700 text-white shadow-xl ring-2 ring-blue-400/50' 
+                    : 'bg-gradient-to-r from-blue-500 to-cyan-600 text-white'
+                }`}
+                layout
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                animate={isSystemBuilderActive ? {
+                  boxShadow: [
+                    '0 0 15px rgba(59, 130, 246, 0.3)',
+                    '0 0 25px rgba(59, 130, 246, 0.5)',
+                    '0 0 15px rgba(59, 130, 246, 0.3)',
+                  ],
+                } : {}}
+                transition={{
+                  layout: isSystemBuilderActive ? {
+                    type: "spring",
+                    stiffness: 500,
+                    damping: 40,
+                    duration: 0.3
+                  } : {
+                    type: "tween",
+                    duration: 0.25,
+                    ease: [0.4, 0, 0.2, 1]
+                  },
+                  boxShadow: {
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }
+                }}
+              >
+                {/* Shimmer effect for mobile */}
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                  animate={{
+                    x: ['-100%', '100%'],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    repeatDelay: 2,
+                    ease: "easeInOut"
+                  }}
+                />
+
+                {/* Icon with pulse */}
+                <motion.div
+                  animate={isSystemBuilderActive ? {
+                    scale: [1, 1.1, 1],
+                  } : {}}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Infinity,
+                    repeatDelay: 1.5,
+                  }}
+                >
+                  <Cpu className="w-3.5 h-3.5 relative z-10" />
+                </motion.div>
+                <span className="text-xs relative z-10">Builder</span>
               </motion.button>
               {loading ? (
                 <div className="flex items-center space-x-2">
