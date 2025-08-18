@@ -78,6 +78,9 @@ COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/public ./public
 
+# Create secrets directory with proper permissions
+RUN mkdir -p /app/.secrets && chown -R nextjs:nodejs /app/.secrets
+
 USER nextjs
 EXPOSE 3002
 ENV PORT=3002
