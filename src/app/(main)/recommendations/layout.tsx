@@ -1,6 +1,8 @@
 'use client';
 
+import { useAuth } from '@/contexts/AuthContext';
 import { RecommendationTab } from '../../components/RecommendationTab';
+import { RecommendationsAuthPrompt } from '../../components/RecommendationsAuthPrompt';
 import { intelligentRecommendationService } from '../../services/intelligentRecommendationService';
 import { useState } from 'react';
 
@@ -9,12 +11,32 @@ export default function RecommendationsLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const { user, loading } = useAuth();
   const [selectedUseCase, setSelectedUseCase] = useState('');
   const [userComplexity, setUserComplexity] = useState('');
   const [userConstraints, setUserConstraints] = useState<string[]>([]);
   const [showRecommendations, setShowRecommendations] = useState(false);
   const [selectedTechnique, setSelectedTechnique] = useState<any>(null);
   const [activeTab, setActiveTab] = useState('recommendations');
+
+  // Show loading state while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
+      </div>
+    );
+  }
+
+  // Show authentication prompt page if user is not authenticated
+  if (!user) {
+    return (
+      <RecommendationsAuthPrompt
+        feature="AI Pattern Recommendations"
+        description="Get personalized AI pattern recommendations based on your specific use case, complexity level, and constraints"
+      />
+    );
+  }
 
   // Get dynamic data from the intelligent recommendation service
   const useCases = intelligentRecommendationService.getAvailableUseCases();

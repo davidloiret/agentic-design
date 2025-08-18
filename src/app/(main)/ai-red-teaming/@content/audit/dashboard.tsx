@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
+import { RedTeamingAuditAuthPrompt } from '@/app/components/RedTeamingAuditAuthPrompt';
 import { 
   Shield, 
   Search,
@@ -62,9 +64,29 @@ const statusConfig = {
 };
 
 export default function AuditDashboard() {
+  const { user, loading } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('all');
   const [audits] = useState(mockAudits);
+
+  // Show loading state while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-500"></div>
+      </div>
+    );
+  }
+
+  // Show authentication prompt page if user is not authenticated
+  if (!user) {
+    return (
+      <RedTeamingAuditAuthPrompt
+        feature="AI Red Teaming Audit Dashboard"
+        description="Access your security audit dashboard to manage and track AI system assessments"
+      />
+    );
+  }
 
   const filteredAudits = audits.filter(audit => {
     const matchesSearch = audit.clientName.toLowerCase().includes(searchQuery.toLowerCase());

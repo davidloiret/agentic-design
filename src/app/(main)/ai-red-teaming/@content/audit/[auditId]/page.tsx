@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
+import { RedTeamingAuditAuthPrompt } from '@/app/components/RedTeamingAuditAuthPrompt';
 import { 
   Shield, 
   ArrowRight,
@@ -197,6 +199,7 @@ interface ChecklistState {
 }
 
 export default function AuditWizardPage({ params }: { params: { auditId: string } }) {
+  const { user, loading } = useAuth();
   const [currentStep, setCurrentStep] = useState(0);
   const [auditData, setAuditData] = useState<AuditData>({
     systemName: '',
@@ -571,6 +574,25 @@ export default function AuditWizardPage({ params }: { params: { auditId: string 
     }
     return true;
   };
+
+  // Show loading state while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-500"></div>
+      </div>
+    );
+  }
+
+  // Show authentication prompt page if user is not authenticated
+  if (!user) {
+    return (
+      <RedTeamingAuditAuthPrompt
+        feature="AI Red Teaming Audit"
+        description="Conduct comprehensive AI security audits with professional-grade assessment tools and methodologies"
+      />
+    );
+  }
 
   return (
     <div className="w-full max-w-none space-y-4 sm:space-y-6">

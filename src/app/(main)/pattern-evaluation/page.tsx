@@ -1,19 +1,25 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 import { PatternEvaluationTab } from '../../components/PatternEvaluationTab';
+import { EvalLabAuthPrompt } from '../../components/EvalLabAuthPrompt';
 import { Construction, AlertTriangle, Zap, X } from 'lucide-react';
 
 export default function PatternEvaluationPage() {
+  const { user, loading } = useAuth();
   const [showDisclaimer, setShowDisclaimer] = useState(false);
 
   useEffect(() => {
-    // Check if user has seen the disclaimer before
-    const hasSeenDisclaimer = localStorage.getItem('pattern-lab-disclaimer-seen');
-    if (!hasSeenDisclaimer) {
-      setShowDisclaimer(true);
+    // Only check disclaimer for authenticated users
+    if (user) {
+      // Check if user has seen the disclaimer before
+      const hasSeenDisclaimer = localStorage.getItem('pattern-lab-disclaimer-seen');
+      if (!hasSeenDisclaimer) {
+        setShowDisclaimer(true);
+      }
     }
-  }, []);
+  }, [user]);
 
   const handleDismissDisclaimer = () => {
     localStorage.setItem('pattern-lab-disclaimer-seen', 'true');
@@ -23,6 +29,25 @@ export default function PatternEvaluationPage() {
   const handleTryAnyway = () => {
     handleDismissDisclaimer();
   };
+
+  // Show loading state while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div>
+      </div>
+    );
+  }
+
+  // Show authentication prompt page if user is not authenticated
+  if (!user) {
+    return (
+      <EvalLabAuthPrompt
+        feature="Pattern Evaluation Lab"
+        description="Compare and evaluate AI agent design patterns side-by-side with rigorous testing methodology"
+      />
+    );
+  }
 
   return (
     <>

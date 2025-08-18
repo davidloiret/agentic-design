@@ -1,6 +1,7 @@
 "use client"
 
 import React, { Suspense } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 import { Search, Shield, FileText, LayoutDashboard, Activity, CheckCircle, BarChart3, Archive } from 'lucide-react';
 import { CategoryNavigationLayout, NavigationItem, NavigationCategory } from './CategoryNavigationLayout';
 import { redTeamingCategories, allRedTeamingTechniques } from '../red-teaming';
@@ -19,6 +20,7 @@ const options = {
 };
 
 const RoutedRedTeamingTechniquesListInner = ({ selectedCategory, selectedTechnique }: RoutedRedTeamingTechniquesListProps) => {
+  const { user } = useAuth();
   const pathname = usePathname();
   const isAuditSection = pathname.includes('/audit');
   
@@ -86,8 +88,8 @@ const RoutedRedTeamingTechniquesListInner = ({ selectedCategory, selectedTechniq
 
   return (
     <div className="h-full flex flex-col">
-      {isAuditSection ? (
-        // Audit Navigation
+      {isAuditSection && user ? (
+        // Audit Navigation - Only show if in audit section AND authenticated
         <div className="space-y-6">
           <div className="">
             <div className="flex items-center gap-2 px-1 pb-3">
@@ -126,32 +128,34 @@ const RoutedRedTeamingTechniquesListInner = ({ selectedCategory, selectedTechniq
       ) : (
         // Default Red Teaming Navigation
         <>
-          {/* Audit Methodology Section */}
-          <div className="mb-6 space-y-2">
-            <div className="flex items-center gap-2 px-1 pb-2">
-              <Shield className="w-4 h-4 text-red-400" />
-              <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">
-                Audit Tools
-              </h2>
-            </div>
-            
-            <Link 
-              href="/ai-red-teaming/audit"
-              className="block w-full p-3 bg-gradient-to-r from-red-500/10 to-orange-500/10 border border-red-500/20 rounded-xl hover:from-red-500/20 hover:to-orange-500/20 transition-all group"
-            >
-              <div className="flex items-center space-x-3">
-                <FileText className="w-5 h-5 text-red-400 group-hover:scale-110 transition-transform" />
-                <div>
-                  <div className="text-sm font-medium text-white group-hover:text-red-300 transition-colors">
-                    Security Audit Methodology
-                  </div>
-                  <div className="text-xs text-gray-400 mt-1">
-                    Comprehensive framework for AI system audits
+          {/* Audit Methodology Section - Only show for authenticated users */}
+          {user && (
+            <div className="mb-6 space-y-2">
+              <div className="flex items-center gap-2 px-1 pb-2">
+                <Shield className="w-4 h-4 text-red-400" />
+                <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">
+                  Audit Tools
+                </h2>
+              </div>
+              
+              <Link 
+                href="/ai-red-teaming/audit"
+                className="block w-full p-3 bg-gradient-to-r from-red-500/10 to-orange-500/10 border border-red-500/20 rounded-xl hover:from-red-500/20 hover:to-orange-500/20 transition-all group"
+              >
+                <div className="flex items-center space-x-3">
+                  <FileText className="w-5 h-5 text-red-400 group-hover:scale-110 transition-transform" />
+                  <div>
+                    <div className="text-sm font-medium text-white group-hover:text-red-300 transition-colors">
+                      Security Audit Methodology
+                    </div>
+                    <div className="text-xs text-gray-400 mt-1">
+                      Comprehensive framework for AI system audits
                   </div>
                 </div>
               </div>
             </Link>
-          </div>
+            </div>
+          )}
 
           {/* Existing Techniques Navigation */}
           <div className="flex-1 min-h-0">
