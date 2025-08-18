@@ -26,6 +26,9 @@ export default function ShareSecretPage() {
 	const [isDecrypting, setIsDecrypting] = React.useState(false);
 	const [secretId, setSecretId] = React.useState<string | null>(null);
 	const [error, setError] = React.useState<string | null>(null);
+	
+	// Size limit: 10MB
+	const MAX_SECRET_SIZE = 10 * 1024 * 1024; // 10MB in bytes
 
 	const searchParams = useSearchParams();
 
@@ -85,8 +88,28 @@ export default function ShareSecretPage() {
 		return password.split('').sort(() => Math.random() - 0.5).join('');
 	}
 
+	function validateSecretSize(text: string): boolean {
+		const sizeInBytes = new Blob([text]).size;
+		return sizeInBytes <= MAX_SECRET_SIZE;
+	}
+
+	function formatFileSize(bytes: number): string {
+		if (bytes === 0) return '0 Bytes';
+		const k = 1024;
+		const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+		const i = Math.floor(Math.log(bytes) / Math.log(k));
+		return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+	}
+
 	async function createSecret() {
 		if (!isReady || !hoddorRef.current || !secretText.trim()) return;
+		
+		// Validate size limit
+		if (!validateSecretSize(secretText)) {
+			const currentSize = new Blob([secretText]).size;
+			setError(`Secret is too large (${formatFileSize(currentSize)}). Maximum size allowed is ${formatFileSize(MAX_SECRET_SIZE)}.`);
+			return;
+		}
 		
 		try {
 			setIsCreating(true);
@@ -474,12 +497,40 @@ export default function ShareSecretPage() {
 								<div className="p-3 rounded-xl bg-gradient-to-br from-red-500/10 to-orange-500/10 border border-red-500/20">
 									<Shield className="w-6 h-6 text-red-400" />
 								</div>
-								<h3 className="text-white font-bold text-xl">Create Secret</h3>
+								<div>
+									<h3 className="text-white font-bold text-xl">Create Secret</h3>
+									<p className="text-gray-400 text-sm">Maximum size: {formatFileSize(MAX_SECRET_SIZE)}</p>
+								</div>
 							</div>
 							
 							<div className="space-y-6">
 								<div className="space-y-2">
-									<label className="text-sm font-medium text-gray-300">Secret Content</label>
+									<div className="flex items-center justify-between">
+										<label className="text-sm font-medium text-gray-300">Secret Content</label>
+										<div className="text-xs text-gray-400">
+											{(() => {
+												const currentSize = new Blob([secretText]).size;
+												const percentage = (currentSize / MAX_SECRET_SIZE) * 100;
+												const isNearLimit = percentage > 80;
+												const isOverLimit = percentage > 100;
+												
+												return (
+													<span className={`transition-colors duration-200 ${
+														isOverLimit ? 'text-red-400' : 
+														isNearLimit ? 'text-yellow-400' : 
+														'text-gray-400'
+													}`}>
+														{formatFileSize(currentSize)} / {formatFileSize(MAX_SECRET_SIZE)}
+														{percentage > 0 && (
+															<span className="ml-1">
+														({percentage.toFixed(1)}%)
+													</span>
+														)}
+													</span>
+												);
+											})()}
+										</div>
+									</div>
 									<textarea
 										placeholder="Enter your sensitive information here..."
 										value={secretText}
@@ -490,6 +541,38 @@ export default function ShareSecretPage() {
 										rows={6}
 										className="w-full px-4 py-3 bg-gray-900/60 border border-gray-600 rounded-xl text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 resize-none"
 									/>
+									{(() => {
+										const currentSize = new Blob([secretText]).size;
+										const percentage = (currentSize / MAX_SECRET_SIZE) * 100;
+										
+										if (percentage > 0) {
+											return (
+												<div className="space-y-1">
+													<div className="w-full bg-gray-700/50 rounded-full h-1.5">
+														<div 
+															className={`h-1.5 rounded-full transition-all duration-300 ${
+																percentage > 100 ? 'bg-red-500' :
+																percentage > 80 ? 'bg-yellow-500' :
+																'bg-green-500'
+															}`}
+															style={{ width: `${Math.min(percentage, 100)}%` }}
+														/>
+													</div>
+													{percentage > 90 && (
+														<p className={`text-xs ${
+															percentage > 100 ? 'text-red-400' : 'text-yellow-400'
+														}`}>
+															{percentage > 100 ? 
+																'⚠️ Content exceeds size limit' : 
+																'⚠️ Approaching size limit'
+															}
+														</p>
+													)}
+												</div>
+											);
+										}
+										return null;
+									})()}
 								</div>
 								
 								<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -530,7 +613,7 @@ export default function ShareSecretPage() {
 
 								<motion.button 
 									onClick={createSecret} 
-									disabled={!isReady || !secretText.trim() || isCreating}
+									disabled={!isReady || !secretText.trim() || isCreating || !validateSecretSize(secretText)}
 									className="w-full inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl text-base font-medium bg-gradient-to-r from-red-600 to-orange-600 text-white border border-red-500/30 hover:from-red-500 hover:to-orange-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-red-500/25"
 									whileHover={{ scale: 1.02, y: -2 }}
 									whileTap={{ scale: 0.95 }}

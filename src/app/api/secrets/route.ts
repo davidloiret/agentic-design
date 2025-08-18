@@ -32,6 +32,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
     
+    // Validate vault size (10MB limit)
+    const MAX_VAULT_SIZE = 10 * 1024 * 1024; // 10MB
+    const vaultSize = vault.length;
+    if (vaultSize > MAX_VAULT_SIZE) {
+      return NextResponse.json({ 
+        error: `Vault too large (${(vaultSize / 1024 / 1024).toFixed(2)}MB). Maximum size is 10MB.` 
+      }, { status: 413 });
+    }
+    
     const secretData: SecretData = {
       id,
       vault,
