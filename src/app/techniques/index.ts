@@ -5,10 +5,8 @@ import { routingTechniques } from './routing';
 import { toolUseTechniques } from './tool-use';
 import { memoryManagementTechniques } from './memory-management';
 import { workflowOrchestrationTechniques } from './workflow-orchestration';
-import { securitySafetyTechniques } from './security-safety';
 import { planningExecutionTechniques } from './planning-execution';
 import { interpretabilityTechniques } from './interpretability';
-import { humanAiCollaborationTechniques } from './human-ai-collaboration';
 import { knowledgeRetrievalTechniques } from './knowledge-retrieval';
 import { knowledgeRepresentationTechniques } from './knowledge-representation';
 import { parallelizationTechniques } from './parallelization';
@@ -21,7 +19,9 @@ import { explorationDiscoveryTechniques } from './exploration-discovery';
 import { learningAdaptationTechniques } from './learning-adaptation';
 import { prioritizationTechniques } from './prioritization';
 import { reflectionTechniques } from './reflection-techniques';
-import { guardrailsSafetyPatterns } from './guardrails-safety-patterns';
+import { securityPrivacyPatterns } from './security-privacy';
+import { contextManagementPatterns } from './context-management';
+import { uiUxPatterns } from './ui-ux-patterns';
 
 export * from './types';
 
@@ -37,12 +37,10 @@ export const techniques: Technique[] = [
   ...toolUseTechniques,
   ...memoryManagementTechniques,
   ...workflowOrchestrationTechniques,
-  ...securitySafetyTechniques,
   ...planningExecutionTechniques,
   ...parallelizationTechniques,
   ...multiAgentTechniques,
   ...interpretabilityTechniques,
-  ...humanAiCollaborationTechniques,
   ...knowledgeRetrievalTechniques,
   ...knowledgeRepresentationTechniques,
   ...resourceAwareOptimizationTechniques,
@@ -53,7 +51,9 @@ export const techniques: Technique[] = [
   ...learningAdaptationTechniques,
   ...prioritizationTechniques,
   ...reflectionTechniques,
-  ...guardrailsSafetyPatterns,
+  ...securityPrivacyPatterns,
+  ...contextManagementPatterns,
+  ...uiUxPatterns,
   ...remainingTechniques,
 ];
 

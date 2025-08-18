@@ -48,6 +48,16 @@ import { ConstitutionalAiEvaluationDetails } from './technique-details/Constitut
 import { HumanInTheLoopDetails } from './technique-details/HumanInTheLoopDetails';
 import { HumanOnTheLoopDetails } from './technique-details/HumanOnTheLoopDetails';
 import { ConsensusAlgorithmsDetails } from './technique-details/ConsensusAlgorithmsDetails';
+import { AmbientAgentPatternsDetails } from './technique-details/AmbientAgentPatternsDetails';
+import { ChatInterfacePatternsDetails } from './technique-details/ChatInterfacePatternsDetails';
+import { CrossPlatformAgentUxDetails } from './technique-details/CrossPlatformAgentUxDetails';
+import { VisualReasoningPatternsDetails } from './technique-details/VisualReasoningPatternsDetails';
+import { MultimodalInteractionPatternsDetails } from './technique-details/MultimodalInteractionPatternsDetails';
+import { IdentityAccessManagementDetails } from './technique-details/IdentityAccessManagementDetails';
+import { ThreatDetectionResponseDetails } from './technique-details/ThreatDetectionResponseDetails';
+import { ComplianceAutomationPatternsDetails } from './technique-details/ComplianceAutomationPatternsDetails';
+import { SecureMultiPartyComputationDetails } from './technique-details/SecureMultiPartyComputationDetails';
+import { ZeroTrustAgentArchitectureDetails } from './technique-details/ZeroTrustAgentArchitectureDetails';
 import { AgentCommunicationProtocolsDetails } from './technique-details/AgentCommunicationProtocolsDetails';
 import { ContinuousLearningDetails } from './technique-details/ContinuousLearningDetails';
 import { ReinforcementLearningAdaptationDetails } from './technique-details/ReinforcementLearningAdaptationDetails';
@@ -136,6 +146,23 @@ import SelfRAGDetails from './technique-details/SelfRAGDetails';
 import GraphRAGDetails from './technique-details/GraphRAGDetails';
 import HierarchicalRAGDetails from './technique-details/HierarchicalRAGDetails';
 import SequentialChainingDetails from './technique-details/SequentialChainingDetails';
+import ContextRetrievalGenerationDetails from './technique-details/ContextRetrievalGenerationDetails';
+import ContextProcessingPipelinesDetails from './technique-details/ContextProcessingPipelinesDetails';
+import ContextLifecycleManagementDetails from './technique-details/ContextLifecycleManagementDetails';
+import HierarchicalContextArchitectureDetails from './technique-details/HierarchicalContextArchitectureDetails';
+import ContextStateMachinesDetails from './technique-details/ContextStateMachinesDetails';
+import ContextStreamingProtocolsDetails from './technique-details/ContextStreamingProtocolsDetails';
+import ContextWritePatternsDetails from './technique-details/ContextWritePatternsDetails';
+import ContextSelectPatternsDetails from './technique-details/ContextSelectPatternsDetails';
+import ContextCompressPatternsDetails from './technique-details/ContextCompressPatternsDetails';
+import ContextIsolatePatternsDetails from './technique-details/ContextIsolatePatternsDetails';
+import SlidingWindowManagementDetails from './technique-details/SlidingWindowManagementDetails';
+import SemanticContextCompressionDetails from './technique-details/SemanticContextCompressionDetails';
+import InfiniAttentionArchitectureDetails from './technique-details/InfiniAttentionArchitectureDetails';
+import MemoryBlockArchitectureDetails from './technique-details/MemoryBlockArchitectureDetails';
+import KVCacheOptimizationDetails from './technique-details/KVCacheOptimizationDetails';
+import ContextEngineeringFrameworksDetails from './technique-details/ContextEngineeringFrameworksDetails';
+import ContextFailurePreventionDetails from './technique-details/ContextFailurePreventionDetails';
 import ParallelChainingDetails from './technique-details/ParallelChainingDetails';
 import FeedbackChainingDetails from './technique-details/FeedbackChainingDetails';
 import MapReduceDetails from './technique-details/MapReduceDetails';
@@ -200,6 +227,17 @@ import { ConstitutionalAIDetails } from './technique-details/ConstitutionalAIDet
 import { ReinforcementLearningFromAIFeedbackDetails } from './technique-details/ReinforcementLearningFromAIFeedbackDetails';
 import { TestTimeScalingDetails } from './technique-details/TestTimeScalingDetails';
 import { OddsRatioPreferenceOptimizationDetails } from './technique-details/OddsRatioPreferenceOptimizationDetails';
+import ProgressiveDisclosurePatternsDetails from './technique-details/ProgressiveDisclosurePatternsDetails';
+import ConfidenceVisualizationPatternsDetails from './technique-details/ConfidenceVisualizationPatternsDetails';
+import MixedInitiativeInterfacePatternsDetails from './technique-details/MixedInitiativeInterfacePatternsDetails';
+import AgentStatusActivityPatternsDetails from './technique-details/AgentStatusActivityPatternsDetails';
+import ContextWindowManagementPatternsDetails from './technique-details/ContextWindowManagementPatternsDetails';
+import AdaptiveInterfacePatternsDetails from './technique-details/AdaptiveInterfacePatternsDetails';
+import MonitoringControlPatternsDetails from './technique-details/MonitoringControlPatternsDetails';
+import ErrorHandlingRecoveryPatternsDetails from './technique-details/ErrorHandlingRecoveryPatternsDetails';
+import OnboardingEducationPatternsDetails from './technique-details/OnboardingEducationPatternsDetails';
+import PrivacySecurityUXDetails from './technique-details/PrivacySecurityUXDetails';
+import AccessibilityAgentDesignDetails from './technique-details/AccessibilityAgentDesignDetails';
 import { SimplePreferenceOptimizationDetails } from './technique-details/SimplePreferenceOptimizationDetails';
 import { SupervisedLearningAdaptationDetails } from './technique-details/SupervisedLearningAdaptationDetails';
 import { UnsupervisedLearningAdaptationDetails } from './technique-details/UnsupervisedLearningAdaptationDetails';
@@ -502,6 +540,40 @@ export const TechniqueDetails = ({
                 <HierarchicalRAGDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'sequential-chaining' ? (
                 <SequentialChainingDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'context-retrieval-generation' ? (
+                <ContextRetrievalGenerationDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'context-processing-pipelines' ? (
+                <ContextProcessingPipelinesDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'context-lifecycle-management' ? (
+                <ContextLifecycleManagementDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'hierarchical-context-architecture' ? (
+                <HierarchicalContextArchitectureDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'context-state-machines' ? (
+                <ContextStateMachinesDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'context-streaming-protocols' ? (
+                <ContextStreamingProtocolsDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'context-write-patterns' ? (
+                <ContextWritePatternsDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'context-select-patterns' ? (
+                <ContextSelectPatternsDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'context-compress-patterns' ? (
+                <ContextCompressPatternsDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'context-isolate-patterns' ? (
+                <ContextIsolatePatternsDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'sliding-window-management' ? (
+                <SlidingWindowManagementDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'semantic-context-compression' ? (
+                <SemanticContextCompressionDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'infini-attention-architecture' ? (
+                <InfiniAttentionArchitectureDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'memory-block-architecture' ? (
+                <MemoryBlockArchitectureDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'kv-cache-optimization' ? (
+                <KVCacheOptimizationDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'context-engineering-frameworks' ? (
+                <ContextEngineeringFrameworksDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'context-failure-prevention' ? (
+                <ContextFailurePreventionDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'parallel-chaining' ? (
                 <ParallelChainingDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'feedback-chaining' ? (
@@ -912,6 +984,26 @@ export const TechniqueDetails = ({
                 <ActorFrameworksDetails />
               ) : selectedTechnique.id === 'consensus-algorithms' ? (
                 <ConsensusAlgorithmsDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'ambient-agent-patterns' ? (
+                <AmbientAgentPatternsDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'chat-interface-patterns' ? (
+                <ChatInterfacePatternsDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'cross-platform-agent-ux' ? (
+                <CrossPlatformAgentUxDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'visual-reasoning-patterns' ? (
+                <VisualReasoningPatternsDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'multimodal-interaction-patterns' ? (
+                <MultimodalInteractionPatternsDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'identity-access-management' ? (
+                <IdentityAccessManagementDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'threat-detection-response' ? (
+                <ThreatDetectionResponseDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'compliance-automation-patterns' ? (
+                <ComplianceAutomationPatternsDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'secure-multi-party-computation' ? (
+                <SecureMultiPartyComputationDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'zero-trust-agent-architecture' ? (
+                <ZeroTrustAgentArchitectureDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'agent-communication-protocols' ? (
                 <AgentCommunicationProtocolsDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'reinforcement-learning-adaptation' ? (
@@ -1044,6 +1136,28 @@ export const TechniqueDetails = ({
                 <HumanInTheLoopDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'human-on-the-loop' ? (
                 <HumanOnTheLoopDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'progressive-disclosure-patterns' ? (
+                <ProgressiveDisclosurePatternsDetails />
+              ) : selectedTechnique.id === 'confidence-visualization-patterns' ? (
+                <ConfidenceVisualizationPatternsDetails />
+              ) : selectedTechnique.id === 'mixed-initiative-interface-patterns' ? (
+                <MixedInitiativeInterfacePatternsDetails />
+              ) : selectedTechnique.id === 'agent-status-activity-patterns' ? (
+                <AgentStatusActivityPatternsDetails />
+              ) : selectedTechnique.id === 'context-window-management-patterns' ? (
+                <ContextWindowManagementPatternsDetails />
+              ) : selectedTechnique.id === 'adaptive-interface-patterns' ? (
+                <AdaptiveInterfacePatternsDetails />
+              ) : selectedTechnique.id === 'monitoring-control-patterns' ? (
+                <MonitoringControlPatternsDetails />
+              ) : selectedTechnique.id === 'error-recovery-patterns' ? (
+                <ErrorHandlingRecoveryPatternsDetails />
+              ) : selectedTechnique.id === 'onboarding-education-patterns' ? (
+                <OnboardingEducationPatternsDetails />
+              ) : selectedTechnique.id === 'privacy-security-ux' ? (
+                <PrivacySecurityUXDetails />
+              ) : selectedTechnique.id === 'accessibility-agent-design' ? (
+                <AccessibilityAgentDesignDetails />
               ) : (
                 <section>
                   <h2 className="text-xl lg:text-xl font-semibold text-white mb-6 flex items-center gap-2">

@@ -253,28 +253,28 @@ export default function ContentPage() {
         <MetricCard 
           title="Total Categories" 
           value={totalCategories} 
-          change={12} 
+          change={20} 
           icon={<BookOpen className="w-4 h-4" />} 
           trend="up" 
         />
         <MetricCard 
           title="Total Techniques" 
           value={totalTechniques} 
-          change={18} 
+          change={35} 
           icon={<Code className="w-4 h-4" />} 
           trend="up" 
         />
         <MetricCard 
           title="Use Cases" 
           value={totalUseCases} 
-          change={25} 
+          change={42} 
           icon={<Target className="w-4 h-4" />} 
           trend="up" 
         />
         <MetricCard 
           title="Avg per Category" 
           value={avgTechniquesPerCategory} 
-          change={8} 
+          change={15} 
           icon={<ChartBar className="w-4 h-4" />} 
           trend="up" 
         />
@@ -361,16 +361,16 @@ export default function ContentPage() {
               <li>• Start with <strong>Reasoning Techniques</strong> for foundational thinking patterns</li>
               <li>• Explore <strong>Prompt Chaining</strong> for building multi-step workflows</li>
               <li>• Learn <strong>Tool Use</strong> patterns for practical applications</li>
-              <li>• Study <strong>Guardrails/Safety</strong> for responsible AI deployment</li>
+              <li>• Study <strong>Security & Privacy</strong> for responsible AI deployment</li>
             </ul>
           </div>
           <div>
             <h4 className="font-medium text-blue-400 mb-2">For Advanced Users</h4>
             <ul className="space-y-2 text-sm text-gray-300">
               <li>• Implement <strong>Multi-Agent</strong> systems for complex coordination</li>
-              <li>• Design <strong>Cognitive Architectures</strong> for specialized reasoning</li>
-              <li>• Build <strong>Knowledge Representation</strong> systems with semantic validation</li>
-              <li>• Explore <strong>Context Orchestration</strong> for enterprise-scale deployments</li>
+              <li>• Master <strong>Context Management</strong> for long-running agent interactions</li>
+              <li>• Design <strong>Knowledge Retrieval (RAG)</strong> systems with semantic validation</li>
+              <li>• Build <strong>Learning and Adaptation</strong> systems for continuous improvement</li>
             </ul>
           </div>
         </div>

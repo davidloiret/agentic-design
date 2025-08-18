@@ -1949,3 +1949,90 @@ Eval est domain dependant.
 
 
 Faire une page overview avant toute les autres techniques pour que ca soit plus clair au lieu de juste cliquer sur category
+
+
+Use markdown !
+
+
+Privacy by first local and distant agent => local do anonymisation etc
+
+Interface patterns
+UI/UX for agentic AI systems
+
+rendre technique accessible à tous.
+
+y'a un peu de doublon Context Write Patterns
+
+faire des liens entre les differentes technique
+RAG par exemple n'est pas dupliqué pck il a sa propre technique
+
+
+
+  kv cache techniques
+  tips tricks
+
+  overlap avec memory / context
+
+  on doit citer mem0 et autre acteur
+
+  codegen => AST etc
+
+
+  explain how transformers work => video ludique
+
+  for each technique => deep dive ?
+
+  instead of overview => cheatsheet ?
+
+
+  pas mal de doublon => Memory Block Architecture
+
+
+  https://github.com/davidkimai/Context-Engineering
+
+
+  est ce que le mieux serait pas des google colab au lieu de faire le sandboxing moi meme => plsu la main si je fais moi
+
+
+  use XML 
+
+  enlever le mot patterns
+
+  finir les technique category security
+
+  ambient agent
+  chatbot
+
+===================================================================
+  kortexya need a search engine + infra plus pertinent que google et bing sur une selection de qualité :=> cf pocket reborn => see article we need crawler etc
+  https://blog.wilsonl.in/search-engine/
+
+
+  =====================
+
+  In security and privacy patterns
+  - Local edge device, mobile, browser, desktop inference
+  - Local agent for anonymisation and distant agent
+
+
+  progressive stream => BAML
+
+
+
+    🔄 Natural Grouping
+
+  The combined category would have logical sub-groups:
+  1. Collaboration Patterns: HITL, HOTL, mixed-initiative
+  2. Visualization Patterns: Confidence, progressive disclosure, status indicators
+  3. Control Patterns: Context management, monitoring, error recovery
+
+
+  Deep dive / library by patterns
+
+
+  ISO 27001
+  Approche Holistic
+
+  Demo to production
+
+  replace supaabse bykeycloak and postgresql

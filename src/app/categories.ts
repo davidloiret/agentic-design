@@ -526,50 +526,50 @@ export const categories: Category[] = [
     techniques: ['cot', 'tot', 'got', 'react', 'fot', 'metacognitive-monitoring', 'test-time-compute', 'reflective-mcts', 'least-to-most', 'analogical-reasoning', 'causal-reasoning', 'abductive-reasoning', 'step-back-prompting', 'buffer-of-thoughts', 'skeleton-of-thoughts']
   },
   { 
-    id: 'guardrails-safety', 
-    name: 'Guardrails/Safety Patterns', 
-    icon: '🛡️', 
-    description: 'Safety measures and content filtering patterns',
-    detailedDescription: 'Safety patterns are essential for deploying AI systems responsibly in production environments. These patterns focus on preventing harmful outputs, protecting against malicious inputs, and ensuring reliable behavior under various conditions. They form the defensive layer that makes AI systems trustworthy and suitable for real-world applications where safety and reliability are paramount.',
+    id: 'security-privacy', 
+    name: 'Security & Privacy Patterns', 
+    icon: '🔐', 
+    description: 'Comprehensive security, privacy, and ethical AI patterns for enterprise deployment',
+    detailedDescription: 'Security and privacy patterns provide enterprise-grade protection for AI systems through comprehensive frameworks covering data protection, access control, compliance automation, and threat mitigation. These patterns extend beyond basic safety measures to include advanced security techniques like differential privacy, zero-trust architectures, secure multi-party computation, and automated regulatory compliance. Modern implementations address the full spectrum of security concerns from prompt injection attacks to sophisticated threat detection and response systems.',
     useCases: [
-      'Content Moderation: Automatically detecting and filtering inappropriate, harmful, or policy-violating content in user-generated text, images, or other media.',
-      'Brand Safety: Ensuring AI-generated content aligns with brand values and doesn\'t produce outputs that could damage reputation or violate compliance requirements.',
-      'Prompt Injection Defense: Protecting against malicious attempts to override system instructions or extract sensitive information through crafted inputs.',
-      'High-Stakes Decision Support: Providing safety nets for AI systems used in critical applications like healthcare, finance, or autonomous systems.',
-      'Regulatory Compliance: Meeting industry standards and legal requirements for AI safety in regulated sectors.',
-      'User Protection: Safeguarding users from potentially harmful or misleading AI-generated advice or information.',
-      'Bias Mitigation: Implementing measures to detect and reduce harmful biases in AI outputs and decision-making.',
-      'Privacy Protection: Ensuring AI systems don\'t inadvertently expose or misuse sensitive personal information.'
+      'Enterprise Data Protection: Implementing differential privacy and secure computation for sensitive business data processing while maintaining AI utility.',
+      'Regulatory Compliance Automation: Automated GDPR, HIPAA, SOX, and industry-specific compliance enforcement with audit trails and reporting.',
+      'Zero-Trust AI Architecture: Never trust, always verify security models for AI systems with continuous authentication and authorization.',
+      'Threat Detection & Response: Real-time monitoring and automated response to security threats including prompt injection, model extraction, and adversarial attacks.',
+      'Privacy-Preserving Collaboration: Secure multi-party computation enabling AI collaboration without exposing sensitive data between organizations.',
+      'Identity & Access Management: Advanced authentication, authorization, and identity verification systems specifically designed for AI agents and human users.',
+      'Content Moderation & Brand Safety: Layered defense systems for content filtering, brand protection, and policy compliance enforcement.',
+      'Compliance Auditing: Automated systems for regulatory compliance monitoring, reporting, and certification across multiple jurisdictions.'
     ],
-    whyImportant: 'Guardrails and safety patterns are fundamental for building trustworthy AI systems that can be safely deployed in production environments. They protect users, organizations, and society from potential AI-related harms while enabling the beneficial use of AI technology. These patterns are essential for regulatory compliance, maintaining user trust, and ensuring that AI systems behave responsibly across diverse scenarios and use cases.',
+    whyImportant: 'Security and privacy patterns are fundamental for enterprise AI deployment, ensuring systems meet regulatory requirements, protect sensitive data, and maintain user trust. These patterns enable organizations to deploy AI safely in regulated industries, protect against evolving security threats, and maintain competitive advantage through secure innovation. They are essential for building AI systems that can handle sensitive data, operate in high-stakes environments, and meet the stringent security requirements of modern enterprise environments.',
     implementationGuide: {
       whenToUse: [
-        'Any production AI system that interacts with users or makes decisions affecting people',
-        'Applications handling sensitive data or operating in regulated industries',
-        'Systems that could potentially generate harmful, biased, or inappropriate content',
-        'AI applications where errors could have significant negative consequences',
-        'Public-facing AI systems where reputation and trust are important',
-        'Applications used by vulnerable populations or in high-stakes scenarios'
+        'Enterprise AI systems handling sensitive or regulated data',
+        'Applications requiring compliance with privacy regulations like GDPR or HIPAA',
+        'Systems operating in adversarial environments with security threats',
+        'Multi-tenant AI platforms with diverse security requirements',
+        'Cross-organizational AI collaboration requiring data protection',
+        'Public-facing AI systems requiring robust security and privacy protection'
       ],
       bestPractices: [
-        'Implement multiple layers of safety checks including input validation and output filtering',
-        'Use both rule-based and ML-based approaches for comprehensive safety coverage',
-        'Regularly test and update safety measures to address new types of harmful content',
-        'Implement proper logging and monitoring of safety interventions for analysis',
-        'Design transparent and explainable safety mechanisms for accountability',
-        'Provide clear feedback to users when safety measures are triggered',
-        'Regularly audit and assess the effectiveness of safety measures across different scenarios'
+        'Implement defense-in-depth strategies with multiple security layers',
+        'Use privacy-by-design principles in AI system architecture',
+        'Deploy continuous monitoring and threat detection systems',
+        'Implement automated compliance validation and reporting',
+        'Use zero-trust security models for AI system access control',
+        'Regular security audits and penetration testing of AI systems',
+        'Maintain incident response plans specifically for AI security threats'
       ],
       commonPitfalls: [
-        'Over-restrictive safety measures that significantly degrade user experience and system utility',
-        'Insufficient testing of safety measures leading to gaps in protection',
-        'Relying solely on automated safety measures without human oversight for critical applications',
-        'Not keeping safety measures updated as new threats and attack vectors emerge',
-        'Poor implementation of safety measures that can be easily bypassed or manipulated',
-        'Not considering the cultural and contextual aspects of safety and appropriateness'
+        'Over-relying on perimeter security without implementing internal protections',
+        'Insufficient privacy protection leading to regulatory violations and user mistrust',
+        'Poor threat detection allowing security breaches to go unnoticed',
+        'Inadequate access controls enabling unauthorized AI system usage',
+        'Not keeping security measures updated for evolving AI-specific threats',
+        'Ignoring the privacy implications of AI training data and model outputs'
       ]
     },
-    techniques: ['input-validation', 'output-filtering', 'prompt-injection-detection', 'bias-detection']
+    techniques: ['layered-defense-pattern', 'contextual-guardrailing-pattern', 'guard-agent-pattern', 'intrinsic-alignment-pattern', 'memory-poisoning-prevention', 'tool-misuse-prevention', 'privilege-compromise-mitigation', 'agrail-adaptive-pattern', 'maestro-multi-agent-security', 'system-prompt-protection', 'differential-privacy-patterns', 'zero-trust-agent-architecture', 'secure-multi-party-computation', 'compliance-automation-patterns', 'threat-detection-response', 'identity-access-management']
   },
 
   // Quality and Discovery Patterns
@@ -620,46 +620,110 @@ export const categories: Category[] = [
     techniques: ['metrics-dashboards', 'automated-testing', 'statistical-monitoring', 'user-feedback-loops']
   },
   {
-    id: 'human-ai-collaboration',
-    name: 'Human-AI Collaboration',
-    icon: '🤝',
-    description: 'Patterns for effective collaboration between humans and AI systems',
-    detailedDescription: 'Frameworks for seamless integration of human expertise with AI capabilities, enabling collaborative workflows where both humans and AI contribute their unique strengths to achieve better outcomes than either could accomplish alone.',
+    id: 'context-management',
+    name: 'Context Management',
+    icon: '🧠',
+    description: 'Strategic context window optimization and engineering patterns for AI agents',
+    detailedDescription: 'Context management patterns enable dynamic context window management, compression, and engineering patterns that optimize agent performance while managing computational costs and memory constraints. These sophisticated approaches address the critical challenge of maintaining relevant information within limited context windows through advanced techniques including semantic compression, hierarchical architectures, and intelligent state management. Modern context engineering has evolved from simple truncation strategies to sophisticated systems that can handle infinite-length contexts through bounded memory, real-time streaming protocols, and cross-modal integration.',
     useCases: [
-      'Medical Diagnosis Support: AI assists doctors with pattern recognition and data analysis while doctors provide clinical judgment, ethical reasoning, and patient interaction.',
-      'Legal Research Collaboration: AI handles large-scale document analysis and case law research while lawyers provide strategic thinking, argumentation, and client advocacy.',
-      'Creative Content Generation: AI generates initial ideas and variations while humans provide creative direction, quality judgment, and artistic vision.',
-      'Scientific Research Partnerships: AI processes large datasets and identifies patterns while researchers provide hypothesis generation, experimental design, and interpretation.'
+      'Agent Continuity: Maintaining conversation state and memory across extended interactions and multiple sessions with sophisticated context preservation techniques.',
+      'Cost Optimization: Intelligent context compression and pruning strategies that reduce token usage while preserving essential information and reasoning capabilities.',
+      'Performance Scaling: Dynamic context window management that adapts to task complexity and available computational resources for optimal throughput.',
+      'Long-Context Processing: Advanced architectures like Infini-Attention that enable processing of arbitrarily long sequences with bounded memory requirements.',
+      'Multi-Agent Coordination: Shared context management systems that enable multiple agents to collaborate effectively while maintaining context consistency.',
+      'Production Deployment: Enterprise-grade context lifecycle management with versioning, audit trails, and compliance tracking for regulated environments.',
+      'Context Infrastructure: Foundational systems for context retrieval, generation, processing pipelines, and quality assessment in production AI systems.',
+      'Lifecycle Management: Comprehensive context governance including archival policies, retention management, and cross-session persistence strategies.'
     ],
-    whyImportant: 'Human-AI collaboration patterns are critical for building AI systems that augment rather than replace human capabilities, ensuring ethical and effective partnerships that leverage the unique strengths of both humans and AI while maintaining human agency and accountability.',
+    whyImportant: 'Context management patterns are fundamental to building capable AI agents that can maintain coherent, long-term interactions while operating efficiently within computational constraints. These patterns address the core limitation of traditional language models - finite context windows - through sophisticated engineering approaches that enable unlimited persistent memory, semantic compression, and intelligent information prioritization. As AI systems become more capable and are deployed in complex, long-running scenarios, effective context management becomes the primary determinant of agent success, often more important than the underlying model capabilities.',
     implementationGuide: {
       whenToUse: [
-        'Tasks requiring both analytical processing and human judgment',
-        'Domains where ethical considerations and human values are paramount',
-        'Complex decision-making scenarios with high stakes or consequences',
-        'Creative or innovative work requiring both generation and curation',
-        'Situations requiring trust, empathy, or human connection',
-        'Workflows where human expertise provides essential context or validation'
+        'Long-running conversations or interactions that exceed standard context window limits',
+        'Multi-session applications requiring persistent memory and state management',
+        'High-volume production systems where context optimization directly impacts costs',
+        'Complex workflows requiring coordination between multiple specialized agents',
+        'Applications processing large documents or datasets that exceed context capacity',
+        'Enterprise systems requiring audit trails and governance of context usage'
       ],
       bestPractices: [
-        'Design clear roles and responsibilities for both human and AI participants',
-        'Implement transparent communication mechanisms between humans and AI',
-        'Build trust through explainable AI and consistent performance',
-        'Provide appropriate training and support for human team members',
-        'Design workflows that leverage the unique strengths of each participant',
-        'Implement feedback loops for continuous improvement of collaboration'
+        'Implement hierarchical context architectures with different retention policies for various information types',
+        'Use semantic compression techniques that preserve meaning while reducing token count',
+        'Design context retrieval systems that can quickly access relevant historical information',
+        'Implement real-time context streaming for applications requiring immediate responsiveness',
+        'Use intelligent context state machines to manage transitions and validate consistency',
+        'Design context isolation patterns for multi-agent systems to prevent interference',
+        'Implement comprehensive monitoring and quality assessment of context management effectiveness'
       ],
       commonPitfalls: [
-        'Over-reliance on AI without maintaining human oversight and accountability',
-        'Poor communication interfaces leading to misunderstanding and errors',
-        'Misaligned goals and expectations between human and AI team members',
-        'Inadequate training or support for humans working with AI systems',
-        'Ignoring human factors like fatigue, bias, and emotional state',
-        'Failing to maintain human agency and decision-making authority'
-              ]
-      },
-      techniques: ['human-in-the-loop', 'human-on-the-loop', 'human-ai-team-formation', 'augmented-decision-making', 'collaborative-learning', 'explainable-ai-interaction', 'approval-workflows', 'collaborative-filtering', 'escalation-procedures', 'feedback-loops']
+        'Over-aggressive context compression leading to loss of critical information and degraded performance',
+        'Poor context retrieval strategies that fail to surface relevant historical information when needed',
+        'Insufficient context lifecycle management leading to unbounded memory growth and performance degradation',
+        'Inadequate context isolation in multi-agent systems causing interference and consistency issues',
+        'Not implementing proper context validation and error recovery mechanisms',
+        'Ignoring the computational overhead and latency implications of sophisticated context management'
+      ]
+    },
+    techniques: ['context-retrieval-generation', 'context-processing-pipelines', 'context-lifecycle-management', 'hierarchical-context-architecture', 'context-state-machines', 'context-streaming-protocols', 'context-write-patterns', 'context-select-patterns', 'context-compress-patterns', 'context-isolate-patterns', 'sliding-window-management', 'semantic-context-compression', 'infini-attention-architecture', 'memory-block-architecture', 'kv-cache-optimization', 'context-engineering-frameworks', 'multi-agent-context-coordination', 'context-failure-prevention']
   },
+  {
+    id: 'ui-ux-patterns',
+    name: 'UI/UX & Human-AI Interaction',
+    icon: '🎨',
+    description: 'Comprehensive user interface, experience, and human-AI collaboration patterns for agentic AI systems',
+    detailedDescription: 'Comprehensive patterns covering both user interface design and human-AI collaboration for agentic AI systems. This unified category addresses the full spectrum of human-agent interaction, from foundational collaboration patterns like Human-in-the-Loop and Human-on-the-Loop to sophisticated interface designs including progressive disclosure, confidence visualization, and mixed-initiative controls. These patterns represent a fundamental paradigm shift from traditional interface design toward outcome-oriented, collaborative human-agent interactions. Named as Gartner\'s top technology trend for 2025, agentic AI requires integrated approaches that seamlessly blend collaboration frameworks with interface innovations including conversational UI beyond chat, multi-agent coordination dashboards, trust-building transparency patterns, adaptive personalization, and multimodal interaction designs.',
+    useCases: [
+      'Human-in-the-Loop Collaboration: Medical diagnosis systems where AI handles routine analysis and flags uncertain cases for human review, maintaining doctor accountability while improving efficiency.',
+      'Human-on-the-Loop Monitoring: Autonomous trading systems with real-time dashboards enabling human oversight and intervention during market volatility or unusual conditions.',
+      'Conversational Agent Interfaces: Advanced conversation design moving beyond traditional chatbots to agent-driven, proactive interactions with multimodal integration and context-aware modality selection.',
+      'Multi-Agent Coordination UX: User interfaces for orchestrating multiple specialized AI agents with transparent handoffs, collaboration dashboards, and seamless context preservation across agent transitions.',
+      'Trust and Transparency Systems: Explainable AI interfaces featuring decision visualization, source attribution, confidence indicators, and progressive disclosure of reasoning processes for high-stakes applications.',
+      'Adaptive Interface Personalization: Dynamic UI adaptation based on user context, behavior patterns, and preferences using real-time personalization engines and context-aware interface adjustment.',
+      'Mission Control Monitoring: Real-time agent oversight interfaces with intervention capabilities, exception-based alerts, performance monitoring, and sophisticated control mechanisms for enterprise agent networks.',
+      'Error Recovery and Failure Communication: Graceful error handling patterns with progressive disclosure, actionable recovery suggestions, and context preservation during failure scenarios.',
+      'Agent Onboarding and Education: User education patterns for introducing agent capabilities, building appropriate mental models, and fostering trust through transparency and capability demonstration.',
+      'Cross-Platform Agent Experiences: Consistent agent interactions across desktop, mobile, web, and emerging platforms with seamless synchronization and device-optimized adaptation.',
+      'Privacy and Security UX: Privacy-first design patterns with granular data controls, transparent security measures, and user empowerment over personal information in agent systems.',
+      'Accessibility in Agent Design: Universal design principles for inclusive agent interfaces supporting diverse abilities, assistive technologies, and cognitive accessibility requirements.',
+      'Visual Reasoning Interfaces: Visualization patterns for agent decision-making processes, reasoning transparency, and cognitive load management in complex problem-solving scenarios.',
+      'Multimodal Interaction Patterns: Advanced integration of voice, visual, gesture, and text communication with context-aware modality switching and emotional adaptation capabilities.'
+    ],
+    whyImportant: 'UI/UX patterns for agentic AI are critical for the successful adoption and deployment of autonomous AI systems in real-world applications. As AI moves from reactive tools to proactive agents, traditional interface paradigms break down, requiring new approaches that balance human control with agent autonomy. These patterns address fundamental challenges including trust calibration, transparency requirements, multi-agent coordination, and the shift from control-centric to outcome-focused design. With the agentic AI market projected to reach $10.41 billion by 2025, organizations need proven UX patterns to deploy these systems safely and effectively while maintaining user satisfaction and regulatory compliance.',
+    implementationGuide: {
+      whenToUse: [
+        'Deploying autonomous AI agents that require human oversight and collaboration',
+        'Building conversational AI systems that move beyond simple chat interfaces',
+        'Creating multi-agent systems requiring coordination and handoff management',
+        'Developing AI applications for high-stakes environments requiring trust and transparency',
+        'Implementing personalized AI experiences that adapt to user context and behavior',
+        'Building enterprise AI systems requiring monitoring, control, and governance interfaces'
+      ],
+      bestPractices: [
+        'Design for outcome-oriented interactions rather than control-centric interfaces',
+        'Implement progressive disclosure of agent capabilities and reasoning processes',
+        'Build trust through transparent decision-making and clear source attribution',
+        'Enable appropriate human intervention and override capabilities',
+        'Design adaptive interfaces that learn and adjust to user preferences and context',
+        'Implement comprehensive error handling with graceful degradation strategies',
+        'Use multimodal interaction patterns that automatically select optimal communication methods',
+        'Ensure accessibility and universal design principles in all agent interface patterns',
+        'Design for cross-platform consistency while optimizing for device-specific capabilities',
+        'Implement privacy-by-design principles with granular user control over data usage'
+      ],
+      commonPitfalls: [
+        'Applying traditional UI paradigms to agentic systems without considering agent autonomy',
+        'Creating interfaces that are too complex for users to understand agent capabilities',
+        'Insufficient transparency leading to user mistrust and poor adoption',
+        'Poor error handling that breaks user trust when agents make mistakes',
+        'Over-automation without providing appropriate human control and intervention mechanisms',
+        'Ignoring accessibility requirements specific to agent interaction patterns',
+        'Inconsistent experiences across different platforms and devices',
+        'Inadequate privacy controls and transparency about data usage',
+        'Poor onboarding that fails to set appropriate expectations for agent capabilities',
+        'Designing agent interfaces without considering the cognitive load of human-agent collaboration'
+      ]
+    },
+    techniques: ['human-in-the-loop', 'human-on-the-loop', 'progressive-disclosure-patterns', 'confidence-visualization-patterns', 'mixed-initiative-interface-patterns', 'agent-status-activity-patterns', 'context-window-management-patterns', 'conversational-interface-patterns', 'agent-collaboration-ux', 'trust-transparency-patterns', 'adaptive-interface-patterns', 'monitoring-control-patterns', 'error-recovery-patterns', 'onboarding-education-patterns', 'privacy-security-ux', 'accessibility-agent-design', 'ambient-agent-patterns', 'chat-interface-patterns', 'cross-platform-agent-ux', 'visual-reasoning-patterns', 'multimodal-interaction-patterns']
+  }
 
   
 ];

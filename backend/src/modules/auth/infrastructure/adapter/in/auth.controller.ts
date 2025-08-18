@@ -32,13 +32,13 @@ export class AuthController {
 
     response.cookie('access_token', result.access_token, {
       ...cookieOptions,
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
+      maxAge: 60 * 60 * 1000, // 1 hour
     });
     
     if (result.refresh_token) {
       response.cookie('refresh_token', result.refresh_token, {
         ...cookieOptions,
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        maxAge: 90 * 24 * 60 * 60 * 1000, // 90 days
       });
     }
     
@@ -58,13 +58,13 @@ export class AuthController {
 
     response.cookie('access_token', result.access_token, {
       ...cookieOptions,
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
+      maxAge: 60 * 60 * 1000, // 1 hour
     });
     
     if (result.refresh_token) {
       response.cookie('refresh_token', result.refresh_token, {
         ...cookieOptions,
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        maxAge: 90 * 24 * 60 * 60 * 1000, // 90 days
       });
     }
     
@@ -84,8 +84,9 @@ export class AuthController {
       await this.authService.logout(token);
     }
     
-    response.clearCookie('access_token');
-    response.clearCookie('refresh_token');
+    const cookieOptions = getCookieOptions();
+    response.clearCookie('access_token', cookieOptions);
+    response.clearCookie('refresh_token', cookieOptions);
     
     return { message: 'Logged out successfully' };
   }
@@ -175,13 +176,13 @@ export class AuthController {
 
       response.cookie('access_token', body.access_token, {
         ...cookieOptions,
-        maxAge: 24 * 60 * 60 * 1000, // 1 day
+        maxAge: 60 * 60 * 1000, // 1 hour
       });
       
       if (body.refresh_token) {
         response.cookie('refresh_token', body.refresh_token, {
           ...cookieOptions,
-          maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+          maxAge: 90 * 24 * 60 * 60 * 1000, // 90 days
         });
       }
       
@@ -231,8 +232,9 @@ export class AuthController {
     const result = await this.authService.updatePassword(accessToken, body.password);
     
     // Clear cookies after password reset for security
-    response.clearCookie('access_token');
-    response.clearCookie('refresh_token');
+    const cookieOptions = getCookieOptions();
+    response.clearCookie('access_token', cookieOptions);
+    response.clearCookie('refresh_token', cookieOptions);
     
     return { 
       message: 'Password has been reset successfully. Please login with your new password.' 
@@ -256,13 +258,13 @@ export class AuthController {
 
     response.cookie('access_token', result.access_token, {
       ...cookieOptions,
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
+      maxAge: 60 * 60 * 1000, // 1 hour
     });
     
     if (result.refresh_token) {
       response.cookie('refresh_token', result.refresh_token, {
         ...cookieOptions,
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        maxAge: 90 * 24 * 60 * 60 * 1000, // 90 days
       });
     }
     
@@ -287,13 +289,13 @@ export class AuthController {
     // Set cookies for password reset flow
     response.cookie('access_token', result.access_token, {
       ...cookieOptions,
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
+      maxAge: 60 * 60 * 1000, // 1 hour
     });
     
     if (result.refresh_token) {
       response.cookie('refresh_token', result.refresh_token, {
         ...cookieOptions,
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        maxAge: 90 * 24 * 60 * 60 * 1000, // 90 days
       });
     }
     
@@ -348,7 +350,7 @@ export class AuthController {
       return {
         access_token: result.session.access_token,
         refresh_token: result.session.refresh_token,
-        expires_in: 24 * 60 * 60, // 1 day in seconds
+        expires_in: 30 * 24 * 60 * 60, // 30 days in seconds
       };
     } catch (error) {
       throw new UnauthorizedException('Failed to refresh token');
@@ -383,7 +385,7 @@ export class AuthController {
         access_token: result.access_token,
         refresh_token: result.refresh_token,
         user: result.user,
-        expires_in: 24 * 60 * 60, // 1 day in seconds
+        expires_in: 30 * 24 * 60 * 60, // 30 days in seconds
       };
     } catch (error) {
       throw new BadRequestException('OAuth callback failed');

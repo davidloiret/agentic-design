@@ -1,6 +1,6 @@
 import { Injectable, CanActivate, ExecutionContext, UnauthorizedException, SetMetadata } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { SupabaseAuthService } from '../adapter/out/supabase-auth.service';
 import { UserRepository } from '../../../user/infrastructure/persistence/user.repository';
 
@@ -16,6 +16,50 @@ export class AuthGuard implements CanActivate {
     private readonly userRepository: UserRepository,
   ) {}
 
+  private getCookieOptions() {
+    const isProduction = process.env.NODE_ENV === 'production';
+    return {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: 'lax' as const,
+      domain: isProduction ? '.agentic-design.ai' : 'localhost',
+      path: '/',
+    };
+  }
+
+  private async refreshTokenAndSetCookies(refreshToken: string, response: Response) {
+    try {
+      const refreshResult = await this.supabaseAuthService.refreshSession(refreshToken);
+      if (refreshResult?.session?.access_token) {
+        const cookieOptions = this.getCookieOptions();
+        
+        response.cookie('access_token', refreshResult.session.access_token, {
+          ...cookieOptions,
+          maxAge: 60 * 60 * 1000, // 1 hour
+        });
+        
+        if (refreshResult.session.refresh_token) {
+          response.cookie('refresh_token', refreshResult.session.refresh_token, {
+            ...cookieOptions,
+            maxAge: 90 * 24 * 60 * 60 * 1000, // 90 days
+          });
+        }
+        
+        return {
+          token: refreshResult.session.access_token,
+          user: refreshResult.user ?? refreshResult.session.user,
+        };
+      }
+    } catch (error) {
+      console.error('Token refresh failed:', error);
+      // Clear invalid cookies with same options used to set them
+      const cookieOptions = this.getCookieOptions();
+      response.clearCookie('access_token', cookieOptions);
+      response.clearCookie('refresh_token', cookieOptions);
+    }
+    return null;
+  }
+
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
@@ -27,67 +71,45 @@ export class AuthGuard implements CanActivate {
     }
 
     const request = context.switchToHttp().getRequest<Request>();
+    const response = context.switchToHttp().getResponse<Response>();
     
     let token = request.cookies?.['access_token'];
+    let isFromCookie = !!token;
     
     if (!token) {
       const authHeader = request.headers.authorization;
       if (authHeader && authHeader.startsWith('Bearer ')) {
         token = authHeader.substring(7);
-      }
-    }
-    
-    if (!token && request.cookies?.['refresh_token']) {
-      const refreshToken = request.cookies['refresh_token'];
-      const refreshResult = await this.supabaseAuthService.refreshSession(refreshToken);
-      if (refreshResult?.session?.access_token) {
-        token = refreshResult.session.access_token;
-        const response = context.switchToHttp().getResponse();
-        response.cookie('access_token', refreshResult.session.access_token, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'lax',
-          maxAge: 24 * 60 * 60 * 1000, // 1 day
-        });
-        if (refreshResult.session.refresh_token) {
-          response.cookie('refresh_token', refreshResult.session.refresh_token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'lax',
-            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-          });
-        }
+        isFromCookie = false;
       }
     }
     
     if (!token) {
-      throw new UnauthorizedException('No authentication token provided');
+      // No access token at all, try refresh if available
+      if (request.cookies?.['refresh_token']) {
+        const refreshToken = request.cookies['refresh_token'];
+        const refreshResult = await this.refreshTokenAndSetCookies(refreshToken, response);
+        if (refreshResult) {
+          token = refreshResult.token;
+          isFromCookie = true;
+        }
+      }
+      
+      if (!token) {
+        throw new UnauthorizedException('No authentication token provided');
+      }
     }
 
     try {
       let user = await this.supabaseAuthService.getUserByToken(token);
       
-      if (!user && request.cookies?.['refresh_token']) {
+      // If token is invalid/expired and we have refresh token (cookie-based auth only)
+      if (!user && isFromCookie && request.cookies?.['refresh_token']) {
         const refreshToken = request.cookies['refresh_token'];
-        const refreshResult = await this.supabaseAuthService.refreshSession(refreshToken);
-        if (refreshResult?.session?.access_token) {
-          token = refreshResult.session.access_token;
-          user = refreshResult.user ?? refreshResult.session.user;
-          const response = context.switchToHttp().getResponse();
-          response.cookie('access_token', refreshResult.session.access_token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'lax',
-            maxAge: 24 * 60 * 60 * 1000, // 1 day
-          });
-          if (refreshResult.session.refresh_token) {
-            response.cookie('refresh_token', refreshResult.session.refresh_token, {
-              httpOnly: true,
-              secure: process.env.NODE_ENV === 'production',
-              sameSite: 'lax',
-              maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-            });
-          }
+        const refreshResult = await this.refreshTokenAndSetCookies(refreshToken, response);
+        if (refreshResult) {
+          token = refreshResult.token;
+          user = refreshResult.user;
         }
       }
       
@@ -131,10 +153,12 @@ export class AuthGuard implements CanActivate {
       
       return true;
     } catch (error) {
-      // Clear invalid cookies
-      const response = context.switchToHttp().getResponse();
-      response.clearCookie('access_token');
-      response.clearCookie('refresh_token');
+      // Clear invalid cookies only if auth was cookie-based
+      if (isFromCookie) {
+        const cookieOptions = this.getCookieOptions();
+        response.clearCookie('access_token', cookieOptions);
+        response.clearCookie('refresh_token', cookieOptions);
+      }
       
       if (error instanceof UnauthorizedException) {
         throw error;
