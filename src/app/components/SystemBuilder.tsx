@@ -568,7 +568,7 @@ const NodeDetailModal = ({ node, isOpen, onClose, onSave, onOpenCodeEditor }: {
 };
 
 // Zone/Group Node for visual boundaries
-const ZoneNode = ({ data }: {data: any}) => {
+const ZoneNode = ({ data, selected }: {data: any; selected?: boolean}) => {
   const getZoneStyle = () => {
     switch (data.zone) {
       case 'internet':
@@ -634,16 +634,24 @@ const ZoneNode = ({ data }: {data: any}) => {
 
   return (
     <div 
-      className={`${style.bg} ${style.border} border-2 border-dashed rounded-xl`}
+      className={`${style.bg} ${style.border} border-2 border-dashed rounded-xl cursor-move hover:bg-opacity-20 transition-all duration-200 ${
+        selected ? 'ring-2 ring-white/30 border-solid' : ''
+      }`}
       style={{
         width: data.width || 400,
         height: data.height || 300,
-        pointerEvents: 'none'
       }}
     >
-      <div className={`${style.text} text-sm font-semibold px-3 py-1`}>
+      <div 
+        className={`${style.text} text-sm font-semibold px-3 py-1 bg-black/20 rounded-tr-xl inline-block pointer-events-none select-none`}
+      >
         {style.label}
       </div>
+      {selected && (
+        <div className="absolute top-2 right-2 text-white/60 text-xs pointer-events-none select-none">
+          Draggable Zone
+        </div>
+      )}
     </div>
   );
 };
@@ -769,7 +777,9 @@ const DatabaseNode = ({ data, selected }: {data: any; selected: boolean}) => {
   const colors = getDbColors();
 
   return (
-    <div className={`px-4 py-3 shadow-xl rounded-lg border-2 min-w-[160px] ${colors.border} ${colors.bg} ${colors.glow} hover:shadow-2xl transition-all duration-200`}>
+    <div className={`px-4 py-3 shadow-xl rounded-lg border-2 min-w-[160px] cursor-move ${colors.border} ${colors.bg} ${colors.glow} hover:shadow-2xl transition-all duration-200 ${
+      selected ? 'ring-2 ring-white/50 scale-105' : ''
+    }`}>
       <Handle 
         type="target" 
         position={Position.Top} 
@@ -907,9 +917,9 @@ const ServiceNode = ({ data, selected }: {data: any; selected: boolean}) => {
   const size = isOrchestrator ? 'min-w-[180px] min-h-[80px]' : 'min-w-[160px]';
 
   return (
-    <div className={`px-4 py-3 shadow-xl rounded-lg border-2 ${size} ${colors.border} ${colors.bg} ${colors.glow} hover:shadow-2xl transition-all duration-200 ${
+    <div className={`px-4 py-3 shadow-xl rounded-lg border-2 ${size} ${colors.border} ${colors.bg} ${colors.glow} hover:shadow-2xl transition-all duration-200 cursor-move ${
       isOrchestrator ? 'ring-2 ring-purple-500/30' : ''
-    }`}>
+    } ${selected ? 'ring-2 ring-white/50 scale-105' : ''}`}>
       <Handle 
         type="target" 
         position={Position.Top} 
@@ -950,9 +960,9 @@ const ServiceNode = ({ data, selected }: {data: any; selected: boolean}) => {
 
 const InterfaceNode = ({ data, selected }: {data: any; selected: boolean}) => {
   return (
-    <div className={`px-4 py-3 shadow-xl rounded-lg border-2 min-w-[160px] ${
+    <div className={`px-4 py-3 shadow-xl rounded-lg border-2 min-w-[160px] cursor-move ${
       selected 
-        ? 'border-indigo-400 bg-indigo-900/70 shadow-indigo-500/40' 
+        ? 'border-indigo-400 bg-indigo-900/70 shadow-indigo-500/40 ring-2 ring-white/30 scale-105' 
         : 'border-indigo-600 bg-indigo-800/50 shadow-indigo-500/20'
     } hover:shadow-2xl transition-all duration-200`}>
       <Handle 
@@ -981,9 +991,9 @@ const InterfaceNode = ({ data, selected }: {data: any; selected: boolean}) => {
 
 const ActorNode = ({ data, selected }: {data: any; selected: boolean}) => {
   return (
-    <div className={`px-4 py-3 shadow-2xl rounded-full border-3 min-w-[140px] ${
+    <div className={`px-4 py-3 shadow-2xl rounded-full border-3 min-w-[140px] cursor-move ${
       selected 
-        ? 'border-amber-400 bg-amber-900/80 shadow-amber-500/50 ring-2 ring-amber-400/30' 
+        ? 'border-amber-400 bg-amber-900/80 shadow-amber-500/50 ring-2 ring-amber-400/30 scale-110' 
         : 'border-amber-500 bg-amber-800/60 shadow-amber-500/30'
     } hover:shadow-3xl transition-all duration-200`}>
       <Handle 
@@ -1491,6 +1501,39 @@ export const SystemBuilder = ({ techniques }: SystemBuilderProps) => {
     [setEdges]
   );
 
+  // Handle zone dragging and move contained nodes automatically
+  const onNodeDragStop = useCallback((event: React.MouseEvent, node: Node, draggedNodes: Node[]) => {
+    if (node.type === 'zone') {
+      // Find the zone that was dragged
+      const draggedZone = draggedNodes.find(n => n.id === node.id);
+      if (!draggedZone) return;
+      
+      // Calculate the movement delta
+      const originalZoneNode = nodes.find(n => n.id === node.id);
+      if (!originalZoneNode) return;
+      
+      const deltaX = draggedZone.position.x - originalZoneNode.position.x;
+      const deltaY = draggedZone.position.y - originalZoneNode.position.y;
+      
+      // Move all nodes that belong to this zone
+      const zoneName = draggedZone.data.zone;
+      setNodes((nds) => 
+        nds.map((n) => {
+          if (n.type !== 'zone' && n.data.zone === zoneName) {
+            return {
+              ...n,
+              position: {
+                x: n.position.x + deltaX,
+                y: n.position.y + deltaY
+              }
+            };
+          }
+          return n;
+        })
+      );
+    }
+  }, [nodes, setNodes]);
+
   // Handle node click for editing (only for non-code nodes)
   const onNodeClick = useCallback((_event: React.MouseEvent, node: Node) => {
     // Only open modal for non-code nodes
@@ -1636,84 +1679,176 @@ export const SystemBuilder = ({ techniques }: SystemBuilderProps) => {
         ];
         break;
       case 'agentic-ai-system':
-        // Complete redesign with proper grid layout and spacing
-        const nodeWidth = 200;
-        const nodeHeight = 120;
-        const xPadding = 100;
-        const yPadding = 50;
-        const xGap = 50;
-        const yGap = 50;
+        // Smart layout calculation inline
+        const nodeWidth = 220;
+        const nodeHeight = 140;
+        const zonePadding = 50; // Keep padding reasonable
+        const nodeSpacingX = 400;
+        const nodeSpacingY = 200;
         
-        templateNodes = [
-          // Zone definitions - properly sized to contain all nodes
-          { id: 'zone-internet', type: 'zone', position: { x: 0, y: 0 }, data: { zone: 'internet', width: 1100, height: 250 }, draggable: false, selectable: false },
-          { id: 'zone-dmz', type: 'zone', position: { x: 0, y: 270 }, data: { zone: 'dmz', width: 1100, height: 200 }, draggable: false, selectable: false },
-          { id: 'zone-application', type: 'zone', position: { x: 0, y: 490 }, data: { zone: 'application', width: 1800, height: 700 }, draggable: false, selectable: false },
-          { id: 'zone-data', type: 'zone', position: { x: 0, y: 1210 }, data: { zone: 'data', width: 1800, height: 250 }, draggable: false, selectable: false },
-          { id: 'zone-infrastructure', type: 'zone', position: { x: 0, y: 1480 }, data: { zone: 'infrastructure', width: 1100, height: 450 }, draggable: false, selectable: false },
-          { id: 'zone-external', type: 'zone', position: { x: 1850, y: 270 }, data: { zone: 'external', width: 400, height: 920 }, draggable: false, selectable: false },
-          { id: 'zone-monitoring', type: 'zone', position: { x: 1150, y: 1480 }, data: { zone: 'monitoring', width: 1100, height: 450 }, draggable: false, selectable: false },
+        // Define node positions by zone
+        const nodePositions = [
+          // Internet Zone nodes
+          { id: 'chat-ui', x: 150, y: 100, zone: 'internet' },
+          { id: 'user', x: 550, y: 100, zone: 'internet' },
+          { id: 'dashboard', x: 950, y: 100, zone: 'internet' },
           
-          // Internet Zone - Public facing (3 nodes in a row)
-          { id: 'chat-ui', type: 'interface', position: { x: 100, y: 80 }, data: { label: 'Chat Interface', interfaceType: 'React App', framework: 'React', pages: ['chat', 'history'] } },
-          { id: 'user', type: 'actor', position: { x: 450, y: 80 }, data: { label: 'User', role: 'End User' } },
-          { id: 'dashboard', type: 'interface', position: { x: 800, y: 80 }, data: { label: 'Admin Dashboard', interfaceType: 'Web App', framework: 'React', pages: ['dashboard', 'agents', 'logs'] } },
+          // DMZ Zone nodes
+          { id: 'load-balancer', x: 350, y: 400, zone: 'dmz' },
+          { id: 'api-gateway', x: 750, y: 400, zone: 'dmz' },
           
-          // DMZ Zone - Network & Gateway (2 nodes centered)
-          { id: 'load-balancer', type: 'service', position: { x: 250, y: 330 }, data: { label: 'Load Balancer', serviceType: 'HAProxy', endpoints: ['/balance', '/health', '/route'], complexity: 'low', reliability: 'critical' } },
-          { id: 'api-gateway', type: 'service', position: { x: 650, y: 330 }, data: { label: 'API Gateway', serviceType: 'Kong/Nginx', endpoints: ['/api/chat', '/api/agents', '/api/tools'], complexity: 'medium', reliability: 'high' } },
+          // Application Zone nodes
+          { id: 'input-validator', x: 150, y: 700, zone: 'application' },
+          { id: 'guard-agent', x: 550, y: 700, zone: 'application' },
+          { id: 'output-filter', x: 950, y: 700, zone: 'application' },
+          { id: 'audit-logger', x: 1350, y: 700, zone: 'application' },
           
-          // Application Zone - Security Layer (4 nodes in first row)
-          { id: 'input-validator', type: 'service', position: { x: 100, y: 560 }, data: { label: 'Input Validator', serviceType: 'Python', endpoints: ['/validate', '/sanitize', '/filter'], complexity: 'medium', reliability: 'critical' } },
-          { id: 'guard-agent', type: 'service', position: { x: 450, y: 560 }, data: { label: 'Guard Agent', serviceType: 'Python', endpoints: ['/validate', '/filter', '/block'], complexity: 'medium', reliability: 'critical' } },
-          { id: 'output-filter', type: 'service', position: { x: 800, y: 560 }, data: { label: 'Output Filter', serviceType: 'Python', endpoints: ['/filter', '/scan', '/approve'], complexity: 'medium', reliability: 'critical' } },
-          { id: 'audit-logger', type: 'service', position: { x: 1150, y: 560 }, data: { label: 'Audit Logger', serviceType: 'Go', endpoints: ['/log', '/audit', '/trace'], complexity: 'low', reliability: 'critical' } },
+          { id: 'agent-registry', x: 350, y: 900, zone: 'application' },
+          { id: 'master-orchestrator', x: 750, y: 900, zone: 'application' },
+          { id: 'task-dispatcher', x: 1150, y: 900, zone: 'application' },
           
-          // Application Zone - Core Orchestration (3 nodes in second row)
-          { id: 'agent-registry', type: 'service', position: { x: 275, y: 740 }, data: { label: 'Agent Registry', serviceType: 'Go', endpoints: ['/register', '/discover', '/health'], complexity: 'medium', reliability: 'high' } },
-          { id: 'master-orchestrator', type: 'service', position: { x: 625, y: 740 }, data: { label: 'Master Orchestrator', serviceType: 'Node.js', endpoints: ['/orchestrate', '/delegate', '/coordinate'], complexity: 'high', reliability: 'critical' } },
-          { id: 'task-dispatcher', type: 'service', position: { x: 975, y: 740 }, data: { label: 'Task Dispatcher', serviceType: 'Python', endpoints: ['/dispatch', '/queue', '/priority'], complexity: 'medium', reliability: 'high' } },
+          { id: 'planning-agent', x: 150, y: 1100, zone: 'application' },
+          { id: 'execution-agent', x: 550, y: 1100, zone: 'application' },
+          { id: 'memory-agent', x: 950, y: 1100, zone: 'application' },
+          { id: 'tool-agent', x: 1350, y: 1100, zone: 'application' },
+          { id: 'evaluation-agent', x: 1750, y: 1100, zone: 'application' },
+          { id: 'reflection-agent', x: 950, y: 1250, zone: 'application' },
           
-          // Infrastructure Zone - Services (properly spaced)
-          { id: 'message-queue', type: 'service', position: { x: 100, y: 1560 }, data: { label: 'Message Queue', serviceType: 'RabbitMQ/Kafka', endpoints: ['/publish', '/subscribe', '/dlq'], complexity: 'medium', reliability: 'high' } },
-          { id: 'config-manager', type: 'service', position: { x: 450, y: 1560 }, data: { label: 'Config Manager', serviceType: 'Consul/etcd', endpoints: ['/config', '/secrets', '/watch'], complexity: 'low', reliability: 'high' } },
+          // Data Zone nodes - NO OVERLAP (Application ends Y:1440, Data starts Y:1500)
+          { id: 'vector-db', x: 150, y: 1500, zone: 'data' },
+          { id: 'knowledge-graph', x: 550, y: 1500, zone: 'data' },
+          { id: 'short-term-memory', x: 950, y: 1500, zone: 'data' },
+          { id: 'long-term-memory', x: 1350, y: 1500, zone: 'data' },
+          { id: 'episodic-memory', x: 1750, y: 1500, zone: 'data' },
           
-          // Application Zone - Specialized Agents (5 nodes in third row, 1 in fourth)
-          { id: 'planning-agent', type: 'service', position: { x: 100, y: 920 }, data: { label: 'Planning Agent', serviceType: 'Python + LLM', endpoints: ['/plan', '/decompose', '/goals'], complexity: 'high', reliability: 'high' } },
-          { id: 'execution-agent', type: 'service', position: { x: 450, y: 920 }, data: { label: 'Execution Agent', serviceType: 'Python', endpoints: ['/execute', '/action', '/result'], complexity: 'high', reliability: 'high' } },
-          { id: 'memory-agent', type: 'service', position: { x: 800, y: 920 }, data: { label: 'Memory Agent', serviceType: 'Python + Vector DB', endpoints: ['/store', '/retrieve', '/update'], complexity: 'high', reliability: 'critical' } },
-          { id: 'tool-agent', type: 'service', position: { x: 1150, y: 920 }, data: { label: 'Tool Agent', serviceType: 'Python', endpoints: ['/tools', '/call', '/validate'], complexity: 'medium', reliability: 'high' } },
-          { id: 'evaluation-agent', type: 'service', position: { x: 1500, y: 920 }, data: { label: 'Evaluation Agent', serviceType: 'Python + LLM', endpoints: ['/evaluate', '/score', '/feedback'], complexity: 'medium', reliability: 'high' } },
-          { id: 'reflection-agent', type: 'service', position: { x: 625, y: 1100 }, data: { label: 'Reflection Agent', serviceType: 'Python + LLM', endpoints: ['/reflect', '/learn', '/improve'], complexity: 'high', reliability: 'standard' } },
+          // Infrastructure Zone nodes - Compact layout within zone boundaries
+          { id: 'message-queue', x: 150, y: 1750, zone: 'infrastructure' },
+          { id: 'config-manager', x: 550, y: 1750, zone: 'infrastructure' },
+          { id: 'tool-registry', x: 950, y: 1750, zone: 'infrastructure' },
+          { id: 'code-executor', x: 350, y: 1820, zone: 'infrastructure' },
+          { id: 'web-scraper', x: 750, y: 1820, zone: 'infrastructure' },
           
-          // Data Zone - Memory Systems (5 databases in a row)
-          { id: 'vector-db', type: 'database', position: { x: 100, y: 1280 }, data: { label: 'Vector Database', dbType: 'Pinecone/Weaviate', tables: ['embeddings', 'metadata'], complexity: 'medium', reliability: 'high' } },
-          { id: 'knowledge-graph', type: 'database', position: { x: 450, y: 1280 }, data: { label: 'Knowledge Graph', dbType: 'Neo4j', tables: ['entities', 'relationships'], complexity: 'high', reliability: 'high' } },
-          { id: 'short-term-memory', type: 'database', position: { x: 800, y: 1280 }, data: { label: 'Short-term Memory', dbType: 'Redis', tables: ['conversations', 'context'], complexity: 'low', reliability: 'high' } },
-          { id: 'long-term-memory', type: 'database', position: { x: 1150, y: 1280 }, data: { label: 'Long-term Memory', dbType: 'PostgreSQL', tables: ['knowledge', 'experiences'], complexity: 'medium', reliability: 'critical' } },
-          { id: 'episodic-memory', type: 'database', position: { x: 1500, y: 1280 }, data: { label: 'Episodic Memory', dbType: 'InfluxDB', tables: ['episodes', 'timeseries'], complexity: 'medium', reliability: 'standard' } },
+          // External Zone nodes (moved far right)
+          { id: 'llm-provider', x: 2400, y: 700, zone: 'external' },
+          { id: 'external-apis', x: 2400, y: 1100, zone: 'external' },
           
-          // Infrastructure Zone - Tool Services (properly spaced second row)
-          { id: 'tool-registry', type: 'service', position: { x: 800, y: 1560 }, data: { label: 'Tool Registry', serviceType: 'Go', endpoints: ['/tools', '/register', '/catalog'], complexity: 'low', reliability: 'high' } },
-          { id: 'code-executor', type: 'service', position: { x: 275, y: 1740 }, data: { label: 'Code Executor', serviceType: 'Docker + Python', endpoints: ['/execute', '/sandbox', '/result'], complexity: 'high', reliability: 'high' } },
-          { id: 'web-scraper', type: 'service', position: { x: 625, y: 1740 }, data: { label: 'Web Scraper', serviceType: 'Python + Selenium', endpoints: ['/scrape', '/extract', '/clean'], complexity: 'medium', reliability: 'standard' } },
-          
-          // Monitoring Zone - Learning Systems (properly spaced)
-          { id: 'feedback-collector', type: 'service', position: { x: 1250, y: 1560 }, data: { label: 'Feedback Collector', serviceType: 'Python', endpoints: ['/feedback', '/rating', '/analytics'], complexity: 'low', reliability: 'standard' } },
-          { id: 'preference-learner', type: 'service', position: { x: 1600, y: 1560 }, data: { label: 'Preference Learner', serviceType: 'Python + ML', endpoints: ['/learn', '/adapt', '/preferences'], complexity: 'high', reliability: 'standard' } },
-          { id: 'model-trainer', type: 'service', position: { x: 1950, y: 1560 }, data: { label: 'Model Trainer', serviceType: 'Python + GPU', endpoints: ['/train', '/finetune', '/validate'], complexity: 'critical', reliability: 'standard' } },
-          
-          // External Zone - Services (vertically aligned)
-          { id: 'llm-provider', type: 'service', position: { x: 1950, y: 550 }, data: { label: 'LLM Provider', serviceType: 'OpenAI/Anthropic', endpoints: ['/completions', '/embeddings', '/models'], complexity: 'low', reliability: 'high', cost: 'high' } },
-          { id: 'external-apis', type: 'service', position: { x: 1950, y: 850 }, data: { label: 'External APIs', serviceType: 'REST/GraphQL', endpoints: ['/weather', '/news', '/finance'], complexity: 'low', reliability: 'standard' } },
-          
-          // Monitoring Zone - Observability (properly spaced second row)
-          { id: 'performance-monitor', type: 'evaluation', position: { x: 1250, y: 1740 }, data: { label: 'Performance Monitor', type: 'Monitoring' } },
-          { id: 'trace-logger', type: 'service', position: { x: 1600, y: 1740 }, data: { label: 'Trace Logger', serviceType: 'OpenTelemetry', endpoints: ['/trace', '/metrics', '/logs'], complexity: 'medium', reliability: 'high' } },
-          { id: 'cost-tracker', type: 'evaluation', position: { x: 1950, y: 1740 }, data: { label: 'Cost Tracker', type: 'Analytics' } },
-          { id: 'error-monitor', type: 'evaluation', position: { x: 1775, y: 1740 }, data: { label: 'Error Monitor', type: 'Alerting' } },
+          // Monitoring Zone nodes - NO OVERLAP (Infrastructure ends Y:2040, Monitoring starts Y:2100)
+          { id: 'feedback-collector', x: 1450, y: 2100, zone: 'monitoring' },
+          { id: 'preference-learner', x: 1850, y: 2100, zone: 'monitoring' },
+          { id: 'model-trainer', x: 2250, y: 2100, zone: 'monitoring' },
+          { id: 'performance-monitor', x: 1550, y: 2200, zone: 'monitoring' },
+          { id: 'trace-logger', x: 1850, y: 2200, zone: 'monitoring' },
+          { id: 'error-monitor', x: 2150, y: 2200, zone: 'monitoring' },
+          { id: 'cost-tracker', x: 2450, y: 2200, zone: 'monitoring' },
         ];
         
+        // Calculate zone boundaries
+        const zones = ['internet', 'dmz', 'application', 'data', 'infrastructure', 'external', 'monitoring'];
+        const zoneBounds: Record<string, any> = {};
+        
+        zones.forEach(zone => {
+          const zoneNodes = nodePositions.filter(n => n.zone === zone);
+          if (zoneNodes.length > 0) {
+            const minX = Math.min(...zoneNodes.map(n => n.x)) - zonePadding;
+            const minY = Math.min(...zoneNodes.map(n => n.y)) - zonePadding;
+            const maxX = Math.max(...zoneNodes.map(n => n.x)) + nodeWidth + zonePadding;
+            const maxY = Math.max(...zoneNodes.map(n => n.y)) + nodeHeight + zonePadding;
+            
+            zoneBounds[zone] = {
+              minX,
+              minY,
+              maxX,
+              maxY,
+              nodes: zoneNodes.map(n => n.id)
+            };
+          }
+        });
+        
+        // Manual positioning - no automatic zone spacing needed
+        // Zones are positioned manually with optimal spacing
+        
+        // Node mapping with all data attributes
+        const nodeMapping: Record<string, any> = {
+          // Internet Zone nodes
+          'chat-ui': { type: 'interface', data: { label: 'Chat Interface', interfaceType: 'React App', framework: 'React', pages: ['chat', 'history'], zone: 'internet' } },
+          'user': { type: 'actor', data: { label: 'User', role: 'End User', zone: 'internet' } },
+          'dashboard': { type: 'interface', data: { label: 'Admin Dashboard', interfaceType: 'Web App', framework: 'React', pages: ['dashboard', 'agents', 'logs'], zone: 'internet' } },
+          
+          // DMZ Zone nodes
+          'load-balancer': { type: 'service', data: { label: 'Load Balancer', serviceType: 'HAProxy', endpoints: ['/balance', '/health', '/route'], complexity: 'low', reliability: 'critical', zone: 'dmz' } },
+          'api-gateway': { type: 'service', data: { label: 'API Gateway', serviceType: 'Kong/Nginx', endpoints: ['/api/chat', '/api/agents', '/api/tools'], complexity: 'medium', reliability: 'high', zone: 'dmz' } },
+          
+          // Application Zone nodes
+          'input-validator': { type: 'service', data: { label: 'Input Validator', serviceType: 'Python', endpoints: ['/validate', '/sanitize', '/filter'], complexity: 'medium', reliability: 'critical', zone: 'application' } },
+          'guard-agent': { type: 'service', data: { label: 'Guard Agent', serviceType: 'Python', endpoints: ['/validate', '/filter', '/block'], complexity: 'medium', reliability: 'critical', zone: 'application' } },
+          'output-filter': { type: 'service', data: { label: 'Output Filter', serviceType: 'Python', endpoints: ['/filter', '/scan', '/approve'], complexity: 'medium', reliability: 'critical', zone: 'application' } },
+          'audit-logger': { type: 'service', data: { label: 'Audit Logger', serviceType: 'Go', endpoints: ['/log', '/audit', '/trace'], complexity: 'low', reliability: 'critical', zone: 'application' } },
+          'agent-registry': { type: 'service', data: { label: 'Agent Registry', serviceType: 'Go', endpoints: ['/register', '/discover', '/health'], complexity: 'medium', reliability: 'high', zone: 'application' } },
+          'master-orchestrator': { type: 'service', data: { label: 'Master Orchestrator', serviceType: 'Node.js', endpoints: ['/orchestrate', '/delegate', '/coordinate'], complexity: 'high', reliability: 'critical', zone: 'application' } },
+          'task-dispatcher': { type: 'service', data: { label: 'Task Dispatcher', serviceType: 'Python', endpoints: ['/dispatch', '/queue', '/priority'], complexity: 'medium', reliability: 'high', zone: 'application' } },
+          
+          // Application Zone - Specialized Agents
+          'planning-agent': { type: 'service', data: { label: 'Planning Agent', serviceType: 'Python + LLM', endpoints: ['/plan', '/decompose', '/goals'], complexity: 'high', reliability: 'high', zone: 'application' } },
+          'execution-agent': { type: 'service', data: { label: 'Execution Agent', serviceType: 'Python', endpoints: ['/execute', '/action', '/result'], complexity: 'high', reliability: 'high', zone: 'application' } },
+          'memory-agent': { type: 'service', data: { label: 'Memory Agent', serviceType: 'Python + Vector DB', endpoints: ['/store', '/retrieve', '/update'], complexity: 'high', reliability: 'critical', zone: 'application' } },
+          'tool-agent': { type: 'service', data: { label: 'Tool Agent', serviceType: 'Python', endpoints: ['/tools', '/call', '/validate'], complexity: 'medium', reliability: 'high', zone: 'application' } },
+          'evaluation-agent': { type: 'service', data: { label: 'Evaluation Agent', serviceType: 'Python + LLM', endpoints: ['/evaluate', '/score', '/feedback'], complexity: 'medium', reliability: 'high', zone: 'application' } },
+          'reflection-agent': { type: 'service', data: { label: 'Reflection Agent', serviceType: 'Python + LLM', endpoints: ['/reflect', '/learn', '/improve'], complexity: 'high', reliability: 'standard', zone: 'application' } },
+          
+          // Data Zone nodes
+          'vector-db': { type: 'database', data: { label: 'Vector Database', dbType: 'Pinecone/Weaviate', tables: ['embeddings', 'metadata'], complexity: 'medium', reliability: 'high', zone: 'data' } },
+          'knowledge-graph': { type: 'database', data: { label: 'Knowledge Graph', dbType: 'Neo4j', tables: ['entities', 'relationships'], complexity: 'high', reliability: 'high', zone: 'data' } },
+          'short-term-memory': { type: 'database', data: { label: 'Short-term Memory', dbType: 'Redis', tables: ['conversations', 'context'], complexity: 'low', reliability: 'high', zone: 'data' } },
+          'long-term-memory': { type: 'database', data: { label: 'Long-term Memory', dbType: 'PostgreSQL', tables: ['knowledge', 'experiences'], complexity: 'medium', reliability: 'critical', zone: 'data' } },
+          'episodic-memory': { type: 'database', data: { label: 'Episodic Memory', dbType: 'InfluxDB', tables: ['episodes', 'timeseries'], complexity: 'medium', reliability: 'standard', zone: 'data' } },
+          
+          // Infrastructure Zone nodes
+          'message-queue': { type: 'service', data: { label: 'Message Queue', serviceType: 'RabbitMQ/Kafka', endpoints: ['/publish', '/subscribe', '/dlq'], complexity: 'medium', reliability: 'high', zone: 'infrastructure' } },
+          'config-manager': { type: 'service', data: { label: 'Config Manager', serviceType: 'Consul/etcd', endpoints: ['/config', '/secrets', '/watch'], complexity: 'low', reliability: 'high', zone: 'infrastructure' } },
+          'tool-registry': { type: 'service', data: { label: 'Tool Registry', serviceType: 'Go', endpoints: ['/tools', '/register', '/catalog'], complexity: 'low', reliability: 'high', zone: 'infrastructure' } },
+          'code-executor': { type: 'service', data: { label: 'Code Executor', serviceType: 'Docker + Python', endpoints: ['/execute', '/sandbox', '/result'], complexity: 'high', reliability: 'high', zone: 'infrastructure' } },
+          'web-scraper': { type: 'service', data: { label: 'Web Scraper', serviceType: 'Python + Selenium', endpoints: ['/scrape', '/extract', '/clean'], complexity: 'medium', reliability: 'standard', zone: 'infrastructure' } },
+          
+          // External Zone nodes
+          'llm-provider': { type: 'service', data: { label: 'LLM Provider', serviceType: 'OpenAI/Anthropic', endpoints: ['/completions', '/embeddings', '/models'], complexity: 'low', reliability: 'high', cost: 'high', zone: 'external' } },
+          'external-apis': { type: 'service', data: { label: 'External APIs', serviceType: 'REST/GraphQL', endpoints: ['/weather', '/news', '/finance'], complexity: 'low', reliability: 'standard', zone: 'external' } },
+          
+          // Monitoring Zone nodes
+          'feedback-collector': { type: 'service', data: { label: 'Feedback Collector', serviceType: 'Python', endpoints: ['/feedback', '/rating', '/analytics'], complexity: 'low', reliability: 'standard', zone: 'monitoring' } },
+          'preference-learner': { type: 'service', data: { label: 'Preference Learner', serviceType: 'Python + ML', endpoints: ['/learn', '/adapt', '/preferences'], complexity: 'high', reliability: 'standard', zone: 'monitoring' } },
+          'model-trainer': { type: 'service', data: { label: 'Model Trainer', serviceType: 'Python + GPU', endpoints: ['/train', '/finetune', '/validate'], complexity: 'critical', reliability: 'standard', zone: 'monitoring' } },
+          'performance-monitor': { type: 'evaluation', data: { label: 'Performance Monitor', type: 'Monitoring', zone: 'monitoring' } },
+          'trace-logger': { type: 'service', data: { label: 'Trace Logger', serviceType: 'OpenTelemetry', endpoints: ['/trace', '/metrics', '/logs'], complexity: 'medium', reliability: 'high', zone: 'monitoring' } },
+          'error-monitor': { type: 'evaluation', data: { label: 'Error Monitor', type: 'Alerting', zone: 'monitoring' } },
+          'cost-tracker': { type: 'evaluation', data: { label: 'Cost Tracker', type: 'Analytics', zone: 'monitoring' } },
+        };
+        
+        // Create nodes from calculated positions
+        const regularNodes = nodePositions.map((nodePos: any) => ({
+          id: nodePos.id,
+          type: nodeMapping[nodePos.id].type,
+          position: { x: nodePos.x, y: nodePos.y },
+          data: nodeMapping[nodePos.id].data,
+          draggable: true,
+          selectable: true
+        }));
+        
+        // Create zone nodes from calculated bounds
+        const zoneNodes = Object.entries(zoneBounds).map(([zone, bounds]: [string, any]) => ({
+          id: `zone-${zone}`,
+          type: 'zone',
+          position: { x: bounds.minX, y: bounds.minY },
+          data: { 
+            zone, 
+            width: bounds.maxX - bounds.minX, 
+            height: bounds.maxY - bounds.minY 
+          },
+          draggable: true,
+          selectable: true
+        }));
+        
+        // Combine zone nodes and regular nodes
+        templateNodes = [...zoneNodes, ...regularNodes];
         templateEdges = [
           // Layer 1: User Flow
           { id: 'e1', source: 'user', target: 'chat-ui', type: 'custom', animated: true },
@@ -2255,6 +2390,7 @@ export const SystemBuilder = ({ techniques }: SystemBuilderProps) => {
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
           onNodeClick={onNodeClick}
+          onNodeDragStop={onNodeDragStop}
           onNodeDoubleClick={(event, node) => {
             // Prevent double-click from opening modal for code nodes
             if (node.type === 'code') {
@@ -2275,6 +2411,16 @@ export const SystemBuilder = ({ techniques }: SystemBuilderProps) => {
             type: 'custom',
             animated: false,
           }}
+          fitView
+          fitViewOptions={{
+            padding: 0.1,
+            includeHiddenNodes: false,
+            minZoom: 0.05,
+            maxZoom: 1.5
+          }}
+          minZoom={0.01}
+          maxZoom={5}
+          defaultViewport={{ x: 0, y: 0, zoom: 0.15 }}
         >
           <Controls className="bg-gray-800 border-gray-600" />
           <MiniMap 

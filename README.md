@@ -2097,11 +2097,40 @@ Distributed Inference
     Decision: No need to add workflow-orchestration category - there's clear, logical overlap with existing categories that better
    organize these techniques according to their core purpose (agent coordination vs. workflow planning).
 
-   swarm ?
+   swarm ? and types
+   add xmind back
+   le fait de controler la sandbox, ca permet de controler navigateur etc 
+   de faire un v0 like, bcp plus la main et faire autre chose que du python et d'avoir le mme env que vscode
+   meilleir a creer que refacto
+
    model visual
 
+code agent
+- lovable
+- bolt
+-) v0
 
    http://agentic-design.ai/brain-mascot-demo
    https://agentic-design.ai/pattern-card-game
    https://agentic-design.ai/pattern-cards
    https://agentic-design.ai/workshops
+
+
+
+   Add:
+   - Agentic Web
+   https://arxiv.org/abs/2507.21206
+   - Coral Protocol
+   https://www.coralprotocol.org/
+
+
+- https://github.com/nlweb-ai/NLWeb
+
+
+Control browser
+   https://github.com/microsoft/magentic-ui
+
+
+Chat to auto generate the system
+
+bring your own token

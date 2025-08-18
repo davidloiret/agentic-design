@@ -1,6 +1,8 @@
 'use client';
 
+import { useAuth } from '@/contexts/AuthContext';
 import { SystemBuilder } from '@/app/components/SystemBuilder';
+import { SystemBuilderAuthPrompt } from '@/app/components/SystemBuilderAuthPrompt';
 import { techniques } from '@/app/techniques';
 
 const categories = [
@@ -20,6 +22,27 @@ const useCases = [
 ];
 
 export default function SystemBuilderPage() {
+  const { user, loading } = useAuth();
+
+  // Show loading state while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  // Show authentication prompt page if user is not authenticated
+  if (!user) {
+    return (
+      <SystemBuilderAuthPrompt
+        feature="System Builder"
+        description="Design and architect agentic systems with our interactive builder tool"
+      />
+    );
+  }
+
   // Flatten all techniques from all categories
   const allTechniques = Object.values(techniques).flat().map(technique => ({
     ...technique,

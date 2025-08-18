@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Brain, TrendingUp, Activity, Star, Code, BookOpen, Users, Target, Shield, ChartBar, ChevronRight } from 'lucide-react';
+import { Brain, TrendingUp, Activity, Star, Code, BookOpen, Users, Target, Shield, ChartBar, ChevronRight, GitBranch } from 'lucide-react';
 import { categories } from '../../../categories';
 import Link from 'next/link';
 import { BrainMascot, BrainExpression } from '@/components/BrainMascot';
@@ -222,14 +222,33 @@ export default function ContentPage() {
         </motion.h2>
         
         <motion.p 
-          className="text-gray-400 text-sm"
+          className="text-gray-400 text-sm mb-4"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
         >
           Explore our comprehensive collection of patterns, techniques, and methodologies for building intelligent AI systems.
         </motion.p>
-        
+
+        {/* Mind Map Navigation Button */}
+        {/* <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="mb-4"
+        >
+          <Link href="/mindmap">
+            <motion.button
+              className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white text-sm font-medium rounded-lg border border-purple-500 hover:border-purple-400 transition-all shadow-md hover:shadow-lg"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <GitBranch className="w-4 h-4" />
+              View Mind Map
+            </motion.button>
+          </Link>
+        </motion.div>
+         */}
         {/* Interaction counter with celebration */}
         {interactionCount > 0 && (
           <motion.div

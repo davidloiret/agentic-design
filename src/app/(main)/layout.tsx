@@ -60,6 +60,7 @@ export default function MainLayout({
   useEffect(() => {
     const routeToTab: { [key: string]: string } = {
       '/patterns': 'patterns',
+      '/recommendations': 'recommendations',
       '/learning-hub': 'learning-hub', 
       '/ai-red-teaming': 'ai-red-teaming',
       '/fine-tuning': 'fine-tuning',
