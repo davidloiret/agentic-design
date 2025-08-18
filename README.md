@@ -2134,3 +2134,25 @@ Control browser
 Chat to auto generate the system
 
 bring your own token
+
+---
+
+https://microsoft.github.io/poml/latest/
+
+Prompt Optimizer with dyspy
+
+
+manus AI blogpost
+
+DeepAgent Template 
+
+ajouter wait list
+
+random uid and hash url etc are bad for model
+
+Dsypy prompt optimizer
+
+few shot dynamic prompt
+
+
+

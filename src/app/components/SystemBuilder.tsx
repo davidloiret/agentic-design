@@ -1678,6 +1678,185 @@ export const SystemBuilder = ({ techniques }: SystemBuilderProps) => {
           { id: 'e4', source: 'model', target: 'monitor' },
         ];
         break;
+      case 'deep-agent': {
+        // Layout configuration
+        const deepNodeWidth = 220;
+        const deepNodeHeight = 140;
+        const deepZonePadding = 50;
+
+        // Node positions grouped by zones for Deep Research Agent
+        const deepNodePositions = [
+          // Internet Zone
+          { id: 'research-ui', x: 150, y: 100, zone: 'internet' },
+          { id: 'researcher-user', x: 520, y: 100, zone: 'internet' },
+
+          // DMZ Zone
+          { id: 'gateway', x: 350, y: 380, zone: 'dmz' },
+          { id: 'rate-limiter', x: 700, y: 380, zone: 'dmz' },
+
+          // Application Zone
+          { id: 'research-orchestrator', x: 150, y: 700, zone: 'application' },
+          { id: 'plan-generator', x: 450, y: 700, zone: 'application' },
+          { id: 'query-expander', x: 750, y: 700, zone: 'application' },
+          { id: 'search-manager', x: 1050, y: 700, zone: 'application' },
+          { id: 'crawl-queue', x: 1350, y: 700, zone: 'application' },
+          { id: 'browser-agent', x: 1650, y: 700, zone: 'application' },
+          { id: 'content-extractor', x: 1950, y: 700, zone: 'application' },
+          { id: 'dedupe-normalizer', x: 2250, y: 700, zone: 'application' },
+          { id: 'evidence-ranker', x: 2550, y: 700, zone: 'application' },
+          { id: 'fact-checker', x: 2850, y: 700, zone: 'application' },
+          { id: 'citation-extractor', x: 3150, y: 700, zone: 'application' },
+          { id: 'synthesizer', x: 3450, y: 700, zone: 'application' },
+          { id: 'outline-manager', x: 3750, y: 700, zone: 'application' },
+          { id: 'report-generator', x: 4050, y: 700, zone: 'application' },
+          { id: 'memory-writer', x: 4350, y: 700, zone: 'application' },
+
+          // Data Zone
+          { id: 'vector-store-passages', x: 900, y: 1000, zone: 'data' },
+          { id: 'source-index', x: 1200, y: 1000, zone: 'data' },
+          { id: 'url-cache', x: 1500, y: 1000, zone: 'data' },
+          { id: 'citation-db', x: 1800, y: 1000, zone: 'data' },
+          { id: 'note-store', x: 2100, y: 1000, zone: 'data' },
+
+          // Infrastructure Zone
+          { id: 'message-queue', x: 1100, y: 1220, zone: 'infrastructure' },
+          { id: 'headless-browser', x: 1500, y: 1220, zone: 'infrastructure' },
+          { id: 'proxy-pool', x: 1900, y: 1220, zone: 'infrastructure' },
+          { id: 'scheduler', x: 2300, y: 1220, zone: 'infrastructure' },
+
+          // External Zone
+          { id: 'search-apis', x: 200, y: 1000, zone: 'external' },
+          { id: 'web-sites', x: 500, y: 1000, zone: 'external' },
+
+          // Monitoring Zone
+          { id: 'progress-monitor', x: 3200, y: 1000, zone: 'monitoring' },
+          { id: 'time-budget', x: 3500, y: 1000, zone: 'monitoring' },
+          { id: 'quality-evaluator', x: 3800, y: 1000, zone: 'monitoring' },
+        ];
+
+        const deepZones = ['internet', 'dmz', 'application', 'data', 'infrastructure', 'external', 'monitoring'];
+        const deepZoneBounds: Record<string, any> = {};
+        deepZones.forEach((zone) => {
+          const zoneNodes = deepNodePositions.filter((n) => n.zone === zone);
+          if (zoneNodes.length > 0) {
+            const minX = Math.min(...zoneNodes.map((n) => n.x)) - deepZonePadding;
+            const minY = Math.min(...zoneNodes.map((n) => n.y)) - deepZonePadding;
+            const maxX = Math.max(...zoneNodes.map((n) => n.x)) + deepNodeWidth + deepZonePadding;
+            const maxY = Math.max(...zoneNodes.map((n) => n.y)) + deepNodeHeight + deepZonePadding;
+            deepZoneBounds[zone] = { minX, minY, maxX, maxY, nodes: zoneNodes.map((n) => n.id) };
+          }
+        });
+
+        const deepNodeMapping: Record<string, any> = {
+          // Internet
+          'research-ui': { type: 'interface', data: { label: 'Research UI', interfaceType: 'Web App', pages: ['plan', 'progress', 'report'], reliability: 'high', complexity: 'medium', zone: 'internet' } },
+          'researcher-user': { type: 'actor', data: { label: 'Researcher', role: 'User', zone: 'internet' } },
+
+          // DMZ
+          'gateway': { type: 'service', data: { label: 'API Gateway', serviceType: 'Nginx/Kong', endpoints: ['/api/research', '/api/progress'], reliability: 'high', complexity: 'medium', zone: 'dmz' } },
+          'rate-limiter': { type: 'service', data: { label: 'Rate Limiter', serviceType: 'Envoy/Custom', endpoints: ['/limit', '/quota'], reliability: 'high', complexity: 'low', zone: 'dmz' } },
+
+          // Application pipeline
+          'research-orchestrator': { type: 'service', data: { label: 'Research Orchestrator', serviceType: 'Node.js', endpoints: ['/orchestrate', '/status'], reliability: 'critical', complexity: 'high', zone: 'application' } },
+          'plan-generator': { type: 'service', data: { label: 'Plan Generator', serviceType: 'Python + LLM', endpoints: ['/plan', '/revise'], reliability: 'high', complexity: 'high', zone: 'application' } },
+          'query-expander': { type: 'service', data: { label: 'Query Expander', serviceType: 'Python', endpoints: ['/expand', '/keywords'], reliability: 'standard', complexity: 'medium', zone: 'application' } },
+          'search-manager': { type: 'service', data: { label: 'Search Manager', serviceType: 'Python', endpoints: ['/search', '/iterate'], reliability: 'high', complexity: 'medium', zone: 'application' } },
+          'crawl-queue': { type: 'service', data: { label: 'Crawl Queue', serviceType: 'Go', endpoints: ['/enqueue', '/dequeue'], reliability: 'high', complexity: 'medium', zone: 'application' } },
+          'browser-agent': { type: 'service', data: { label: 'Browser Agent', serviceType: 'Python + Playwright', endpoints: ['/fetch', '/render'], reliability: 'standard', complexity: 'medium', zone: 'application' } },
+          'content-extractor': { type: 'service', data: { label: 'Content Extractor', serviceType: 'Python', endpoints: ['/extract', '/clean'], reliability: 'high', complexity: 'medium', zone: 'application' } },
+          'dedupe-normalizer': { type: 'service', data: { label: 'Deduper/Normalizer', serviceType: 'Python', endpoints: ['/normalize', '/dedupe'], reliability: 'standard', complexity: 'medium', zone: 'application' } },
+          'evidence-ranker': { type: 'service', data: { label: 'Evidence Ranker', serviceType: 'Python', endpoints: ['/rank'], reliability: 'high', complexity: 'medium', zone: 'application' } },
+          'fact-checker': { type: 'service', data: { label: 'Fact Checker', serviceType: 'Python + LLM', endpoints: ['/verify', '/crossref'], reliability: 'high', complexity: 'high', zone: 'application' } },
+          'citation-extractor': { type: 'service', data: { label: 'Citation Extractor', serviceType: 'Python', endpoints: ['/citations', '/attribution'], reliability: 'high', complexity: 'medium', zone: 'application' } },
+          'synthesizer': { type: 'service', data: { label: 'Synthesizer', serviceType: 'Python + LLM', endpoints: ['/synthesize', '/summarize'], reliability: 'high', complexity: 'high', zone: 'application' } },
+          'outline-manager': { type: 'service', data: { label: 'Outline Manager', serviceType: 'Python', endpoints: ['/outline', '/sections'], reliability: 'standard', complexity: 'medium', zone: 'application' } },
+          'report-generator': { type: 'service', data: { label: 'Report Generator', serviceType: 'Python', endpoints: ['/report', '/export'], reliability: 'high', complexity: 'medium', zone: 'application' } },
+          'memory-writer': { type: 'service', data: { label: 'Memory Writer', serviceType: 'Python', endpoints: ['/persist', '/update'], reliability: 'high', complexity: 'medium', zone: 'application' } },
+
+          // Data
+          'vector-store-passages': { type: 'database', data: { label: 'Vector Store (Passages)', dbType: 'Pinecone/FAISS', tables: ['embeddings', 'chunks'], reliability: 'high', complexity: 'medium', zone: 'data' } },
+          'source-index': { type: 'database', data: { label: 'Source Index', dbType: 'PostgreSQL', tables: ['sources', 'domains'], reliability: 'high', complexity: 'medium', zone: 'data' } },
+          'url-cache': { type: 'database', data: { label: 'URL Cache', dbType: 'Redis', tables: ['urls', 'snapshots'], reliability: 'standard', complexity: 'low', zone: 'data' } },
+          'citation-db': { type: 'database', data: { label: 'Citation DB', dbType: 'PostgreSQL', tables: ['citations', 'references'], reliability: 'high', complexity: 'medium', zone: 'data' } },
+          'note-store': { type: 'database', data: { label: 'Note Store', dbType: 'MongoDB', tables: ['notes', 'highlights'], reliability: 'standard', complexity: 'medium', zone: 'data' } },
+
+          // Infrastructure
+          'message-queue': { type: 'service', data: { label: 'Message Queue', serviceType: 'RabbitMQ/Kafka', endpoints: ['/publish', '/consume'], reliability: 'high', complexity: 'medium', zone: 'infrastructure' } },
+          'headless-browser': { type: 'service', data: { label: 'Headless Browser', serviceType: 'Playwright/Chromium', endpoints: ['/render', '/screenshot'], reliability: 'standard', complexity: 'medium', zone: 'infrastructure' } },
+          'proxy-pool': { type: 'service', data: { label: 'Proxy Pool', serviceType: 'Custom', endpoints: ['/allocate', '/release'], reliability: 'standard', complexity: 'low', zone: 'infrastructure' } },
+          'scheduler': { type: 'service', data: { label: 'Scheduler', serviceType: 'Celery/Temporal', endpoints: ['/schedule', '/cancel'], reliability: 'high', complexity: 'medium', zone: 'infrastructure' } },
+
+          // External
+          'search-apis': { type: 'service', data: { label: 'Search APIs', serviceType: 'Google/Bing/Perplexity', endpoints: ['/search'], reliability: 'standard', complexity: 'low', zone: 'external' } },
+          'web-sites': { type: 'service', data: { label: 'Web Sites', serviceType: 'HTTP/HTTPS', endpoints: ['/'], reliability: 'standard', complexity: 'low', zone: 'external' } },
+
+          // Monitoring
+          'progress-monitor': { type: 'evaluation', data: { label: 'Progress Monitor', type: 'Monitoring', zone: 'monitoring' } },
+          'time-budget': { type: 'evaluation', data: { label: 'Time Budget', type: 'Monitoring', zone: 'monitoring' } },
+          'quality-evaluator': { type: 'evaluation', data: { label: 'Quality Evaluator', type: 'Evaluation', zone: 'monitoring' } },
+        };
+
+        const deepRegularNodes = deepNodePositions.map((pos: any) => ({
+          id: pos.id,
+          type: deepNodeMapping[pos.id].type,
+          position: { x: pos.x, y: pos.y },
+          data: deepNodeMapping[pos.id].data,
+          draggable: true,
+          selectable: true,
+        }));
+
+        const deepZoneNodes = Object.entries(deepZoneBounds).map(([zone, bounds]: [string, any]) => ({
+          id: `zone-${zone}`,
+          type: 'zone',
+          position: { x: bounds.minX, y: bounds.minY },
+          data: { zone, width: bounds.maxX - bounds.minX, height: bounds.maxY - bounds.minY },
+          draggable: true,
+          selectable: true,
+        }));
+
+        templateNodes = [...deepZoneNodes, ...deepRegularNodes];
+        templateEdges = [
+          // User flow
+          { id: 'd-e1', source: 'researcher-user', target: 'research-ui', type: 'custom', animated: true },
+          { id: 'd-e2', source: 'research-ui', target: 'gateway', type: 'custom' },
+          { id: 'd-e3', source: 'gateway', target: 'rate-limiter', type: 'custom' },
+          { id: 'd-e4', source: 'rate-limiter', target: 'research-orchestrator', type: 'custom' },
+
+          // Core pipeline
+          { id: 'd-e5', source: 'research-orchestrator', target: 'plan-generator', type: 'custom', data: { type: 'llm' }, animated: true },
+          { id: 'd-e6', source: 'plan-generator', target: 'query-expander', type: 'custom' },
+          { id: 'd-e7', source: 'query-expander', target: 'search-manager', type: 'custom' },
+          { id: 'd-e8', source: 'search-manager', target: 'search-apis', type: 'custom' },
+          { id: 'd-e9', source: 'search-manager', target: 'crawl-queue', type: 'custom' },
+          { id: 'd-e10', source: 'crawl-queue', target: 'message-queue', type: 'custom' },
+          { id: 'd-e11', source: 'message-queue', target: 'browser-agent', type: 'custom' },
+          { id: 'd-e12', source: 'browser-agent', target: 'headless-browser', type: 'custom' },
+          { id: 'd-e13', source: 'headless-browser', target: 'proxy-pool', type: 'custom' },
+          { id: 'd-e14', source: 'browser-agent', target: 'content-extractor', type: 'custom' },
+          { id: 'd-e15', source: 'content-extractor', target: 'dedupe-normalizer', type: 'custom' },
+          { id: 'd-e16', source: 'dedupe-normalizer', target: 'evidence-ranker', type: 'custom' },
+          { id: 'd-e17', source: 'evidence-ranker', target: 'fact-checker', type: 'custom', data: { type: 'llm' }, animated: true },
+          { id: 'd-e18', source: 'fact-checker', target: 'citation-extractor', type: 'custom' },
+          { id: 'd-e19', source: 'citation-extractor', target: 'synthesizer', type: 'custom', data: { type: 'llm' }, animated: true },
+          { id: 'd-e20', source: 'synthesizer', target: 'outline-manager', type: 'custom' },
+          { id: 'd-e21', source: 'outline-manager', target: 'report-generator', type: 'custom' },
+          { id: 'd-e22', source: 'report-generator', target: 'memory-writer', type: 'custom' },
+          { id: 'd-e23', source: 'memory-writer', target: 'research-ui', type: 'custom' },
+
+          // Data flows
+          { id: 'd-e24', source: 'content-extractor', target: 'vector-store-passages', type: 'custom', data: { type: 'data' } },
+          { id: 'd-e25', source: 'search-manager', target: 'url-cache', type: 'custom', data: { type: 'data' } },
+          { id: 'd-e26', source: 'citation-extractor', target: 'citation-db', type: 'custom', data: { type: 'data' } },
+          { id: 'd-e27', source: 'memory-writer', target: 'note-store', type: 'custom', data: { type: 'data' } },
+          { id: 'd-e28', source: 'content-extractor', target: 'source-index', type: 'custom', data: { type: 'data' } },
+
+          // Monitoring
+          { id: 'd-e29', source: 'research-orchestrator', target: 'progress-monitor', type: 'custom', data: { type: 'monitoring' } },
+          { id: 'd-e30', source: 'research-orchestrator', target: 'time-budget', type: 'custom', data: { type: 'monitoring' } },
+          { id: 'd-e31', source: 'report-generator', target: 'quality-evaluator', type: 'custom', data: { type: 'evaluation' } },
+        ];
+        break;
+      }
       case 'agentic-ai-system':
         // Smart layout calculation inline
         const nodeWidth = 220;
@@ -2207,6 +2386,22 @@ export const SystemBuilder = ({ techniques }: SystemBuilderProps) => {
                   <div className="text-white text-sm font-bold">Complete Agentic AI System</div>
                   <div className="text-purple-300 text-xs">Full enterprise-grade architecture</div>
                   <div className="text-gray-400 text-xs mt-1">40+ components, 9 layers, production-ready</div>
+                </div>
+              </div>
+            </button>
+            <button
+              onClick={() => loadTemplate('deep-agent')}
+              className="w-full text-left px-3 py-3 bg-gradient-to-r from-indigo-900/50 to-cyan-900/50 hover:from-indigo-800/60 hover:to-cyan-800/60 rounded border border-indigo-500/30 hover:border-indigo-400/50 transition-colors relative overflow-hidden group"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 to-cyan-500/10 group-hover:from-indigo-500/20 group-hover:to-cyan-500/20 transition-all"></div>
+              <div className="relative flex items-center gap-2">
+                <div className="flex items-center justify-center w-8 h-8 bg-indigo-500/20 rounded-full">
+                  <span className="text-sm">🔎</span>
+                </div>
+                <div>
+                  <div className="text-white text-sm font-bold">Deep Research Agent</div>
+                  <div className="text-indigo-300 text-xs">Autonomous multi-step research with citations</div>
+                  <div className="text-gray-400 text-xs mt-1">Planning → Search → Extract → Verify → Synthesize</div>
                 </div>
               </div>
             </button>

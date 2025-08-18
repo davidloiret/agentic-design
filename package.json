@@ -19,6 +19,7 @@
     "prebuild": "npm run rust:build"
   },
   "dependencies": {
+    "@gatewatcher/hoddor": "^1.0.1",
     "@monaco-editor/react": "^4.7.0",
     "@remotion/player": "^4.0.327",
     "@types/cytoscape": "^3.21.9",
