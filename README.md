@@ -2155,4 +2155,36 @@ Dsypy prompt optimizer
 few shot dynamic prompt
 
 
-:8L{y{m0J1o6baHF
+compare patterns => https://boundaryml.com/blog/schema-aligned-parsing
+
+move share-secret to backend ?
+cracking the prompting enterview
+
+
+see tokenizer => run tokenizer to debug like in context engineering lessons from manus video
+
+caching => kv cache how to ma nage
+
+langextract
+markitdown
+
+page to markdown etc
+
+dspy + BAML
+
+suivi des compétences
+
+
+============
+
+
+  - BootstrapFewShot: State-of-the-art few-shot learning with bootstrapping
+  - BootstrapFewShotWithRandomSearch: Enhanced bootstrapping with random search
+  - MIPROv2: Multi-stage instruction optimization with Bayesian search
+  - COPRO: Constraint-driven program optimization
+
+
+  add analytics
+
+
+  distilation
