@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { promptOptimizerAPI, type OptimizationRequest, type OptimizationResult, type TrainingExample, type OptimizedPrompt, type ComparisonResult, type DSPyTrace } from '@/lib/prompt-optimizer-api';
-import { Wand2, Plus, Trash2, Copy, Info, Sparkles, Target, Brain, Lightbulb, ChevronDown, ChevronRight, Code2, FileText } from 'lucide-react';
+import { Wand2, Plus, Trash2, Copy, Info, Sparkles, Target, Brain, Lightbulb, ChevronDown, ChevronRight, Code2, FileText, Download } from 'lucide-react';
 
 export default function PromptOptimizer() {
   const [promptTemplate, setPromptTemplate] = useState('');
@@ -18,29 +18,128 @@ export default function PromptOptimizer() {
   const [newTestExample, setNewTestExample] = useState({ inputs: '', expected_output: '' });
   const [useCustomTestData, setUseCustomTestData] = useState(false);
   const [expandedTraces, setExpandedTraces] = useState<Set<number>>(new Set());
+  const [tryItMode, setTryItMode] = useState<{ requestId: string; result: OptimizationResult } | null>(null);
+  const [tryItInputs, setTryItInputs] = useState<Record<string, string>>({});
+  const [tryItPrediction, setTryItPrediction] = useState<any>(null);
+  const [tryItLoading, setTryItLoading] = useState(false);
+  const [showFullTraces, setShowFullTraces] = useState(false);
 
   // Example templates
   const exampleTemplates = [
     {
-      name: "Question Answering",
-      template: "Answer the following question based on the context provided.\n\nContext: {context}\nQuestion: {question}\nAnswer:",
-      example: { inputs: '{"context": "The sky is blue due to Rayleigh scattering.", "question": "Why is the sky blue?"}', expected_output: "The sky is blue due to Rayleigh scattering of light." }
+      name: "Multi-hop Reasoning (Complex QA)",
+      template: "Answer the question using the given context. Think step by step.\n\nContext: {context}\nQuestion: {question}\nAnswer:",
+      examples: [
+        { inputs: '{"context": "Sarah owns a bakery. Her bakery produces 120 croissants daily. Each croissant costs $3. On weekends, she increases production by 50%.", "question": "How much revenue does Sarah make from croissants on a weekend day?"}', expected_output: "$540" },
+        { inputs: '{"context": "The conference has 3 sessions. Session A has 45 attendees, Session B has 30% more than A, and Session C has twice as many as B.", "question": "What is the total number of attendees across all sessions?"}', expected_output: "213" },
+        { inputs: '{"context": "A train leaves Station A at 2 PM traveling at 60 mph. Another train leaves Station B (180 miles away) at 3 PM traveling at 90 mph toward Station A.", "question": "At what time will the trains meet?"}', expected_output: "4:12 PM" },
+        { inputs: '{"context": "Company X had $2M revenue in Q1. Q2 saw a 15% increase, Q3 decreased by 10% from Q2, and Q4 increased by 20% from Q3.", "question": "What was the total revenue for the year?"}', expected_output: "$8.856M" },
+        { inputs: '{"context": "A recipe needs 2 cups of flour for 12 cookies. You want to make 30 cookies but only have 4 cups of flour.", "question": "Do you have enough flour, and if not, how much more do you need?"}', expected_output: "Not enough. You need 1 more cup of flour." }
+      ]
+    },
+    {
+      name: "Logical Reasoning",
+      template: "Based on the given facts, answer the question with logical reasoning.\n\nFacts: {facts}\nQuestion: {question}\nAnswer:",
+      examples: [
+        { inputs: '{"facts": "All programmers know Python. Sam is a programmer. Python is a programming language.", "question": "Does Sam know Python?"}', expected_output: "Yes" },
+        { inputs: '{"facts": "If it rains, the grass gets wet. The grass is not wet. It might rain tomorrow.", "question": "Did it rain today?"}', expected_output: "No" },
+        { inputs: '{"facts": "Every student who studies hard passes the exam. John studied hard. Mary did not study.", "question": "Will John pass the exam?"}', expected_output: "Yes" },
+        { inputs: '{"facts": "All birds can fly except penguins. Tweety is a bird. Tweety lives in Antarctica.", "question": "Can Tweety fly?"}', expected_output: "Cannot determine (could be a penguin or another Antarctic bird)" },
+        { inputs: '{"facts": "The meeting is at 3 PM or 4 PM. If it\'s at 3 PM, Tom will attend. Tom is not attending.", "question": "When is the meeting?"}', expected_output: "4 PM" }
+      ]
+    },
+    {
+      name: "Code Explanation & Generation",
+      template: "Given the programming task, provide the solution with explanation.\n\nTask: {task}\nConstraints: {constraints}\nSolution:",
+      examples: [
+        { inputs: '{"task": "Find the second largest number in an array", "constraints": "O(n) time complexity, handle duplicates"}', expected_output: "def second_largest(arr):\n    if len(arr) < 2: return None\n    first = second = float('-inf')\n    for num in arr:\n        if num > first:\n            second = first\n            first = num\n        elif first > num > second:\n            second = num\n    return second if second != float('-inf') else None" },
+        { inputs: '{"task": "Check if a string has balanced parentheses", "constraints": "Must handle (), [], and {} brackets"}', expected_output: "def is_balanced(s):\n    stack = []\n    pairs = {'(': ')', '[': ']', '{': '}'}\n    for char in s:\n        if char in pairs:\n            stack.append(char)\n        elif char in pairs.values():\n            if not stack or pairs[stack.pop()] != char:\n                return False\n    return len(stack) == 0" },
+        { inputs: '{"task": "Implement a basic LRU cache", "constraints": "O(1) get and put operations"}', expected_output: "from collections import OrderedDict\n\nclass LRUCache:\n    def __init__(self, capacity):\n        self.cache = OrderedDict()\n        self.capacity = capacity\n    \n    def get(self, key):\n        if key in self.cache:\n            self.cache.move_to_end(key)\n            return self.cache[key]\n        return -1\n    \n    def put(self, key, value):\n        self.cache[key] = value\n        self.cache.move_to_end(key)\n        if len(self.cache) > self.capacity:\n            self.cache.popitem(last=False)" }
+      ]
     },
     {
       name: "Text Classification",
       template: "Classify the sentiment of the following text as positive, negative, or neutral.\n\nText: {text}\nSentiment:",
-      example: { inputs: '{"text": "I love this product!"}', expected_output: "positive" }
+      examples: [
+        { inputs: '{"text": "I love this product! Best purchase ever!"}', expected_output: "positive" },
+        { inputs: '{"text": "This is terrible. I want my money back."}', expected_output: "negative" },
+        { inputs: '{"text": "The package arrived on time."}', expected_output: "neutral" },
+        { inputs: '{"text": "Amazing service, highly recommend!"}', expected_output: "positive" },
+        { inputs: '{"text": "Disappointed with the quality."}', expected_output: "negative" },
+        { inputs: '{"text": "It works as described."}', expected_output: "neutral" }
+      ]
     },
     {
       name: "Code Generation",
       template: "Generate Python code for the following task:\n\nTask: {task}\nCode:",
-      example: { inputs: '{"task": "Create a function that adds two numbers"}', expected_output: "def add_numbers(a, b):\n    return a + b" }
+      examples: [
+        { inputs: '{"task": "Create a function that adds two numbers"}', expected_output: "def add_numbers(a, b):\n    return a + b" },
+        { inputs: '{"task": "Write a function to reverse a string"}', expected_output: "def reverse_string(s):\n    return s[::-1]" },
+        { inputs: '{"task": "Create a function that checks if a number is even"}', expected_output: "def is_even(n):\n    return n % 2 == 0" },
+        { inputs: '{"task": "Write a function to find the maximum in a list"}', expected_output: "def find_max(lst):\n    return max(lst)" },
+        { inputs: '{"task": "Create a function that counts vowels in a string"}', expected_output: "def count_vowels(s):\n    return sum(1 for c in s.lower() if c in 'aeiou')" }
+      ]
+    },
+    {
+      name: "Math Word Problems",
+      template: "Solve the following math word problem step by step.\n\nProblem: {problem}\nSolution:",
+      examples: [
+        { inputs: '{"problem": "If John has 5 apples and Mary gives him 3 more, how many apples does John have?"}', expected_output: "8" },
+        { inputs: '{"problem": "A train travels 60 miles in 2 hours. What is its average speed?"}', expected_output: "30 miles per hour" },
+        { inputs: '{"problem": "If a shirt costs $20 and is on sale for 25% off, what is the sale price?"}', expected_output: "$15" },
+        { inputs: '{"problem": "Sarah reads 20 pages per day. How many pages will she read in a week?"}', expected_output: "140 pages" }
+      ]
+    },
+    {
+      name: "Text Summarization",
+      template: "Summarize the following text in one sentence.\n\nText: {text}\nSummary:",
+      examples: [
+        { inputs: '{"text": "The meeting was held on Tuesday at 3 PM. We discussed the quarterly sales report and planned the marketing strategy for next month. All team members were present and contributed valuable insights."}', expected_output: "The team met to review quarterly sales and plan next month's marketing strategy." },
+        { inputs: '{"text": "Scientists have discovered a new species of butterfly in the Amazon rainforest. The butterfly has unique blue and gold patterns on its wings and is only found in a specific region of Brazil."}', expected_output: "A new butterfly species with blue and gold wings was discovered in the Brazilian Amazon." },
+        { inputs: '{"text": "The company announced record profits for the third quarter, driven by strong sales in the Asian market and cost-cutting measures implemented earlier this year."}', expected_output: "The company achieved record Q3 profits through Asian market growth and cost reductions." }
+      ]
+    },
+    {
+      name: "Data Extraction from Messy Text",
+      template: "Extract structured information from the unstructured text.\n\nText: {text}\nExtract: {extract_fields}\nOutput:",
+      examples: [
+        { inputs: '{"text": "Hey! Just wanted to let you know that the meeting has been moved to next Tuesday at 2:30 PM in conference room B. Also, don\'t forget to bring the Q3 reports - Sarah needs them for the budget review.", "extract_fields": "meeting_date, meeting_time, location, required_items, person_mentioned"}', expected_output: "meeting_date: next Tuesday\nmeeting_time: 2:30 PM\nlocation: conference room B\nrequired_items: Q3 reports\nperson_mentioned: Sarah" },
+        { inputs: '{"text": "Order #12345 - Customer Jane Smith (jane@email.com) purchased 3x Blue Widget ($29.99 each) and 1x Red Gadget ($45.00). Ship to: 123 Main St, Apt 4B, NYC 10001. Express shipping requested.", "extract_fields": "order_id, customer_name, email, items_ordered, total_amount, shipping_address, shipping_type"}', expected_output: "order_id: 12345\ncustomer_name: Jane Smith\nemail: jane@email.com\nitems_ordered: 3x Blue Widget, 1x Red Gadget\ntotal_amount: $134.97\nshipping_address: 123 Main St, Apt 4B, NYC 10001\nshipping_type: Express" },
+        { inputs: '{"text": "Bug Report: Login page crashes on Chrome v98.0.4758.102 when user enters email with special chars. Steps: 1) Go to login 2) Enter test+user@domain.com 3) Click submit. Error: Uncaught TypeError at line 245.", "extract_fields": "issue_type, affected_page, browser_version, reproduction_steps, error_message"}', expected_output: "issue_type: Bug Report\naffected_page: Login page\nbrowser_version: Chrome v98.0.4758.102\nreproduction_steps: 1) Go to login 2) Enter test+user@domain.com 3) Click submit\nerror_message: Uncaught TypeError at line 245" }
+      ]
+    },
+    {
+      name: "Complex Instruction Following",
+      template: "Follow the instructions precisely to transform the input.\n\nInput: {input}\nInstructions: {instructions}\nOutput:",
+      examples: [
+        { inputs: '{"input": "The quick brown fox jumps over the lazy dog", "instructions": "1. Count the number of words. 2. Replace all vowels with asterisks. 3. Reverse the entire string. 4. Add the word count at the end."}', expected_output: "g*d yz*l *ht r*v* spm*j x*f nw*rb kc**q *hT 9" },
+        { inputs: '{"input": "2023-11-15", "instructions": "1. Convert to day name. 2. Add 10 days. 3. Format as \'Month DD, YYYY\'. 4. Calculate days until end of year."}', expected_output: "November 25, 2023 (36 days until end of year)" },
+        { inputs: '{"input": "[5, 2, 8, 1, 9]", "instructions": "1. Sort ascending. 2. Calculate mean. 3. Remove values below mean. 4. Double remaining values. 5. Return as comma-separated string."}', expected_output: "10, 16, 18" }
+      ]
     }
   ];
 
-  const useExampleTemplate = (template: typeof exampleTemplates[0]) => {
+  const useExampleTemplate = (template: typeof exampleTemplates[0], loadAll: boolean = true) => {
     setPromptTemplate(template.template);
-    setNewExample(template.example);
+    if (loadAll) {
+      setTrainingExamples([]); // Clear existing examples
+      // Load all examples for this template
+      const loadedExamples: TrainingExample[] = [];
+      template.examples.forEach(example => {
+        try {
+          const inputs = JSON.parse(example.inputs);
+          loadedExamples.push({ inputs, expected_output: example.expected_output });
+        } catch (e) {
+          console.error('Failed to parse example:', e);
+        }
+      });
+      setTrainingExamples(loadedExamples);
+    } else {
+      // Just set the first example in the form
+      if (template.examples.length > 0) {
+        setNewExample(template.examples[0]);
+      }
+    }
     setShowExamples(false);
   };
 
@@ -91,6 +190,62 @@ export default function PromptOptimizer() {
     if (!text) return text;
     // Remove ANSI escape sequences
     return text.replace(/\x1b\[[0-9;]*m/g, '');
+  };
+
+  const tryOptimizedPrompt = async () => {
+    if (!tryItMode) return;
+    
+    setTryItLoading(true);
+    setError(null);
+    
+    try {
+      const result = await promptOptimizerAPI.predictWithComparison(
+        tryItMode.requestId,
+        tryItInputs
+      );
+      setTryItPrediction(result);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Prediction failed');
+    } finally {
+      setTryItLoading(false);
+    }
+  };
+
+  const initializeTryItMode = (requestId: string, result: OptimizationResult) => {
+    setTryItMode({ requestId, result });
+    setTryItPrediction(null);
+    
+    // Extract input fields from the prompt template
+    const template = result.optimized_prompt?.original_template || '';
+    const fieldMatches = template.match(/\{(\w+)\}/g) || [];
+    const fields = fieldMatches.map(match => match.slice(1, -1));
+    
+    const initialInputs: Record<string, string> = {};
+    fields.forEach(field => {
+      initialInputs[field] = '';
+    });
+    setTryItInputs(initialInputs);
+  };
+
+  const downloadPredictor = async (requestId: string) => {
+    try {
+      const predictorData = await promptOptimizerAPI.exportPredictor(requestId);
+      
+      // Create a blob from the JSON data
+      const blob = new Blob([JSON.stringify(predictorData, null, 2)], { type: 'application/json' });
+      
+      // Create a download link
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `predictor-${requestId}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Failed to download predictor');
+    }
   };
 
   const optimizePrompt = async () => {
@@ -221,14 +376,24 @@ export default function PromptOptimizer() {
                 <p className="text-sm text-gray-300 mb-3">Choose a template to get started:</p>
                 <div className="space-y-2">
                   {exampleTemplates.map((template, index) => (
-                    <button
-                      key={index}
-                      onClick={() => useExampleTemplate(template)}
-                      className="w-full text-left p-3 bg-gray-600 rounded border border-gray-500 hover:border-pink-400 hover:bg-gray-500 transition-colors"
-                    >
+                    <div key={index} className="p-3 bg-gray-600 rounded border border-gray-500">
                       <div className="font-medium text-white">{template.name}</div>
                       <div className="text-xs text-gray-300 truncate">{template.template.slice(0, 100)}...</div>
-                    </button>
+                      <div className="flex gap-2 mt-2">
+                        <button
+                          onClick={() => useExampleTemplate(template, true)}
+                          className="flex-1 text-xs bg-pink-600 hover:bg-pink-700 text-white px-2 py-1 rounded transition-colors"
+                        >
+                          Load All {template.examples.length} Examples
+                        </button>
+                        <button
+                          onClick={() => useExampleTemplate(template, false)}
+                          className="flex-1 text-xs bg-purple-600 hover:bg-purple-700 text-white px-2 py-1 rounded transition-colors"
+                        >
+                          Template Only
+                        </button>
+                      </div>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -593,24 +758,40 @@ export default function PromptOptimizer() {
                     )}
 
                     {/* Test Results Button */}
-                    {result.status === 'completed' && result.optimized_prompt && ((useCustomTestData && customTestData.length > 0) || (!useCustomTestData && trainingExamples.length > 0)) && (
-                      <div className="mb-3">
+                    {result.status === 'completed' && result.optimized_prompt && (
+                      <div className="mb-3 flex gap-2">
+                        {((useCustomTestData && customTestData.length > 0) || (!useCustomTestData && trainingExamples.length > 0)) && (
+                          <button
+                            onClick={() => testOptimizedPrompt(result)}
+                            disabled={testingLoading}
+                            className="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+                          >
+                            {testingLoading ? (
+                              <>
+                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                                Testing...
+                              </>
+                            ) : (
+                              <>
+                                <Target className="w-4 h-4 mr-2" />
+                                Test Performance
+                              </>
+                            )}
+                          </button>
+                        )}
                         <button
-                          onClick={() => testOptimizedPrompt(result)}
-                          disabled={testingLoading}
-                          className="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+                          onClick={() => initializeTryItMode(result.request_id, result)}
+                          className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded text-sm font-medium flex items-center"
                         >
-                          {testingLoading ? (
-                            <>
-                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                              Testing...
-                            </>
-                          ) : (
-                            <>
-                              <Target className="w-4 h-4 mr-2" />
-                              Test Performance
-                            </>
-                          )}
+                          <Sparkles className="w-4 h-4 mr-2" />
+                          Try It
+                        </button>
+                        <button
+                          onClick={() => downloadPredictor(result.request_id)}
+                          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm font-medium flex items-center"
+                        >
+                          <Download className="w-4 h-4 mr-2" />
+                          Download
                         </button>
                       </div>
                     )}
@@ -970,6 +1151,206 @@ export default function PromptOptimizer() {
                   Tested on {testResults.test_examples_count} examples
                 </div>
               </div>
+            </div>
+          )}
+          
+          {/* Try It Mode */}
+          {tryItMode && (
+            <div className="bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-semibold text-white flex items-center">
+                  <Sparkles className="w-5 h-5 mr-2 text-purple-400" />
+                  Try Optimized Prompt
+                </h2>
+                <button
+                  onClick={() => {
+                    setTryItMode(null);
+                    setTryItPrediction(null);
+                    setTryItInputs({});
+                  }}
+                  className="text-gray-400 hover:text-gray-300"
+                >
+                  ✕
+                </button>
+              </div>
+              
+              {/* Input Fields */}
+              <div className="space-y-4 mb-6">
+                <div className="text-sm text-gray-400">
+                  Enter values for each input field:
+                </div>
+                {Object.entries(tryItInputs).map(([field, value]) => (
+                  <div key={field}>
+                    <label className="block text-sm font-medium text-gray-300 mb-1">
+                      {field}
+                    </label>
+                    <input
+                      type="text"
+                      value={value}
+                      onChange={(e) => setTryItInputs({ ...tryItInputs, [field]: e.target.value })}
+                      className="w-full px-3 py-2 bg-gray-700 border border-gray-600 text-white rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      placeholder={`Enter ${field}...`}
+                    />
+                  </div>
+                ))}
+              </div>
+              
+              {/* Submit Button */}
+              <button
+                onClick={tryOptimizedPrompt}
+                disabled={tryItLoading || Object.values(tryItInputs).some(v => !v)}
+                className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+              >
+                {tryItLoading ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    Predicting...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-4 h-4 mr-2" />
+                    Run Prediction
+                  </>
+                )}
+              </button>
+              
+              {/* Prediction Results */}
+              {tryItPrediction && (
+                <div className="mt-6 space-y-4">
+                  <div className="border-t border-gray-700 pt-4">
+                    <h3 className="text-lg font-semibold text-white mb-3">Comparison Results</h3>
+                    
+                    {/* Side-by-side comparison */}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+                      {/* Unoptimized Result */}
+                      <div className="bg-gray-700 p-4 rounded-lg">
+                        <div className="flex items-center justify-between mb-3">
+                          <h4 className="text-sm font-semibold text-red-400">Without Optimization</h4>
+                          <span className="text-xs bg-red-900/30 text-red-400 px-2 py-1 rounded">Basic Prompt</span>
+                        </div>
+                        
+                        {tryItPrediction.unoptimized.outputs && Object.keys(tryItPrediction.unoptimized.outputs).length > 0 ? (
+                          <div className="space-y-2">
+                            {Object.entries(tryItPrediction.unoptimized.outputs).map(([key, value]) => (
+                              <div key={key}>
+                                <div className="text-xs font-medium text-gray-400">{key}:</div>
+                                <div className="font-mono text-sm text-gray-200 bg-gray-800 p-2 rounded">
+                                  {value}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="text-sm text-gray-400 italic">No output generated</div>
+                        )}
+                      </div>
+                      
+                      {/* Optimized Result */}
+                      <div className="bg-gray-700 p-4 rounded-lg">
+                        <div className="flex items-center justify-between mb-3">
+                          <h4 className="text-sm font-semibold text-green-400">With DSPy Optimization</h4>
+                          <span className="text-xs bg-green-900/30 text-green-400 px-2 py-1 rounded">Optimized</span>
+                        </div>
+                        
+                        {tryItPrediction.optimized.outputs && Object.keys(tryItPrediction.optimized.outputs).length > 0 ? (
+                          <div className="space-y-2">
+                            {Object.entries(tryItPrediction.optimized.outputs).map(([key, value]) => (
+                              <div key={key}>
+                                <div className="text-xs font-medium text-gray-400">{key}:</div>
+                                <div className="font-mono text-sm text-gray-200 bg-gray-800 p-2 rounded">
+                                  {value}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="text-sm text-gray-400 italic">No output generated</div>
+                        )}
+                      </div>
+                    </div>
+                    
+                    {/* Key Differences */}
+                    <div className="bg-gray-700 p-4 rounded-lg mb-4">
+                      <h4 className="text-sm font-semibold text-yellow-400 mb-2">Key Differences</h4>
+                      <div className="space-y-2 text-sm">
+                        {/* Compare output fields */}
+                        {(() => {
+                          const unoptFields = Object.keys(tryItPrediction.unoptimized.outputs || {});
+                          const optFields = Object.keys(tryItPrediction.optimized.outputs || {});
+                          const allFields = [...new Set([...unoptFields, ...optFields])];
+                          
+                          return allFields.map(field => {
+                            const unoptValue = tryItPrediction.unoptimized.outputs?.[field] || 'N/A';
+                            const optValue = tryItPrediction.optimized.outputs?.[field] || 'N/A';
+                            const isDifferent = unoptValue !== optValue;
+                            
+                            return isDifferent ? (
+                              <div key={field} className="flex items-start space-x-2">
+                                <span className="text-yellow-400">•</span>
+                                <div>
+                                  <span className="font-medium text-gray-300">{field}:</span>
+                                  <div className="text-xs mt-1">
+                                    <span className="text-red-400">Before:</span> {unoptValue}
+                                  </div>
+                                  <div className="text-xs">
+                                    <span className="text-green-400">After:</span> {optValue}
+                                  </div>
+                                </div>
+                              </div>
+                            ) : null;
+                          });
+                        })()}
+                        
+                        {/* Show if optimized has additional reasoning */}
+                        {tryItPrediction.optimized.outputs?.reasoning && !tryItPrediction.unoptimized.outputs?.reasoning && (
+                          <div className="flex items-start space-x-2">
+                            <span className="text-green-400">+</span>
+                            <span className="text-gray-300">
+                              Optimized version includes step-by-step reasoning
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    
+                    {/* Show/Hide Full Traces Button */}
+                    <button
+                      onClick={() => setShowFullTraces(!showFullTraces)}
+                      className="text-sm text-blue-400 hover:text-blue-300 flex items-center"
+                    >
+                      {showFullTraces ? <ChevronDown className="w-4 h-4 mr-1" /> : <ChevronRight className="w-4 h-4 mr-1" />}
+                      View Full DSPy Traces
+                    </button>
+                    
+                    {/* Full Traces */}
+                    {showFullTraces && (
+                      <div className="mt-4 space-y-4">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                          {/* Unoptimized Trace */}
+                          <div className="bg-gray-800 p-3 rounded">
+                            <h5 className="text-xs font-medium text-red-400 mb-2">Unoptimized Trace</h5>
+                            {tryItPrediction.unoptimized.trace?.dspy_history_output && (
+                              <div className="text-xs font-mono text-gray-300 whitespace-pre-wrap overflow-x-auto max-h-64 overflow-y-auto">
+                                {cleanAnsiCodes(tryItPrediction.unoptimized.trace.dspy_history_output)}
+                              </div>
+                            )}
+                          </div>
+                          
+                          {/* Optimized Trace */}
+                          <div className="bg-gray-800 p-3 rounded">
+                            <h5 className="text-xs font-medium text-green-400 mb-2">Optimized Trace</h5>
+                            {tryItPrediction.optimized.trace?.dspy_history_output && (
+                              <div className="text-xs font-mono text-gray-300 whitespace-pre-wrap overflow-x-auto max-h-64 overflow-y-auto">
+                                {cleanAnsiCodes(tryItPrediction.optimized.trace.dspy_history_output)}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>

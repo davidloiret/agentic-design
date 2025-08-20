@@ -157,6 +157,43 @@ class PromptOptimizerAPI {
   async healthCheck(): Promise<{ status: string; service: string }> {
     return this.request('/health');
   }
+
+  async predictWithOptimizedPrompt(requestId: string, inputs: Record<string, any>): Promise<{
+    inputs: Record<string, any>;
+    outputs: Record<string, any>;
+    trace: DSPyTrace;
+  }> {
+    return this.request(`/predict/${requestId}`, {
+      method: 'POST',
+      body: JSON.stringify(inputs),
+    });
+  }
+
+  async predictWithComparison(requestId: string, inputs: Record<string, any>): Promise<{
+    unoptimized: {
+      inputs: Record<string, any>;
+      outputs: Record<string, any>;
+      trace: DSPyTrace;
+    };
+    optimized: {
+      inputs: Record<string, any>;
+      outputs: Record<string, any>;
+      trace: DSPyTrace;
+    };
+    template_info: {
+      original: string;
+      optimized: string;
+    };
+  }> {
+    return this.request(`/predict-comparison/${requestId}`, {
+      method: 'POST',
+      body: JSON.stringify(inputs),
+    });
+  }
+
+  async exportPredictor(requestId: string): Promise<any> {
+    return this.request(`/export/${requestId}`);
+  }
 }
 
 export const promptOptimizerAPI = new PromptOptimizerAPI();

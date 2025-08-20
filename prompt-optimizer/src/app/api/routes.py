@@ -107,6 +107,83 @@ async def test_prompt_comparison(
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@router.post("/predict/{request_id}")
+async def predict_with_optimized_prompt(
+    request_id: str,
+    inputs: dict,
+    service: OptimizationService = Depends(get_optimization_service)
+):
+    """Use an optimized predictor to make predictions"""
+    try:
+        # Get the optimization result to verify it exists and is completed
+        result = await service.get_optimization_result(request_id)
+        if result.status != "completed":
+            raise HTTPException(
+                status_code=400, 
+                detail=f"Optimization {request_id} is not completed yet. Status: {result.status}"
+            )
+        
+        # Make prediction
+        prediction_result = await service.predict_with_optimized_prompt(request_id, inputs)
+        return prediction_result
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/predict-comparison/{request_id}")
+async def predict_with_comparison(
+    request_id: str,
+    inputs: dict,
+    service: OptimizationService = Depends(get_optimization_service)
+):
+    """Compare predictions between original and optimized prompts"""
+    try:
+        # Get the optimization result
+        result = await service.get_optimization_result(request_id)
+        if result.status != "completed":
+            raise HTTPException(
+                status_code=400, 
+                detail=f"Optimization {request_id} is not completed yet. Status: {result.status}"
+            )
+        
+        # Get original prompt template
+        original_template = result.optimized_prompt.original_template
+        
+        # Make predictions with both versions
+        unoptimized_result = await service.predict_without_optimization(original_template, inputs)
+        optimized_result = await service.predict_with_optimized_prompt(request_id, inputs)
+        
+        return {
+            "unoptimized": unoptimized_result,
+            "optimized": optimized_result,
+            "template_info": {
+                "original": original_template,
+                "optimized": result.optimized_prompt.optimized_template
+            }
+        }
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/export/{request_id}")
+async def export_predictor(
+    request_id: str,
+    service: OptimizationService = Depends(get_optimization_service)
+):
+    """Export an optimized predictor as JSON"""
+    try:
+        predictor_data = await service.export_predictor(request_id)
+        return predictor_data
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @router.get("/health")
 async def health_check():
     return {"status": "healthy", "service": "prompt-optimizer"}

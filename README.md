@@ -2188,3 +2188,29 @@ suivi des compétences
 
 
   distilation
+
+
+  use predictor in system builder
+
+  inspect history
+
+
+  DSpy + BAML
+
+
+  Multi Hop
+
+  fine tune pipeline with system builder
+
+  add analytics
+
+  fine tune
+
+
+  --------
+
+Fine tuning without model weight
+  https://dspy.ai/tutorials/games/
+
+
+  Worflows for coding
