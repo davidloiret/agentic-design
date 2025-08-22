@@ -2155,6 +2155,7 @@ Dsypy prompt optimizer
 few shot dynamic prompt
 
 
+<<<<<<< HEAD
 compare patterns => https://boundaryml.com/blog/schema-aligned-parsing
 
 move share-secret to backend ?
@@ -2260,6 +2261,7 @@ Optimize for =>
 Add context
 
 use XML 
+<<<<<<< HEAD
 
 
 select model => different suggestion according to model selected
@@ -2308,3 +2310,10 @@ Vibe coding technique and methodo
 Tdd
 
 use nginx instead of nextjs for procyifin and add api. subdomain 
+=======
+=======
+llm a tendance a simplifer le pb, mock etc
+
+find the minimal model that still pass eval
+>>>>>>> c126365a (feat: up)
+>>>>>>> 29b4070c (feat: up)

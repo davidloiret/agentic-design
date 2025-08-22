@@ -129,6 +129,7 @@ show_help() {
     echo "  restart [service]  - Restart service(s)"
     echo "  status             - Show running containers"
     echo "  clean              - Clean Docker system"
+    echo "  shell [service]    - Enter shell in service container"
     echo ""
     echo "Services:"
     echo "  frontend    - Next.js frontend (port 3002)"
@@ -145,6 +146,8 @@ show_help() {
     echo "  ./manage.sh rebuild codesandbox      # Build and start CodeSandbox service"
     echo "  ./manage.sh start codesandbox        # Start CodeSandbox service"  
     echo "  ./manage.sh stop codesandbox         # Stop CodeSandbox service"
+    echo "  ./manage.sh shell frontend           # Enter shell in frontend container"
+    echo "  ./manage.sh shell backend            # Enter shell in backend container"
 }
 
 # Track overall command start time
@@ -328,6 +331,29 @@ case "$1" in
         ;;
     clean)
         run_with_timing "Cleaning Docker system" docker system prune -a -f --volumes && docker builder prune -af
+        ;;
+    shell)
+        if [ -z "$2" ]; then
+            echo "❌ Please specify a service: frontend or backend"
+            echo "Usage: ./manage.sh shell [frontend|backend]"
+            exit 1
+        fi
+        
+        case "$2" in
+            frontend)
+                echo "🔧 Entering shell in frontend container..."
+                docker compose -f $COMPOSE_FILE exec frontend /bin/sh
+                ;;
+            backend)
+                echo "🔧 Entering shell in backend container..."
+                docker compose -f $COMPOSE_FILE exec backend /bin/sh
+                ;;
+            *)
+                echo "❌ Invalid service: $2"
+                echo "Available services for shell: frontend, backend"
+                exit 1
+                ;;
+        esac
         ;;
     help|--help|-h)
         show_help
