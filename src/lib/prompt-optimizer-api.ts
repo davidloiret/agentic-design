@@ -1,6 +1,18 @@
+export interface SimplePromptComponents {
+  task_context: string;
+  tone_context?: string;
+  background_data?: string;
+  detailed_task_instructions?: string;
+  conversation_history?: string;
+  final_request: string;
+  chain_of_thought?: string;
+  output_formatting?: string;
+}
+
 export interface PromptTemplate {
   template: string;
   parameters: Record<string, any>;
+  simple_components?: SimplePromptComponents;
 }
 
 export interface TrainingExample {
@@ -87,6 +99,18 @@ export interface ComparisonResult {
   optimized_metrics: EvaluationMetrics;
   improvements: Record<string, number>;
   test_examples_count: number;
+}
+
+export interface ImprovePromptRequest {
+  prompt: string;
+  context?: string;
+  improvements?: string[];
+}
+
+export interface ImprovePromptResponse {
+  improved_prompt: string;
+  improvements_made: string[];
+  suggestions: string[];
 }
 
 const PROMPT_OPTIMIZER_BASE_URL = 'http://localhost:9090/api/v1';
@@ -193,6 +217,13 @@ class PromptOptimizerAPI {
 
   async exportPredictor(requestId: string): Promise<any> {
     return this.request(`/export/${requestId}`);
+  }
+
+  async improvePrompt(request: ImprovePromptRequest): Promise<ImprovePromptResponse> {
+    return this.request('/improve-prompt', {
+      method: 'POST',
+      body: JSON.stringify(request),
+    });
   }
 }
 

@@ -7,7 +7,9 @@ from ...domain.entities import (
     OptimizationRequest, 
     OptimizationResult,
     PromptTemplate,
-    TrainingExample
+    TrainingExample,
+    SimplePromptComponents,
+    OptimizationStrategy
 )
 
 
@@ -16,6 +18,12 @@ class TestComparisonRequest(BaseModel):
     optimized_prompt: str
     test_data: List[dict]
     request_id: Optional[str] = None  # Optional: use optimized predictor from this request
+
+
+class ImprovePromptRequest(BaseModel):
+    prompt: str
+    context: Optional[str] = None  # Additional context about what the prompt is for
+    improvements: Optional[List[str]] = None  # Specific improvements requested
 
 router = APIRouter(prefix="/api/v1", tags=["optimization"])
 
@@ -180,6 +188,25 @@ async def export_predictor(
         return predictor_data
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+
+@router.post("/improve-prompt")
+async def improve_prompt(
+    request: ImprovePromptRequest,
+    service: OptimizationService = Depends(get_optimization_service)
+):
+    """Improve an existing prompt using LLM-based suggestions"""
+    try:
+        # Use the service to improve the prompt
+        improved_prompt = await service.improve_prompt(
+            prompt=request.prompt,
+            context=request.context,
+            improvements=request.improvements
+        )
+        return improved_prompt
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

@@ -2214,3 +2214,49 @@ Fine tuning without model weight
 
 
   Worflows for coding
+
+
+  -----------
+
+  feedback loop
+
+  find the smallest model that works => optimization prompt => ajouter BAML ? 
+  
+  Tool calling 
+
+  Code avec dspy
+
+  create ontology
+
+
+  Add aibrix
+
+  ----
+
+  Share secret
+
+  I also want a option to Improve Existing Prompt where I copy a prompt and I ask for improve. Idea is to add a real prompt with data and the system should transform it to template according to simple strategy and using LLM. If information missing, it should ask the user, and get immediat result with eval in background without switching steps.
+
+
+  I also want a option that transform the prompt to template, identify using a model the different possible option of the template like task, context etc
+
+  uv run uvicorn src.app.main:app --reload --port 9090
+
+
+    I also want a option to fast Improve Existing Prompt where I copy/paste a prompt and I ask the system to improve my prompt and I copy the result. Idea is to add a real prompt with data and the system should improve it using LLM for fast iteration on small prompt.
+
+
+Fine tuning LLM
+Fine tining embedding
+
+use xml ?
+
+add aibrick
+
+add agent loop / interruptable
+
+Optimize for =>
+
+Add context
+
+use XML 

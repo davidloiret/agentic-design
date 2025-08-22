@@ -1,7 +1,7 @@
-import PromptOptimizer from '@/components/PromptOptimizer';
+import PromptOptimizerStepper from '@/components/PromptOptimizerStepper';
 
 export default function PromptOptimizerPage() {
-  return <PromptOptimizer />;
+  return <PromptOptimizerStepper />;
 }
 
 export const metadata = {

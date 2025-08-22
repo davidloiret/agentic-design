@@ -101,16 +101,23 @@ export class AuthController {
       cookie: request.headers.cookie,
     });
     
-    const token = request.cookies?.['access_token'] || 
-                  request.headers.authorization?.replace('Bearer ', '');
+    // The AuthGuard has already validated the token and attached the user to the request
+    // This ensures refresh tokens are automatically handled
+    const user = request['user'];
+    const supabaseUser = request['supabaseUser'];
     
-    if (!token) {
+    if (!user || !supabaseUser) {
       return null;
     }
     
-    const user = await this.authService.getCurrentUser(token);
-    
-    return user;
+    // Return the user in the format expected by the frontend
+    return {
+      id: supabaseUser.id, // Supabase ID
+      userId: user.id, // Local database ID for backend operations
+      email: supabaseUser.email,
+      firstName: user.firstName || supabaseUser.user_metadata?.firstName,
+      lastName: user.lastName || supabaseUser.user_metadata?.lastName,
+    };
   }
 
   @Public()

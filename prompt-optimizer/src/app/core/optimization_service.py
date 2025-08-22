@@ -1,9 +1,11 @@
 import uuid
 from datetime import datetime
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 from ..core.config import Settings
 from ...domain.entities import OptimizationRequest, OptimizationResult, OptimizedPrompt
 from ...domain.ports import PromptOptimizerPort, OptimizationRepositoryPort
+import openai
+import json
 
 
 class OptimizationService:
@@ -118,3 +120,107 @@ class OptimizationService:
         }
         
         return serialized
+    
+    async def improve_prompt(
+        self, 
+        prompt: str, 
+        context: Optional[str] = None,
+        improvements: Optional[List[str]] = None
+    ) -> Dict[str, Any]:
+        """Improve an existing prompt using LLM-based suggestions"""
+        try:
+            # Initialize OpenAI client if available
+            if hasattr(self.settings, 'openai_api_key') and self.settings.openai_api_key:
+                client = openai.OpenAI(api_key=self.settings.openai_api_key)
+            else:
+                # Fallback to rule-based improvements
+                return await self._rule_based_improvement(prompt, context, improvements)
+            
+            # Build the improvement prompt
+            system_prompt = """You are an expert prompt engineer. Your task is to improve the given prompt to make it more effective, clear, and likely to produce better results.
+
+Consider the following aspects when improving prompts:
+1. Clarity and specificity
+2. Structure and organization  
+3. Context and background information
+4. Clear instructions and expected output format
+5. Examples when helpful
+6. Appropriate use of techniques like chain-of-thought or step-by-step reasoning
+
+Return your response as a JSON object with the following structure:
+{
+  "improved_prompt": "The improved version of the prompt",
+  "improvements_made": ["List of specific improvements made"],
+  "suggestions": ["Additional suggestions for further improvement"]
+}"""
+
+            user_message = f"Original prompt:\n{prompt}"
+            
+            if context:
+                user_message += f"\n\nContext: {context}"
+            
+            if improvements:
+                user_message += f"\n\nSpecific improvements requested: {', '.join(improvements)}"
+            
+            # Call OpenAI API
+            response = client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_message}
+                ],
+                temperature=0.7,
+                response_format={"type": "json_object"}
+            )
+            
+            result = json.loads(response.choices[0].message.content)
+            return result
+            
+        except Exception as e:
+            # Fallback to rule-based improvements
+            return await self._rule_based_improvement(prompt, context, improvements)
+    
+    async def _rule_based_improvement(
+        self, 
+        prompt: str, 
+        context: Optional[str] = None,
+        improvements: Optional[List[str]] = None
+    ) -> Dict[str, Any]:
+        """Rule-based prompt improvement as fallback"""
+        improved_prompt = prompt
+        improvements_made = []
+        suggestions = []
+        
+        # Add structure if missing
+        if "\n" not in prompt and len(prompt) > 100:
+            improved_prompt = prompt.replace(". ", ".\n\n")
+            improvements_made.append("Added paragraph breaks for better readability")
+        
+        # Add chain of thought if complex
+        if "analyze" in prompt.lower() or "explain" in prompt.lower():
+            if "step by step" not in prompt.lower():
+                improved_prompt += "\n\nPlease think through this step by step."
+                improvements_made.append("Added chain-of-thought instruction")
+        
+        # Add output format if missing
+        if "format" not in prompt.lower() and "structure" not in prompt.lower():
+            suggestions.append("Consider specifying the desired output format")
+        
+        # Add context usage instruction
+        if context and "context" not in prompt.lower():
+            improved_prompt = f"Context: {context}\n\n{improved_prompt}"
+            improvements_made.append("Added context section")
+        
+        # Check for placeholders
+        if "{" not in prompt and "example" not in prompt.lower():
+            suggestions.append("Consider adding placeholders for dynamic content using {placeholder} syntax")
+        
+        # Add role definition if missing
+        if not any(phrase in prompt.lower() for phrase in ["you are", "act as", "role"]):
+            suggestions.append("Consider defining a specific role or persona for better context")
+        
+        return {
+            "improved_prompt": improved_prompt,
+            "improvements_made": improvements_made,
+            "suggestions": suggestions
+        }

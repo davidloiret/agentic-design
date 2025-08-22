@@ -18,11 +18,23 @@ class OptimizationStrategy(str, Enum):
     BOOTSTRAP_FINETUNE = "bootstrap_finetune"
 
 
+class SimplePromptComponents(BaseModel):
+    task_context: str
+    tone_context: Optional[str] = None
+    background_data: Optional[str] = None
+    detailed_task_instructions: Optional[str] = None
+    conversation_history: Optional[str] = None
+    final_request: str
+    chain_of_thought: Optional[str] = None
+    output_formatting: Optional[str] = None
+
+
 class PromptTemplate(BaseModel):
     id: Optional[str] = None
     template: str = Field(..., description="The prompt template with placeholders")
     parameters: Dict[str, Any] = Field(default_factory=dict)
     description: Optional[str] = None
+    simple_components: Optional[SimplePromptComponents] = None
 
 
 class TrainingExample(BaseModel):
