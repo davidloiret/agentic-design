@@ -1,19 +1,22 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import cookieParser from 'cookie-parser';
-import * as express from 'express';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
+  // Create NestJS app with body parser disabled initially
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     rawBody: true,
   });
+  // Configure NestJS body parser with custom limits
+  app.useBodyParser('json', { limit: 10_485_760 });
+  app.useBodyParser('text', { limit: 10_485_760 });
+  app.useBodyParser('raw', { limit: 10_485_760 });
+  app.useBodyParser('urlencoded', { limit: 10_485_760, extended: true });
+  
   const configService = app.get(ConfigService);
-
-  // Configure body parser limits - must be before other middleware
-  app.use(express.json({ limit: '50mb' }));
-  app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
   app.setGlobalPrefix('api/v1');
 

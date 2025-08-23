@@ -10,6 +10,12 @@ const nextConfig = {
   serverRuntimeConfig: {
     bodySizeLimit: '50mb',
   },
+  // Configure body parser limits for API routes
+  api: {
+    bodyParser: {
+      sizeLimit: '50mb',
+    },
+  },
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,

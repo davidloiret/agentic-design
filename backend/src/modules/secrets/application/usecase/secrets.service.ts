@@ -16,7 +16,7 @@ interface SecretData {
 @Injectable()
 export class SecretsService {
   private readonly SECRETS_DIR = path.join(process.cwd(), '.secrets');
-  private readonly MAX_VAULT_SIZE = 10 * 1024 * 1024; // 10MB
+  private readonly MAX_VAULT_SIZE = 50 * 1024 * 1024; // 50MB
 
   private async ensureSecretsDir() {
     try {

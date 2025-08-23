@@ -16,7 +16,7 @@ function ShareSecretContent() {
 	const [isCreating, setIsCreating] = React.useState(false);
 	const [creationProgress, setCreationProgress] = React.useState<{
 		currentStep: string;
-		currentFile?: string;
+		technicalStep?: string;
 		fileIndex?: number;
 		totalFiles?: number;
 		progress: number;
@@ -179,31 +179,31 @@ function ShareSecretContent() {
 		try {
 			setIsCreating(true);
 			setError(null);
-			setCreationProgress({ currentStep: 'Initializing encryption...', progress: 5 });
+			setCreationProgress({ currentStep: '🔮 Initializing Hoddor magic...', technicalStep: 'Initializing encryption', progress: 5 });
 			
 			// Generate unique ID and passphrase
 			const secretId = `secret_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 			const generatedPassphrase = generateSecurePassword();
 			setPassphrase(generatedPassphrase);
 			
-			setCreationProgress({ currentStep: 'Creating secure vault...', progress: 10 });
+			setCreationProgress({ currentStep: '🏗️ Vaulting up your fortress...', technicalStep: 'Creating secure vault', progress: 10 });
 			
 			// Create vault with the secret
 			await hoddorRef.current.create_vault(secretId);
 			const identity = await hoddorRef.current.vault_identity_from_passphrase(generatedPassphrase, secretId);
 			
-			setCreationProgress({ currentStep: 'Vault created, preparing data...', progress: 20 });
+			setCreationProgress({ currentStep: '🧪 Hoddoring your precious data...', technicalStep: 'Preparing data for encryption', progress: 20 });
 			
 			// Store data based on type
 			if (secretType === "text") {
-				setCreationProgress({ currentStep: 'Encrypting text...', progress: 40 });
+				setCreationProgress({ currentStep: '🔥 Vaulting your secret words...', technicalStep: 'Encrypting text content', progress: 40 });
 				await hoddorRef.current.upsert_vault(secretId, identity, "secret", secretText, null, true);
 				await hoddorRef.current.upsert_vault(secretId, identity, "type", "text", null, true);
-				setCreationProgress({ currentStep: 'Text encrypted successfully', progress: 60 });
+				setCreationProgress({ currentStep: '✨ Successfully Hoddored!', technicalStep: 'Text encryption complete', progress: 60 });
 			} else {
 				// For files, store multiple files data and metadata
 				setCreationProgress({ 
-					currentStep: 'Setting up file encryption...', 
+					currentStep: '📦 Preparing vault chambers...', technicalStep: 'Setting up file encryption', 
 					progress: 30,
 					totalFiles: selectedFiles.length 
 				});
@@ -217,8 +217,7 @@ function ShareSecretContent() {
 					const fileProgress = Math.round(30 + (i / selectedFiles.length) * 40); // 30-70% for file processing
 					
 					setCreationProgress({
-						currentStep: `Processing file ${i + 1}/${selectedFiles.length}...`,
-						currentFile: file.name,
+						currentStep: `🔧 Hoddoring file ${i + 1}/${selectedFiles.length}...`, technicalStep: `Processing ${file.name}`,
 						fileIndex: i + 1,
 						totalFiles: selectedFiles.length,
 						progress: fileProgress
@@ -235,8 +234,7 @@ function ShareSecretContent() {
 					}
 					
 					setCreationProgress({
-						currentStep: `Encrypting ${file.name}...`,
-						currentFile: file.name,
+						currentStep: `🌪️ Vaulting the secrets...`, technicalStep: `Encrypting ${file.name}`,
 						fileIndex: i + 1,
 						totalFiles: selectedFiles.length,
 						progress: fileProgress + 2
@@ -256,18 +254,18 @@ function ShareSecretContent() {
 				}
 				
 				setCreationProgress({ 
-					currentStep: 'All files encrypted successfully', 
+					currentStep: '🎉 All secrets safely Hoddored!', technicalStep: 'All files encrypted successfully', 
 					progress: 70,
 					totalFiles: selectedFiles.length 
 				});
 			}
 			
 			// Export vault for server storage
-			setCreationProgress({ currentStep: 'Preparing vault for storage...', progress: 75 });
+			setCreationProgress({ currentStep: '📋 Sealing the vault doors...', technicalStep: 'Preparing vault for storage', progress: 75 });
 			const vaultData = await hoddorRef.current.export_vault(secretId);
 			
 			// Store on server via NestJS backend
-			setCreationProgress({ currentStep: 'Uploading to secure server...', progress: 85 });
+			setCreationProgress({ currentStep: '🚀 Transmitting to Hoddor realm...', technicalStep: 'Uploading to secure server', progress: 85 });
 			const response = await fetch('/api/v1/secrets', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
@@ -281,7 +279,7 @@ function ShareSecretContent() {
 			
 			if (!response.ok) throw new Error('Failed to store secret');
 			
-			setCreationProgress({ currentStep: 'Generating share link...', progress: 95 });
+			setCreationProgress({ currentStep: '🔗 Forging vault access key...', technicalStep: 'Generating share link', progress: 95 });
 			
 			// Create share link (passphrase sent separately)
 			const baseUrl = window.location.origin;
@@ -289,7 +287,7 @@ function ShareSecretContent() {
 			setShareLink(link);
 			
 			// Clean up local vault
-			setCreationProgress({ currentStep: 'Completing setup...', progress: 100 });
+			setCreationProgress({ currentStep: '🎊 Hoddor magic complete!', technicalStep: 'Completing setup', progress: 100 });
 			await hoddorRef.current.remove_vault(secretId);
 			
 		} catch (err: any) {
@@ -1108,8 +1106,12 @@ function ShareSecretContent() {
 								{isCreating && creationProgress.progress > 0 && (
 									<div className="space-y-3 mb-4">
 										<div className="flex items-center justify-between text-sm">
-											<span className="text-gray-300">{creationProgress.currentStep}</span>
-											<span className="text-gray-400">{creationProgress.progress}%</span>
+											<div className="flex-1">
+												{creationProgress.technicalStep && (
+													<div className="text-gray-300">{creationProgress.technicalStep}</div>
+												)}
+											</div>
+											<span className="text-gray-400 ml-4">{creationProgress.progress}%</span>
 										</div>
 										
 										{/* Progress bar */}
@@ -1121,12 +1123,9 @@ function ShareSecretContent() {
 										</div>
 										
 										{/* File specific progress */}
-										{creationProgress.currentFile && creationProgress.totalFiles && (
-											<div className="text-xs text-gray-400">
-												<div className="flex justify-between">
-													<span>Processing: {creationProgress.currentFile}</span>
-													<span>File {creationProgress.fileIndex} of {creationProgress.totalFiles}</span>
-												</div>
+										{creationProgress.totalFiles && creationProgress.totalFiles > 1 && (
+											<div className="text-xs text-gray-400 text-right">
+												<span>File {creationProgress.fileIndex} of {creationProgress.totalFiles}</span>
 											</div>
 										)}
 									</div>
@@ -1142,7 +1141,7 @@ function ShareSecretContent() {
 									{isCreating ? (
 										<>
 											<div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-											{creationProgress.currentStep || 'Creating Secure Link...'}
+											{creationProgress.currentStep || '🔮 Hoddoring your secrets...'}
 										</>
 									) : (
 										<>

@@ -44,6 +44,8 @@ RUN mkdir -p logs
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nodejs -u 1001
 
+RUN mkdir -p /app/.secrets && chown -R nodejs:nodejs /app/.secrets
+
 # Change ownership of app directory
 RUN chown -R nodejs:nodejs /app
 

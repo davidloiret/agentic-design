@@ -40,23 +40,40 @@ const app = next({ dev, hostname, port });
 const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
-  const server = createServer(async (req, res) => {
+  const server = createServer({
+    // Set max header size to 16KB (default is 8KB)
+    maxHeaderSize: 16384,
+  }, async (req, res) => {
     try {
       const parsedUrl = parse(req.url, true);
       const { pathname, query } = parsedUrl;
 
       // Handle backend API proxy
       if (pathname.startsWith('/api/backend/')) {
-        const proxyPath = pathname.replace('/api/backend', '');
-        const target = `${backendUrl}${proxyPath}`;
+        console.log('Proxying request:', {
+          method: req.method,
+          path: pathname,
+          contentLength: req.headers['content-length'],
+          contentType: req.headers['content-type'],
+        });
         
-        // Create proxy middleware
+        // Create proxy middleware with large body size limit
         const proxy = createProxyMiddleware({
           target: backendUrl,
           changeOrigin: true,
           pathRewrite: {
             '^/api/backend': '', // Remove /api/backend prefix
           },
+          // Configure request size limits
+          onProxyReq: (proxyReq, req, res) => {
+            // Set content length header if not already set
+            if (req.headers['content-length']) {
+              proxyReq.setHeader('Content-Length', req.headers['content-length']);
+            }
+          },
+          // Increase buffer size limit to match backend's 50MB
+          parseReqBody: false, // Don't parse body in proxy middleware
+          limit: 10_485_760,
           onError: (err, req, res) => {
             console.error('Proxy error:', err);
             res.writeHead(500, { 'Content-Type': 'text/plain' });

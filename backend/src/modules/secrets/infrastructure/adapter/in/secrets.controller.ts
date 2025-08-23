@@ -12,7 +12,6 @@ import {
 import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
 import { SecretsService } from '../../../application/usecase/secrets.service';
 import { Public } from '../../../../auth/infrastructure/guard/auth.guard';
-import { CreateSecretDto } from '../../../application/dto/create-secret.dto';
 import { SecretResponseDto } from '../../../application/dto/secret-response.dto';
 
 @ApiTags('secrets')
