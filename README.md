@@ -2320,3 +2320,6 @@ find the minimal model that still pass eval
 
 
 Encrypt to recipient plublic key; so only know user can access it
+
+good now implement ui-ux-patterns/agent-collaboration-ux detail page, conduct research and ensure every information is        │
+│   backed by authoritative reference, think hard.      

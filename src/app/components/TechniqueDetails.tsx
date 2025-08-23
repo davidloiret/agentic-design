@@ -53,6 +53,9 @@ import { ChatInterfacePatternsDetails } from './technique-details/ChatInterfaceP
 import { CrossPlatformAgentUxDetails } from './technique-details/CrossPlatformAgentUxDetails';
 import { VisualReasoningPatternsDetails } from './technique-details/VisualReasoningPatternsDetails';
 import { MultimodalInteractionPatternsDetails } from './technique-details/MultimodalInteractionPatternsDetails';
+import { ConversationalInterfacePatternsDetails } from './technique-details/ConversationalInterfacePatternsDetails';
+import { AgentCollaborationUxDetails } from './technique-details/AgentCollaborationUxDetails';
+import { TrustTransparencyPatternsDetails } from './technique-details/TrustTransparencyPatternsDetails';
 import { IdentityAccessManagementDetails } from './technique-details/IdentityAccessManagementDetails';
 import { ThreatDetectionResponseDetails } from './technique-details/ThreatDetectionResponseDetails';
 import { ComplianceAutomationPatternsDetails } from './technique-details/ComplianceAutomationPatternsDetails';
@@ -999,6 +1002,12 @@ export const TechniqueDetails = ({
                 <VisualReasoningPatternsDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'multimodal-interaction-patterns' ? (
                 <MultimodalInteractionPatternsDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'conversational-interface-patterns' ? (
+                <ConversationalInterfacePatternsDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'agent-collaboration-ux' ? (
+                <AgentCollaborationUxDetails selectedTechnique={selectedTechnique} />
+              ) : selectedTechnique.id === 'trust-transparency-patterns' ? (
+                <TrustTransparencyPatternsDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'identity-access-management' ? (
                 <IdentityAccessManagementDetails selectedTechnique={selectedTechnique} />
               ) : selectedTechnique.id === 'threat-detection-response' ? (
