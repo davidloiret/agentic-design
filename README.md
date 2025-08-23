@@ -2317,3 +2317,6 @@ llm a tendance a simplifer le pb, mock etc
 find the minimal model that still pass eval
 >>>>>>> c126365a (feat: up)
 >>>>>>> 29b4070c (feat: up)
+
+
+Encrypt to recipient plublic key; so only know user can access it

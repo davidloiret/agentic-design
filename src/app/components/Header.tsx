@@ -391,6 +391,17 @@ export const Header = () => {
               {/* Text */}
               <span className="text-sm relative z-10">System Builder</span>
             </motion.button>
+
+            {/* Share Secret - Fire icon button */}
+            <motion.button
+              onClick={() => router.push('/share-secret')}
+              className="p-2 text-orange-400 hover:text-orange-300 hover:bg-gray-800/50 rounded-lg transition-colors"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              title="Share Secret"
+            >
+              <Flame className="w-5 h-5" />
+            </motion.button>
                     
             {/* Auth section - Last item on the right */}
             {loading ? (
@@ -606,6 +617,15 @@ export const Header = () => {
                   <Cpu className="w-3.5 h-3.5 relative z-10" />
                 </motion.div>
                 <span className="text-xs relative z-10">Builder</span>
+              </motion.button>
+              <motion.button
+                onClick={() => router.push('/share-secret')}
+                className="p-2 text-orange-400 hover:text-orange-300 hover:bg-gray-800/50 rounded-lg transition-colors"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                title="Share Secret"
+              >
+                <Flame className="w-5 h-5" />
               </motion.button>
               {loading ? (
                 <div className="flex items-center space-x-2">
