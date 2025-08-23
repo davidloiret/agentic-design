@@ -248,7 +248,7 @@ export default function PromptOptimizerStepper() {
 
   // Function to generate template from components
   const generateTemplateFromComponents = () => {
-    const components = [];
+    const components: string[] = [];
     
     if (simpleComponents.task_context) {
       components.push(simpleComponents.task_context);
@@ -457,7 +457,7 @@ export default function PromptOptimizerStepper() {
     setTrainingExamples(trainingExamples.filter((_, i) => i !== index));
   };
 
-  const useExampleTemplate = (template: typeof exampleTemplates[0], loadAll: boolean = true) => {
+  const loadExampleTemplate = (template: typeof exampleTemplates[0], loadAll: boolean = true) => {
     setPromptTemplate(template.template);
     if (loadAll) {
       setTrainingExamples([]); // Clear existing examples
@@ -487,7 +487,7 @@ export default function PromptOptimizerStepper() {
     setTryItPrediction(null);
     
     // Extract input fields from the prompt template
-    const template = optimizationResult.optimized_prompt.original_template || '';
+    const template = optimizationResult.optimized_prompt?.original_template || '';
     const fieldMatches = template.match(/\{(\w+)\}/g) || [];
     const fields = fieldMatches.map(match => match.slice(1, -1));
     
@@ -827,7 +827,7 @@ export default function PromptOptimizerStepper() {
       return messages;
     };
     
-    const chatMessages = convertToChatFormat(optimizationResult.optimized_prompt.optimized_template);
+    const chatMessages = convertToChatFormat(optimizationResult.optimized_prompt?.optimized_template || '');
 
     return (
       <div className="bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-700">
@@ -871,7 +871,7 @@ export default function PromptOptimizerStepper() {
             <div>
               <h3 className="text-sm font-medium text-gray-300 mb-3">Original Prompt</h3>
               <div className="bg-gray-900 rounded-lg p-4 font-mono text-sm">
-                {optimizationResult.optimized_prompt.original_template}
+                {optimizationResult.optimized_prompt?.original_template}
               </div>
             </div>
           )}
@@ -881,14 +881,14 @@ export default function PromptOptimizerStepper() {
               <div className="flex items-center">
                 <span>Optimized Prompt {displayFormat === 'chat' && '(Chat Format)'}</span>
                 <span className="ml-2 px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">
-                  {optimizationResult.optimized_prompt.performance_score.toFixed(1)}% accuracy
+                  {optimizationResult.optimized_prompt?.performance_score?.toFixed(1) || '0'}% accuracy
                 </span>
               </div>
               <button
                 onClick={() => {
                   const textToCopy = displayFormat === 'chat' 
                     ? JSON.stringify(chatMessages, null, 2)
-                    : optimizationResult.optimized_prompt.optimized_template;
+                    : optimizationResult.optimized_prompt?.optimized_template || '';
                   navigator.clipboard.writeText(textToCopy);
                   // Show a brief confirmation
                   const btn = event?.target as HTMLButtonElement;
@@ -907,7 +907,7 @@ export default function PromptOptimizerStepper() {
             
             {displayFormat === 'raw' ? (
               <div className="bg-green-900/20 border border-green-800 rounded-lg p-4 font-mono text-sm text-green-300 whitespace-pre-wrap">
-                {optimizationResult.optimized_prompt.optimized_template}
+                {optimizationResult.optimized_prompt?.optimized_template}
               </div>
             ) : (
               <div className="bg-gray-900 rounded-lg p-4 space-y-3">
@@ -933,9 +933,9 @@ export default function PromptOptimizerStepper() {
                 </div>
               </div>
             )}
-            {optimizationResult.optimized_prompt.metadata?.actual_demonstrations && optimizationResult.optimized_prompt.optimized_template.includes('Examples:') && (
+            {(optimizationResult.optimized_prompt.metadata as any)?.actual_demonstrations && optimizationResult.optimized_prompt?.optimized_template?.includes('Examples:') && (
               <div className="mt-2 text-xs text-gray-400 italic">
-                Contains {optimizationResult.optimized_prompt.metadata.actual_demonstrations} optimized demonstrations from {optimizationResult.optimized_prompt.metadata.training_examples} training examples.
+                Contains {(optimizationResult.optimized_prompt.metadata as any).actual_demonstrations} optimized demonstrations from {optimizationResult.optimized_prompt.metadata?.training_examples} training examples.
               </div>
             )}
           </div>
@@ -1351,7 +1351,7 @@ export default function PromptOptimizerStepper() {
                     {exampleTemplates.map((template, index) => (
                       <div key={index} className="border border-gray-700 rounded-lg">
                         <button
-                          onClick={() => useExampleTemplate(template, false)}
+                          onClick={() => loadExampleTemplate(template, false)}
                           className="w-full p-3 text-left hover:bg-gray-700 transition-colors rounded-t-lg"
                         >
                           <div className="font-medium text-white">{template.name}</div>
@@ -1359,13 +1359,13 @@ export default function PromptOptimizerStepper() {
                         </button>
                         <div className="p-3 bg-gray-700/50 border-t border-gray-600 flex gap-2">
                           <button
-                            onClick={() => useExampleTemplate(template, true)}
+                            onClick={() => loadExampleTemplate(template, true)}
                             className="flex-1 text-xs bg-pink-600 hover:bg-pink-700 text-white px-2 py-1.5 rounded transition-colors"
                           >
                             Load All {template.examples.length} Examples
                           </button>
                           <button
-                            onClick={() => useExampleTemplate(template, false)}
+                            onClick={() => loadExampleTemplate(template, false)}
                             className="flex-1 text-xs bg-purple-600 hover:bg-purple-700 text-white px-2 py-1.5 rounded transition-colors"
                           >
                             Template Only
@@ -1591,16 +1591,16 @@ export default function PromptOptimizerStepper() {
                                 <span className="text-gray-500">DSPy Version:</span>
                                 <span className="text-gray-300">{optimizationResult.optimized_prompt.metadata.dspy_version}</span>
                               </div>
-                              {optimizationResult.optimized_prompt.metadata.actual_demonstrations && (
+                              {(optimizationResult.optimized_prompt.metadata as any)?.actual_demonstrations && (
                                 <div className="flex justify-between">
                                   <span className="text-gray-500">Demonstrations:</span>
-                                  <span className="text-gray-300">{optimizationResult.optimized_prompt.metadata.actual_demonstrations}</span>
+                                  <span className="text-gray-300">{(optimizationResult.optimized_prompt.metadata as any).actual_demonstrations}</span>
                                 </div>
                               )}
-                              {optimizationResult.optimized_prompt.metadata.history_size && (
+                              {(optimizationResult.optimized_prompt.metadata as any)?.history_size && (
                                 <div className="flex justify-between">
                                   <span className="text-gray-500">History Size:</span>
-                                  <span className="text-gray-300">{(optimizationResult.optimized_prompt.metadata.history_size / 1024).toFixed(1)} KB</span>
+                                  <span className="text-gray-300">{((optimizationResult.optimized_prompt.metadata as any).history_size / 1024).toFixed(1)} KB</span>
                                 </div>
                               )}
                             </div>
@@ -1608,21 +1608,21 @@ export default function PromptOptimizerStepper() {
                         )}
                         
                         {/* DSPy Signature */}
-                        {optimizationResult.optimized_prompt.dspy_signature && (
+                        {optimizationResult.optimized_prompt?.dspy_signature && (
                           <div>
                             <h3 className="text-sm font-medium text-gray-400 mb-2">DSPy Signature</h3>
                             <pre className="bg-gray-900 p-4 rounded-lg overflow-x-auto text-xs text-gray-300">
-                              <code>{optimizationResult.optimized_prompt.dspy_signature}</code>
+                              <code>{optimizationResult.optimized_prompt?.dspy_signature}</code>
                             </pre>
                           </div>
                         )}
                         
                         {/* Optimization Steps */}
-                        {optimizationResult.optimized_prompt.optimization_history && optimizationResult.optimized_prompt.optimization_history.length > 0 && (
+                        {optimizationResult.optimized_prompt?.optimization_history && optimizationResult.optimized_prompt.optimization_history.length > 0 && (
                           <div>
                             <h3 className="text-sm font-medium text-gray-400 mb-2">Optimization Steps</h3>
                             <div className="space-y-2">
-                              {optimizationResult.optimized_prompt.optimization_history.map((step, idx) => (
+                              {optimizationResult.optimized_prompt?.optimization_history?.map((step, idx) => (
                                 <div key={idx} className="bg-gray-900 p-3 rounded-lg">
                                   <div className="flex items-center justify-between mb-1">
                                     <span className="text-sm font-medium text-gray-300">Step {step.step}</span>
@@ -1643,7 +1643,7 @@ export default function PromptOptimizerStepper() {
                             <span>Raw DSPy History</span>
                             <button
                               onClick={() => {
-                                const blob = new Blob([optimizationResult.optimized_prompt.dspy_history || ''], { type: 'text/plain' });
+                                const blob = new Blob([optimizationResult.optimized_prompt?.dspy_history || ''], { type: 'text/plain' });
                                 const url = URL.createObjectURL(blob);
                                 const a = document.createElement('a');
                                 a.href = url;
@@ -1658,7 +1658,7 @@ export default function PromptOptimizerStepper() {
                             </button>
                           </h3>
                           <pre className="bg-gray-900 p-4 rounded-lg overflow-x-auto text-xs text-gray-300 max-h-96 overflow-y-auto">
-                            <code>{optimizationResult.optimized_prompt.dspy_history}</code>
+                            <code>{optimizationResult.optimized_prompt?.dspy_history}</code>
                           </pre>
                         </div>
                       </div>

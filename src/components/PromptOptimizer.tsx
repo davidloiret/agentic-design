@@ -119,7 +119,7 @@ export default function PromptOptimizer() {
     }
   ];
 
-  const useExampleTemplate = (template: typeof exampleTemplates[0], loadAll: boolean = true) => {
+  const loadExampleTemplate = (template: typeof exampleTemplates[0], loadAll: boolean = true) => {
     setPromptTemplate(template.template);
     if (loadAll) {
       setTrainingExamples([]); // Clear existing examples
@@ -381,13 +381,13 @@ export default function PromptOptimizer() {
                       <div className="text-xs text-gray-300 truncate">{template.template.slice(0, 100)}...</div>
                       <div className="flex gap-2 mt-2">
                         <button
-                          onClick={() => useExampleTemplate(template, true)}
+                          onClick={() => loadExampleTemplate(template, true)}
                           className="flex-1 text-xs bg-pink-600 hover:bg-pink-700 text-white px-2 py-1 rounded transition-colors"
                         >
                           Load All {template.examples.length} Examples
                         </button>
                         <button
-                          onClick={() => useExampleTemplate(template, false)}
+                          onClick={() => loadExampleTemplate(template, false)}
                           className="flex-1 text-xs bg-purple-600 hover:bg-purple-700 text-white px-2 py-1 rounded transition-colors"
                         >
                           Template Only
@@ -1235,7 +1235,7 @@ export default function PromptOptimizer() {
                               <div key={key}>
                                 <div className="text-xs font-medium text-gray-400">{key}:</div>
                                 <div className="font-mono text-sm text-gray-200 bg-gray-800 p-2 rounded">
-                                  {value}
+                                  {String(value)}
                                 </div>
                               </div>
                             ))}
@@ -1258,7 +1258,7 @@ export default function PromptOptimizer() {
                               <div key={key}>
                                 <div className="text-xs font-medium text-gray-400">{key}:</div>
                                 <div className="font-mono text-sm text-gray-200 bg-gray-800 p-2 rounded">
-                                  {value}
+                                  {String(value)}
                                 </div>
                               </div>
                             ))}
