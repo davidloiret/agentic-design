@@ -69,6 +69,7 @@ export default function MainLayout({
       '/project-hub': 'project-hub',
       '/news-hub': 'news-hub',
       '/pattern-evaluation': 'pattern-evaluation',
+      '/prompt-optimizer': 'prompt-optimizer',
     };
 
     // Check for exact match first, then check if pathname starts with any route
