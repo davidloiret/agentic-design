@@ -135,7 +135,6 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
       name: 'Learn',
       tabs: [
         { id: 'patterns', label: 'Patterns', icon: BookOpen, description: 'Browse AI design patterns', route: '/patterns' },
-        { id: 'recommendations', label: 'Recommendations', icon: Target, description: 'Get pattern suggestions for your use case', route: '/recommendations' },
         { id: 'fine-tuning', label: 'Fine Tuning', icon: Settings, description: 'Model optimization', route: '/fine-tuning' },
         { id: 'ai-inference', label: 'AI Inference', icon: Cpu, description: 'Inference strategies', route: '/ai-inference' },
       ]
@@ -144,7 +143,7 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
       name: 'Lab',
       tabs: [
         { id: 'pattern-evaluation', label: 'Eval Lab', icon: FlaskRound, description: 'Evaluate patterns with different models', route: '/pattern-evaluation' },
-        { id: 'prompt-optimizer', label: 'Prompt Optimizer', icon: Wand2, description: 'Optimize prompts using DSPy', route: '/prompt-optimizer' },
+        { id: 'prompt-optimizer', label: 'Prompt Optimizer', icon: Wand2, description: 'Optimize prompts', route: '/prompt-optimizer' },
         { id: 'ai-red-teaming', label: 'AI Red Teaming', icon: Shield, description: 'AI security & defensive techniques', route: '/ai-red-teaming' },
       ]
     },

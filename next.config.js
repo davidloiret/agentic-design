@@ -6,6 +6,10 @@ const nextConfig = {
     reactCompiler: true,
   },
   output: 'standalone',
+  // Increase body size limits for file uploads
+  serverRuntimeConfig: {
+    bodySizeLimit: '50mb',
+  },
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,

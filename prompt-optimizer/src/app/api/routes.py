@@ -11,6 +11,7 @@ from ...domain.entities import (
     SimplePromptComponents,
     OptimizationStrategy
 )
+from ...domain.prompt_guides import PromptGuideRegistry
 
 
 class TestComparisonRequest(BaseModel):
@@ -24,6 +25,7 @@ class ImprovePromptRequest(BaseModel):
     prompt: str
     context: Optional[str] = None  # Additional context about what the prompt is for
     improvements: Optional[List[str]] = None  # Specific improvements requested
+    guide_type: Optional[str] = None  # Which prompt guide to use (defaults to 'anthropic')
 
 router = APIRouter(prefix="/api/v1", tags=["optimization"])
 
@@ -204,9 +206,20 @@ async def improve_prompt(
         improved_prompt = await service.improve_prompt(
             prompt=request.prompt,
             context=request.context,
-            improvements=request.improvements
+            improvements=request.improvements,
+            guide_type=request.guide_type
         )
         return improved_prompt
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/prompt-guides")
+async def list_prompt_guides():
+    """List all available prompt improvement guides"""
+    try:
+        guides = PromptGuideRegistry.list_guides()
+        return {"guides": guides}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

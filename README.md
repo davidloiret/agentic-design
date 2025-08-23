@@ -2260,3 +2260,51 @@ Optimize for =>
 Add context
 
 use XML 
+
+
+select model => different suggestion according to model selected
+
+Anthropic Guide
+GPT 5 prompting guide
+
+https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview
+
+we need a way to evaluate
+
+handle system prompt
+
+display prompt guide
+
+use dribble
+Add vibe coding methodoloy
+Design => dribble
+Do exclaidraw first => to mermaid => 
+
+
+- https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview
+- https://cookbook.openai.com/examples/gpt-5/gpt-5_prompting_guide
+
+add xml
+
+recommendation should be in patterns
+
+voice agent in UI/UX
+
+---------
+
+diagram to code and code to diagram
+baser system builder sur baml et dspy
+
+your ai partner
+
+----------
+
+Vibe coding technique and methodo
+- spec (garbae in garbage out)
+- Use todo list
+- think hard
+- reflect on what you did, is everythingh ok 
+
+Tdd
+
+use nginx instead of nextjs for procyifin and add api. subdomain 

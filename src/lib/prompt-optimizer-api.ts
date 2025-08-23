@@ -105,12 +105,23 @@ export interface ImprovePromptRequest {
   prompt: string;
   context?: string;
   improvements?: string[];
+  guide_type?: string;
 }
 
 export interface ImprovePromptResponse {
   improved_prompt: string;
   improvements_made: string[];
   suggestions: string[];
+}
+
+export interface PromptGuide {
+  name: string;
+  description: string;
+  criteria: string[];
+}
+
+export interface PromptGuidesResponse {
+  guides: Record<string, PromptGuide>;
 }
 
 const PROMPT_OPTIMIZER_BASE_URL = 'http://localhost:9090/api/v1';
@@ -224,6 +235,10 @@ class PromptOptimizerAPI {
       method: 'POST',
       body: JSON.stringify(request),
     });
+  }
+
+  async getPromptGuides(): Promise<PromptGuidesResponse> {
+    return this.request('/prompt-guides');
   }
 }
 

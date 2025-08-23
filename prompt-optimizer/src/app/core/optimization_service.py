@@ -4,6 +4,7 @@ from typing import Dict, List, Any, Optional
 from ..core.config import Settings
 from ...domain.entities import OptimizationRequest, OptimizationResult, OptimizedPrompt
 from ...domain.ports import PromptOptimizerPort, OptimizationRepositoryPort
+from ...domain.prompt_guides import PromptGuideRegistry, PromptGuideType
 import openai
 import json
 
@@ -125,7 +126,8 @@ class OptimizationService:
         self, 
         prompt: str, 
         context: Optional[str] = None,
-        improvements: Optional[List[str]] = None
+        improvements: Optional[List[str]] = None,
+        guide_type: Optional[str] = None
     ) -> Dict[str, Any]:
         """Improve an existing prompt using LLM-based suggestions"""
         try:
@@ -134,33 +136,15 @@ class OptimizationService:
                 client = openai.OpenAI(api_key=self.settings.openai_api_key)
             else:
                 # Fallback to rule-based improvements
-                return await self._rule_based_improvement(prompt, context, improvements)
+                return await self._rule_based_improvement(prompt, context, improvements, guide_type)
             
-            # Build the improvement prompt
-            system_prompt = """You are an expert prompt engineer. Your task is to improve the given prompt to make it more effective, clear, and likely to produce better results.
-
-Consider the following aspects when improving prompts:
-1. Clarity and specificity
-2. Structure and organization  
-3. Context and background information
-4. Clear instructions and expected output format
-5. Examples when helpful
-6. Appropriate use of techniques like chain-of-thought or step-by-step reasoning
-
-Return your response as a JSON object with the following structure:
-{
-  "improved_prompt": "The improved version of the prompt",
-  "improvements_made": ["List of specific improvements made"],
-  "suggestions": ["Additional suggestions for further improvement"]
-}"""
-
-            user_message = f"Original prompt:\n{prompt}"
+            # Get the appropriate prompt guide
+            selected_guide_type = PromptGuideType(guide_type) if guide_type else PromptGuideType.ANTHROPIC
+            guide = PromptGuideRegistry.get_guide(selected_guide_type)
             
-            if context:
-                user_message += f"\n\nContext: {context}"
-            
-            if improvements:
-                user_message += f"\n\nSpecific improvements requested: {', '.join(improvements)}"
+            # Get system prompt and format user message using the selected guide
+            system_prompt = guide.get_system_prompt()
+            user_message = guide.format_user_message(prompt, context, improvements)
             
             # Call OpenAI API
             response = client.chat.completions.create(
@@ -178,46 +162,110 @@ Return your response as a JSON object with the following structure:
             
         except Exception as e:
             # Fallback to rule-based improvements
-            return await self._rule_based_improvement(prompt, context, improvements)
+            return await self._rule_based_improvement(prompt, context, improvements, guide_type)
     
     async def _rule_based_improvement(
         self, 
         prompt: str, 
         context: Optional[str] = None,
-        improvements: Optional[List[str]] = None
+        improvements: Optional[List[str]] = None,
+        guide_type: Optional[str] = None
     ) -> Dict[str, Any]:
         """Rule-based prompt improvement as fallback"""
         improved_prompt = prompt
         improvements_made = []
         suggestions = []
         
-        # Add structure if missing
-        if "\n" not in prompt and len(prompt) > 100:
-            improved_prompt = prompt.replace(". ", ".\n\n")
-            improvements_made.append("Added paragraph breaks for better readability")
+        # Get the appropriate guide
+        selected_guide_type = PromptGuideType(guide_type) if guide_type else PromptGuideType.ANTHROPIC
         
-        # Add chain of thought if complex
-        if "analyze" in prompt.lower() or "explain" in prompt.lower():
-            if "step by step" not in prompt.lower():
-                improved_prompt += "\n\nPlease think through this step by step."
-                improvements_made.append("Added chain-of-thought instruction")
+        if selected_guide_type == PromptGuideType.ANTHROPIC:
+            # Anthropic-specific improvements with XML tags
+            
+            # Build structured prompt with XML tags
+            parts = []
+            
+            # 1. Task Context
+            parts.append(f"<task_context>\n{prompt}\n</task_context>")
+            improvements_made.append("Added XML task_context tags (Anthropic structure)")
+            
+            # 2. Background Data
+            if context:
+                parts.append(f"\n<background_data>\n{context}\n</background_data>")
+                improvements_made.append("Added XML background_data tags for context")
+            
+            # 3. Instructions for complex tasks
+            if any(word in prompt.lower() for word in ["analyze", "explain", "evaluate", "compare"]):
+                if "step by step" not in prompt.lower() and "think" not in prompt.lower():
+                    parts.append("\n<thinking>\nThink through this step by step before providing your response.\n</thinking>")
+                    improvements_made.append("Added XML thinking tags for chain-of-thought")
+            
+            # 4. Tone Context suggestion
+            if not any(phrase in prompt.lower() for phrase in ["tone:", "style:", "voice:"]):
+                suggestions.append("Consider adding <tone_context> to guide the response style")
+            
+            # 5. Output formatting suggestion
+            if "format" not in prompt.lower() and "structure" not in prompt.lower():
+                suggestions.append("Consider adding <output_format> to specify formatting requirements")
+            
+            # 6. Examples suggestion
+            if "example" not in prompt.lower() and len(prompt) < 50:
+                suggestions.append("Consider adding <examples> to clarify expectations")
+            
+            improved_prompt = "\n".join(parts)
+                
+        elif selected_guide_type == PromptGuideType.GPT5:
+            # GPT-5 specific improvements with XML tags
+            
+            # Build structured prompt with XML tags
+            parts = []
+            
+            # 1. Clear goal statement
+            parts.append(f"<goal>\n{prompt}\n</goal>")
+            improvements_made.append("Added XML goal tags (GPT-5 structure)")
+            
+            # 2. Context
+            if context:
+                parts.append(f"\n<context>\n{context}\n</context>")
+                parts.append("\n<actions>\nGather any additional context needed before proceeding.\n</actions>")
+                improvements_made.append("Added XML context and actions tags")
+            
+            # 3. Exploration method for research tasks
+            if any(word in prompt.lower() for word in ["research", "explore", "investigate", "find"]):
+                if "method" not in prompt.lower() and "approach" not in prompt.lower():
+                    parts.append("\n<method>\nSystematically search and analyze relevant information.\n</method>")
+                    improvements_made.append("Added XML method tags for exploration")
+            
+            # 4. Structured plan
+            if len(prompt) > 50 and "plan" not in prompt.lower():
+                plan = """
+<method>
+Approach this task with a structured plan:
+1. Understand the requirements
+2. Gather necessary information  
+3. Execute the task
+4. Verify the results
+</method>"""
+                parts.append(plan)
+                improvements_made.append("Added XML method tags with structured plan")
+            
+            # 5. Stop conditions suggestion
+            if any(word in prompt.lower() for word in ["until", "complete", "finish", "done"]):
+                if "stop" not in prompt.lower() and "complete when" not in prompt.lower():
+                    suggestions.append("Consider adding <stop_criteria> to define completion conditions")
+            
+            # 6. Constraints suggestion
+            suggestions.append("Consider adding <constraints> for depth limits or safety boundaries")
+            
+            # 7. Reasoning effort
+            if any(word in prompt.lower() for word in ["complex", "detailed", "thorough"]):
+                suggestions.append("Consider adding <persistence> to specify reasoning effort level")
+            
+            improved_prompt = "\n".join(parts)
         
-        # Add output format if missing
-        if "format" not in prompt.lower() and "structure" not in prompt.lower():
-            suggestions.append("Consider specifying the desired output format")
-        
-        # Add context usage instruction
-        if context and "context" not in prompt.lower():
-            improved_prompt = f"Context: {context}\n\n{improved_prompt}"
-            improvements_made.append("Added context section")
-        
-        # Check for placeholders
-        if "{" not in prompt and "example" not in prompt.lower():
+        # Common improvements for any guide
+        if "{" not in prompt and "placeholder" not in prompt.lower():
             suggestions.append("Consider adding placeholders for dynamic content using {placeholder} syntax")
-        
-        # Add role definition if missing
-        if not any(phrase in prompt.lower() for phrase in ["you are", "act as", "role"]):
-            suggestions.append("Consider defining a specific role or persona for better context")
         
         return {
             "improved_prompt": improved_prompt,

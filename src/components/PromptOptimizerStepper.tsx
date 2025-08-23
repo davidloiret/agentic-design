@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { CheckCircle, Circle, ChevronRight, Loader2, BarChart3, Code, Sparkles, Brain, Target, FileText, TestTube, Rocket, Info, GitBranch, Layers, Database, BookOpen, Settings, ChevronDown, ChevronUp, Check, Eye, EyeOff, ArrowRight, ArrowLeft, Play, Pause, RotateCcw, Download, Copy, Zap, Plus, Trash2 } from 'lucide-react';
-import { promptOptimizerAPI, type OptimizationRequest, type OptimizationResult, type TrainingExample, type OptimizedPrompt, type ComparisonResult, type DSPyTrace, type SimplePromptComponents, type ImprovePromptResponse } from '@/lib/prompt-optimizer-api';
+import { promptOptimizerAPI, type OptimizationRequest, type OptimizationResult, type TrainingExample, type OptimizedPrompt, type ComparisonResult, type DSPyTrace, type SimplePromptComponents, type ImprovePromptResponse, type PromptGuide } from '@/lib/prompt-optimizer-api';
 
 type OptimizationStrategy = 'bootstrap_fewshot' | 'mipro' | 'copro' | 'bootstrap_finetune';
 type ViewMode = 'setup' | 'training' | 'results' | 'improve';
@@ -230,6 +230,9 @@ export default function PromptOptimizerStepper() {
   const [improveLoading, setImproveLoading] = useState(false);
   const [improveResult, setImproveResult] = useState<ImprovePromptResponse | null>(null);
   const [copiedImproved, setCopiedImproved] = useState(false);
+  const [availableGuides, setAvailableGuides] = useState<Record<string, PromptGuide>>({});
+  const [selectedGuide, setSelectedGuide] = useState<string>('anthropic');
+  const [showCriteriaModal, setShowCriteriaModal] = useState(false);
   
   // Simple template components state
   const [simpleComponents, setSimpleComponents] = useState<SimplePromptComponents>({
@@ -410,6 +413,19 @@ export default function PromptOptimizerStepper() {
     };
   }, [pollingInterval]);
 
+  // Fetch available prompt guides on mount
+  useEffect(() => {
+    const fetchGuides = async () => {
+      try {
+        const response = await promptOptimizerAPI.getPromptGuides();
+        setAvailableGuides(response.guides);
+      } catch (error) {
+        console.error('Failed to fetch prompt guides:', error);
+      }
+    };
+    fetchGuides();
+  }, []);
+
   const simulateOptimizationProgress = () => {
     let step = 0;
     const interval = setInterval(() => {
@@ -514,6 +530,7 @@ export default function PromptOptimizerStepper() {
       const result = await promptOptimizerAPI.improvePrompt({
         prompt: improvePromptInput,
         context: improveContext || undefined,
+        guide_type: selectedGuide,
       });
       setImproveResult(result);
     } catch (e) {
@@ -1040,15 +1057,13 @@ export default function PromptOptimizerStepper() {
                   </div>
                   <button
                     onClick={() => setViewMode('improve')}
-                    className="group flex items-center px-5 py-2.5 bg-white/20 backdrop-blur-sm rounded-xl hover:bg-white/30 transition-all duration-200 border border-white/20"
+                    className="group flex items-center px-5 py-2.5 bg-white/20 rounded-xl hover:bg-white/30 transition-all duration-200 border border-white/20"
                   >
                     <Sparkles className="w-4 h-4 mr-2 group-hover:animate-pulse" />
                     <span className="font-medium">Quick Improve</span>
                   </button>
                 </div>
               </div>
-              <div className="absolute -right-20 -top-20 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>
-              <div className="absolute -left-20 -bottom-20 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl"></div>
             </div>
             
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -1836,24 +1851,20 @@ export default function PromptOptimizerStepper() {
               </button>
             </div>
             
-            <div className="bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl p-8 text-white relative overflow-hidden">
-              <div className="relative z-10">
-                <div className="flex items-center mb-2">
-                  <Sparkles className="w-8 h-8 mr-3" />
-                  <h1 className="text-3xl font-bold">Quick Prompt Improver</h1>
-                </div>
-                <p className="text-blue-100 max-w-2xl">
-                  Get instant AI-powered improvements for your prompts. Perfect for quick iterations and refinements.
-                </p>
+            <div className="bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl p-8 text-white">
+              <div className="flex items-center mb-2">
+                <Sparkles className="w-8 h-8 mr-3" />
+                <h1 className="text-3xl font-bold">Quick Prompt Improver</h1>
               </div>
-              <div className="absolute -right-20 -top-20 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>
-              <div className="absolute -left-20 -bottom-20 w-96 h-96 bg-cyan-600/20 rounded-full blur-3xl"></div>
+              <p className="text-blue-100 max-w-2xl">
+                Get instant AI-powered improvements for your prompts. Perfect for quick iterations and refinements.
+              </p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Input Section */}
               <div className="space-y-6">
-                <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-gray-700/50">
+                <div className="bg-gray-800 rounded-2xl p-6 shadow-xl border border-gray-700">
                   <div className="flex items-center justify-between mb-4">
                     <h2 className="text-xl font-semibold text-white flex items-center">
                       <FileText className="w-5 h-5 mr-2 text-blue-400" />
@@ -1864,7 +1875,7 @@ export default function PromptOptimizerStepper() {
                     </span>
                   </div>
                   <textarea
-                    className="w-full h-64 p-4 border border-gray-700 rounded-xl resize-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 bg-gray-900/50 text-white placeholder-gray-500 transition-all"
+                    className="w-full h-64 p-4 border border-gray-700 rounded-xl resize-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 bg-gray-900 text-white placeholder-gray-500 transition-all"
                     placeholder="Paste your existing prompt here..."
                     value={improvePromptInput}
                     onChange={(e) => setImprovePromptInput(e.target.value)}
@@ -1879,11 +1890,36 @@ export default function PromptOptimizerStepper() {
                       <span className="text-xs text-gray-500">Optional</span>
                     </div>
                     <textarea
-                      className="w-full h-24 p-3 border border-gray-700 rounded-xl resize-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 bg-gray-900/50 text-white placeholder-gray-500 transition-all"
+                      className="w-full h-24 p-3 border border-gray-700 rounded-xl resize-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 bg-gray-900 text-white placeholder-gray-500 transition-all"
                       placeholder="What is this prompt for? Any specific requirements?"
                       value={improveContext}
                       onChange={(e) => setImproveContext(e.target.value)}
                     />
+                  </div>
+
+                  <div className="mt-6">
+                    <div className="flex items-center justify-between mb-2">
+                      <label className="text-sm font-medium text-gray-300 flex items-center">
+                        <BookOpen className="w-4 h-4 mr-1.5 text-gray-500" />
+                        Optimization Guide
+                      </label>
+                    </div>
+                    <select
+                      value={selectedGuide}
+                      onChange={(e) => setSelectedGuide(e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-700 rounded-xl bg-gray-900 text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+                    >
+                      {Object.entries(availableGuides).map(([key, guide]) => (
+                        <option key={key} value={key}>
+                          {guide.name}
+                        </option>
+                      ))}
+                    </select>
+                    {availableGuides[selectedGuide] && (
+                      <p className="mt-2 text-xs text-gray-400">
+                        {availableGuides[selectedGuide].description}
+                      </p>
+                    )}
                   </div>
 
                   <button
@@ -1905,8 +1941,34 @@ export default function PromptOptimizerStepper() {
                   </button>
                 </div>
 
+                {/* Guide Criteria */}
+                {availableGuides[selectedGuide] && (
+                  <div className="bg-gray-800 rounded-2xl p-4 border border-gray-700">
+                    <h3 className="text-sm font-medium text-gray-400 mb-3 flex items-center">
+                      <Target className="w-4 h-4 mr-1.5" />
+                      Optimization Criteria
+                    </h3>
+                    <div className="grid grid-cols-1 gap-2">
+                      {availableGuides[selectedGuide].criteria.slice(0, 4).map((criterion, idx) => (
+                        <div key={idx} className="flex items-start">
+                          <Check className="w-3 h-3 text-green-500 mt-0.5 mr-2 flex-shrink-0" />
+                          <span className="text-xs text-gray-300">{criterion}</span>
+                        </div>
+                      ))}
+                      {availableGuides[selectedGuide].criteria.length > 4 && (
+                        <button
+                          onClick={() => setShowCriteriaModal(true)}
+                          className="text-xs text-blue-400 hover:text-blue-300 text-left"
+                        >
+                          +{availableGuides[selectedGuide].criteria.length - 4} more criteria...
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )}
+
                 {/* Example Prompts */}
-                <div className="bg-gray-800/30 rounded-2xl p-4 border border-gray-700/30">
+                <div className="bg-gray-800 rounded-2xl p-4 border border-gray-700">
                   <h3 className="text-sm font-medium text-gray-400 mb-3 flex items-center">
                     <BookOpen className="w-4 h-4 mr-1.5" />
                     Try an Example
@@ -1917,7 +1979,7 @@ export default function PromptOptimizerStepper() {
                         setImprovePromptInput("Analyze the sentiment of the following text");
                         setImproveContext("Building a customer feedback analysis tool");
                       }}
-                      className="w-full text-left p-3 bg-gray-900/50 rounded-xl hover:bg-gray-900/70 transition-colors text-sm text-gray-300"
+                      className="w-full text-left p-3 bg-gray-900 rounded-xl hover:bg-gray-800 transition-colors text-sm text-gray-300"
                     >
                       <span className="font-medium text-gray-200">Sentiment Analysis</span>
                       <p className="text-xs text-gray-500 mt-0.5">Simple sentiment classification prompt</p>
@@ -1927,7 +1989,7 @@ export default function PromptOptimizerStepper() {
                         setImprovePromptInput("You are a code reviewer. Review the following code for bugs and improvements");
                         setImproveContext("Code review assistant for JavaScript/TypeScript projects");
                       }}
-                      className="w-full text-left p-3 bg-gray-900/50 rounded-xl hover:bg-gray-900/70 transition-colors text-sm text-gray-300"
+                      className="w-full text-left p-3 bg-gray-900 rounded-xl hover:bg-gray-800 transition-colors text-sm text-gray-300"
                     >
                       <span className="font-medium text-gray-200">Code Review</span>
                       <p className="text-xs text-gray-500 mt-0.5">Basic code review instruction</p>
@@ -1939,7 +2001,7 @@ export default function PromptOptimizerStepper() {
               {/* Results Section */}
               <div className="space-y-6">
                 {!improveResult && !improveLoading && (
-                  <div className="bg-gray-800/30 rounded-2xl p-12 text-center border border-gray-700/30">
+                  <div className="bg-gray-800 rounded-2xl p-12 text-center border border-gray-700">
                     <Sparkles className="w-12 h-12 mx-auto mb-4 text-gray-600" />
                     <p className="text-gray-400">Your improved prompt will appear here</p>
                   </div>
@@ -1947,7 +2009,7 @@ export default function PromptOptimizerStepper() {
                 
                 {improveResult && (
                   <>
-                    <div className="bg-gradient-to-br from-gray-800/50 to-gray-800/30 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-gray-700/50">
+                    <div className="bg-gradient-to-br from-gray-800 to-gray-700 rounded-2xl p-6 shadow-xl border border-gray-700">
                       <div className="flex items-center justify-between mb-4">
                         <h2 className="text-xl font-semibold text-white flex items-center">
                           <Sparkles className="w-5 h-5 mr-2 text-yellow-400" />
@@ -1974,14 +2036,14 @@ export default function PromptOptimizerStepper() {
                           )}
                         </button>
                       </div>
-                      <div className="bg-gray-900/50 rounded-xl p-4 border border-gray-700/50">
+                      <div className="bg-gray-900 rounded-xl p-4 border border-gray-700">
                         <pre className="text-sm text-gray-100 whitespace-pre-wrap font-mono">
                           {improveResult.improved_prompt}
                         </pre>
                       </div>
                     </div>
 
-                    <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-gray-700/50">
+                    <div className="bg-gray-800 rounded-2xl p-6 shadow-xl border border-gray-700">
                       <h3 className="text-lg font-semibold mb-4 text-white flex items-center">
                         <CheckCircle className="w-5 h-5 mr-2 text-green-400" />
                         Improvements Applied
@@ -1999,7 +2061,7 @@ export default function PromptOptimizerStepper() {
                     </div>
 
                     {improveResult.suggestions.length > 0 && (
-                      <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-gray-700/50">
+                      <div className="bg-gray-800 rounded-2xl p-6 shadow-xl border border-gray-700">
                         <h3 className="text-lg font-semibold mb-4 text-white flex items-center">
                           <Info className="w-5 h-5 mr-2 text-blue-400" />
                           Further Suggestions
@@ -2016,6 +2078,52 @@ export default function PromptOptimizerStepper() {
                     )}
                   </>
                 )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Criteria Modal */}
+        {showCriteriaModal && availableGuides[selectedGuide] && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-gray-800 rounded-2xl p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-semibold text-white flex items-center">
+                  <Target className="w-5 h-5 mr-2 text-blue-400" />
+                  {availableGuides[selectedGuide].name} - All Criteria
+                </h2>
+                <button
+                  onClick={() => setShowCriteriaModal(false)}
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              
+              <p className="text-gray-400 text-sm mb-6">
+                {availableGuides[selectedGuide].description}
+              </p>
+              
+              <div className="space-y-3">
+                {availableGuides[selectedGuide].criteria.map((criterion, idx) => (
+                  <div key={idx} className="flex items-start p-3 bg-gray-900 rounded-lg">
+                    <div className="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center mr-3">
+                      <span className="text-sm font-medium text-white">{idx + 1}</span>
+                    </div>
+                    <span className="text-gray-300">{criterion}</span>
+                  </div>
+                ))}
+              </div>
+              
+              <div className="mt-6 flex justify-end">
+                <button
+                  onClick={() => setShowCriteriaModal(false)}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  Close
+                </button>
               </div>
             </div>
           </div>

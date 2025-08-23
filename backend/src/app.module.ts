@@ -13,6 +13,7 @@ import { PatternGameModule } from './modules/pattern-game/pattern-game.module';
 import { UserKnowledgeBaseModule } from './modules/user-knowledge-base/user-knowledge-base.module';
 import { CodeExecutionModule } from './modules/code-execution/code-execution.module';
 import { WorkshopModule } from './modules/workshop/workshop.module';
+import { SecretsModule } from './modules/secrets/secrets.module';
 import mikroOrmConfig from './mikro-orm.config';
 
 @Module({
@@ -31,6 +32,7 @@ import mikroOrmConfig from './mikro-orm.config';
     UserKnowledgeBaseModule,
     CodeExecutionModule,
     WorkshopModule,
+    SecretsModule,
   ],
   controllers: [AppController, HealthController],
 })
