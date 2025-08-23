@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { CheckCircle, Circle, ChevronRight, Loader2, BarChart3, Code, Sparkles, Brain, Target, FileText, TestTube, Rocket, Info, GitBranch, Layers, Database, BookOpen, Settings, ChevronDown, ChevronUp, Check, Eye, EyeOff, ArrowRight, ArrowLeft, Play, Pause, RotateCcw, Download, Copy, Zap, Plus, Trash2 } from 'lucide-react';
+import { CheckCircle, Circle, ChevronRight, Loader2, BarChart3, Code, Sparkles, Brain, Target, FileText, TestTube, Rocket, Info, GitBranch, Layers, Database, BookOpen, Settings, ChevronDown, ChevronUp, Check, Eye, EyeOff, ArrowRight, ArrowLeft, Play, Pause, RotateCcw, Download, Copy, Zap, Plus, Trash2, Wand2 } from 'lucide-react';
 import { promptOptimizerAPI, type OptimizationRequest, type OptimizationResult, type TrainingExample, type OptimizedPrompt, type ComparisonResult, type DSPyTrace, type SimplePromptComponents, type ImprovePromptResponse, type PromptGuide } from '@/lib/prompt-optimizer-api';
 
 type OptimizationStrategy = 'bootstrap_fewshot' | 'mipro' | 'copro' | 'bootstrap_finetune';
@@ -1049,11 +1049,16 @@ export default function PromptOptimizerStepper() {
             <div className="bg-gradient-to-r from-pink-600 to-purple-600 rounded-xl p-8 text-white relative overflow-hidden">
               <div className="relative z-10">
                 <div className="flex items-start justify-between">
-                  <div>
-                    <h1 className="text-3xl font-bold mb-2">Prompt Optimizer</h1>
-                    <p className="text-pink-100 max-w-2xl">
-                      Transform your prompts into high-performing AI interactions using advanced optimization strategies.
-                    </p>
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center justify-center w-16 h-16 bg-white/20 rounded-full">
+                      <Wand2 className="w-8 h-8 text-pink-200" />
+                    </div>
+                    <div>
+                      <h1 className="text-3xl font-bold mb-2">Prompt Optimizer</h1>
+                      <p className="text-pink-100 max-w-2xl">
+                        Optimize prompts using advanced DSPy strategies to improve performance, accuracy, and consistency.
+                      </p>
+                    </div>
                   </div>
                   <button
                     onClick={() => setViewMode('improve')}
