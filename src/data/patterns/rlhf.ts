@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const rlhfPattern: PatternScenario = {
   id: 'rlhf',
   title: 'Reinforcement Learning from Human Feedback',
+  description: 'Human-in-the-loop training methodology that uses human preferences and feedback to align AI models with human values and desired behaviors.',
   initialNodes: [
     {
       id: 'user-prompt',

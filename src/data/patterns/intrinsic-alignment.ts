@@ -144,7 +144,7 @@ export const intrinsicAlignmentPattern: PatternScenario = {
       target: 'intrinsic-monitor-1',
       ...edgeStyle,
       label: 'monitored',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e5',
@@ -152,7 +152,7 @@ export const intrinsicAlignmentPattern: PatternScenario = {
       target: 'intrinsic-monitor-2',
       ...edgeStyle,
       label: 'monitored',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e6',
@@ -160,7 +160,7 @@ export const intrinsicAlignmentPattern: PatternScenario = {
       target: 'intrinsic-monitor-2',
       ...edgeStyle,
       label: 'monitored',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e7',
@@ -168,7 +168,7 @@ export const intrinsicAlignmentPattern: PatternScenario = {
       target: 'intrinsic-monitor-3',
       ...edgeStyle,
       label: 'monitored',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
 
     // Detection results
@@ -231,7 +231,7 @@ export const intrinsicAlignmentPattern: PatternScenario = {
       target: 'deceptive-path',
       ...edgeStyle,
       label: 'vulnerable to',
-      style: { ...edgeStyle.style, stroke: '#6b7280', strokeDasharray: '5,5' }
+      style: { ...edgeStyle, stroke: '#6b7280', strokeDasharray: '5,5' }
     },
 
     // Final outcome

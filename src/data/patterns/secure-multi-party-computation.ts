@@ -114,7 +114,7 @@ export const secureMultiPartyComputationPattern: PatternScenario = {
       target: 'privacy-violations',
       ...edgeStyle,
       label: 'causes violations',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
     {
       id: 'e5',
@@ -122,7 +122,7 @@ export const secureMultiPartyComputationPattern: PatternScenario = {
       target: 'legal-consequences',
       ...edgeStyle,
       label: 'leads to penalties',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
 
     // Right path: SMPC secure computation flow
@@ -155,7 +155,7 @@ export const secureMultiPartyComputationPattern: PatternScenario = {
       target: 'smpc-principle',
       ...edgeStyle,
       label: 'demonstrates need',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e10',
@@ -163,7 +163,7 @@ export const secureMultiPartyComputationPattern: PatternScenario = {
       target: 'smpc-principle',
       ...edgeStyle,
       label: 'proves capability',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const taskManagementOrchestrationPattern: PatternScenario = {
   id: 'task-management-orchestration',
   title: 'Task Management & Orchestration',
+  description: 'Comprehensive orchestration system that breaks down complex requests into manageable tasks, coordinates execution across multiple agents, and manages dependencies and workflows.',
   initialNodes: [
     {
       id: 'complex-request',

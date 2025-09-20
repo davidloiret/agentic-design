@@ -163,7 +163,7 @@ export const granularPrivacyControlsPattern: PatternScenario = {
       target: 'system-abandonment',
       ...edgeStyle,
       label: 'leads to rejection',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
 
     // Granular control components
@@ -265,7 +265,7 @@ export const granularPrivacyControlsPattern: PatternScenario = {
       target: 'granular-principle',
       ...edgeStyle,
       label: 'demonstrates necessity',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e19',
@@ -273,7 +273,7 @@ export const granularPrivacyControlsPattern: PatternScenario = {
       target: 'granular-principle',
       ...edgeStyle,
       label: 'validates approach',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e20',
@@ -281,7 +281,7 @@ export const granularPrivacyControlsPattern: PatternScenario = {
       target: 'granular-principle',
       ...edgeStyle,
       label: 'proves effectiveness',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

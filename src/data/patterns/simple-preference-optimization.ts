@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const simpoPattern: PatternScenario = {
   id: 'simple-preference-optimization',
   title: 'Simple Preference Optimization',
+  description: 'Streamlined approach to preference optimization that simplifies complex alignment methods while maintaining effectiveness in training models according to human preferences.',
   initialNodes: [
     {
       id: 'user-task',

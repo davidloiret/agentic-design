@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const distributedMemoryArchitecturesPattern: PatternScenario = {
   id: 'distributed-memory-architectures',
   title: 'Distributed Memory Architectures',
+  description: 'Scalable memory systems distributed across multiple nodes with load balancing, replication, and consistency mechanisms to handle large-scale agent memory requirements.',
   initialNodes: [
     {
       id: 'memory-request',

@@ -241,7 +241,7 @@ export const contextLifecycleManagementPattern: PatternScenario = {
       target: 'lifecycle-principle',
       ...edgeStyle,
       label: 'proves',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
 
     // Expiration also demonstrates principle
@@ -251,7 +251,7 @@ export const contextLifecycleManagementPattern: PatternScenario = {
       target: 'lifecycle-principle',
       ...edgeStyle,
       label: 'completes',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

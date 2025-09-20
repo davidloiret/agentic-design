@@ -121,7 +121,7 @@ export const zeroTrustAgentArchitecturePattern: PatternScenario = {
       target: 'breach-propagation',
       ...edgeStyle,
       label: 'enables lateral movement',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
 
     // Right path: Zero-trust security flow
@@ -154,7 +154,7 @@ export const zeroTrustAgentArchitecturePattern: PatternScenario = {
       target: 'zero-trust-principle',
       ...edgeStyle,
       label: 'demonstrates risk',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e10',
@@ -162,7 +162,7 @@ export const zeroTrustAgentArchitecturePattern: PatternScenario = {
       target: 'zero-trust-principle',
       ...edgeStyle,
       label: 'enables security',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

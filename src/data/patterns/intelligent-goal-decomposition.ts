@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const intelligentGoalDecompositionPattern: PatternScenario = {
   id: 'goal-decomposition',
   title: 'Intelligent Goal Decomposition',
+  description: 'Automated breakdown of complex strategic goals into manageable sub-goals and tasks, using dependency analysis and resource constraints to create executable action plans.',
   initialNodes: [
     {
       id: 'strategic-goal',

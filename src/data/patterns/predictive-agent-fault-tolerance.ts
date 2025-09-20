@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const predictiveAgentFaultTolerancePattern: PatternScenario = {
   id: 'predictive-agent-fault-tolerance',
   title: 'Predictive Agent Fault Tolerance',
+  description: 'Proactive fault tolerance system that monitors agent health, predicts potential failures, and implements preventive measures to maintain system reliability and continuity.',
   initialNodes: [
     {
       id: 'normal-operation',
@@ -123,7 +124,7 @@ export const predictiveAgentFaultTolerancePattern: PatternScenario = {
       target: 'pattern-analysis',
       ...edgeStyle,
       label: 'improve',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

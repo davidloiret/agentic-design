@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const supervisorWorkerPattern: PatternScenario = {
   id: 'supervisor-worker-pattern',
   title: 'Supervisor-Worker Pattern',
+  description: 'Hierarchical coordination pattern where a supervisor agent manages and distributes tasks among specialized worker agents, monitoring progress and ensuring quality outcomes.',
   initialNodes: [
     {
       id: 'client-request',

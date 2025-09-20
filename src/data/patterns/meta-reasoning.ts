@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const metaReasoningPattern: PatternScenario = {
   id: 'meta-reasoning',
   title: 'Meta-Reasoning Pattern',
+  description: 'Higher-order reasoning about reasoning processes themselves, enabling agents to monitor, evaluate, and optimize their own reasoning strategies and decision-making approaches.',
   initialNodes: [
     {
       id: 'input',

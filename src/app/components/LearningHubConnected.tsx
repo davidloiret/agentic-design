@@ -371,11 +371,12 @@ export const LearningHubConnected: React.FC<LearningHubProps> = ({ techniques = 
     console.log('[Learning Hub] Score represents percentage:', score, '%');
 
     // Track challenge completion
-    trackLearningHub('challenge_complete', challengeId, {
+    trackLearningHub('challenge_complete', JSON.stringify({
+      challengeId: challengeId,
       score: score,
       xp_earned: xpEarned,
       performance: score >= 80 ? 'excellent' : score >= 60 ? 'good' : 'needs_improvement'
-    });
+    }));
 
     setSaveError(null);
     setSaveSuccess(false);

@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const workingMemoryPatternsPattern: PatternScenario = {
   id: 'working-memory-patterns',
   title: 'Working Memory Patterns',
+  description: 'Active memory management system for maintaining and manipulating information during complex problem-solving tasks, with attention-based resource allocation and constraint tracking.',
   initialNodes: [
     {
       id: 'task-input',

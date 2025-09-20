@@ -179,7 +179,7 @@ export const testTimeComputeScalingPattern: PatternScenario = {
       target: 'deep-optimization',
       ...edgeStyle,
       label: 'focus resources',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const selfImprovingSystemsPattern: PatternScenario = {
   id: 'self-improving-systems',
   title: 'Self-Improving Systems',
+  description: 'Autonomous systems that continuously enhance their performance through real-world interaction analysis, self-evaluation, and iterative improvement cycles.',
   initialNodes: [
     {
       id: 'chatbot-v1',

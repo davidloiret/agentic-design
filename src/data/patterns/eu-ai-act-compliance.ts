@@ -185,7 +185,7 @@ export const euAiActCompliancePattern: PatternScenario = {
       target: 'penalties-fines',
       ...edgeStyle,
       label: 'violations penalized',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
     {
       id: 'e11',
@@ -211,7 +211,7 @@ export const euAiActCompliancePattern: PatternScenario = {
       target: 'compliance-principle',
       ...edgeStyle,
       label: 'enforces principle',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e14',
@@ -219,7 +219,7 @@ export const euAiActCompliancePattern: PatternScenario = {
       target: 'compliance-principle',
       ...edgeStyle,
       label: 'implements principle',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

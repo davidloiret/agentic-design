@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const htnPlanningPattern: PatternScenario = {
   id: 'hierarchical-task-network-planning',
   title: 'Hierarchical Task Network (HTN) Planning',
+  description: 'Planning methodology that decomposes complex goals into hierarchical task networks, using domain knowledge to break down abstract tasks into executable primitive actions.',
   initialNodes: [
     {
       id: 'goal',

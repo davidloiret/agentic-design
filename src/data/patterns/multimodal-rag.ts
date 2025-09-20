@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const multimodalRagPattern: PatternScenario = {
   id: 'multimodal-rag',
   title: 'Multimodal RAG (Multi-Source Retrieval-Augmented Generation)',
+  description: 'Advanced retrieval-augmented generation system capable of processing and retrieving from multiple data modalities including text, images, audio, and video sources for comprehensive query responses.',
   initialNodes: [
     {
       id: 'user-query',

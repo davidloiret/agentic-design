@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const consensusAlgorithmsPattern: PatternScenario = {
   id: 'consensus-algorithms',
   title: 'Consensus Algorithms',
+  description: 'Distributed decision-making mechanisms including voting, Byzantine fault tolerance, and Raft consensus to achieve agreement among multiple agents in the presence of potential failures.',
   initialNodes: [
     {
       id: 'decision-problem',

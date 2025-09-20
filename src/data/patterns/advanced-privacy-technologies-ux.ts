@@ -166,7 +166,7 @@ export const advancedPrivacyTechnologiesUXPattern: PatternScenario = {
       target: 'user-trust-issues',
       ...edgeStyle,
       label: 'creates hesitation',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
 
     // Advanced privacy technologies implementation
@@ -275,7 +275,7 @@ export const advancedPrivacyTechnologiesUXPattern: PatternScenario = {
       target: 'technology-ux-principle',
       ...edgeStyle,
       label: 'highlights UX importance',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e20',
@@ -283,7 +283,7 @@ export const advancedPrivacyTechnologiesUXPattern: PatternScenario = {
       target: 'technology-ux-principle',
       ...edgeStyle,
       label: 'demonstrates success',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e21',
@@ -291,7 +291,7 @@ export const advancedPrivacyTechnologiesUXPattern: PatternScenario = {
       target: 'technology-ux-principle',
       ...edgeStyle,
       label: 'validates approach',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

@@ -218,7 +218,7 @@ export const gaiaBenchmarkPattern: PatternScenario = {
       target: 'agi-evaluation-principle',
       ...edgeStyle,
       label: 'enables measurement',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e16',
@@ -226,7 +226,7 @@ export const gaiaBenchmarkPattern: PatternScenario = {
       target: 'agi-evaluation-principle',
       ...edgeStyle,
       label: 'proves principle',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

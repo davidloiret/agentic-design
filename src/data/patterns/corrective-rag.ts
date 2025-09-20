@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const correctiveRagPattern: PatternScenario = {
   id: 'corrective-rag',
   title: 'Corrective RAG (CRAG)',
+  description: 'Self-correcting retrieval-augmented generation that evaluates retrieved documents for relevance, triggers web search for additional information, and validates answers for accuracy.',
   initialNodes: [
     {
       id: 'user-query',

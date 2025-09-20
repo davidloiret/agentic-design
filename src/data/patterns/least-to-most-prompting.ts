@@ -187,7 +187,7 @@ export const leastToMostPromptingPattern: PatternScenario = {
       target: 'direct-failure',
       ...edgeStyle,
       label: 'direct attempt',
-      style: { ...edgeStyle.style, stroke: '#ef4444', strokeDasharray: '5,5' }
+      style: { ...edgeStyle, stroke: '#ef4444', strokeDasharray: '5,5' }
     },
   ],
   steps: [

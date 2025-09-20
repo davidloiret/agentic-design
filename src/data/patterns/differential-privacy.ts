@@ -121,7 +121,7 @@ export const differentialPrivacyPattern: PatternScenario = {
       target: 'privacy-breach',
       ...edgeStyle,
       label: 'enables inference attacks',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
 
     // Right path: Differential privacy protection
@@ -154,7 +154,7 @@ export const differentialPrivacyPattern: PatternScenario = {
       target: 'privacy-principle',
       ...edgeStyle,
       label: 'demonstrates need',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e10',
@@ -162,7 +162,7 @@ export const differentialPrivacyPattern: PatternScenario = {
       target: 'privacy-principle',
       ...edgeStyle,
       label: 'proves effectiveness',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

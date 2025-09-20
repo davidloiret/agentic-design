@@ -123,7 +123,7 @@ export const layeredDefensePattern: PatternScenario = {
       target: 'layer1-bypass',
       ...edgeStyle,
       label: '10% bypass',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
     // Layer 1 to Layer 2
     {
@@ -139,7 +139,7 @@ export const layeredDefensePattern: PatternScenario = {
       target: 'layer2-bypass',
       ...edgeStyle,
       label: '2% total bypass',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
     // Layer 2 to Layer 3
     {
@@ -155,7 +155,7 @@ export const layeredDefensePattern: PatternScenario = {
       target: 'layer3-bypass',
       ...edgeStyle,
       label: '0.2% total bypass',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
     // Layer 3 to Layer 4
     {
@@ -171,7 +171,7 @@ export const layeredDefensePattern: PatternScenario = {
       target: 'layer4-bypass',
       ...edgeStyle,
       label: '0.03% total bypass',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
     // Layer 4 to Layer 5
     {
@@ -187,7 +187,7 @@ export const layeredDefensePattern: PatternScenario = {
       target: 'final-escape',
       ...edgeStyle,
       label: '0.006% final escape',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
     // Success path
     {
@@ -247,7 +247,7 @@ export const layeredDefensePattern: PatternScenario = {
       target: 'layer1-defense',
       ...edgeStyle,
       label: 'strengthen',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e14',
@@ -255,7 +255,7 @@ export const layeredDefensePattern: PatternScenario = {
       target: 'layer3-defense',
       ...edgeStyle,
       label: 'strengthen',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

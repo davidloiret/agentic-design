@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const memoryOperationsPattern: PatternScenario = {
   id: 'memory-reading-writing-operations',
   title: 'Memory Reading/Writing Operations',
+  description: 'Comprehensive system for orchestrating memory read and write operations with multi-tier storage, access control, caching strategies, and optimization for efficient agent memory management.',
   initialNodes: [
     {
       id: 'agent-request',

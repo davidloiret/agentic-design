@@ -97,7 +97,7 @@ export const privilegeCompromiseMitigationPattern: PatternScenario = {
       target: 'full-access',
       ...edgeStyle,
       label: 'grants broad permissions',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
     {
       id: 'e4',
@@ -105,7 +105,7 @@ export const privilegeCompromiseMitigationPattern: PatternScenario = {
       target: 'data-breach',
       ...edgeStyle,
       label: 'enables complete compromise',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
 
     // Right path: Protected system
@@ -122,7 +122,7 @@ export const privilegeCompromiseMitigationPattern: PatternScenario = {
       target: 'anomaly-detected',
       ...edgeStyle,
       label: 'suspicious pattern identified',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
     {
       id: 'e7',
@@ -139,7 +139,7 @@ export const privilegeCompromiseMitigationPattern: PatternScenario = {
       target: 'protection-principle',
       ...edgeStyle,
       label: 'demonstrates need',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e9',
@@ -147,7 +147,7 @@ export const privilegeCompromiseMitigationPattern: PatternScenario = {
       target: 'protection-principle',
       ...edgeStyle,
       label: 'protection success',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

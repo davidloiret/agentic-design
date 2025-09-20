@@ -232,7 +232,7 @@ export const adaptiveInterfacePatternsPattern: PatternScenario = {
       target: 'adaptive-principle',
       ...edgeStyle,
       label: 'validates',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

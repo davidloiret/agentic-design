@@ -45,7 +45,17 @@ interface VisualReasoningFlowProps {
 }
 
 const createFlowNodes = (pattern: VisualReasoningPattern): FlowNode[] => {
-  const nodeConfigs = {
+  type NodeConfig = {
+    id: string;
+    label: string;
+    type: 'input' | 'process' | 'output' | 'decision';
+    x: number;
+    y: number;
+    icon: React.ReactNode;
+    description: string;
+  };
+  
+  const nodeConfigs: Record<string, NodeConfig[]> = {
     'visual-chain-of-thought': [
       { id: 'visual-input', label: 'Visual Input', type: 'input', x: 100, y: 50, icon: <Eye className="w-4 h-4" />, description: 'Raw image/video input' },
       { id: 'perception-model', label: 'Visual Perception', type: 'process', x: 300, y: 50, icon: <Target className="w-4 h-4" />, description: 'Object detection and scene parsing' },
@@ -79,7 +89,7 @@ const createFlowNodes = (pattern: VisualReasoningPattern): FlowNode[] => {
 
   const configs = nodeConfigs[pattern.id as keyof typeof nodeConfigs] || [];
 
-  return configs.map(config => ({
+  return configs.map((config: NodeConfig) => ({
     id: config.id,
     type: 'default',
     position: { x: config.x, y: config.y },

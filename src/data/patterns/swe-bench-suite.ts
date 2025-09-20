@@ -213,7 +213,7 @@ export const sweBenchSuitePattern: PatternScenario = {
       target: 'software-evaluation-principle',
       ...edgeStyle,
       label: 'reveals limitations',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e15',
@@ -221,7 +221,7 @@ export const sweBenchSuitePattern: PatternScenario = {
       target: 'software-evaluation-principle',
       ...edgeStyle,
       label: 'drives progress',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

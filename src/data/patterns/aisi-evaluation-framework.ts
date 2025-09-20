@@ -186,7 +186,7 @@ export const aisiEvaluationFrameworkPattern: PatternScenario = {
       target: 'safety-evaluation-principle',
       ...edgeStyle,
       label: 'enables principle',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e12',
@@ -194,7 +194,7 @@ export const aisiEvaluationFrameworkPattern: PatternScenario = {
       target: 'safety-evaluation-principle',
       ...edgeStyle,
       label: 'validates principle',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e13',
@@ -202,7 +202,7 @@ export const aisiEvaluationFrameworkPattern: PatternScenario = {
       target: 'safety-evaluation-principle',
       ...edgeStyle,
       label: 'scales principle',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

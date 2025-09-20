@@ -257,7 +257,7 @@ export const helmAgentEvaluationPattern: PatternScenario = {
       target: 'holistic-evaluation-principle',
       ...edgeStyle,
       label: 'proves effectiveness',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e19',
@@ -265,7 +265,7 @@ export const helmAgentEvaluationPattern: PatternScenario = {
       target: 'holistic-evaluation-principle',
       ...edgeStyle,
       label: 'demonstrates openness',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

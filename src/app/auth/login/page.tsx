@@ -21,7 +21,7 @@ export default function LoginPage() {
   const [emailFocused, setEmailFocused] = useState(false);
   const [sparkles, setSparkles] = useState<Array<{id: number, x: number, y: number}>>([]);
   const { signIn, signInWithGoogle, signInWithGitHub } = useAuth();
-  const { trackAuth } = usePlausible();
+  const { trackAuth, trackEvent } = usePlausible();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -42,7 +42,7 @@ export default function LoginPage() {
       setError(errorMessage);
 
       // Track failed login attempt
-      trackAuth('login_failed');
+      trackEvent('Auth Failed', { action: 'login' });
 
       // Show resend confirmation option if email not confirmed
       if (errorMessage.includes('confirmation link') ||

@@ -133,7 +133,7 @@ export const memoryPoisoningPreventionPattern: PatternScenario = {
       target: 'validation-gateway',
       ...edgeStyle,
       label: 'intercept',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
 
     // Validation checks
@@ -180,7 +180,7 @@ export const memoryPoisoningPreventionPattern: PatternScenario = {
       target: 'quarantine',
       ...edgeStyle,
       label: 'inconsistent',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
 
     // Memory system connection
@@ -206,7 +206,7 @@ export const memoryPoisoningPreventionPattern: PatternScenario = {
       target: 'corruption-detected',
       ...edgeStyle,
       label: 'hash mismatch',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
     {
       id: 'e12',
@@ -230,7 +230,7 @@ export const memoryPoisoningPreventionPattern: PatternScenario = {
       target: 'agent-memory',
       ...edgeStyle,
       label: 'restore clean backup',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
 
     // Vulnerable system comparison
@@ -240,7 +240,7 @@ export const memoryPoisoningPreventionPattern: PatternScenario = {
       target: 'vulnerable-system',
       ...edgeStyle,
       label: 'direct access',
-      style: { ...edgeStyle.style, stroke: '#6b7280', strokeDasharray: '5,5' }
+      style: { ...edgeStyle, stroke: '#6b7280', strokeDasharray: '5,5' }
     },
   ],
   steps: [

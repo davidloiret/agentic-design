@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const testTimeScalingPattern: PatternScenario = {
   id: 'test-time-scaling',
   title: 'Test-Time Scaling',
+  description: 'Performance improvement technique that allocates more computational resources during inference for complex problems, scaling effort based on problem difficulty.',
   initialNodes: [
     {
       id: 'math-problem',

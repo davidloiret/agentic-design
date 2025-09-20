@@ -214,7 +214,7 @@ export const reflectiveMctsPattern: PatternScenario = {
       target: 'move-a',
       ...edgeStyle,
       label: 'reexplore',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

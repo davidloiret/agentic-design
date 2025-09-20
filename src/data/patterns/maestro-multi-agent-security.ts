@@ -114,7 +114,7 @@ export const maestroMultiAgentSecurityPattern: PatternScenario = {
       target: 'security-blind-spots',
       ...edgeStyle,
       label: 'creates vulnerabilities',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
     {
       id: 'e5',
@@ -122,7 +122,7 @@ export const maestroMultiAgentSecurityPattern: PatternScenario = {
       target: 'system-compromise',
       ...edgeStyle,
       label: 'enables cascade failure',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
 
     // Right path: MAESTRO coordinated defense
@@ -155,7 +155,7 @@ export const maestroMultiAgentSecurityPattern: PatternScenario = {
       target: 'orchestration-principle',
       ...edgeStyle,
       label: 'demonstrates need',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e10',
@@ -163,7 +163,7 @@ export const maestroMultiAgentSecurityPattern: PatternScenario = {
       target: 'orchestration-principle',
       ...edgeStyle,
       label: 'proves effectiveness',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

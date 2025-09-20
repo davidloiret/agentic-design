@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const parametricMemoryPattern: PatternScenario = {
   id: 'parametric-memory',
   title: 'Parametric Memory',
+  description: 'Knowledge storage system where information is encoded directly into model parameters, enabling fast access to learned knowledge without external memory lookups.',
   initialNodes: [
     {
       id: 'knowledge-query',

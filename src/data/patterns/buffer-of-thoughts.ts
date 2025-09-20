@@ -210,7 +210,7 @@ export const bufferOfThoughtsPattern: PatternScenario = {
       target: 'thought-buffer',
       ...edgeStyle,
       label: 'update',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     // Next problem reuse
     {
@@ -226,7 +226,7 @@ export const bufferOfThoughtsPattern: PatternScenario = {
       target: 'instant-match',
       ...edgeStyle,
       label: 'enables reuse',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     // Buffer management
     {

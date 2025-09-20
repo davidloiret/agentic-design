@@ -114,7 +114,7 @@ export const confidentialComputingPattern: PatternScenario = {
       target: 'data-exposure',
       ...edgeStyle,
       label: 'exposes sensitive data',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
     {
       id: 'e5',
@@ -122,7 +122,7 @@ export const confidentialComputingPattern: PatternScenario = {
       target: 'competitive-loss',
       ...edgeStyle,
       label: 'leads to business damage',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
 
     // Right path: Confidential computing protection flow
@@ -155,7 +155,7 @@ export const confidentialComputingPattern: PatternScenario = {
       target: 'confidential-principle',
       ...edgeStyle,
       label: 'demonstrates necessity',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e10',
@@ -163,7 +163,7 @@ export const confidentialComputingPattern: PatternScenario = {
       target: 'confidential-principle',
       ...edgeStyle,
       label: 'achieves protection goal',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

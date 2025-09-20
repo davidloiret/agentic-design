@@ -233,7 +233,7 @@ export const theAgentCompanyBenchmarkPattern: PatternScenario = {
       target: 'benchmark-principle',
       ...edgeStyle,
       label: 'demonstrates reality',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e17',
@@ -241,7 +241,7 @@ export const theAgentCompanyBenchmarkPattern: PatternScenario = {
       target: 'benchmark-principle',
       ...edgeStyle,
       label: 'proves necessity',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

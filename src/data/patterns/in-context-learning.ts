@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const inContextLearningPattern: PatternScenario = {
   id: 'in-context-learning',
   title: 'In-Context Learning',
+  description: 'Learning approach where models adapt to new tasks using only examples provided in the input context, without parameter updates, enabling rapid task switching and few-shot learning.',
   initialNodes: [
     {
       id: 'task-query',

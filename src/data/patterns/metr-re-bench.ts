@@ -220,7 +220,7 @@ export const metrReBenchPattern: PatternScenario = {
       target: 'ai-rd-evaluation-principle',
       ...edgeStyle,
       label: 'proves principle',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

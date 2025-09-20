@@ -121,7 +121,7 @@ export const threatDetectionResponsePattern: PatternScenario = {
       target: 'detection-delay',
       ...edgeStyle,
       label: 'coverage gaps',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
     {
       id: 'e5',
@@ -129,7 +129,7 @@ export const threatDetectionResponsePattern: PatternScenario = {
       target: 'manual-response',
       ...edgeStyle,
       label: 'slow response process',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
     {
       id: 'e6',
@@ -137,7 +137,7 @@ export const threatDetectionResponsePattern: PatternScenario = {
       target: 'financial-damage',
       ...edgeStyle,
       label: 'too late to prevent damage',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
 
     // Right path: Automated detection and response flow
@@ -170,7 +170,7 @@ export const threatDetectionResponsePattern: PatternScenario = {
       target: 'response-principle',
       ...edgeStyle,
       label: 'demonstrates cost of delay',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e11',
@@ -178,7 +178,7 @@ export const threatDetectionResponsePattern: PatternScenario = {
       target: 'response-principle',
       ...edgeStyle,
       label: 'proves automation value',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

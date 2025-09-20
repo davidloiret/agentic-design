@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const agentCommunicationFaultTolerancePattern: PatternScenario = {
   id: 'agent-communication-fault-tolerance',
   title: 'Agent Communication Fault Tolerance',
+  description: 'Ensures reliable agent communication through failure detection, backup systems, and automatic recovery mechanisms to maintain business continuity during network or service failures.',
   initialNodes: [
     {
       id: 'order-agent',
@@ -81,7 +82,7 @@ export const agentCommunicationFaultTolerancePattern: PatternScenario = {
       target: 'payment-agent',
       ...edgeStyle,
       label: 'process payment',
-      style: { ...edgeStyle.style, stroke: '#ef4444', strokeDasharray: '5,5' }
+      style: { ...edgeStyle, stroke: '#ef4444', strokeDasharray: '5,5' }
     },
     {
       id: 'e4',
@@ -89,7 +90,7 @@ export const agentCommunicationFaultTolerancePattern: PatternScenario = {
       target: 'failure-detection',
       ...edgeStyle,
       label: 'timeout',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
     {
       id: 'e5',
@@ -132,7 +133,7 @@ export const agentCommunicationFaultTolerancePattern: PatternScenario = {
       target: 'recovery-complete',
       ...edgeStyle,
       label: 'stock confirmed',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const advancedRagPattern: PatternScenario = {
   id: 'advanced-rag',
   title: 'Advanced RAG (Enhanced Retrieve-Augmented Generation)',
+  description: 'An enhanced retrieval-augmented generation system with improved indexing, query processing, and generation capabilities',
   initialNodes: [
     {
       id: 'indexing-phase-header',
@@ -207,7 +208,7 @@ export const advancedRagPattern: PatternScenario = {
       target: 'initial-retrieval',
       ...edgeStyle,
       label: 'query index',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5', stroke: '#9ca3af' }
+      style: { ...edgeStyle, strokeDasharray: '5,5', stroke: '#9ca3af' }
     },
   ],
   steps: [

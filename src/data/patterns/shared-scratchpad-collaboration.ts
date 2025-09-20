@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const sharedScratchpadCollaborationPattern: PatternScenario = {
   id: 'shared-scratchpad-collaboration',
   title: 'Shared Scratchpad Collaboration',
+  description: 'Collaborative framework where multiple agents work together using a shared workspace to coordinate tasks, share insights, and build upon each others contributions.',
   initialNodes: [
     {
       id: 'collaborative-task',

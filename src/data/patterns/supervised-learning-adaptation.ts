@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const supervisedLearningAgentsPattern: PatternScenario = {
   id: 'supervised-learning-adaptation',
   title: 'Supervised Learning for Agents',
+  description: 'Training methodology for agents using labeled examples and expert demonstrations to learn desired behaviors through supervised learning techniques and iterative improvement.',
   initialNodes: [
     {
       id: 'agent-goal',

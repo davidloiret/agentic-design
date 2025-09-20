@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const agentCommunicationProtocolsPattern: PatternScenario = {
   id: 'agent-communication-protocols',
   title: 'Agent Communication Protocols',
+  description: 'Standardized communication frameworks using FIPA-ACL, KQML, and other protocols to enable structured, secure, and reliable message exchange between distributed agents.',
   initialNodes: [
     {
       id: 'communication-task',

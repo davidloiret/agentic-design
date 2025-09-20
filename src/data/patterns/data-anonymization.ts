@@ -128,7 +128,7 @@ export const dataAnonymizationPattern: PatternScenario = {
       target: 'linkage-attack',
       ...edgeStyle,
       label: 'vulnerable to attacks',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
     {
       id: 'e5',
@@ -136,7 +136,7 @@ export const dataAnonymizationPattern: PatternScenario = {
       target: 'privacy-breach',
       ...edgeStyle,
       label: 'enables re-identification',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
 
     // Right path: Comprehensive anonymization techniques
@@ -201,7 +201,7 @@ export const dataAnonymizationPattern: PatternScenario = {
       target: 'anonymization-principle',
       ...edgeStyle,
       label: 'demonstrates inadequacy',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e14',
@@ -209,7 +209,7 @@ export const dataAnonymizationPattern: PatternScenario = {
       target: 'anonymization-principle',
       ...edgeStyle,
       label: 'proves effectiveness',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

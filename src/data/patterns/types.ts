@@ -7,6 +7,7 @@ export interface PatternScenario {
   steps: any[];
   initialNodes: Node[];
   initialEdges: Edge[];
+  metadata?: any;
 }
 
 export interface ScenarioStep {

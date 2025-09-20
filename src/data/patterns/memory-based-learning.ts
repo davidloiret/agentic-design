@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const memoryBasedLearningPattern: PatternScenario = {
   id: 'memory-based-learning',
   title: 'Memory-Based Learning',
+  description: 'An agent learning pattern that leverages stored experiences and memories to improve decision-making and personalization over time',
   initialNodes: [
     {
       id: 'travel-assistant',

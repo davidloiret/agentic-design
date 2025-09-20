@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const constitutionalAIPattern: PatternScenario = {
   id: 'constitutional-ai',
   title: 'Constitutional AI',
+  description: 'Self-correcting AI system that uses constitutional principles to identify harmful responses, applies critique and revision cycles, and ensures ethical, helpful outputs aligned with human values.',
   initialNodes: [
     {
       id: 'user-request',

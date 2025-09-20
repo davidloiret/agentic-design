@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const hierarchicalCoordinationPattern: PatternScenario = {
   id: 'hierarchical-coordination',
   title: 'Hierarchical Coordination',
+  description: 'Multi-level coordination system with strategic, tactical, and operational layers where higher-level agents set goals and lower-level agents execute specific tasks with delegated authority.',
   initialNodes: [
     {
       id: 'strategic-goal',

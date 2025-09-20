@@ -121,7 +121,7 @@ export const identityAccessManagementPattern: PatternScenario = {
       target: 'credential-compromise',
       ...edgeStyle,
       label: 'weak security enables theft',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
     {
       id: 'e5',
@@ -129,7 +129,7 @@ export const identityAccessManagementPattern: PatternScenario = {
       target: 'unauthorized-access',
       ...edgeStyle,
       label: 'attacker uses stolen credentials',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
     {
       id: 'e6',
@@ -137,7 +137,7 @@ export const identityAccessManagementPattern: PatternScenario = {
       target: 'data-breach',
       ...edgeStyle,
       label: 'escalates to major breach',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
 
     // Right path: Comprehensive IAM security flow
@@ -170,7 +170,7 @@ export const identityAccessManagementPattern: PatternScenario = {
       target: 'iam-principle',
       ...edgeStyle,
       label: 'demonstrates critical need',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e11',
@@ -178,7 +178,7 @@ export const identityAccessManagementPattern: PatternScenario = {
       target: 'iam-principle',
       ...edgeStyle,
       label: 'enables secure operations',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

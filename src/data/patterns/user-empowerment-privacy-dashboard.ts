@@ -167,7 +167,7 @@ export const userEmpowermentPrivacyDashboardPattern: PatternScenario = {
       target: 'privacy-fatigue',
       ...edgeStyle,
       label: 'leads to abandonment',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
 
     // Dashboard core features
@@ -269,7 +269,7 @@ export const userEmpowermentPrivacyDashboardPattern: PatternScenario = {
       target: 'empowerment-principle',
       ...edgeStyle,
       label: 'demonstrates need',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e19',
@@ -277,7 +277,7 @@ export const userEmpowermentPrivacyDashboardPattern: PatternScenario = {
       target: 'empowerment-principle',
       ...edgeStyle,
       label: 'validates approach',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

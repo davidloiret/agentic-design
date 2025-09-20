@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const memoryConsolidationPattern: PatternScenario = {
   id: 'memory-consolidation',
   title: 'Memory Consolidation',
+  description: 'Engine for processing raw memories through pattern analysis, compression, abstraction, and integration into structured knowledge schemas with quality control and storage optimization.',
   initialNodes: [
     {
       id: 'raw-memories',

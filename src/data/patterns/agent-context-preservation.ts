@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const agentContextPreservationPattern: PatternScenario = {
   id: 'agent-context-preservation',
   title: 'Agent Context Preservation and Recovery',
+  description: 'Maintains conversation context, memory state, and relationship continuity during system failures, enabling seamless recovery without losing progress or requiring users to restart interactions.',
   initialNodes: [
     {
       id: 'therapy-session',

@@ -126,6 +126,23 @@ echo "✅ Domain $PLAUSIBLE_DOMAIN resolves to: $PLAUSIBLE_IP"
 
 # ─── Fire up temporary Nginx for HTTP-01 challenge ─────────────────────────────
 echo "🚀 Starting temporary web server for Let's Encrypt challenge..."
+
+# Check if port 80 is in use and stop any conflicting containers
+NGINX_CONTAINER=$(docker ps --filter "publish=80" --format "{{.Names}}" | grep -E "nginx|web" || true)
+if [ ! -z "$NGINX_CONTAINER" ]; then
+  echo "⚠️  Temporarily stopping container using port 80: $NGINX_CONTAINER"
+  docker stop $NGINX_CONTAINER >/dev/null
+  RESTART_NGINX=true
+else
+  RESTART_NGINX=false
+fi
+
+# Remove any leftover temp-nginx container
+if docker ps -a --format "{{.Names}}" | grep -q "^temp-nginx$"; then
+  echo "🧹 Cleaning up leftover temp-nginx container..."
+  docker rm -f temp-nginx >/dev/null 2>&1
+fi
+
 cat > "$CERTBOT_DIR/nginx-temp.conf" <<EOF
 server {
     listen 80;
@@ -224,6 +241,12 @@ echo "🛑 Stopping temporary web server..."
 docker stop temp-nginx >/dev/null
 docker rm   temp-nginx >/dev/null
 rm "$CERTBOT_DIR/nginx-temp.conf"
+
+# Restart the nginx container if we stopped it earlier
+if [ "$RESTART_NGINX" = true ]; then
+  echo "🔄 Restarting original nginx container: $NGINX_CONTAINER"
+  docker start $NGINX_CONTAINER >/dev/null
+fi
 
 # ─── Fix permissions so you can read the cert files ────────────────────────────
 echo "🔧 Adjusting certificate file ownership..."

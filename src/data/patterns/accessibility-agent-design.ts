@@ -280,7 +280,7 @@ export const accessibilityAgentDesignPattern: PatternScenario = {
       target: 'accessibility-principle',
       ...edgeStyle,
       label: 'demonstrates',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e22',
@@ -288,7 +288,7 @@ export const accessibilityAgentDesignPattern: PatternScenario = {
       target: 'accessibility-principle',
       ...edgeStyle,
       label: 'validates',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

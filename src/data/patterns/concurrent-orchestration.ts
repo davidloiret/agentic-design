@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const concurrentOrchestrationPattern: PatternScenario = {
   id: 'concurrent-orchestration',
   title: 'Concurrent Orchestration',
+  description: 'Coordinates multiple agents working simultaneously on the same complex problem, enabling parallel processing, perspective sharing, and integrated solution convergence for comprehensive results.',
   initialNodes: [
     {
       id: 'complex-problem',

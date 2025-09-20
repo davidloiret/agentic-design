@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const orpoPattern: PatternScenario = {
   id: 'odds-ratio-preference-optimization',
   title: 'Odds Ratio Preference Optimization',
+  description: 'Unified training approach that combines helpfulness and safety optimization in a single step using odds ratios, eliminating the need for separate alignment phases in AI model training.',
   initialNodes: [
     {
       id: 'training-goal',

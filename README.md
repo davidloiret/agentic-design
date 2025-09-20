@@ -2,7 +2,16 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+First, set up Plausible analytics:
+
+```bash
+./manage.sh setup plausible
+```
+
+⚠️ **Important**: Plausible is configured with registration disabled and requires authentication. 
+See [PLAUSIBLE_SETUP.md](./PLAUSIBLE_SETUP.md) for security details and default credentials.
+
+Then, run the development server:
 
 ```bash
 npm run dev

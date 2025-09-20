@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const llmCheckpointRecoveryPattern: PatternScenario = {
   id: 'llm-checkpoint-recovery',
   title: 'LLM Checkpoint Recovery',
+  description: 'A system for saving and recovering LLM generation state to handle interruptions and maintain conversation continuity',
   initialNodes: [
     {
       id: 'writing-task',

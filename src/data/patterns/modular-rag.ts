@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const modularRagPattern: PatternScenario = {
   id: 'modular-rag',
   title: 'Modular RAG (Flexible Retrieval-Augmented Generation)',
+  description: 'Flexible retrieval-augmented generation system with modular components for routing, retrieval, generation, and validation that can be dynamically configured based on query complexity.',
   initialNodes: [
     {
       id: 'user-query',

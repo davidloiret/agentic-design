@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const sequentialPipelineAgentsPattern: PatternScenario = {
   id: 'sequential-pipeline-agents',
   title: 'Sequential Pipeline Agents',
+  description: 'Linear processing chain where specialized agents handle data sequentially, each adding value and transforming input for the next stage in the pipeline.',
   initialNodes: [
     {
       id: 'raw-input',

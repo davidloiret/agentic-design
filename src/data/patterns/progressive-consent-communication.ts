@@ -167,7 +167,7 @@ export const progressiveConsentCommunicationPattern: PatternScenario = {
       target: 'blind-acceptance',
       ...edgeStyle,
       label: 'leads to uninformed choices',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
 
     // Progressive consent components
@@ -269,7 +269,7 @@ export const progressiveConsentCommunicationPattern: PatternScenario = {
       target: 'progressive-principle',
       ...edgeStyle,
       label: 'demonstrates problem',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e19',
@@ -277,7 +277,7 @@ export const progressiveConsentCommunicationPattern: PatternScenario = {
       target: 'progressive-principle',
       ...edgeStyle,
       label: 'validates approach',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

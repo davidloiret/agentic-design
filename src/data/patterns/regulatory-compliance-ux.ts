@@ -162,7 +162,7 @@ export const regulatoryComplianceUXPattern: PatternScenario = {
       target: 'regulatory-risk',
       ...edgeStyle,
       label: 'increases violation risk',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
 
     // Proactive compliance implementations
@@ -257,7 +257,7 @@ export const regulatoryComplianceUXPattern: PatternScenario = {
       target: 'compliance-principle',
       ...edgeStyle,
       label: 'highlights compliance importance',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e18',
@@ -265,7 +265,7 @@ export const regulatoryComplianceUXPattern: PatternScenario = {
       target: 'compliance-principle',
       ...edgeStyle,
       label: 'validates user-centric approach',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e19',
@@ -273,7 +273,7 @@ export const regulatoryComplianceUXPattern: PatternScenario = {
       target: 'compliance-principle',
       ...edgeStyle,
       label: 'proves business value',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

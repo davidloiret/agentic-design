@@ -193,7 +193,7 @@ export const visualReasoningPatternScenario: PatternScenario = {
       target: 'vctp-think',
       ...edgeStyle,
       label: 'refines',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
 
     // Visual perception drives attention mechanisms
@@ -325,7 +325,7 @@ export const visualReasoningPatternScenario: PatternScenario = {
       target: 'visual-reasoning-principle',
       ...edgeStyle,
       label: 'validates',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e27',
@@ -333,7 +333,7 @@ export const visualReasoningPatternScenario: PatternScenario = {
       target: 'visual-reasoning-principle',
       ...edgeStyle,
       label: 'proves',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

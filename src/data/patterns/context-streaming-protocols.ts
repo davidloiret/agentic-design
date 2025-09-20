@@ -199,7 +199,7 @@ export const contextStreamingProtocolsPattern: PatternScenario = {
       target: 'streaming-protocols-framework',
       ...edgeStyle,
       label: 'adapts',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
 
     // Performance validates principle
@@ -216,7 +216,7 @@ export const contextStreamingProtocolsPattern: PatternScenario = {
       target: 'streaming-principle',
       ...edgeStyle,
       label: 'demonstrates',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

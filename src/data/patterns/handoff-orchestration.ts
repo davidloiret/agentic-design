@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const handoffOrchestrationPattern: PatternScenario = {
   id: 'handoff-orchestration',
   title: 'Handoff Orchestration',
+  description: 'Coordinated transfer of tasks between specialized agents, ensuring smooth transitions, context preservation, and optimal routing based on agent capabilities and current workloads.',
   initialNodes: [
     {
       id: 'user-query',

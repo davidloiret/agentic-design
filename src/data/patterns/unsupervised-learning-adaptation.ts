@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const unsupervisedLearningAgentsPattern: PatternScenario = {
   id: 'unsupervised-learning-adaptation',
   title: 'Unsupervised Learning for Agents',
+  description: 'Learning methodology for agents to discover patterns and structure in unlabeled data through clustering, dimensionality reduction, and self-organization techniques.',
   initialNodes: [
     {
       id: 'agent-challenge',

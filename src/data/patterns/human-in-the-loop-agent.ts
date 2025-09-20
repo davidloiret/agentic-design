@@ -189,7 +189,7 @@ export const humanInTheLoopAgentPattern: PatternScenario = {
       target: 'collaborative-principle',
       ...edgeStyle,
       label: 'proves effectiveness',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e13',
@@ -197,7 +197,7 @@ export const humanInTheLoopAgentPattern: PatternScenario = {
       target: 'collaborative-principle',
       ...edgeStyle,
       label: 'validates approach',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
 
     // Pure automation failure also validates principle
@@ -207,7 +207,7 @@ export const humanInTheLoopAgentPattern: PatternScenario = {
       target: 'collaborative-principle',
       ...edgeStyle,
       label: 'demonstrates need',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5', stroke: '#ef4444' }
+      style: { ...edgeStyle, strokeDasharray: '5,5', stroke: '#ef4444' }
     },
   ],
   steps: [

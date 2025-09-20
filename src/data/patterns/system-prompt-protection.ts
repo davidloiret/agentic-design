@@ -114,7 +114,7 @@ export const systemPromptProtectionPattern: PatternScenario = {
       target: 'prompt-revealed',
       ...edgeStyle,
       label: 'exposes system prompt',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
     {
       id: 'e5',
@@ -122,7 +122,7 @@ export const systemPromptProtectionPattern: PatternScenario = {
       target: 'security-bypass',
       ...edgeStyle,
       label: 'enables manipulation',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
 
     // Right path: Protected system defense
@@ -155,7 +155,7 @@ export const systemPromptProtectionPattern: PatternScenario = {
       target: 'protection-principle',
       ...edgeStyle,
       label: 'demonstrates risk',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e10',
@@ -163,7 +163,7 @@ export const systemPromptProtectionPattern: PatternScenario = {
       target: 'protection-principle',
       ...edgeStyle,
       label: 'proves necessity',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

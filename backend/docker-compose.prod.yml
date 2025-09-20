@@ -120,6 +120,7 @@ services:
       - ADMIN_USER_NAME=Admin
       - ADMIN_USER_PWD=changeme123
       - DISABLE_REGISTRATION=true
+      - DISABLE_AUTH=false
     networks:
       - agentic-network
 

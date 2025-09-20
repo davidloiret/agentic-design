@@ -133,7 +133,7 @@ export const hybridSecretCacheManagementPattern: PatternScenario = {
       target: 'security-performance-tradeoff',
       ...edgeStyle,
       label: 'creates impossible choice',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
     {
       id: 'e5',
@@ -141,7 +141,7 @@ export const hybridSecretCacheManagementPattern: PatternScenario = {
       target: 'system-failure',
       ...edgeStyle,
       label: 'leads to system failure',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
 
     // Right path: Hybrid architecture deployment
@@ -206,7 +206,7 @@ export const hybridSecretCacheManagementPattern: PatternScenario = {
       target: 'hybrid-principle',
       ...edgeStyle,
       label: 'demonstrates need',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e14',
@@ -214,7 +214,7 @@ export const hybridSecretCacheManagementPattern: PatternScenario = {
       target: 'hybrid-principle',
       ...edgeStyle,
       label: 'proves effectiveness',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

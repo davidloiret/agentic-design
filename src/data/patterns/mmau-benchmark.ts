@@ -202,7 +202,7 @@ export const mmauBenchmarkPattern: PatternScenario = {
       target: 'holistic-evaluation-principle',
       ...edgeStyle,
       label: 'demonstrates principle',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

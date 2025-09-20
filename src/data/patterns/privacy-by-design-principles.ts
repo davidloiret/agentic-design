@@ -179,7 +179,7 @@ export const privacyByDesignPrinciplesPattern: PatternScenario = {
       target: 'compliance-issues',
       ...edgeStyle,
       label: 'leads to violations',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
 
     // Privacy-by-Design principles
@@ -270,7 +270,7 @@ export const privacyByDesignPrinciplesPattern: PatternScenario = {
       target: 'privacy-principle',
       ...edgeStyle,
       label: 'demonstrates necessity',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e19',
@@ -278,7 +278,7 @@ export const privacyByDesignPrinciplesPattern: PatternScenario = {
       target: 'privacy-principle',
       ...edgeStyle,
       label: 'proves effectiveness',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e20',
@@ -286,7 +286,7 @@ export const privacyByDesignPrinciplesPattern: PatternScenario = {
       target: 'privacy-principle',
       ...edgeStyle,
       label: 'validates approach',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

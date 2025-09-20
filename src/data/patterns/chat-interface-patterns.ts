@@ -264,7 +264,7 @@ export const chatInterfacePatternsPattern: PatternScenario = {
       target: 'chat-principle',
       ...edgeStyle,
       label: 'demonstrates',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e20',
@@ -272,7 +272,7 @@ export const chatInterfacePatternsPattern: PatternScenario = {
       target: 'chat-principle',
       ...edgeStyle,
       label: 'validates',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

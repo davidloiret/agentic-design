@@ -394,7 +394,7 @@ case "$1" in
                 echo "📊 Access your analytics at: https://plausible.agentic-design.ai"
                 echo "🔑 Login credentials:"
                 echo "   Email: admin@agentic-design.ai"
-                echo "   Password: changeme123"
+                echo "   Password: rvTvcxJGuDU722"
                 echo ""
                 echo "⚠️  Important Steps:"
                 echo "   1. Change your password after first login"

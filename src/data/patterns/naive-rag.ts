@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const naiveRagPattern: PatternScenario = {
   id: 'naive-rag',
   title: 'Naive RAG (Retrieve-Augmented Generation)',
+  description: 'Simple retrieval-augmented generation approach with basic indexing and retrieval phases, demonstrating the fundamental concepts of knowledge retrieval for augmented text generation.',
   initialNodes: [
     {
       id: 'indexing-phase-header',
@@ -168,7 +169,7 @@ export const naiveRagPattern: PatternScenario = {
       target: 'simple-search',
       ...edgeStyle,
       label: 'query index',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5', stroke: '#9ca3af' }
+      style: { ...edgeStyle, strokeDasharray: '5,5', stroke: '#9ca3af' }
     },
   ],
   steps: [

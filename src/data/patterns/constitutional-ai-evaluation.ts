@@ -215,7 +215,7 @@ export const constitutionalAiEvaluationPattern: PatternScenario = {
       target: 'constitutional-principle',
       ...edgeStyle,
       label: 'proves principle',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

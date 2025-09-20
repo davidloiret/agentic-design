@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const hierarchicalMemoryPattern: PatternScenario = {
   id: 'hierarchical-memory',
   title: 'Hierarchical Memory',
+  description: 'Multi-layered memory architecture organizing information at different abstraction levels from detailed facts to high-level concepts, enabling efficient storage and contextual retrieval.',
   initialNodes: [
     {
       id: 'information-input',

@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const directPreferenceOptimizationPattern: PatternScenario = {
   id: 'direct-preference-optimization',
   title: 'Direct Preference Optimization',
+  description: 'Training method that directly optimizes language models on human preference data without requiring reward models, using preference pairs to improve response quality and alignment.',
   initialNodes: [
     {
       id: 'user-prompt',

@@ -186,7 +186,7 @@ export const mlrBenchPattern: PatternScenario = {
       target: 'mlr-judge-system',
       ...edgeStyle,
       label: 'judged by',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
     {
       id: 'e12',
@@ -210,7 +210,7 @@ export const mlrBenchPattern: PatternScenario = {
       target: 'experimental-reliability-gap',
       ...edgeStyle,
       label: 'exposes critical flaw',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
 
     // Both insights converge to principle
@@ -220,7 +220,7 @@ export const mlrBenchPattern: PatternScenario = {
       target: 'research-evaluation-principle',
       ...edgeStyle,
       label: 'shows promise',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e16',
@@ -228,7 +228,7 @@ export const mlrBenchPattern: PatternScenario = {
       target: 'research-evaluation-principle',
       ...edgeStyle,
       label: 'demands reliability',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

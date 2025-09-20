@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const semanticMemoryNetworksPattern: PatternScenario = {
   id: 'semantic-memory-networks',
   title: 'Semantic Memory Networks',
+  description: 'Interconnected knowledge network that models semantic relationships, enabling context-aware retrieval and inference through conceptual associations and graph-based reasoning.',
   initialNodes: [
     {
       id: 'knowledge-query',

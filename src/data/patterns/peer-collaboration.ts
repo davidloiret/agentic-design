@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const peerCollaborationPattern: PatternScenario = {
   id: 'peer-collaboration',
   title: 'Peer Collaboration',
+  description: 'Decentralized collaboration pattern where peer agents with equal status work together on distributed problems through consensus-building and shared decision-making.',
   initialNodes: [
     {
       id: 'distributed-problem',

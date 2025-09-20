@@ -115,7 +115,7 @@ export const agrailAdaptivePattern: PatternScenario = {
       target: 'exploitation',
       ...edgeStyle,
       label: 'enables exploitation',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
 
     // AGrail adaptive response flow
@@ -148,7 +148,7 @@ export const agrailAdaptivePattern: PatternScenario = {
       target: 'continuous-learning',
       ...edgeStyle,
       label: 'demonstrates need',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e9',
@@ -156,7 +156,7 @@ export const agrailAdaptivePattern: PatternScenario = {
       target: 'continuous-learning',
       ...edgeStyle,
       label: 'adaptive success',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
 
     // Future adaptability
@@ -166,7 +166,7 @@ export const agrailAdaptivePattern: PatternScenario = {
       target: 'future-threat',
       ...edgeStyle,
       label: 'ready for future threats',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e11',
@@ -174,7 +174,7 @@ export const agrailAdaptivePattern: PatternScenario = {
       target: 'continuous-learning',
       ...edgeStyle,
       label: 'ongoing evolution',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
 
     // Feedback loop for continuous improvement
@@ -184,7 +184,7 @@ export const agrailAdaptivePattern: PatternScenario = {
       target: 'agrail-system',
       ...edgeStyle,
       label: 'improves detection',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

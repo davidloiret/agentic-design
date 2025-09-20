@@ -237,7 +237,7 @@ export const abductiveReasoningPattern: PatternScenario = {
       target: 'deductive-contrast',
       ...edgeStyle,
       label: 'compare',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e11',
@@ -245,7 +245,7 @@ export const abductiveReasoningPattern: PatternScenario = {
       target: 'inductive-contrast',
       ...edgeStyle,
       label: 'compare',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

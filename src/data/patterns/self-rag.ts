@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const selfRagPattern: PatternScenario = {
   id: 'self-rag',
   title: 'Self-RAG (Self-Reflective Retrieve-Augmented Generation)',
+  description: 'Enhanced RAG system with self-reflection capabilities that evaluates when to retrieve information, assesses retrieval quality, and validates generated responses for accuracy.',
   initialNodes: [
     {
       id: 'user-query',

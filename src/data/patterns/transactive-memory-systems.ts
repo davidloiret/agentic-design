@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const transactiveMemorySystemsPattern: PatternScenario = {
   id: 'transactive-memory-systems',
   title: 'Transactive Memory Systems',
+  description: 'Distributed memory system where agents specialize in different knowledge domains and collaborate by knowing who knows what, leveraging collective expertise efficiently.',
   initialNodes: [
     {
       id: 'complex-task',

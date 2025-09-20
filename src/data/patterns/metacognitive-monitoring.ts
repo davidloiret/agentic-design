@@ -177,7 +177,7 @@ export const metacognitiveMonitoringPattern: PatternScenario = {
       target: 'gather-vitals',
       ...edgeStyle,
       label: 'low confidence',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e10',
@@ -185,7 +185,7 @@ export const metacognitiveMonitoringPattern: PatternScenario = {
       target: 'updated-confidence',
       ...edgeStyle,
       label: 'quality check',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

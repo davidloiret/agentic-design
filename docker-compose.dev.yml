@@ -79,7 +79,7 @@ services:
       - CLICKHOUSE_DATABASE_URL=http://plausible_events_db:8123/plausible_events_db
       - ADMIN_USER_EMAIL=admin@agentic-design.ai
       - ADMIN_USER_NAME=Admin
-      - ADMIN_USER_PWD=changeme123
+      - ADMIN_USER_PWD=rvTvcxJGuDU722
       - DISABLE_REGISTRATION=true
     networks:
       - agentic-network

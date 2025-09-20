@@ -192,7 +192,7 @@ export const hierarchicalContextArchitecturePattern: PatternScenario = {
       target: 'working-memory-layer',
       ...edgeStyle,
       label: 'loads into',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
 
     // Self-directed management
@@ -227,7 +227,7 @@ export const hierarchicalContextArchitecturePattern: PatternScenario = {
       target: 'hierarchical-principle',
       ...edgeStyle,
       label: 'validates',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

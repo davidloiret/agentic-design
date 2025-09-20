@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const contextualStructuredMemoryPattern: PatternScenario = {
   id: 'contextual-structured-memory',
   title: 'Contextual Structured Memory',
+  description: 'Schema-based memory organization system that stores information in predefined structures with relationships, indexes, and metadata for efficient querying and contextual retrieval.',
   initialNodes: [
     {
       id: 'multi-agent-query',

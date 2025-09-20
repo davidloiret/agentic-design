@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const continualLearningPattern: PatternScenario = {
   id: 'continual-learning',
   title: 'Continual Learning',
+  description: 'Adaptive learning system that acquires new knowledge over time while preventing catastrophic forgetting, using techniques like elastic weight consolidation and progressive neural networks.',
   initialNodes: [
     {
       id: 'assistant-v1',

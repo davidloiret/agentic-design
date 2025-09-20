@@ -170,7 +170,7 @@ export const guardAgentPattern: PatternScenario = {
       target: 'blocked-request',
       ...edgeStyle,
       label: 'malicious intent',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
 
     // GuardAgent oversight
@@ -180,7 +180,7 @@ export const guardAgentPattern: PatternScenario = {
       target: 'target-agent',
       ...edgeStyle,
       label: 'monitors',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e11',
@@ -188,7 +188,7 @@ export const guardAgentPattern: PatternScenario = {
       target: 'output-filtering',
       ...edgeStyle,
       label: 'controls',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
 
     // Monitoring feedback
@@ -212,7 +212,7 @@ export const guardAgentPattern: PatternScenario = {
       target: 'guard-agent',
       ...edgeStyle,
       label: 'improve protection',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
 
     // Comparison with unprotected
@@ -222,7 +222,7 @@ export const guardAgentPattern: PatternScenario = {
       target: 'unprotected-agent',
       ...edgeStyle,
       label: 'direct access',
-      style: { ...edgeStyle.style, stroke: '#ef4444', strokeDasharray: '5,5' }
+      style: { ...edgeStyle, stroke: '#ef4444', strokeDasharray: '5,5' }
     },
   ],
   steps: [

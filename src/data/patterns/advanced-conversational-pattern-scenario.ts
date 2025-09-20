@@ -343,7 +343,7 @@ export const advancedConversationalPatternScenario: PatternScenario = {
       target: 'conversational-principle',
       ...edgeStyle,
       label: 'validates',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e28',
@@ -351,7 +351,7 @@ export const advancedConversationalPatternScenario: PatternScenario = {
       target: 'conversational-principle',
       ...edgeStyle,
       label: 'proves',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

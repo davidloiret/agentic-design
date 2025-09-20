@@ -345,7 +345,7 @@ export const multimodalInteractionPatternScenario: PatternScenario = {
       target: 'multimodal-principle',
       ...edgeStyle,
       label: 'validates',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e29',
@@ -353,7 +353,7 @@ export const multimodalInteractionPatternScenario: PatternScenario = {
       target: 'multimodal-principle',
       ...edgeStyle,
       label: 'proves',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

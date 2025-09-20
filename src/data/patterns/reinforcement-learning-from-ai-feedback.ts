@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const rlaifPattern: PatternScenario = {
   id: 'reinforcement-learning-from-ai-feedback',
   title: 'Reinforcement Learning from AI Feedback',
+  description: 'Training approach that uses AI models to provide feedback instead of human raters, enabling scalable improvement of agent behavior through automated evaluation and preference learning.',
   initialNodes: [
     {
       id: 'writing-task',

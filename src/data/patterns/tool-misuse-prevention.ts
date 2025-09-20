@@ -97,7 +97,7 @@ export const toolMisusePreventionPattern: PatternScenario = {
       target: 'direct-execution',
       ...edgeStyle,
       label: 'no validation',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
     {
       id: 'e4',
@@ -105,7 +105,7 @@ export const toolMisusePreventionPattern: PatternScenario = {
       target: 'catastrophic-damage',
       ...edgeStyle,
       label: 'immediate destruction',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
 
     // Right path: Protected flow
@@ -122,7 +122,7 @@ export const toolMisusePreventionPattern: PatternScenario = {
       target: 'threat-detected',
       ...edgeStyle,
       label: 'malicious intent found',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
     {
       id: 'e7',
@@ -139,7 +139,7 @@ export const toolMisusePreventionPattern: PatternScenario = {
       target: 'key-insight',
       ...edgeStyle,
       label: 'demonstrates need',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e9',
@@ -147,7 +147,7 @@ export const toolMisusePreventionPattern: PatternScenario = {
       target: 'key-insight',
       ...edgeStyle,
       label: 'protection success',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

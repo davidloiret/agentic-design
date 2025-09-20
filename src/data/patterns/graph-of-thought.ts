@@ -145,7 +145,7 @@ export const graphOfThoughtPattern: PatternScenario = {
       target: 'energy-thought',
       ...edgeStyle,
       label: 'refine',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e13',

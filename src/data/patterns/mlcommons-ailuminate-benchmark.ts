@@ -138,7 +138,7 @@ export const mlcommonsAiluminateBenchmarkPattern: PatternScenario = {
       target: 'coverage-gaps',
       ...edgeStyle,
       label: 'misses critical risks',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
     {
       id: 'e5',
@@ -146,7 +146,7 @@ export const mlcommonsAiluminateBenchmarkPattern: PatternScenario = {
       target: 'post-deployment-incidents',
       ...edgeStyle,
       label: 'leads to incidents',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
 
     // Right path: AILuminate systematic evaluation
@@ -225,7 +225,7 @@ export const mlcommonsAiluminateBenchmarkPattern: PatternScenario = {
       target: 'standardized-evaluation-principle',
       ...edgeStyle,
       label: 'demonstrates need',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e16',
@@ -233,7 +233,7 @@ export const mlcommonsAiluminateBenchmarkPattern: PatternScenario = {
       target: 'standardized-evaluation-principle',
       ...edgeStyle,
       label: 'proves effectiveness',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

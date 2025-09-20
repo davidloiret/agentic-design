@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const a2aProtocolPattern: PatternScenario = {
   id: 'a2a-protocol',
   title: 'A2A Protocol (Agent2Agent)',
+  description: 'A protocol for agent-to-agent communication and coordination in multi-agent systems',
   initialNodes: [
     {
       id: 'enterprise-request',

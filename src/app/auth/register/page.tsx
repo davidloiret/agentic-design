@@ -20,7 +20,7 @@ export default function RegisterPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
   const { signUp, signInWithGoogle, signInWithGitHub } = useAuth();
-  const { trackAuth } = usePlausible();
+  const { trackAuth, trackEvent } = usePlausible();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -48,7 +48,7 @@ export default function RegisterPage() {
       setRegistrationSuccess(true);
     } catch (err: any) {
       // Track failed registration
-      trackAuth('register_failed');
+      trackEvent('Auth Failed', { action: 'register' });
 
       setError(err.message || 'Failed to create account');
     } finally {

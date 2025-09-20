@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const onlineLearningAgentsPattern: PatternScenario = {
   id: 'online-learning-adaptation',
   title: 'Online Learning for Agents',
+  description: 'Real-time learning system for agents that must continuously adapt to changing environments, such as stock trading agents adapting to dynamic market conditions.',
   initialNodes: [
     {
       id: 'stock-trading-agent',

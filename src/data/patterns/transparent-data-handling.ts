@@ -152,7 +152,7 @@ export const transparentDataHandlingPattern: PatternScenario = {
       target: 'trust-erosion',
       ...edgeStyle,
       label: 'reduces confidence',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
 
     // Transparent processing components
@@ -238,7 +238,7 @@ export const transparentDataHandlingPattern: PatternScenario = {
       target: 'transparency-principle',
       ...edgeStyle,
       label: 'demonstrates need',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e17',
@@ -246,7 +246,7 @@ export const transparentDataHandlingPattern: PatternScenario = {
       target: 'transparency-principle',
       ...edgeStyle,
       label: 'validates approach',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e18',
@@ -254,7 +254,7 @@ export const transparentDataHandlingPattern: PatternScenario = {
       target: 'transparency-principle',
       ...edgeStyle,
       label: 'confirms requirements',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

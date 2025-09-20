@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const memoryConsolidationProcessesPattern: PatternScenario = {
   id: 'memory-consolidation-processes',
   title: 'Memory Consolidation Processes',
+  description: 'Multi-stage pipeline for transforming short-term agent experiences into stable long-term memory through synaptic consolidation, schema integration, and optimization strategies for multi-agent systems.',
   initialNodes: [
     {
       id: 'short-term-experiences',

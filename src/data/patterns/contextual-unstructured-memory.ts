@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const contextualUnstructuredMemoryPattern: PatternScenario = {
   id: 'contextual-unstructured-memory',
   title: 'Contextual Unstructured Memory',
+  description: 'Flexible memory system for storing and retrieving varied data formats including conversations, documents, and multimedia through semantic embeddings and similarity-based search.',
   initialNodes: [
     {
       id: 'raw-input',

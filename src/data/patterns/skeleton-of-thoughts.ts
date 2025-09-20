@@ -185,7 +185,7 @@ export const skeletonOfThoughtsPattern: PatternScenario = {
       target: 'skeleton-framework',
       ...edgeStyle,
       label: 'improves',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     // Comparisons
     {
@@ -194,7 +194,7 @@ export const skeletonOfThoughtsPattern: PatternScenario = {
       target: 'rigid-comparison',
       ...edgeStyle,
       label: 'alternative',
-      style: { ...edgeStyle.style, stroke: '#ef4444', strokeDasharray: '5,5' }
+      style: { ...edgeStyle, stroke: '#ef4444', strokeDasharray: '5,5' }
     },
     {
       id: 'ec2',
@@ -202,7 +202,7 @@ export const skeletonOfThoughtsPattern: PatternScenario = {
       target: 'ad-hoc-comparison',
       ...edgeStyle,
       label: 'alternative',
-      style: { ...edgeStyle.style, stroke: '#ef4444', strokeDasharray: '5,5' }
+      style: { ...edgeStyle, stroke: '#ef4444', strokeDasharray: '5,5' }
     },
   ],
   steps: [

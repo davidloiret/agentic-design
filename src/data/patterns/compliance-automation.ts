@@ -114,7 +114,7 @@ export const complianceAutomationPattern: PatternScenario = {
       target: 'human-errors',
       ...edgeStyle,
       label: 'prone to mistakes',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
     {
       id: 'e5',
@@ -122,7 +122,7 @@ export const complianceAutomationPattern: PatternScenario = {
       target: 'regulatory-violations',
       ...edgeStyle,
       label: 'leads to violations',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
 
     // Right path: Automated compliance flow
@@ -155,7 +155,7 @@ export const complianceAutomationPattern: PatternScenario = {
       target: 'automation-principle',
       ...edgeStyle,
       label: 'demonstrates need',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
     {
       id: 'e10',
@@ -163,7 +163,7 @@ export const complianceAutomationPattern: PatternScenario = {
       target: 'automation-principle',
       ...edgeStyle,
       label: 'enables compliance',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

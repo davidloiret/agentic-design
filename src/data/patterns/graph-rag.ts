@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const graphRagPattern: PatternScenario = {
   id: 'graph-rag',
   title: 'Graph RAG (Knowledge Graph-Enhanced RAG)',
+  description: 'Enhanced retrieval system that uses knowledge graphs to understand entity relationships and provide more accurate, contextually relevant answers by leveraging structured knowledge connections.',
   initialNodes: [
     {
       id: 'indexing-phase',
@@ -168,7 +169,7 @@ export const graphRagPattern: PatternScenario = {
       target: 'hierarchical-retrieval',
       ...edgeStyle,
       label: 'use summaries',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5', stroke: '#9ca3af' }
+      style: { ...edgeStyle, strokeDasharray: '5,5', stroke: '#9ca3af' }
     },
     {
       id: 'cross-phase-2',
@@ -176,7 +177,7 @@ export const graphRagPattern: PatternScenario = {
       target: 'cross-community-synthesis',
       ...edgeStyle,
       label: 'entity relations',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5', stroke: '#9ca3af' }
+      style: { ...edgeStyle, strokeDasharray: '5,5', stroke: '#9ca3af' }
     },
   ],
   steps: [

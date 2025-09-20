@@ -96,7 +96,7 @@ export const stepBackPromptingPattern: PatternScenario = {
       target: 'direct-approach',
       ...edgeStyle,
       label: 'immediate',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5', stroke: '#6b7280' }
+      style: { ...edgeStyle, strokeDasharray: '5,5', stroke: '#6b7280' }
     },
     {
       id: 'e1b',
@@ -194,7 +194,7 @@ export const stepBackPromptingPattern: PatternScenario = {
       target: 'direct-limitation',
       ...edgeStyle,
       label: 'limitations',
-      style: { ...edgeStyle.style, stroke: '#ef4444' }
+      style: { ...edgeStyle, stroke: '#ef4444' }
     },
   ],
   steps: [

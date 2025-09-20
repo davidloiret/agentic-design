@@ -232,7 +232,7 @@ export const contextEngineeringFrameworksPattern: PatternScenario = {
       target: 'engineering-principle',
       ...edgeStyle,
       label: 'demonstrates',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
   ],
   steps: [

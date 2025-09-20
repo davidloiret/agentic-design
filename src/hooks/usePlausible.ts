@@ -23,12 +23,12 @@ export function usePlausible() {
     trackEvent('Search', { query, results });
   }, [trackEvent]);
 
-  const trackDemo = useCallback((demoType: string, action: string) => {
-    trackEvent('Demo Interaction', { demo: demoType, action });
+  const trackDemo = useCallback((demoType: string, action: string, props?: Record<string, any>) => {
+    trackEvent('Demo Interaction', { demo: demoType, action, ...props });
   }, [trackEvent]);
 
-  const trackCodePlayground = useCallback((language: string, action: string) => {
-    trackEvent('Code Playground', { language, action });
+  const trackCodePlayground = useCallback((language: string, action: string, props?: Record<string, any>) => {
+    trackEvent('Code Playground', { language, action, ...props });
   }, [trackEvent]);
 
   const trackAuth = useCallback((action: 'login' | 'register' | 'logout') => {

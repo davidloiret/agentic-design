@@ -27,7 +27,8 @@ export const AIAgentQuiz: React.FC<AIAgentQuizProps> = ({
 
   const handleAnswerSelect = (optionId: string) => {
     if (!isAnswered) {
-      const isCorrect = currentQuestion.correctAnswer === optionId;
+      const selectedOption = currentQuestion.options.find(opt => opt.id === optionId);
+      const isCorrect = selectedOption?.isCorrect || false;
 
       trackEvent('Quiz Interaction', {
         action: 'answer_selected',
@@ -62,7 +63,9 @@ export const AIAgentQuiz: React.FC<AIAgentQuizProps> = ({
       const score = calculateScore();
       const correctAnswers = Object.keys(selectedAnswers).filter(questionId => {
         const question = questions.find(q => q.id === questionId);
-        return question && selectedAnswers[questionId] === question.correctAnswer;
+        if (!question) return false;
+        const selectedOption = question.options.find(opt => opt.id === selectedAnswers[questionId]);
+        return selectedOption?.isCorrect || false;
       }).length;
 
       trackEvent('Quiz Interaction', {

@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const metaLearningPattern: PatternScenario = {
   id: 'meta-learning',
   title: 'Meta-Learning Systems',
+  description: 'Learning how to learn efficiently by rapidly adapting to new tasks using prior experience, few-shot learning, and transferable knowledge representations.',
   initialNodes: [
     {
       id: 'new-task',

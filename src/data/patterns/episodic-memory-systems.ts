@@ -4,6 +4,7 @@ import { nodeStyle, edgeStyle } from './styles';
 export const episodicMemorySystemsPattern: PatternScenario = {
   id: 'episodic-memory-systems',
   title: 'Episodic Memory Systems',
+  description: 'Memory system that captures and recalls specific experiences, events, and interactions with temporal context, enabling agents to learn from past situations and apply experiential knowledge.',
   initialNodes: [
     {
       id: 'agent-experience',

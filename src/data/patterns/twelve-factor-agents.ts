@@ -242,7 +242,7 @@ export const twelveFactorAgentsPattern: PatternScenario = {
       target: 'core-principle',
       ...edgeStyle,
       label: 'proves hybrid approach',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+      style: { ...edgeStyle, strokeDasharray: '5,5' }
     },
 
     // Traditional failure also validates principle
@@ -252,7 +252,7 @@ export const twelveFactorAgentsPattern: PatternScenario = {
       target: 'core-principle',
       ...edgeStyle,
       label: 'demonstrates need',
-      style: { ...edgeStyle.style, strokeDasharray: '5,5', stroke: '#ef4444' }
+      style: { ...edgeStyle, strokeDasharray: '5,5', stroke: '#ef4444' }
     },
   ],
   steps: [
