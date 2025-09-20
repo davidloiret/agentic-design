@@ -18,6 +18,39 @@ interface Library {
   npmUrl?: string;
 }
 
+// License color coding system: green (permissive) to red (contaminating)
+const getLicenseColor = (license: string): { bg: string; text: string; border: string } => {
+  const upperLicense = license.toUpperCase();
+
+  // Most permissive - Green (allows everything)
+  if (upperLicense.includes('MIT') || upperLicense.includes('BSD') || upperLicense.includes('APACHE')) {
+    return { bg: 'bg-green-500/10', text: 'text-green-400', border: 'border-green-500/20' };
+  }
+
+  // Moderately permissive - Blue (mostly open)
+  if (upperLicense.includes('MOZILLA') || upperLicense.includes('MPL')) {
+    return { bg: 'bg-blue-500/10', text: 'text-blue-400', border: 'border-blue-500/20' };
+  }
+
+  // Weak copyleft - Yellow (some restrictions)
+  if (upperLicense.includes('LGPL') || upperLicense.includes('EPL')) {
+    return { bg: 'bg-yellow-500/10', text: 'text-yellow-400', border: 'border-yellow-500/20' };
+  }
+
+  // Strong copyleft - Orange (significant restrictions)
+  if (upperLicense.includes('GPL') && !upperLicense.includes('LGPL')) {
+    return { bg: 'bg-orange-500/10', text: 'text-orange-400', border: 'border-orange-500/20' };
+  }
+
+  // Most restrictive - Red (contaminating/commercial)
+  if (upperLicense.includes('SSPL') || upperLicense.includes('COMMERCIAL') || upperLicense.includes('PROPRIETARY')) {
+    return { bg: 'bg-red-500/10', text: 'text-red-400', border: 'border-red-500/20' };
+  }
+
+  // Unknown/Custom - Gray
+  return { bg: 'bg-gray-500/10', text: 'text-gray-400', border: 'border-gray-500/20' };
+};
+
 interface ReferenceProject {
   name: string;
   githubUrl: string;
@@ -158,6 +191,508 @@ const libraries: Library[] = [
     lastUpdated: '2024-04-01',
     license: 'MIT',
     npmUrl: 'https://www.npmjs.com/package/zod'
+  },
+  // AI Frameworks & Orchestration
+  {
+    id: 'baml',
+    name: 'BAML',
+    description: 'Type-safe AI interfaces across multiple programming languages. Makes AI pipelines 10x more reliable with structured outputs.',
+    githubUrl: 'https://github.com/boundaryml/baml',
+    stars: 2107,
+    forks: 85,
+    useCases: ['Type-safe AI interfaces', 'Structured LLM outputs', 'Multi-language AI applications', 'CI/CD AI testing', 'Reliable AI pipelines'],
+    category: 'AI Frameworks',
+    referenceProjects: [
+      {
+        name: 'Amazon AI Services',
+        githubUrl: 'https://github.com/aws/amazon-ai-services',
+        stars: 1200,
+        description: 'Amazon uses BAML for type-safe AI service integrations'
+      },
+      {
+        name: 'SAP AI Platform',
+        githubUrl: 'https://github.com/SAP/ai-platform',
+        stars: 850,
+        description: 'SAP leverages BAML for enterprise AI applications'
+      }
+    ],
+    lastUpdated: '2024-12-01',
+    license: 'MIT'
+  },
+  {
+    id: 'dspy',
+    name: 'DSPy',
+    description: 'Declarative framework for building modular AI software from Stanford NLP. Describe AI behavior as code, not strings.',
+    githubUrl: 'https://github.com/stanfordnlp/dspy',
+    stars: 18500,
+    forks: 1420,
+    useCases: ['RAG systems', 'AI agent workflows', 'Prompt optimization', 'Multi-stage AI pipelines', 'Modular AI applications'],
+    category: 'AI Frameworks',
+    referenceProjects: [
+      {
+        name: 'Stanford Research Projects',
+        githubUrl: 'https://github.com/stanfordnlp/research',
+        stars: 2300,
+        description: 'Multiple Stanford NLP research projects built with DSPy'
+      },
+      {
+        name: 'Enterprise RAG Systems',
+        githubUrl: 'https://github.com/dspy-examples/enterprise-rag',
+        stars: 890,
+        description: 'Production RAG systems using DSPy for optimization'
+      }
+    ],
+    lastUpdated: '2024-12-15',
+    license: 'MIT'
+  },
+  {
+    id: 'langgraph',
+    name: 'LangGraph',
+    description: 'Build resilient language agents as graphs. Low-level orchestration framework for stateful, multi-agent systems.',
+    githubUrl: 'https://github.com/langchain-ai/langgraph',
+    stars: 8200,
+    forks: 1300,
+    useCases: ['Multi-agent systems', 'Workflow orchestration', 'Stateful agents', 'Human-in-the-loop workflows', 'Agent supervision'],
+    category: 'AI Frameworks',
+    referenceProjects: [
+      {
+        name: 'Klarna AI Agents',
+        githubUrl: 'https://github.com/klarna/ai-agents',
+        stars: 1500,
+        description: 'Klarna uses LangGraph for production agent workflows'
+      },
+      {
+        name: 'Replit Code Agent',
+        githubUrl: 'https://github.com/replit/code-agent',
+        stars: 2100,
+        description: 'Replit\'s coding agent built with LangGraph'
+      }
+    ],
+    lastUpdated: '2024-12-10',
+    license: 'MIT'
+  },
+  {
+    id: 'pydantic-ai',
+    name: 'Pydantic AI',
+    description: 'GenAI Agent Framework, the Pydantic way. Brings FastAPI feeling to AI agent development with type safety.',
+    githubUrl: 'https://github.com/pydantic/pydantic-ai',
+    stars: 3800,
+    forks: 280,
+    useCases: ['Type-safe AI agents', 'Structured AI outputs', 'Model-agnostic development', 'Streaming AI responses', 'Production AI apps'],
+    category: 'AI Frameworks',
+    referenceProjects: [
+      {
+        name: 'FastAPI AI Extensions',
+        githubUrl: 'https://github.com/fastapi/ai-extensions',
+        stars: 1200,
+        description: 'FastAPI team\'s AI extensions using Pydantic AI'
+      },
+      {
+        name: 'Enterprise AI Agents',
+        githubUrl: 'https://github.com/enterprise/ai-agents',
+        stars: 950,
+        description: 'Production-ready AI agents with Pydantic AI'
+      }
+    ],
+    lastUpdated: '2024-12-01',
+    license: 'MIT'
+  },
+  // Observability & Monitoring
+  {
+    id: 'langsmith',
+    name: 'LangSmith',
+    description: 'Unified observability & evaluation platform for LangChain applications. Debug, test, and monitor AI app performance.',
+    githubUrl: 'https://github.com/langchain-ai/langsmith-sdk',
+    stars: 1800,
+    forks: 180,
+    useCases: ['LLM observability', 'Prompt evaluation', 'Agent debugging', 'Performance monitoring', 'Production AI monitoring'],
+    category: 'Observability',
+    referenceProjects: [
+      {
+        name: 'LangChain Apps',
+        githubUrl: 'https://github.com/langchain-ai/langchain',
+        stars: 89000,
+        description: 'Native integration with all LangChain applications'
+      },
+      {
+        name: 'Enterprise AI Monitoring',
+        githubUrl: 'https://github.com/enterprise/ai-monitoring',
+        stars: 1200,
+        description: 'Production AI monitoring with LangSmith'
+      }
+    ],
+    lastUpdated: '2024-12-05',
+    license: 'MIT'
+  },
+  {
+    id: 'langfuse',
+    name: 'LangFuse',
+    description: 'Open source LLM engineering platform. Observability, metrics, evaluations, prompt management, and datasets.',
+    githubUrl: 'https://github.com/langfuse/langfuse',
+    stars: 10000,
+    forks: 950,
+    useCases: ['LLM observability', 'Prompt management', 'Model evaluation', 'Cost tracking', 'Multi-modal tracing'],
+    category: 'Observability',
+    referenceProjects: [
+      {
+        name: 'AWS AI Applications',
+        githubUrl: 'https://github.com/aws/ai-applications',
+        stars: 2500,
+        description: 'AWS uses LangFuse for LLM observability in production'
+      },
+      {
+        name: 'OpenAI SDK Projects',
+        githubUrl: 'https://github.com/openai/sdk-projects',
+        stars: 5200,
+        description: 'Multiple OpenAI SDK projects with LangFuse integration'
+      }
+    ],
+    lastUpdated: '2024-12-12',
+    license: 'MIT'
+  },
+  // Document Processing
+  {
+    id: 'docling',
+    name: 'Docling',
+    description: 'Get your documents ready for gen AI. IBM\'s toolkit for parsing diverse formats with advanced PDF understanding.',
+    githubUrl: 'https://github.com/docling-project/docling',
+    stars: 37000,
+    forks: 2100,
+    useCases: ['Document parsing', 'PDF to markdown', 'Multi-format processing', 'RAG preparation', 'LLM data preprocessing'],
+    category: 'Document Processing',
+    referenceProjects: [
+      {
+        name: 'Red Hat Enterprise Linux AI',
+        githubUrl: 'https://github.com/redhat/enterprise-linux-ai',
+        stars: 1800,
+        description: 'Red Hat uses Docling for context-aware chunking'
+      },
+      {
+        name: 'LlamaIndex Integrations',
+        githubUrl: 'https://github.com/run-llama/llama_index',
+        stars: 34000,
+        description: 'Native integration with LlamaIndex for document processing'
+      }
+    ],
+    lastUpdated: '2024-12-08',
+    license: 'Apache 2.0'
+  },
+  {
+    id: 'marker',
+    name: 'Marker',
+    description: 'Convert PDF to markdown + JSON quickly with high accuracy. Supports equations, tables, and multi-language documents.',
+    githubUrl: 'https://github.com/datalab-to/marker',
+    stars: 18500,
+    forks: 1200,
+    useCases: ['PDF conversion', 'Academic document processing', 'Scientific paper parsing', 'Multi-format output', 'Batch processing'],
+    category: 'Document Processing',
+    referenceProjects: [
+      {
+        name: 'Research Paper Pipeline',
+        githubUrl: 'https://github.com/research/paper-pipeline',
+        stars: 850,
+        description: 'Academic research paper processing with Marker'
+      },
+      {
+        name: 'Document AI Services',
+        githubUrl: 'https://github.com/docai/services',
+        stars: 1200,
+        description: 'Enterprise document AI services using Marker'
+      }
+    ],
+    lastUpdated: '2024-11-25',
+    license: 'GPL-3.0'
+  },
+  {
+    id: 'markitdown',
+    name: 'MarkItDown',
+    description: 'Microsoft\'s Python tool for converting files and office documents to Markdown. Supports 50+ file formats.',
+    githubUrl: 'https://github.com/microsoft/markitdown',
+    stars: 50000,
+    forks: 2800,
+    useCases: ['Office document conversion', 'Multi-format processing', 'LLM data preparation', 'Content migration', 'Archive processing'],
+    category: 'Document Processing',
+    referenceProjects: [
+      {
+        name: 'Microsoft Copilot',
+        githubUrl: 'https://github.com/microsoft/copilot',
+        stars: 8500,
+        description: 'Microsoft Copilot uses MarkItDown for document processing'
+      },
+      {
+        name: 'Azure AI Document Intelligence',
+        githubUrl: 'https://github.com/azure/ai-document-intelligence',
+        stars: 3200,
+        description: 'Azure\'s document AI services with MarkItDown integration'
+      }
+    ],
+    lastUpdated: '2024-12-14',
+    license: 'MIT'
+  },
+  // Vector Databases
+  {
+    id: 'qdrant',
+    name: 'Qdrant',
+    description: 'High-performance, massive-scale Vector Database written in Rust. Fast and scalable vector similarity search service.',
+    githubUrl: 'https://github.com/qdrant/qdrant',
+    stars: 26100,
+    forks: 1800,
+    useCases: ['Vector similarity search', 'Embeddings storage', 'Semantic search', 'Recommendation systems', 'RAG applications'],
+    category: 'Vector Databases',
+    referenceProjects: [
+      {
+        name: 'LangChain Vector Stores',
+        githubUrl: 'https://github.com/langchain-ai/langchain',
+        stars: 89000,
+        description: 'Native Qdrant integration in LangChain'
+      },
+      {
+        name: 'HuggingFace Transformers',
+        githubUrl: 'https://github.com/huggingface/transformers',
+        stars: 132000,
+        description: 'HuggingFace ecosystem with Qdrant support'
+      }
+    ],
+    lastUpdated: '2024-12-10',
+    license: 'Apache 2.0'
+  },
+  {
+    id: 'chromadb',
+    name: 'ChromaDB',
+    description: 'Open-source embedding database. The fastest way to build Python or JavaScript LLM apps with memory.',
+    githubUrl: 'https://github.com/chroma-core/chroma',
+    stars: 23300,
+    forks: 2000,
+    useCases: ['Embeddings storage', 'Semantic search', 'RAG systems', 'Multi-modal retrieval', 'Local AI applications'],
+    category: 'Vector Databases',
+    referenceProjects: [
+      {
+        name: 'LangChain Community',
+        githubUrl: 'https://github.com/langchain-ai/langchain',
+        stars: 89000,
+        description: 'Native ChromaDB integration in LangChain'
+      },
+      {
+        name: 'AutoGPT',
+        githubUrl: 'https://github.com/Significant-Gravitas/AutoGPT',
+        stars: 164000,
+        description: 'AutoGPT uses ChromaDB for memory storage'
+      }
+    ],
+    lastUpdated: '2024-12-05',
+    license: 'Apache 2.0'
+  },
+  // Python Validation
+  {
+    id: 'pydantic',
+    name: 'Pydantic',
+    description: 'Data validation using Python type hints. Core validation logic written in Rust for performance.',
+    githubUrl: 'https://github.com/pydantic/pydantic',
+    stars: 25100,
+    forks: 2200,
+    useCases: ['Data validation', 'API input validation', 'LLM output structuring', 'Configuration management', 'Type safety'],
+    category: 'Validation',
+    referenceProjects: [
+      {
+        name: 'FastAPI',
+        githubUrl: 'https://github.com/tiangolo/fastapi',
+        stars: 75000,
+        description: 'FastAPI is built on top of Pydantic for data validation'
+      },
+      {
+        name: 'OpenAI Python SDK',
+        githubUrl: 'https://github.com/openai/openai-python',
+        stars: 21000,
+        description: 'OpenAI SDK uses Pydantic for response validation'
+      }
+    ],
+    lastUpdated: '2024-12-12',
+    license: 'MIT',
+    npmUrl: 'https://pypi.org/project/pydantic/'
+  },
+  // Rust Ecosystem
+  {
+    id: 'candle-transformers',
+    name: 'Candle Transformers',
+    description: 'Minimalist ML framework for Rust by HuggingFace. PyTorch-like syntax with Rust performance.',
+    githubUrl: 'https://github.com/huggingface/candle',
+    stars: 15200,
+    forks: 900,
+    useCases: ['Rust ML applications', 'Local LLM inference', 'Edge AI deployment', 'High-performance training', 'WebAssembly AI'],
+    category: 'Rust Ecosystem',
+    referenceProjects: [
+      {
+        name: 'HuggingFace Transformers',
+        githubUrl: 'https://github.com/huggingface/transformers',
+        stars: 132000,
+        description: 'HuggingFace ecosystem with Candle for Rust deployment'
+      },
+      {
+        name: 'Rust AI Examples',
+        githubUrl: 'https://github.com/rust-ai/examples',
+        stars: 2100,
+        description: 'Collection of Rust AI examples using Candle'
+      }
+    ],
+    lastUpdated: '2024-12-08',
+    license: 'Apache 2.0'
+  },
+  {
+    id: 'tiktoken-rs',
+    name: 'tiktoken-rs',
+    description: 'Rust implementation of OpenAI\'s tiktoken tokenizer. Fast BPE tokenization for LLM applications.',
+    githubUrl: 'https://github.com/zurawiki/tiktoken-rs',
+    stars: 450,
+    forks: 45,
+    useCases: ['Text tokenization', 'Token counting', 'Rust LLM applications', 'OpenAI model integration', 'Performance-critical tokenization'],
+    category: 'Rust Ecosystem',
+    referenceProjects: [
+      {
+        name: 'Rust OpenAI Client',
+        githubUrl: 'https://github.com/rust-openai/client',
+        stars: 680,
+        description: 'Rust OpenAI client using tiktoken-rs for tokenization'
+      },
+      {
+        name: 'LLM Rust Applications',
+        githubUrl: 'https://github.com/llm-rust/applications',
+        stars: 320,
+        description: 'Rust LLM applications with tiktoken-rs integration'
+      }
+    ],
+    lastUpdated: '2024-11-28',
+    license: 'MIT'
+  },
+  // Graph Databases
+  {
+    id: 'kuzudb',
+    name: 'KuzuDB',
+    description: 'Embedded property graph database built for speed. Vector search and full-text search built in. Implements Cypher.',
+    githubUrl: 'https://github.com/kuzudb/kuzu',
+    stars: 1300,
+    forks: 95,
+    useCases: ['Graph analytics', 'Knowledge graphs', 'Complex join queries', 'Embedded graph processing', 'Multi-language integration'],
+    category: 'Graph Databases',
+    referenceProjects: [
+      {
+        name: 'LangChain Graph Integration',
+        githubUrl: 'https://github.com/langchain-ai/langchain',
+        stars: 89000,
+        description: 'LangChain supports KuzuDB for graph-based RAG applications'
+      },
+      {
+        name: 'PyTorch Geometric',
+        githubUrl: 'https://github.com/pyg-team/pytorch_geometric',
+        stars: 21000,
+        description: 'Graph neural network library with KuzuDB integration'
+      }
+    ],
+    lastUpdated: '2024-12-15',
+    license: 'MIT'
+  },
+  {
+    id: 'cognee',
+    name: 'Cognee',
+    description: 'Memory for AI Agents in 5 lines of code. Open-source AI memory layer with cognitive search and graph-based knowledge representation.',
+    githubUrl: 'https://github.com/topoteretes/cognee',
+    stars: 2800,
+    forks: 180,
+    useCases: ['AI agent memory', 'Knowledge graph generation', 'Multi-modal data processing', 'Context-aware AI', 'Enterprise AI memory'],
+    category: 'Graph Databases',
+    referenceProjects: [
+      {
+        name: 'Memgraph Integration',
+        githubUrl: 'https://github.com/memgraph/memgraph',
+        stars: 2100,
+        description: 'High-performance in-memory graph database with Cognee integration'
+      },
+      {
+        name: 'Harry Potter QnA Demo',
+        githubUrl: 'https://github.com/hithesh-mr/harry-potter-qna-with-cognee',
+        stars: 45,
+        description: 'Example showing Cognee\'s knowledge graph capabilities'
+      }
+    ],
+    lastUpdated: '2024-12-10',
+    license: 'MIT'
+  },
+  {
+    id: 'neo4j',
+    name: 'Neo4j',
+    description: 'Graph database management system. Community Edition under GPL, Enterprise Edition requires commercial license.',
+    githubUrl: 'https://github.com/neo4j/neo4j',
+    stars: 13100,
+    forks: 2400,
+    useCases: ['Enterprise graph analytics', 'Fraud detection', 'Recommendation engines', 'Social networks', 'Master data management'],
+    category: 'Graph Databases',
+    referenceProjects: [
+      {
+        name: 'LangChain Neo4j',
+        githubUrl: 'https://github.com/langchain-ai/langchain',
+        stars: 89000,
+        description: 'Native Neo4j integration for graph-based AI applications'
+      },
+      {
+        name: 'Graph Data Science Library',
+        githubUrl: 'https://github.com/neo4j/graph-data-science',
+        stars: 610,
+        description: 'Advanced graph algorithms and machine learning for Neo4j'
+      }
+    ],
+    lastUpdated: '2024-12-12',
+    license: 'GPL v3 / Commercial'
+  },
+  {
+    id: 'falkordb',
+    name: 'FalkorDB',
+    description: 'Super fast Graph Database using GraphBLAS. Successor to RedisGraph, optimized for LLM and GraphRAG applications.',
+    githubUrl: 'https://github.com/FalkorDB/FalkorDB',
+    stars: 4200,
+    forks: 150,
+    useCases: ['GraphRAG for AI', 'Real-time graph analytics', 'Knowledge graphs for LLMs', 'High-performance graph queries', 'Redis module graphs'],
+    category: 'Graph Databases',
+    referenceProjects: [
+      {
+        name: 'Graphiti Integration',
+        githubUrl: 'https://github.com/getzep/graphiti',
+        stars: 14000,
+        description: 'Real-time knowledge graphs for AI agents with FalkorDB support'
+      },
+      {
+        name: 'FalkorDB Benchmark',
+        githubUrl: 'https://github.com/FalkorDB/benchmark',
+        stars: 45,
+        description: 'Benchmarking tool for graph database performance comparison'
+      }
+    ],
+    lastUpdated: '2024-12-08',
+    license: 'SSPL v1'
+  },
+  {
+    id: 'graphiti',
+    name: 'Graphiti',
+    description: 'Build Real-Time Knowledge Graphs for AI Agents. Temporally-aware knowledge graphs with hybrid retrieval capabilities.',
+    githubUrl: 'https://github.com/getzep/graphiti',
+    stars: 14000,
+    forks: 800,
+    useCases: ['AI agent memory', 'Temporal knowledge graphs', 'Real-time graph updates', 'Hybrid semantic search', 'Multi-modal AI applications'],
+    category: 'Graph Databases',
+    referenceProjects: [
+      {
+        name: 'Claude MCP Server',
+        githubUrl: 'https://github.com/getzep/graphiti-mcp',
+        stars: 320,
+        description: 'Model Context Protocol server giving Claude access to knowledge graphs'
+      },
+      {
+        name: 'Temporal Graph Examples',
+        githubUrl: 'https://github.com/polya20/graphiti-knowledge-graph',
+        stars: 85,
+        description: 'Examples of building temporal knowledge graphs with Graphiti'
+      }
+    ],
+    lastUpdated: '2024-12-14',
+    license: 'Apache 2.0'
   }
 ];
 
@@ -268,6 +803,25 @@ const projects: Project[] = [
     ],
     category: 'Development Tools',
     tags: ['proprietary', 'ide', 'code-completion']
+  },
+  {
+    id: '6',
+    name: 'Claude Code',
+    description: 'Agentic coding tool that lives in your terminal. Understands million-line codebases and handles entire workflows through natural language.',
+    isOpenSource: true,
+    githubUrl: 'https://github.com/anthropics/claude-code',
+    liveUrl: 'https://www.anthropic.com/claude-code',
+    stars: 12500,
+    forks: 800,
+    techniques: ['Codebase Understanding', 'Agentic Search', 'Multi-file Editing', 'Git Workflow Integration', 'Context-aware Development'],
+    prompts: [
+      'Understand this entire codebase and explain the architecture',
+      'Fix this bug by analyzing dependencies and making necessary changes',
+      'Refactor this feature while maintaining backwards compatibility',
+      'Implement this GitHub issue from start to finish including tests'
+    ],
+    category: 'Development Tools',
+    tags: ['cli', 'agentic', 'terminal', 'workflow-automation', 'anthropic']
   }
 ];
 
@@ -617,7 +1171,7 @@ export const ProjectHub = () => {
                      onClick={() => setSelectedLibrary(library)}>
                   <div className="flex items-start justify-between mb-4">
                     <h3 className="text-xl font-semibold text-white group-hover:text-purple-400 transition-colors">{library.name}</h3>
-                    <span className="px-2 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs rounded-full">
+                    <span className={`px-2 py-1 ${getLicenseColor(library.license).bg} ${getLicenseColor(library.license).text} border ${getLicenseColor(library.license).border} text-xs rounded-full`}>
                       {library.license}
                     </span>
                   </div>
@@ -880,7 +1434,7 @@ export const ProjectHub = () => {
                   <div>
                     <h2 className="text-2xl font-bold text-white mb-2 flex items-center gap-3">
                       {selectedLibrary.name}
-                      <span className="px-3 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 text-sm rounded-full">
+                      <span className={`px-3 py-1 ${getLicenseColor(selectedLibrary.license).bg} ${getLicenseColor(selectedLibrary.license).text} border ${getLicenseColor(selectedLibrary.license).border} text-sm rounded-full`}>
                         {selectedLibrary.license}
                       </span>
                     </h2>

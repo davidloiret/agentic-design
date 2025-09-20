@@ -13,7 +13,10 @@ import {
   Users,
   Award,
   TrendingUp,
-  Sparkles
+  Sparkles,
+  Cpu,
+  Zap,
+  Brain
 } from 'lucide-react';
 import { usePlausible } from '@/hooks/usePlausible';
 
@@ -30,38 +33,106 @@ export const AuthPromptModal = ({ isOpen, onClose, feature, description }: AuthP
 
   if (!isOpen) return null;
 
-  const benefits = [
-    {
-      icon: Trophy,
-      title: 'Track Your Progress',
-      description: 'Save your learning progress and pick up where you left off'
-    },
-    {
-      icon: Award,
-      title: 'Earn Certificates',
-      description: 'Get certified in AI design patterns and showcase your skills'
-    },
-    {
-      icon: Target,
-      title: 'Personalized Learning',
-      description: 'Get customized learning paths based on your goals'
-    },
-    {
-      icon: TrendingUp,
-      title: 'Skill Analytics',
-      description: 'Track your improvement and identify areas to focus on'
-    },
-    {
-      icon: Users,
-      title: 'Community Access',
-      description: 'Connect with other learners and share your achievements'
-    },
-    {
-      icon: BookOpen,
-      title: 'Saved Resources',
-      description: 'Bookmark patterns and resources for quick reference'
+  // Get feature-specific styling
+  const getFeatureStyle = (feature: string) => {
+    if (feature === 'Model Recommendations') {
+      return {
+        icon: Brain,
+        iconBg: 'bg-gradient-to-br from-blue-500 to-purple-600',
+        accentColor: 'blue',
+        gradientFrom: 'from-blue-500/10',
+        gradientTo: 'to-purple-500/10',
+        borderColor: 'border-blue-500/20',
+        sparkleColor: 'text-blue-400'
+      };
     }
-  ];
+    // Default learning hub style
+    return {
+      icon: GraduationCap,
+      iconBg: 'bg-gradient-to-br from-rose-500 to-pink-600',
+      accentColor: 'rose',
+      gradientFrom: 'from-rose-500/10',
+      gradientTo: 'to-pink-500/10',
+      borderColor: 'border-rose-500/20',
+      sparkleColor: 'text-rose-400'
+    };
+  };
+
+  const featureStyle = getFeatureStyle(feature);
+
+  // Dynamic benefits based on the feature
+  const getFeatureBenefits = (feature: string) => {
+    if (feature === 'Model Recommendations') {
+      return [
+        {
+          icon: Target,
+          title: 'AI-Powered Matching',
+          description: 'Get personalized model recommendations based on your specific requirements'
+        },
+        {
+          icon: BookOpen,
+          title: 'Save Recommendations',
+          description: 'Bookmark and track your recommended models for future reference'
+        },
+        {
+          icon: TrendingUp,
+          title: 'Usage Analytics',
+          description: 'Track which models work best for your projects and learn from experience'
+        },
+        {
+          icon: Trophy,
+          title: 'Project History',
+          description: 'Keep a history of your fine-tuning projects and model performance'
+        },
+        {
+          icon: Users,
+          title: 'Community Insights',
+          description: 'See what models other developers with similar needs are using'
+        },
+        {
+          icon: Award,
+          title: 'Expert Guidance',
+          description: 'Access advanced filtering and comparison tools for better decisions'
+        }
+      ];
+    }
+
+    // Default benefits for other features
+    return [
+      {
+        icon: Trophy,
+        title: 'Track Your Progress',
+        description: 'Save your learning progress and pick up where you left off'
+      },
+      {
+        icon: Award,
+        title: 'Earn Certificates',
+        description: 'Get certified in AI design patterns and showcase your skills'
+      },
+      {
+        icon: Target,
+        title: 'Personalized Learning',
+        description: 'Get customized learning paths based on your goals'
+      },
+      {
+        icon: TrendingUp,
+        title: 'Skill Analytics',
+        description: 'Track your improvement and identify areas to focus on'
+      },
+      {
+        icon: Users,
+        title: 'Community Access',
+        description: 'Connect with other learners and share your achievements'
+      },
+      {
+        icon: BookOpen,
+        title: 'Saved Resources',
+        description: 'Bookmark patterns and resources for quick reference'
+      }
+    ];
+  };
+
+  const benefits = getFeatureBenefits(feature);
 
   const handleSignUp = () => {
     trackEvent('Auth Prompt Modal', {
@@ -113,8 +184,8 @@ export const AuthPromptModal = ({ isOpen, onClose, feature, description }: AuthP
           </button>
           
           <div className="flex items-center space-x-4 mb-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-rose-500 to-pink-600 rounded-2xl flex items-center justify-center shadow-xl">
-              <GraduationCap className="w-8 h-8 text-white" />
+            <div className={`w-16 h-16 ${featureStyle.iconBg} rounded-2xl flex items-center justify-center shadow-xl`}>
+              <featureStyle.icon className="w-8 h-8 text-white" />
             </div>
             <div>
               <h2 className="text-2xl font-bold text-gray-100 mb-1">
@@ -126,13 +197,18 @@ export const AuthPromptModal = ({ isOpen, onClose, feature, description }: AuthP
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-rose-500/10 to-pink-500/10 border border-rose-500/20 rounded-lg p-4">
+          <div className={`bg-gradient-to-r ${featureStyle.gradientFrom} ${featureStyle.gradientTo} border ${featureStyle.borderColor} rounded-lg p-4`}>
             <div className="flex items-center space-x-2 mb-2">
-              <Sparkles className="w-5 h-5 text-rose-400" />
-              <span className="text-rose-400 font-semibold">Sign up to get the full experience!</span>
+              <Sparkles className={`w-5 h-5 ${featureStyle.sparkleColor}`} />
+              <span className={`${featureStyle.sparkleColor} font-semibold`}>
+                {feature === 'Model Recommendations' ? 'Sign up for AI-powered recommendations!' : 'Sign up to get the full experience!'}
+              </span>
             </div>
             <p className="text-gray-300 text-sm">
-              Create an account to save your progress, earn certificates, and access personalized learning features.
+              {feature === 'Model Recommendations'
+                ? 'Create an account to access personalized model recommendations, save your preferences, and track your fine-tuning projects.'
+                : 'Create an account to save your progress, earn certificates, and access personalized learning features.'
+              }
             </p>
           </div>
         </div>
@@ -167,9 +243,13 @@ export const AuthPromptModal = ({ isOpen, onClose, feature, description }: AuthP
           <div className="flex flex-col sm:flex-row gap-3">
             <button
               onClick={handleSignUp}
-              className="flex-1 flex items-center justify-center space-x-2 px-6 py-3 bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-700 hover:to-pink-700 text-white font-semibold rounded-lg shadow-lg transform transition-all duration-200 hover:scale-[1.02]"
+              className={`flex-1 flex items-center justify-center space-x-2 px-6 py-3 bg-gradient-to-r ${
+                feature === 'Model Recommendations'
+                  ? 'from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700'
+                  : 'from-rose-600 to-pink-600 hover:from-rose-700 hover:to-pink-700'
+              } text-white font-semibold rounded-lg shadow-lg transform transition-all duration-200 hover:scale-[1.02]`}
             >
-              <GraduationCap className="w-5 h-5" />
+              <featureStyle.icon className="w-5 h-5" />
               <span>Sign Up Free</span>
             </button>
             
@@ -180,16 +260,6 @@ export const AuthPromptModal = ({ isOpen, onClose, feature, description }: AuthP
               Sign In
             </button>
           </div>
-          
-          <div className="mt-4 text-center">
-            <button
-              onClick={handleContinueAsGuest}
-              className="text-sm text-gray-400 hover:text-gray-300 transition-colors duration-200 underline underline-offset-2"
-            >
-              Continue as guest (limited features)
-            </button>
-          </div>
-          
           <p className="mt-4 text-xs text-gray-500 text-center">
             By signing up, you agree to our Terms of Service and Privacy Policy.
             Free account • No credit card required

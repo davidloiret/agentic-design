@@ -2,14 +2,15 @@
 
 import React from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { 
-  BookOpen, 
-  Code, 
-  Cloud, 
-  Monitor, 
-  Brain, 
-  FileText, 
-  Settings 
+import {
+  BookOpen,
+  Code,
+  Cloud,
+  Monitor,
+  Brain,
+  FileText,
+  Settings,
+  AlertTriangle
 } from 'lucide-react';
 
 interface SidebarItem {
@@ -35,6 +36,12 @@ export const FineTuningSidebar = () => {
       title: 'Cheatsheet & Best Practices',
       icon: FileText,
       href: '/fine-tuning/cheatsheet'
+    },
+    {
+      id: 'gaps',
+      title: 'Critical Gaps & Missing Elements',
+      icon: AlertTriangle,
+      href: '/fine-tuning/gaps'
     },
     {
       id: 'techniques',
