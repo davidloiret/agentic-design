@@ -2,6 +2,7 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
 import { ChevronRight, Play, Pause, RotateCcw, CheckCircle, Clock, AlertCircle, ArrowRight } from 'lucide-react';
+import { usePlausible } from '@/hooks/usePlausible';
 
 interface ChainStep {
   id: string;
@@ -169,6 +170,7 @@ const generateStepOutput = (step: ChainStep, input: string, scenario: string): s
 };
 
 export const SequentialChainingDemo: React.FC = () => {
+  const { trackEvent } = usePlausible();
   const [selectedScenario, setSelectedScenario] = useState<SequentialScenario>(SCENARIOS[0]);
   const [steps, setSteps] = useState<ChainStep[]>(SCENARIOS[0].steps);
   const [isRunning, setIsRunning] = useState(false);
@@ -178,6 +180,13 @@ export const SequentialChainingDemo: React.FC = () => {
   const [currentInput, setCurrentInput] = useState('');
 
   const resetDemo = useCallback(() => {
+    trackEvent('Demo Interaction', {
+      action: 'reset_demo',
+      demo_type: 'sequential_chaining',
+      scenario_id: selectedScenario.id,
+      current_step_index: currentStepIndex
+    });
+
     const resetSteps = selectedScenario.steps.map(step => ({
       ...step,
       status: 'pending' as const,
@@ -233,6 +242,14 @@ export const SequentialChainingDemo: React.FC = () => {
   };
 
   const runSequentialChain = async () => {
+    trackEvent('Demo Interaction', {
+      action: 'start_sequential_chain',
+      demo_type: 'sequential_chaining',
+      scenario_id: selectedScenario.id,
+      total_steps: selectedScenario.steps.length,
+      speed_multiplier: speed
+    });
+
     setIsRunning(true);
     resetDemo();
     

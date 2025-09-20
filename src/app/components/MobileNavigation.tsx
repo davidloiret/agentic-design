@@ -2,11 +2,11 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Home, 
-  BookOpen, 
-  Brain, 
-  Trophy, 
+import {
+  Home,
+  BookOpen,
+  Brain,
+  Trophy,
   Menu,
   X,
   Search,
@@ -19,6 +19,7 @@ import {
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { DesignSystem } from '@/lib/design-system';
+import { usePlausible } from '@/hooks/usePlausible';
 
 const navigationItems = [
   { id: 'home', label: 'Home', href: '/', icon: Home },
@@ -29,6 +30,7 @@ const navigationItems = [
 
 export const MobileBottomNavigation: React.FC = () => {
   const pathname = usePathname();
+  const { trackEvent } = usePlausible();
   
   return (
     <nav className={`${DesignSystem.mobile.bottomNav} px-2 py-2 z-50 md:hidden`}>
@@ -42,10 +44,15 @@ export const MobileBottomNavigation: React.FC = () => {
               key={item.id}
               href={item.href}
               className={`flex flex-col items-center justify-center ${DesignSystem.mobile.touchTarget} px-3 rounded-lg transition-all duration-200 ${
-                isActive 
-                  ? 'text-blue-400 bg-blue-500/10' 
+                isActive
+                  ? 'text-blue-400 bg-blue-500/10'
                   : 'text-gray-400 hover:text-gray-200'
               }`}
+              onClick={() => trackEvent('Mobile Navigation', {
+                destination: item.id,
+                current_page: pathname,
+                is_active: isActive
+              })}
             >
               <Icon className="w-6 h-6 mb-1" />
               <span className="text-xs font-medium">{item.label}</span>

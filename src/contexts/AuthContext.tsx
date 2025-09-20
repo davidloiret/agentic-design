@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 import { api } from '@/lib/api-client';
+import { plausible } from '@/components/PlausibleAnalytics';
 
 interface User {
   id: string; // Supabase ID
@@ -79,17 +80,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signInWithGoogle = () => {
+    // Track Google sign-in attempt
+    plausible('Auth', { props: { action: 'google_signin' } });
+
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
     console.log('[AuthContext] Signing in with Google...', backendUrl);
     window.location.href = `${backendUrl}/api/v1/auth/google`;
   };
 
   const signInWithGitHub = () => {
+    // Track GitHub sign-in attempt
+    plausible('Auth', { props: { action: 'github_signin' } });
+
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
     window.location.href = `${backendUrl}/api/v1/auth/github`;
   };
 
   const signOut = async () => {
+    // Track logout
+    plausible('Auth', { props: { action: 'logout' } });
+
     await api.post('/api/v1/auth/logout', {});
     setUser(null);
   };

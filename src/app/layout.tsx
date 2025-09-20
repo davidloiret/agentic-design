@@ -6,6 +6,8 @@ import { LearningHubProvider } from '@/contexts/LearningHubContext';
 import { SearchProvider } from '@/contexts/SearchContext';
 import { SearchModal } from '@/app/components/SearchModal';
 import JsonLd from '@/components/JsonLd';
+import PlausibleAnalytics from '@/components/PlausibleAnalytics';
+import '@/lib/analytics'; // Initialize global analytics tracking
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -121,6 +123,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <PlausibleAnalytics
+          domain={process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN || 'agentic-design.ai'}
+          src={process.env.NEXT_PUBLIC_PLAUSIBLE_SRC || '/js/script.js'}
+          enabled={process.env.NEXT_PUBLIC_PLAUSIBLE_ENABLED !== 'false'}
+        />
         <AuthProvider>
           <SearchProvider>
             <LearningHubProvider>

@@ -1,0 +1,489 @@
+import { PatternScenario } from './types';
+import { nodeStyle, edgeStyle } from './styles';
+
+export const peerCollaborationPattern: PatternScenario = {
+  id: 'peer-collaboration',
+  title: 'Peer Collaboration',
+  initialNodes: [
+    {
+      id: 'distributed-problem',
+      position: { x: 400, y: 50 },
+      data: { label: '🎯 Distributed Problem\n"Develop decentralized app with consensus mechanism"' },
+      style: { ...nodeStyle, background: '#10b981', minWidth: 380 },
+    },
+    // Peer Agents (All Equal)
+    {
+      id: 'peer-1',
+      position: { x: 200, y: 200 },
+      data: { label: '👤 Peer Agent 1\nBlockchain Expert\nReputation: ⭐⭐⭐⭐⭐' },
+      style: { ...nodeStyle, background: '#3b82f6', minWidth: 180 },
+    },
+    {
+      id: 'peer-2',
+      position: { x: 600, y: 200 },
+      data: { label: '👤 Peer Agent 2\nSmart Contract Dev\nReputation: ⭐⭐⭐⭐' },
+      style: { ...nodeStyle, background: '#3b82f6', minWidth: 180 },
+    },
+    {
+      id: 'peer-3',
+      position: { x: 100, y: 400 },
+      data: { label: '👤 Peer Agent 3\nCrypto Security\nReputation: ⭐⭐⭐⭐⭐' },
+      style: { ...nodeStyle, background: '#3b82f6', minWidth: 180 },
+    },
+    {
+      id: 'peer-4',
+      position: { x: 400, y: 400 },
+      data: { label: '👤 Peer Agent 4\nP2P Networking\nReputation: ⭐⭐⭐⭐' },
+      style: { ...nodeStyle, background: '#3b82f6', minWidth: 180 },
+    },
+    {
+      id: 'peer-5',
+      position: { x: 700, y: 400 },
+      data: { label: '👤 Peer Agent 5\nConsensus Algorithms\nReputation: ⭐⭐⭐⭐⭐' },
+      style: { ...nodeStyle, background: '#3b82f6', minWidth: 180 },
+    },
+    // Peer Proposals
+    {
+      id: 'proposal-1',
+      position: { x: 200, y: 300 },
+      data: { label: '💡 Proposal #1\nPoW consensus\nVotes: 2/5' },
+      style: { ...nodeStyle, background: '#f59e0b', minWidth: 140 },
+    },
+    {
+      id: 'proposal-2',
+      position: { x: 600, y: 300 },
+      data: { label: '💡 Proposal #2\nPoS consensus\nVotes: 3/5' },
+      style: { ...nodeStyle, background: '#f59e0b', minWidth: 140 },
+    },
+    {
+      id: 'proposal-3',
+      position: { x: 400, y: 500 },
+      data: { label: '💡 Proposal #3\nHybrid approach\nVotes: 4/5' },
+      style: { ...nodeStyle, background: '#22c55e', minWidth: 140 },
+    },
+    // Decentralized Mechanisms
+    {
+      id: 'message-broadcast',
+      position: { x: 100, y: 600 },
+      data: { label: '📡 Message Broadcast\nP2P communication' },
+      style: { ...nodeStyle, background: '#7c3aed', minWidth: 180 },
+    },
+    {
+      id: 'reputation-system',
+      position: { x: 300, y: 600 },
+      data: { label: '⭐ Reputation System\nTrust scoring' },
+      style: { ...nodeStyle, background: '#7c3aed', minWidth: 180 },
+    },
+    {
+      id: 'voting-mechanism',
+      position: { x: 500, y: 600 },
+      data: { label: '🗳️ Voting Mechanism\nDecentralized decisions' },
+      style: { ...nodeStyle, background: '#7c3aed', minWidth: 180 },
+    },
+    {
+      id: 'consensus-protocol',
+      position: { x: 700, y: 600 },
+      data: { label: '🤝 Consensus Protocol\nReach agreement' },
+      style: { ...nodeStyle, background: '#7c3aed', minWidth: 180 },
+    },
+    // Collaboration Features
+    {
+      id: 'shared-ledger',
+      position: { x: 150, y: 720 },
+      data: { label: '📖 Shared Ledger\nImmutable record' },
+      style: { ...nodeStyle, background: '#ec4899', minWidth: 160 },
+    },
+    {
+      id: 'gossip-protocol',
+      position: { x: 320, y: 720 },
+      data: { label: '💬 Gossip Protocol\nInformation spreading' },
+      style: { ...nodeStyle, background: '#ec4899', minWidth: 160 },
+    },
+    {
+      id: 'conflict-resolution',
+      position: { x: 490, y: 720 },
+      data: { label: '⚖️ Conflict Resolution\nByzantine fault tolerance' },
+      style: { ...nodeStyle, background: '#ec4899', minWidth: 160 },
+    },
+    {
+      id: 'task-marketplace',
+      position: { x: 660, y: 720 },
+      data: { label: '🏪 Task Marketplace\nBid on subtasks' },
+      style: { ...nodeStyle, background: '#ec4899', minWidth: 160 },
+    },
+    // Emergent Behavior
+    {
+      id: 'swarm-intelligence',
+      position: { x: 200, y: 840 },
+      data: { label: '🐝 Swarm Intelligence\nCollective problem solving' },
+      style: { ...nodeStyle, background: '#ef4444', minWidth: 200 },
+    },
+    {
+      id: 'self-organization',
+      position: { x: 420, y: 840 },
+      data: { label: '🔄 Self-Organization\nEmergent structure' },
+      style: { ...nodeStyle, background: '#ef4444', minWidth: 200 },
+    },
+    {
+      id: 'distributed-learning',
+      position: { x: 640, y: 840 },
+      data: { label: '🎓 Distributed Learning\nShared knowledge base' },
+      style: { ...nodeStyle, background: '#ef4444', minWidth: 200 },
+    },
+    // Quality Assurance
+    {
+      id: 'peer-review',
+      position: { x: 150, y: 960 },
+      data: { label: '👁️ Peer Review\nCross-validation' },
+      style: { ...nodeStyle, background: '#6366f1', minWidth: 160 },
+    },
+    {
+      id: 'trust-verification',
+      position: { x: 350, y: 960 },
+      data: { label: '🔐 Trust Verification\nCryptographic proofs' },
+      style: { ...nodeStyle, background: '#6366f1', minWidth: 160 },
+    },
+    {
+      id: 'performance-metrics',
+      position: { x: 550, y: 960 },
+      data: { label: '📊 Performance Metrics\nContribution tracking' },
+      style: { ...nodeStyle, background: '#6366f1', minWidth: 160 },
+    },
+    {
+      id: 'emergent-solution',
+      position: { x: 400, y: 1080 },
+      data: { label: '✨ Emergent Solution\nDecentralized app with peer-validated consensus' },
+      style: { ...nodeStyle, background: '#10b981', minWidth: 350 },
+    },
+  ],
+  initialEdges: [
+    // Problem broadcast to all peers
+    {
+      id: 'problem-peer1',
+      source: 'distributed-problem',
+      target: 'peer-1',
+      style: { ...edgeStyle, stroke: '#3b82f6' },
+      animated: true,
+    },
+    {
+      id: 'problem-peer2',
+      source: 'distributed-problem',
+      target: 'peer-2',
+      style: { ...edgeStyle, stroke: '#3b82f6' },
+      animated: true,
+    },
+    {
+      id: 'problem-peer3',
+      source: 'distributed-problem',
+      target: 'peer-3',
+      style: { ...edgeStyle, stroke: '#3b82f6' },
+      animated: true,
+    },
+    {
+      id: 'problem-peer4',
+      source: 'distributed-problem',
+      target: 'peer-4',
+      style: { ...edgeStyle, stroke: '#3b82f6' },
+      animated: true,
+    },
+    {
+      id: 'problem-peer5',
+      source: 'distributed-problem',
+      target: 'peer-5',
+      style: { ...edgeStyle, stroke: '#3b82f6' },
+      animated: true,
+    },
+    // Peer-to-peer mesh network (all connected)
+    {
+      id: 'peer1-peer2',
+      source: 'peer-1',
+      target: 'peer-2',
+      style: { ...edgeStyle, stroke: '#64748b', strokeDasharray: '3 3' },
+      label: 'P2P',
+    },
+    {
+      id: 'peer1-peer3',
+      source: 'peer-1',
+      target: 'peer-3',
+      style: { ...edgeStyle, stroke: '#64748b', strokeDasharray: '3 3' },
+      label: 'P2P',
+    },
+    {
+      id: 'peer1-peer4',
+      source: 'peer-1',
+      target: 'peer-4',
+      style: { ...edgeStyle, stroke: '#64748b', strokeDasharray: '3 3' },
+      label: 'P2P',
+    },
+    {
+      id: 'peer2-peer3',
+      source: 'peer-2',
+      target: 'peer-3',
+      style: { ...edgeStyle, stroke: '#64748b', strokeDasharray: '3 3' },
+      label: 'P2P',
+    },
+    {
+      id: 'peer2-peer4',
+      source: 'peer-2',
+      target: 'peer-4',
+      style: { ...edgeStyle, stroke: '#64748b', strokeDasharray: '3 3' },
+      label: 'P2P',
+    },
+    {
+      id: 'peer2-peer5',
+      source: 'peer-2',
+      target: 'peer-5',
+      style: { ...edgeStyle, stroke: '#64748b', strokeDasharray: '3 3' },
+      label: 'P2P',
+    },
+    {
+      id: 'peer3-peer4',
+      source: 'peer-3',
+      target: 'peer-4',
+      style: { ...edgeStyle, stroke: '#64748b', strokeDasharray: '3 3' },
+      label: 'P2P',
+    },
+    {
+      id: 'peer3-peer5',
+      source: 'peer-3',
+      target: 'peer-5',
+      style: { ...edgeStyle, stroke: '#64748b', strokeDasharray: '3 3' },
+      label: 'P2P',
+    },
+    {
+      id: 'peer4-peer5',
+      source: 'peer-4',
+      target: 'peer-5',
+      style: { ...edgeStyle, stroke: '#64748b', strokeDasharray: '3 3' },
+      label: 'P2P',
+    },
+    // Peers to proposals
+    {
+      id: 'peer1-proposal1',
+      source: 'peer-1',
+      target: 'proposal-1',
+      style: { ...edgeStyle, stroke: '#f59e0b' },
+      label: 'Submit',
+    },
+    {
+      id: 'peer2-proposal2',
+      source: 'peer-2',
+      target: 'proposal-2',
+      style: { ...edgeStyle, stroke: '#f59e0b' },
+      label: 'Submit',
+    },
+    {
+      id: 'peer4-proposal3',
+      source: 'peer-4',
+      target: 'proposal-3',
+      style: { ...edgeStyle, stroke: '#22c55e' },
+      label: 'Submit',
+    },
+    // Voting on proposals
+    {
+      id: 'peer3-proposal1',
+      source: 'peer-3',
+      target: 'proposal-1',
+      style: { ...edgeStyle, stroke: '#f59e0b', strokeDasharray: '5 5' },
+      label: 'Vote',
+    },
+    {
+      id: 'peer5-proposal2',
+      source: 'peer-5',
+      target: 'proposal-2',
+      style: { ...edgeStyle, stroke: '#f59e0b', strokeDasharray: '5 5' },
+      label: 'Vote',
+    },
+    {
+      id: 'peer1-proposal3',
+      source: 'peer-1',
+      target: 'proposal-3',
+      style: { ...edgeStyle, stroke: '#22c55e', strokeDasharray: '5 5' },
+      label: 'Vote',
+    },
+    // Peers to mechanisms
+    {
+      id: 'peer1-broadcast',
+      source: 'peer-1',
+      target: 'message-broadcast',
+      style: { ...edgeStyle, stroke: '#7c3aed' },
+    },
+    {
+      id: 'peer2-reputation',
+      source: 'peer-2',
+      target: 'reputation-system',
+      style: { ...edgeStyle, stroke: '#7c3aed' },
+    },
+    {
+      id: 'peer3-voting',
+      source: 'peer-3',
+      target: 'voting-mechanism',
+      style: { ...edgeStyle, stroke: '#7c3aed' },
+    },
+    {
+      id: 'peer5-consensus',
+      source: 'peer-5',
+      target: 'consensus-protocol',
+      style: { ...edgeStyle, stroke: '#7c3aed' },
+    },
+    // Mechanisms to features
+    {
+      id: 'broadcast-gossip',
+      source: 'message-broadcast',
+      target: 'gossip-protocol',
+      style: { ...edgeStyle, stroke: '#ec4899' },
+    },
+    {
+      id: 'reputation-ledger',
+      source: 'reputation-system',
+      target: 'shared-ledger',
+      style: { ...edgeStyle, stroke: '#ec4899' },
+    },
+    {
+      id: 'voting-conflict',
+      source: 'voting-mechanism',
+      target: 'conflict-resolution',
+      style: { ...edgeStyle, stroke: '#ec4899' },
+    },
+    {
+      id: 'consensus-marketplace',
+      source: 'consensus-protocol',
+      target: 'task-marketplace',
+      style: { ...edgeStyle, stroke: '#ec4899' },
+    },
+    // Features to emergent behavior
+    {
+      id: 'gossip-swarm',
+      source: 'gossip-protocol',
+      target: 'swarm-intelligence',
+      style: { ...edgeStyle, stroke: '#ef4444' },
+    },
+    {
+      id: 'ledger-organization',
+      source: 'shared-ledger',
+      target: 'self-organization',
+      style: { ...edgeStyle, stroke: '#ef4444' },
+    },
+    {
+      id: 'marketplace-learning',
+      source: 'task-marketplace',
+      target: 'distributed-learning',
+      style: { ...edgeStyle, stroke: '#ef4444' },
+    },
+    {
+      id: 'conflict-organization',
+      source: 'conflict-resolution',
+      target: 'self-organization',
+      style: { ...edgeStyle, stroke: '#ef4444' },
+    },
+    // Emergent to quality
+    {
+      id: 'swarm-review',
+      source: 'swarm-intelligence',
+      target: 'peer-review',
+      style: { ...edgeStyle, stroke: '#6366f1' },
+    },
+    {
+      id: 'organization-trust',
+      source: 'self-organization',
+      target: 'trust-verification',
+      style: { ...edgeStyle, stroke: '#6366f1' },
+    },
+    {
+      id: 'learning-metrics',
+      source: 'distributed-learning',
+      target: 'performance-metrics',
+      style: { ...edgeStyle, stroke: '#6366f1' },
+    },
+    // Quality to final
+    {
+      id: 'review-solution',
+      source: 'peer-review',
+      target: 'emergent-solution',
+      style: { ...edgeStyle, stroke: '#10b981' },
+    },
+    {
+      id: 'trust-solution',
+      source: 'trust-verification',
+      target: 'emergent-solution',
+      style: { ...edgeStyle, stroke: '#10b981' },
+    },
+    {
+      id: 'metrics-solution',
+      source: 'performance-metrics',
+      target: 'emergent-solution',
+      style: { ...edgeStyle, stroke: '#10b981' },
+    },
+    // Proposal to solution
+    {
+      id: 'proposal3-solution',
+      source: 'proposal-3',
+      target: 'emergent-solution',
+      style: { ...edgeStyle, stroke: '#10b981', strokeWidth: 3 },
+      animated: true,
+      label: 'Accepted',
+    },
+  ],
+  steps: [
+    {
+      title: 'Problem Distribution',
+      description: 'Problem broadcast to all peer agents equally',
+      activeNodes: ['distributed-problem', 'peer-1', 'peer-2', 'peer-3', 'peer-4', 'peer-5'],
+      activeEdges: ['problem-peer1', 'problem-peer2', 'problem-peer3', 'problem-peer4', 'problem-peer5'],
+    },
+    {
+      title: 'Peer Network Formation',
+      description: 'Peers establish P2P mesh network connections',
+      activeNodes: ['peer-1', 'peer-2', 'peer-3', 'peer-4', 'peer-5'],
+      activeEdges: ['peer1-peer2', 'peer1-peer3', 'peer1-peer4', 'peer2-peer3', 'peer2-peer4', 'peer2-peer5', 'peer3-peer4', 'peer3-peer5', 'peer4-peer5'],
+    },
+    {
+      title: 'Proposal Generation',
+      description: 'Peers independently generate solution proposals',
+      activeNodes: ['peer-1', 'peer-2', 'peer-4', 'proposal-1', 'proposal-2', 'proposal-3'],
+      activeEdges: ['peer1-proposal1', 'peer2-proposal2', 'peer4-proposal3'],
+    },
+    {
+      title: 'Distributed Voting',
+      description: 'Peers vote on proposals without central authority',
+      activeNodes: ['peer-1', 'peer-3', 'peer-5', 'proposal-1', 'proposal-2', 'proposal-3'],
+      activeEdges: ['peer3-proposal1', 'peer5-proposal2', 'peer1-proposal3'],
+    },
+    {
+      title: 'Decentralized Mechanisms',
+      description: 'Activate P2P communication and consensus protocols',
+      activeNodes: ['message-broadcast', 'reputation-system', 'voting-mechanism', 'consensus-protocol'],
+      activeEdges: ['peer1-broadcast', 'peer2-reputation', 'peer3-voting', 'peer5-consensus'],
+    },
+    {
+      title: 'Collaboration Features',
+      description: 'Enable shared ledger, gossip, and task marketplace',
+      activeNodes: ['shared-ledger', 'gossip-protocol', 'conflict-resolution', 'task-marketplace'],
+      activeEdges: ['broadcast-gossip', 'reputation-ledger', 'voting-conflict', 'consensus-marketplace'],
+    },
+    {
+      title: 'Emergent Behavior',
+      description: 'Swarm intelligence and self-organization emerge',
+      activeNodes: ['swarm-intelligence', 'self-organization', 'distributed-learning'],
+      activeEdges: ['gossip-swarm', 'ledger-organization', 'marketplace-learning', 'conflict-organization'],
+    },
+    {
+      title: 'Peer Quality Assurance',
+      description: 'Peers review and verify each other\'s work',
+      activeNodes: ['peer-review', 'trust-verification', 'performance-metrics'],
+      activeEdges: ['swarm-review', 'organization-trust', 'learning-metrics'],
+    },
+    {
+      title: 'Consensus Achievement',
+      description: 'Proposal #3 reaches consensus threshold',
+      activeNodes: ['proposal-3', 'consensus-protocol'],
+      activeEdges: [],
+    },
+    {
+      title: 'Solution Emergence',
+      description: 'Decentralized solution emerges from peer collaboration',
+      activeNodes: ['emergent-solution', 'proposal-3', 'peer-review', 'trust-verification', 'performance-metrics'],
+      activeEdges: ['proposal3-solution', 'review-solution', 'trust-solution', 'metrics-solution'],
+    },
+  ],
+};

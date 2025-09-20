@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Editor from '@monaco-editor/react';
 import { Play, Copy, Download, RotateCcw, Code, Terminal } from 'lucide-react';
+import { usePlausible } from '@/hooks/usePlausible';
 
 interface CodeSandboxProps {
   patternId: string;
@@ -23,6 +24,7 @@ export default function CodeSandbox({ patternId, initialCode, language, onCodeCh
   const [isRunning, setIsRunning] = useState(false);
   const [executionResult, setExecutionResult] = useState<ExecutionResult | null>(null);
   const editorRef = useRef<any>(null);
+  const { trackCodePlayground } = usePlausible();
 
   // Update code when language changes
   useEffect(() => {
@@ -56,14 +58,20 @@ export default function CodeSandbox({ patternId, initialCode, language, onCodeCh
   };
 
   const runCode = async () => {
+    // Track code execution start
+    trackCodePlayground(language, 'execute', {
+      pattern: patternId,
+      code_length: code.length
+    });
+
     setIsRunning(true);
     setOutput('Running...');
-    
+
     const startTime = Date.now();
-    
+
     try {
       let result: string;
-      
+
       if (language === 'typescript') {
         result = await executeTypeScript(code);
       } else if (language === 'python') {
@@ -73,19 +81,33 @@ export default function CodeSandbox({ patternId, initialCode, language, onCodeCh
       } else {
         result = 'Unsupported language';
       }
-      
+
       const executionTime = Date.now() - startTime;
-      
+
+      // Track successful execution
+      trackCodePlayground(language, 'execute_success', {
+        pattern: patternId,
+        execution_time: executionTime,
+        output_length: result.length
+      });
+
       setExecutionResult({
         output: result,
         executionTime
       });
       setOutput(result);
-      
+
     } catch (error) {
       const executionTime = Date.now() - startTime;
       const errorMessage = error instanceof Error ? error.message : String(error);
-      
+
+      // Track execution error
+      trackCodePlayground(language, 'execute_error', {
+        pattern: patternId,
+        execution_time: executionTime,
+        error_type: error instanceof Error ? error.constructor.name : 'Unknown'
+      });
+
       setExecutionResult({
         output: '',
         error: errorMessage,
@@ -145,6 +167,12 @@ export default function CodeSandbox({ patternId, initialCode, language, onCodeCh
   };
 
   const copyToClipboard = async () => {
+    // Track copy action
+    trackCodePlayground(language, 'copy', {
+      pattern: patternId,
+      code_length: code.length
+    });
+
     try {
       await navigator.clipboard.writeText(code);
       // You could add a toast notification here
@@ -154,9 +182,16 @@ export default function CodeSandbox({ patternId, initialCode, language, onCodeCh
   };
 
   const downloadCode = () => {
+    // Track download action
+    trackCodePlayground(language, 'download', {
+      pattern: patternId,
+      code_length: code.length,
+      filename: `${patternId}_${language}`
+    });
+
     const extension = language === 'typescript' ? 'ts' : language === 'python' ? 'py' : 'rs';
     const filename = `${patternId}_${language}.${extension}`;
-    
+
     const blob = new Blob([code], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -169,6 +204,12 @@ export default function CodeSandbox({ patternId, initialCode, language, onCodeCh
   };
 
   const resetCode = () => {
+    // Track reset action
+    trackCodePlayground(language, 'reset', {
+      pattern: patternId,
+      changes_made: code !== initialCode
+    });
+
     setCode(initialCode);
     setOutput('');
     setExecutionResult(null);

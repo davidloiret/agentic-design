@@ -1,493 +1,470 @@
 import { PatternScenario } from './types';
+import { nodeStyle, edgeStyle } from './styles';
 
 export const hierarchicalMemoryPattern: PatternScenario = {
   id: 'hierarchical-memory',
-  title: 'Hierarchical Memory Management',
-  description: 'Multi-tier memory architecture with intelligent promotion/demotion policies, mimicking human memory systems for optimal information retention and retrieval.',
-  steps: [
-    {
-      id: 'input-processing',
-      title: 'Input Processing & Classification',
-      description: 'Analyze incoming information and classify for appropriate memory tier placement',
-      input: 'Raw information (messages, data, events)',
-      output: 'Classified information with importance scores',
-      activeNodes: ['input-processor', 'content-classifier', 'importance-scorer'],
-      activeEdges: ['input-to-classifier', 'classifier-to-scorer']
-    },
-    {
-      id: 'working-memory-storage',
-      title: 'Working Memory Storage',
-      description: 'Store immediate, actively used information in high-speed working memory',
-      input: 'Recent interactions and active context',
-      output: 'Working memory entries with access tracking',
-      activeNodes: ['working-memory', 'access-tracker', 'recency-monitor'],
-      activeEdges: ['scorer-to-working', 'working-to-tracker']
-    },
-    {
-      id: 'short-term-promotion',
-      title: 'Short-term Memory Promotion',
-      description: 'Promote frequently accessed or important items to short-term storage',
-      input: 'Working memory items with high access frequency',
-      output: 'Short-term memory entries with retention timers',
-      activeNodes: ['promotion-engine', 'short-term-memory', 'retention-manager'],
-      activeEdges: ['tracker-to-promotion', 'promotion-to-short-term']
-    },
-    {
-      id: 'medium-term-consolidation',
-      title: 'Medium-term Consolidation',
-      description: 'Consolidate important patterns and insights into medium-term storage',
-      input: 'Short-term items with proven importance over time',
-      output: 'Consolidated knowledge patterns and connections',
-      activeNodes: ['consolidation-engine', 'medium-term-memory', 'pattern-detector'],
-      activeEdges: ['short-term-to-consolidation', 'consolidation-to-medium-term']
-    },
-    {
-      id: 'long-term-encoding',
-      title: 'Long-term Knowledge Encoding',
-      description: 'Encode core knowledge and learned patterns into permanent storage',
-      input: 'Medium-term patterns with persistent value',
-      output: 'Permanent knowledge base with semantic relationships',
-      activeNodes: ['encoding-engine', 'long-term-memory', 'semantic-indexer'],
-      activeEdges: ['medium-term-to-encoding', 'encoding-to-long-term']
-    },
-    {
-      id: 'retrieval-coordination',
-      title: 'Cross-tier Retrieval',
-      description: 'Coordinate information retrieval across all memory hierarchies',
-      input: 'Query for information across memory tiers',
-      output: 'Ranked results from all memory levels',
-      activeNodes: ['retrieval-coordinator', 'query-processor', 'result-merger'],
-      activeEdges: ['coordinator-to-processor', 'processor-to-merger']
-    },
-    {
-      id: 'memory-maintenance',
-      title: 'Memory Maintenance & Optimization',
-      description: 'Perform garbage collection, defragmentation, and policy optimization',
-      input: 'Memory state analysis and performance metrics',
-      output: 'Optimized memory hierarchy with updated policies',
-      activeNodes: ['maintenance-service', 'garbage-collector', 'policy-optimizer'],
-      activeEdges: ['maintenance-to-gc', 'gc-to-optimizer']
-    }
-  ],
+  title: 'Hierarchical Memory',
   initialNodes: [
     {
-      id: 'input-processor',
-      type: 'input',
-      position: { x: 50, y: 150 },
-      data: {
-        label: 'Input Processor',
-        description: 'Receives and preprocesses all incoming information',
-        type: 'input',
-        status: 'idle'
-      }
+      id: 'information-input',
+      position: { x: 400, y: 50 },
+      data: { label: '📥 Information Input\n"Customer interaction data + context"' },
+      style: { ...nodeStyle, background: '#10b981', minWidth: 350 },
     },
+    // Memory Controller
     {
-      id: 'content-classifier',
-      type: 'default',
-      position: { x: 250, y: 150 },
-      data: {
-        label: 'Content Classifier',
-        description: 'Analyzes and categorizes information types',
-        type: 'processor',
-        status: 'idle'
-      }
+      id: 'memory-controller',
+      position: { x: 375, y: 150 },
+      data: { label: '🧠 Memory Controller\nTier management & routing' },
+      style: { ...nodeStyle, background: '#dc2626', minWidth: 250 },
     },
-    {
-      id: 'importance-scorer',
-      type: 'default',
-      position: { x: 450, y: 150 },
-      data: {
-        label: 'Importance Scorer',
-        description: 'Assigns relevance and importance scores',
-        type: 'analyzer',
-        status: 'idle'
-      }
-    },
+    // Memory Tiers
     {
       id: 'working-memory',
-      type: 'default',
-      position: { x: 150, y: 300 },
-      data: {
-        label: 'Working Memory',
-        description: 'Level 1: Recent interactions (50 items, 5 min retention)',
-        type: 'storage',
-        status: 'idle'
-      }
-    },
-    {
-      id: 'access-tracker',
-      type: 'default',
-      position: { x: 350, y: 300 },
-      data: {
-        label: 'Access Tracker',
-        description: 'Monitors access frequency and patterns',
-        type: 'monitor',
-        status: 'idle'
-      }
-    },
-    {
-      id: 'recency-monitor',
-      type: 'default',
-      position: { x: 550, y: 300 },
-      data: {
-        label: 'Recency Monitor',
-        description: 'Tracks temporal relevance and decay',
-        type: 'monitor',
-        status: 'idle'
-      }
-    },
-    {
-      id: 'promotion-engine',
-      type: 'default',
-      position: { x: 250, y: 450 },
-      data: {
-        label: 'Promotion Engine',
-        description: 'Manages tier promotions based on importance',
-        type: 'processor',
-        status: 'idle'
-      }
+      position: { x: 100, y: 250 },
+      data: { label: '⚡ Working Memory\nTier 1: Immediate\n50 items | 5 min retention' },
+      style: { ...nodeStyle, background: '#3b82f6', minWidth: 180 },
     },
     {
       id: 'short-term-memory',
-      type: 'default',
-      position: { x: 150, y: 600 },
-      data: {
-        label: 'Short-term Memory',
-        description: 'Level 2: Important items (200 items, 1 week retention)',
-        type: 'storage',
-        status: 'idle'
-      }
-    },
-    {
-      id: 'retention-manager',
-      type: 'default',
-      position: { x: 350, y: 600 },
-      data: {
-        label: 'Retention Manager',
-        description: 'Manages retention policies and timers',
-        type: 'manager',
-        status: 'idle'
-      }
-    },
-    {
-      id: 'consolidation-engine',
-      type: 'default',
-      position: { x: 550, y: 600 },
-      data: {
-        label: 'Consolidation Engine',
-        description: 'Consolidates patterns and relationships',
-        type: 'processor',
-        status: 'idle'
-      }
+      position: { x: 300, y: 250 },
+      data: { label: '🔄 Short-term Memory\nTier 2: Recent\n200 items | 1 week retention' },
+      style: { ...nodeStyle, background: '#3b82f6', minWidth: 180 },
     },
     {
       id: 'medium-term-memory',
-      type: 'default',
-      position: { x: 150, y: 750 },
-      data: {
-        label: 'Medium-term Memory',
-        description: 'Level 3: Key insights (500 items, 1 month retention)',
-        type: 'storage',
-        status: 'idle'
-      }
-    },
-    {
-      id: 'pattern-detector',
-      type: 'default',
-      position: { x: 350, y: 750 },
-      data: {
-        label: 'Pattern Detector',
-        description: 'Identifies recurring patterns and themes',
-        type: 'analyzer',
-        status: 'idle'
-      }
-    },
-    {
-      id: 'encoding-engine',
-      type: 'default',
-      position: { x: 550, y: 750 },
-      data: {
-        label: 'Encoding Engine',
-        description: 'Encodes knowledge for permanent storage',
-        type: 'processor',
-        status: 'idle'
-      }
+      position: { x: 500, y: 250 },
+      data: { label: '📊 Medium-term Memory\nTier 3: Important\n500 items | 1 month retention' },
+      style: { ...nodeStyle, background: '#3b82f6', minWidth: 180 },
     },
     {
       id: 'long-term-memory',
-      type: 'default',
-      position: { x: 150, y: 900 },
-      data: {
-        label: 'Long-term Memory',
-        description: 'Level 4: Core knowledge (unlimited, permanent)',
-        type: 'storage',
-        status: 'idle'
-      }
+      position: { x: 700, y: 250 },
+      data: { label: '🗄️ Long-term Memory\nTier 4: Permanent\nUnlimited | No expiry' },
+      style: { ...nodeStyle, background: '#3b82f6', minWidth: 180 },
+    },
+    // Retention Policies
+    {
+      id: 'lru-policy',
+      position: { x: 50, y: 380 },
+      data: { label: '🕐 LRU Policy\nLeast Recently Used\nEviction strategy' },
+      style: { ...nodeStyle, background: '#7c3aed', minWidth: 160 },
     },
     {
-      id: 'semantic-indexer',
-      type: 'default',
-      position: { x: 350, y: 900 },
-      data: {
-        label: 'Semantic Indexer',
-        description: 'Creates semantic relationships and indexes',
-        type: 'indexer',
-        status: 'idle'
-      }
+      id: 'frequency-policy',
+      position: { x: 220, y: 380 },
+      data: { label: '📈 Frequency Policy\nAccess count tracking\nPromotion trigger' },
+      style: { ...nodeStyle, background: '#7c3aed', minWidth: 160 },
     },
     {
-      id: 'retrieval-coordinator',
-      type: 'default',
-      position: { x: 750, y: 450 },
-      data: {
-        label: 'Retrieval Coordinator',
-        description: 'Coordinates cross-tier information retrieval',
-        type: 'coordinator',
-        status: 'idle'
-      }
+      id: 'importance-policy',
+      position: { x: 390, y: 380 },
+      data: { label: '⭐ Importance Policy\nCriticality scoring\nPriority retention' },
+      style: { ...nodeStyle, background: '#7c3aed', minWidth: 160 },
     },
     {
-      id: 'query-processor',
-      type: 'default',
-      position: { x: 750, y: 600 },
-      data: {
-        label: 'Query Processor',
-        description: 'Processes and routes retrieval queries',
-        type: 'processor',
-        status: 'idle'
-      }
+      id: 'decay-policy',
+      position: { x: 560, y: 380 },
+      data: { label: '📉 Decay Policy\nTemporal relevance\nForgetting curve' },
+      style: { ...nodeStyle, background: '#7c3aed', minWidth: 160 },
     },
     {
-      id: 'result-merger',
-      type: 'default',
-      position: { x: 750, y: 750 },
-      data: {
-        label: 'Result Merger',
-        description: 'Merges and ranks results from all tiers',
-        type: 'merger',
-        status: 'idle'
-      }
+      id: 'consolidation-policy',
+      position: { x: 730, y: 380 },
+      data: { label: '🔗 Consolidation\nPattern extraction\nKnowledge merge' },
+      style: { ...nodeStyle, background: '#7c3aed', minWidth: 160 },
+    },
+    // Memory Operations
+    {
+      id: 'tier-promotion',
+      position: { x: 100, y: 520 },
+      data: { label: '⬆️ Tier Promotion\nMoving up hierarchy' },
+      style: { ...nodeStyle, background: '#f59e0b', minWidth: 160 },
     },
     {
-      id: 'maintenance-service',
-      type: 'default',
-      position: { x: 950, y: 450 },
-      data: {
-        label: 'Maintenance Service',
-        description: 'Manages overall memory health and optimization',
-        type: 'service',
-        status: 'idle'
-      }
+      id: 'tier-demotion',
+      position: { x: 280, y: 520 },
+      data: { label: '⬇️ Tier Demotion\nMoving down hierarchy' },
+      style: { ...nodeStyle, background: '#f59e0b', minWidth: 160 },
     },
     {
-      id: 'garbage-collector',
-      type: 'default',
-      position: { x: 950, y: 600 },
-      data: {
-        label: 'Garbage Collector',
-        description: 'Removes expired and unused memory entries',
-        type: 'collector',
-        status: 'idle'
-      }
+      id: 'cross-tier-search',
+      position: { x: 460, y: 520 },
+      data: { label: '🔍 Cross-tier Search\nUnified retrieval' },
+      style: { ...nodeStyle, background: '#f59e0b', minWidth: 160 },
     },
     {
-      id: 'policy-optimizer',
-      type: 'default',
-      position: { x: 950, y: 750 },
-      data: {
-        label: 'Policy Optimizer',
-        description: 'Optimizes retention and promotion policies',
-        type: 'optimizer',
-        status: 'idle'
-      }
+      id: 'memory-compaction',
+      position: { x: 640, y: 520 },
+      data: { label: '🗜️ Compaction\nDefragmentation' },
+      style: { ...nodeStyle, background: '#f59e0b', minWidth: 160 },
+    },
+    // Access Patterns
+    {
+      id: 'hot-access',
+      position: { x: 50, y: 640 },
+      data: { label: '🔥 Hot Access\nFrequent queries\nWorking memory hit' },
+      style: { ...nodeStyle, background: '#ec4899', minWidth: 180 },
     },
     {
-      id: 'memory-interface',
-      type: 'output',
-      position: { x: 550, y: 1050 },
-      data: {
-        label: 'Memory Interface',
-        description: 'Provides unified access to hierarchical memory',
-        type: 'output',
-        status: 'idle'
-      }
-    }
+      id: 'warm-access',
+      position: { x: 250, y: 640 },
+      data: { label: '♨️ Warm Access\nRecent queries\nShort-term hit' },
+      style: { ...nodeStyle, background: '#ec4899', minWidth: 180 },
+    },
+    {
+      id: 'cold-access',
+      position: { x: 450, y: 640 },
+      data: { label: '❄️ Cold Access\nHistorical queries\nLong-term retrieval' },
+      style: { ...nodeStyle, background: '#ec4899', minWidth: 180 },
+    },
+    {
+      id: 'miss-handling',
+      position: { x: 650, y: 640 },
+      data: { label: '❌ Miss Handling\nNot found\nFallback strategy' },
+      style: { ...nodeStyle, background: '#ec4899', minWidth: 180 },
+    },
+    // Performance Metrics
+    {
+      id: 'hit-ratio',
+      position: { x: 100, y: 760 },
+      data: { label: '📊 Hit Ratio\n95% L1, 85% L2\n70% L3, 100% L4' },
+      style: { ...nodeStyle, background: '#ef4444', minWidth: 160 },
+    },
+    {
+      id: 'latency-profile',
+      position: { x: 280, y: 760 },
+      data: { label: '⏱️ Latency Profile\nL1: <10ms\nL2: <50ms\nL3: <200ms\nL4: <1s' },
+      style: { ...nodeStyle, background: '#ef4444', minWidth: 160 },
+    },
+    {
+      id: 'memory-usage',
+      position: { x: 460, y: 760 },
+      data: { label: '💾 Memory Usage\nL1: 2MB\nL2: 10MB\nL3: 50MB\nL4: 500MB+' },
+      style: { ...nodeStyle, background: '#ef4444', minWidth: 160 },
+    },
+    {
+      id: 'eviction-stats',
+      position: { x: 640, y: 760 },
+      data: { label: '📈 Eviction Stats\nLRU hits: 1.2K/hr\nPromotions: 450/hr' },
+      style: { ...nodeStyle, background: '#ef4444', minWidth: 160 },
+    },
+    // Optimization
+    {
+      id: 'adaptive-sizing',
+      position: { x: 150, y: 880 },
+      data: { label: '🎯 Adaptive Sizing\nDynamic tier capacity' },
+      style: { ...nodeStyle, background: '#6366f1', minWidth: 160 },
+    },
+    {
+      id: 'predictive-caching',
+      position: { x: 320, y: 880 },
+      data: { label: '🔮 Predictive Caching\nAnticipatory loading' },
+      style: { ...nodeStyle, background: '#6366f1', minWidth: 160 },
+    },
+    {
+      id: 'policy-tuning',
+      position: { x: 490, y: 880 },
+      data: { label: '⚙️ Policy Tuning\nML-based optimization' },
+      style: { ...nodeStyle, background: '#6366f1', minWidth: 160 },
+    },
+    {
+      id: 'garbage-collection',
+      position: { x: 660, y: 880 },
+      data: { label: '🗑️ Garbage Collection\nAutomatic cleanup' },
+      style: { ...nodeStyle, background: '#6366f1', minWidth: 160 },
+    },
+    {
+      id: 'optimized-retrieval',
+      position: { x: 400, y: 1000 },
+      data: { label: '✨ Optimized Retrieval\nFast, efficient multi-tier memory access' },
+      style: { ...nodeStyle, background: '#10b981', minWidth: 380 },
+    },
   ],
   initialEdges: [
+    // Input to controller
     {
-      id: 'input-to-classifier',
-      source: 'input-processor',
-      target: 'content-classifier',
-      type: 'smoothstep',
-      label: 'raw data'
+      id: 'input-controller',
+      source: 'information-input',
+      target: 'memory-controller',
+      style: { ...edgeStyle, stroke: '#dc2626', strokeWidth: 3 },
+      animated: true,
     },
+    // Controller to tiers
     {
-      id: 'classifier-to-scorer',
-      source: 'content-classifier',
-      target: 'importance-scorer',
-      type: 'smoothstep',
-      label: 'classified content'
-    },
-    {
-      id: 'scorer-to-working',
-      source: 'importance-scorer',
+      id: 'controller-working',
+      source: 'memory-controller',
       target: 'working-memory',
-      type: 'smoothstep',
-      label: 'scored items'
+      style: { ...edgeStyle, stroke: '#3b82f6', strokeWidth: 2 },
+      label: 'Store',
     },
     {
-      id: 'working-to-tracker',
-      source: 'working-memory',
-      target: 'access-tracker',
-      type: 'smoothstep',
-      label: 'access patterns'
-    },
-    {
-      id: 'working-to-recency',
-      source: 'working-memory',
-      target: 'recency-monitor',
-      type: 'smoothstep',
-      label: 'temporal data'
-    },
-    {
-      id: 'tracker-to-promotion',
-      source: 'access-tracker',
-      target: 'promotion-engine',
-      type: 'smoothstep',
-      label: 'access metrics'
-    },
-    {
-      id: 'recency-to-promotion',
-      source: 'recency-monitor',
-      target: 'promotion-engine',
-      type: 'smoothstep',
-      label: 'recency scores'
-    },
-    {
-      id: 'promotion-to-short-term',
-      source: 'promotion-engine',
+      id: 'controller-short',
+      source: 'memory-controller',
       target: 'short-term-memory',
-      type: 'smoothstep',
-      label: 'promoted items'
+      style: { ...edgeStyle, stroke: '#3b82f6', strokeWidth: 2 },
+      label: 'Route',
     },
     {
-      id: 'short-term-to-retention',
-      source: 'short-term-memory',
-      target: 'retention-manager',
-      type: 'smoothstep',
-      label: 'retention data'
-    },
-    {
-      id: 'short-term-to-consolidation',
-      source: 'short-term-memory',
-      target: 'consolidation-engine',
-      type: 'smoothstep',
-      label: 'consolidation candidates'
-    },
-    {
-      id: 'consolidation-to-medium-term',
-      source: 'consolidation-engine',
+      id: 'controller-medium',
+      source: 'memory-controller',
       target: 'medium-term-memory',
-      type: 'smoothstep',
-      label: 'consolidated knowledge'
+      style: { ...edgeStyle, stroke: '#3b82f6', strokeWidth: 2 },
+      label: 'Route',
     },
     {
-      id: 'medium-term-to-pattern',
-      source: 'medium-term-memory',
-      target: 'pattern-detector',
-      type: 'smoothstep',
-      label: 'pattern analysis'
-    },
-    {
-      id: 'medium-term-to-encoding',
-      source: 'medium-term-memory',
-      target: 'encoding-engine',
-      type: 'smoothstep',
-      label: 'encoding candidates'
-    },
-    {
-      id: 'encoding-to-long-term',
-      source: 'encoding-engine',
+      id: 'controller-long',
+      source: 'memory-controller',
       target: 'long-term-memory',
-      type: 'smoothstep',
-      label: 'encoded knowledge'
+      style: { ...edgeStyle, stroke: '#3b82f6', strokeWidth: 2 },
+      label: 'Route',
     },
+    // Tier transitions
     {
-      id: 'long-term-to-indexer',
-      source: 'long-term-memory',
-      target: 'semantic-indexer',
-      type: 'smoothstep',
-      label: 'indexing requests'
-    },
-    {
-      id: 'working-to-retrieval',
+      id: 'working-short',
       source: 'working-memory',
-      target: 'retrieval-coordinator',
-      type: 'smoothstep',
-      label: 'L1 access'
+      target: 'short-term-memory',
+      style: { ...edgeStyle, stroke: '#f59e0b', strokeWidth: 2 },
+      label: 'Promote',
+      animated: true,
     },
     {
-      id: 'short-term-to-retrieval',
+      id: 'short-medium',
       source: 'short-term-memory',
-      target: 'retrieval-coordinator',
-      type: 'smoothstep',
-      label: 'L2 access'
+      target: 'medium-term-memory',
+      style: { ...edgeStyle, stroke: '#f59e0b', strokeWidth: 2 },
+      label: 'Promote',
+      animated: true,
     },
     {
-      id: 'medium-term-to-retrieval',
+      id: 'medium-long',
       source: 'medium-term-memory',
-      target: 'retrieval-coordinator',
-      type: 'smoothstep',
-      label: 'L3 access'
+      target: 'long-term-memory',
+      style: { ...edgeStyle, stroke: '#f59e0b', strokeWidth: 2 },
+      label: 'Promote',
+      animated: true,
+    },
+    // Policies to tiers
+    {
+      id: 'lru-working',
+      source: 'lru-policy',
+      target: 'working-memory',
+      style: { ...edgeStyle, stroke: '#7c3aed', strokeDasharray: '5 5' },
     },
     {
-      id: 'long-term-to-retrieval',
+      id: 'frequency-short',
+      source: 'frequency-policy',
+      target: 'short-term-memory',
+      style: { ...edgeStyle, stroke: '#7c3aed', strokeDasharray: '5 5' },
+    },
+    {
+      id: 'importance-medium',
+      source: 'importance-policy',
+      target: 'medium-term-memory',
+      style: { ...edgeStyle, stroke: '#7c3aed', strokeDasharray: '5 5' },
+    },
+    {
+      id: 'decay-short',
+      source: 'decay-policy',
+      target: 'short-term-memory',
+      style: { ...edgeStyle, stroke: '#7c3aed', strokeDasharray: '5 5' },
+    },
+    {
+      id: 'consolidation-long',
+      source: 'consolidation-policy',
+      target: 'long-term-memory',
+      style: { ...edgeStyle, stroke: '#7c3aed', strokeDasharray: '5 5' },
+    },
+    // Memory operations
+    {
+      id: 'working-promotion',
+      source: 'working-memory',
+      target: 'tier-promotion',
+      style: { ...edgeStyle, stroke: '#f59e0b' },
+    },
+    {
+      id: 'short-demotion',
+      source: 'short-term-memory',
+      target: 'tier-demotion',
+      style: { ...edgeStyle, stroke: '#f59e0b' },
+    },
+    {
+      id: 'controller-search',
+      source: 'memory-controller',
+      target: 'cross-tier-search',
+      style: { ...edgeStyle, stroke: '#f59e0b' },
+      animated: true,
+    },
+    {
+      id: 'long-compaction',
       source: 'long-term-memory',
-      target: 'retrieval-coordinator',
-      type: 'smoothstep',
-      label: 'L4 access'
+      target: 'memory-compaction',
+      style: { ...edgeStyle, stroke: '#f59e0b' },
+    },
+    // Access patterns
+    {
+      id: 'working-hot',
+      source: 'working-memory',
+      target: 'hot-access',
+      style: { ...edgeStyle, stroke: '#ec4899' },
+      animated: true,
     },
     {
-      id: 'coordinator-to-processor',
-      source: 'retrieval-coordinator',
-      target: 'query-processor',
-      type: 'smoothstep',
-      label: 'query routing'
+      id: 'short-warm',
+      source: 'short-term-memory',
+      target: 'warm-access',
+      style: { ...edgeStyle, stroke: '#ec4899' },
+      animated: true,
     },
     {
-      id: 'processor-to-merger',
-      source: 'query-processor',
-      target: 'result-merger',
-      type: 'smoothstep',
-      label: 'tier results'
+      id: 'long-cold',
+      source: 'long-term-memory',
+      target: 'cold-access',
+      style: { ...edgeStyle, stroke: '#ec4899' },
     },
     {
-      id: 'maintenance-to-gc',
-      source: 'maintenance-service',
-      target: 'garbage-collector',
-      type: 'smoothstep',
-      label: 'cleanup triggers'
+      id: 'search-miss',
+      source: 'cross-tier-search',
+      target: 'miss-handling',
+      style: { ...edgeStyle, stroke: '#ec4899', strokeDasharray: '5 5' },
+    },
+    // Access to metrics
+    {
+      id: 'hot-hit',
+      source: 'hot-access',
+      target: 'hit-ratio',
+      style: { ...edgeStyle, stroke: '#ef4444' },
     },
     {
-      id: 'gc-to-optimizer',
-      source: 'garbage-collector',
-      target: 'policy-optimizer',
-      type: 'smoothstep',
-      label: 'optimization data'
+      id: 'warm-latency',
+      source: 'warm-access',
+      target: 'latency-profile',
+      style: { ...edgeStyle, stroke: '#ef4444' },
     },
     {
-      id: 'merger-to-interface',
-      source: 'result-merger',
-      target: 'memory-interface',
-      type: 'smoothstep',
-      label: 'unified results'
+      id: 'cold-usage',
+      source: 'cold-access',
+      target: 'memory-usage',
+      style: { ...edgeStyle, stroke: '#ef4444' },
     },
     {
-      id: 'indexer-to-interface',
-      source: 'semantic-indexer',
-      target: 'memory-interface',
-      type: 'smoothstep',
-      label: 'indexed access'
-    }
-  ]
+      id: 'miss-eviction',
+      source: 'miss-handling',
+      target: 'eviction-stats',
+      style: { ...edgeStyle, stroke: '#ef4444' },
+    },
+    // Optimization connections
+    {
+      id: 'hit-adaptive',
+      source: 'hit-ratio',
+      target: 'adaptive-sizing',
+      style: { ...edgeStyle, stroke: '#6366f1' },
+    },
+    {
+      id: 'latency-predictive',
+      source: 'latency-profile',
+      target: 'predictive-caching',
+      style: { ...edgeStyle, stroke: '#6366f1' },
+    },
+    {
+      id: 'usage-policy',
+      source: 'memory-usage',
+      target: 'policy-tuning',
+      style: { ...edgeStyle, stroke: '#6366f1' },
+    },
+    {
+      id: 'eviction-gc',
+      source: 'eviction-stats',
+      target: 'garbage-collection',
+      style: { ...edgeStyle, stroke: '#6366f1' },
+    },
+    // Final output
+    {
+      id: 'adaptive-output',
+      source: 'adaptive-sizing',
+      target: 'optimized-retrieval',
+      style: { ...edgeStyle, stroke: '#10b981' },
+    },
+    {
+      id: 'predictive-output',
+      source: 'predictive-caching',
+      target: 'optimized-retrieval',
+      style: { ...edgeStyle, stroke: '#10b981' },
+    },
+    {
+      id: 'policy-output',
+      source: 'policy-tuning',
+      target: 'optimized-retrieval',
+      style: { ...edgeStyle, stroke: '#10b981' },
+    },
+    {
+      id: 'gc-output',
+      source: 'garbage-collection',
+      target: 'optimized-retrieval',
+      style: { ...edgeStyle, stroke: '#10b981', strokeWidth: 3 },
+      animated: true,
+    },
+  ],
+  steps: [
+    {
+      title: 'Information Input',
+      description: 'New information arrives for storage',
+      activeNodes: ['information-input', 'memory-controller'],
+      activeEdges: ['input-controller'],
+    },
+    {
+      title: 'Tier Routing',
+      description: 'Controller routes to appropriate memory tier',
+      activeNodes: ['memory-controller', 'working-memory', 'short-term-memory', 'medium-term-memory', 'long-term-memory'],
+      activeEdges: ['controller-working', 'controller-short', 'controller-medium', 'controller-long'],
+    },
+    {
+      title: 'Retention Policies',
+      description: 'Apply tier-specific retention and eviction policies',
+      activeNodes: ['lru-policy', 'frequency-policy', 'importance-policy', 'decay-policy', 'consolidation-policy'],
+      activeEdges: ['lru-working', 'frequency-short', 'importance-medium', 'decay-short', 'consolidation-long'],
+    },
+    {
+      title: 'Tier Promotion',
+      description: 'Frequently accessed items promoted to higher tiers',
+      activeNodes: ['working-memory', 'short-term-memory', 'medium-term-memory', 'long-term-memory'],
+      activeEdges: ['working-short', 'short-medium', 'medium-long'],
+    },
+    {
+      title: 'Memory Operations',
+      description: 'Promotion, demotion, search, and compaction',
+      activeNodes: ['tier-promotion', 'tier-demotion', 'cross-tier-search', 'memory-compaction'],
+      activeEdges: ['working-promotion', 'short-demotion', 'controller-search', 'long-compaction'],
+    },
+    {
+      title: 'Access Patterns',
+      description: 'Different access patterns for different tiers',
+      activeNodes: ['working-memory', 'short-term-memory', 'long-term-memory', 'hot-access', 'warm-access', 'cold-access'],
+      activeEdges: ['working-hot', 'short-warm', 'long-cold'],
+    },
+    {
+      title: 'Cross-tier Search',
+      description: 'Searching across all memory tiers',
+      activeNodes: ['cross-tier-search', 'working-memory', 'short-term-memory', 'medium-term-memory', 'long-term-memory', 'miss-handling'],
+      activeEdges: ['controller-search', 'search-miss'],
+    },
+    {
+      title: 'Performance Metrics',
+      description: 'Tracking hit ratios, latency, and usage',
+      activeNodes: ['hit-ratio', 'latency-profile', 'memory-usage', 'eviction-stats'],
+      activeEdges: ['hot-hit', 'warm-latency', 'cold-usage', 'miss-eviction'],
+    },
+    {
+      title: 'Optimization Strategies',
+      description: 'Adaptive sizing, predictive caching, and tuning',
+      activeNodes: ['adaptive-sizing', 'predictive-caching', 'policy-tuning', 'garbage-collection'],
+      activeEdges: ['hit-adaptive', 'latency-predictive', 'usage-policy', 'eviction-gc'],
+    },
+    {
+      title: 'Optimized Retrieval',
+      description: 'Efficient multi-tier memory access achieved',
+      activeNodes: ['adaptive-sizing', 'predictive-caching', 'policy-tuning', 'garbage-collection', 'optimized-retrieval'],
+      activeEdges: ['adaptive-output', 'predictive-output', 'policy-output', 'gc-output'],
+    },
+  ],
 };

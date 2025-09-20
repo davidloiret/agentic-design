@@ -127,15 +127,17 @@ show_help() {
     echo "  force-rebuild [service] - Force complete rebuild (remove containers, images, volumes)"
     echo "  logs [service]     - Show logs for service(s)"
     echo "  restart [service]  - Restart service(s)"
+    echo "  setup [service]    - Setup and configure service"
     echo "  status             - Show running containers"
     echo "  clean              - Clean Docker system"
     echo "  shell [service]    - Enter shell in service container"
     echo ""
     echo "Services:"
     echo "  frontend    - Next.js frontend (port 3002)"
-    echo "  backend     - Node.js backend (port 3001)"  
+    echo "  backend     - Node.js backend (port 3001)"
     echo "  nginx       - Nginx reverse proxy (ports 80/443)"
     echo "  codesandbox - CodeSandbox environment (requires sudo for Firecracker/KVM)"
+    echo "  plausible   - Plausible Analytics (port 8000)"
     echo "  all         - All services (default if no service specified)"
     echo ""
     echo "Examples:"
@@ -144,8 +146,10 @@ show_help() {
     echo "  ./manage.sh logs frontend            # Show frontend logs"
     echo "  ./manage.sh up                       # Start all services"
     echo "  ./manage.sh rebuild codesandbox      # Build and start CodeSandbox service"
-    echo "  ./manage.sh start codesandbox        # Start CodeSandbox service"  
+    echo "  ./manage.sh start codesandbox        # Start CodeSandbox service"
     echo "  ./manage.sh stop codesandbox         # Stop CodeSandbox service"
+    echo "  ./manage.sh up plausible             # Start Plausible Analytics"
+    echo "  ./manage.sh setup plausible          # Setup and configure Plausible"
     echo "  ./manage.sh shell frontend           # Enter shell in frontend container"
     echo "  ./manage.sh shell backend            # Enter shell in backend container"
 }
@@ -351,6 +355,58 @@ case "$1" in
             *)
                 echo "❌ Invalid service: $2"
                 echo "Available services for shell: frontend, backend"
+                exit 1
+                ;;
+        esac
+        ;;
+    setup)
+        case "$2" in
+            plausible)
+                echo "🚀 Setting up Plausible Analytics..."
+
+                # Start databases first
+                run_with_timing "Starting Plausible databases" docker compose -f $COMPOSE_FILE up -d plausible_db plausible_events_db
+
+                # Wait for databases
+                echo "⏳ Waiting for databases to be ready..."
+                sleep 15
+
+                # Start Plausible
+                run_with_timing "Starting Plausible Analytics" docker compose -f $COMPOSE_FILE up -d plausible
+
+                # Wait for Plausible to be ready
+                echo "⏳ Waiting for Plausible to initialize..."
+                sleep 20
+
+                # Check if accessible
+                echo "🔍 Checking Plausible status..."
+                for i in {1..30}; do
+                    if curl -f http://localhost:8000 >/dev/null 2>&1; then
+                        echo "✅ Plausible is ready!"
+                        break
+                    fi
+                    echo "⏳ Waiting for Plausible... ($i/30)"
+                    sleep 2
+                done
+
+                echo ""
+                echo "✅ Plausible Analytics setup complete!"
+                echo "📊 Access your analytics at: https://plausible.agentic-design.ai"
+                echo "🔑 Login credentials:"
+                echo "   Email: admin@agentic-design.ai"
+                echo "   Password: changeme123"
+                echo ""
+                echo "⚠️  Important Steps:"
+                echo "   1. Change your password after first login"
+                echo "   2. Add 'agentic-design.ai' domain in Plausible dashboard"
+                echo "   3. Copy the tracking script if needed"
+                echo ""
+                echo "🔗 Your frontend is already configured to use this instance"
+                echo "🛡️  Don't forget to generate SSL certificates with: ./init-letsencrypt.sh"
+                ;;
+            *)
+                echo "❌ Setup not available for service: $2"
+                echo "Available setup commands: plausible"
                 exit 1
                 ;;
         esac

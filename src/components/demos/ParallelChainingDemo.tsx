@@ -2,6 +2,7 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
 import { Play, Pause, RotateCcw, CheckCircle, Clock, AlertCircle, Zap, GitBranch } from 'lucide-react';
+import { usePlausible } from '@/hooks/usePlausible';
 
 interface ParallelChain {
   id: string;
@@ -175,6 +176,7 @@ const generateChainOutput = (chain: ParallelChain, scenario: string): string => 
 };
 
 export const ParallelChainingDemo: React.FC = () => {
+  const { trackEvent } = usePlausible();
   const [selectedScenario, setSelectedScenario] = useState<ParallelScenario>(SCENARIOS[0]);
   const [chains, setChains] = useState<ParallelChain[]>(SCENARIOS[0].chains);
   const [isRunning, setIsRunning] = useState(false);
@@ -184,6 +186,13 @@ export const ParallelChainingDemo: React.FC = () => {
   const [speed, setSpeed] = useState(1.5);
 
   const resetDemo = useCallback(() => {
+    trackEvent('Demo Interaction', {
+      action: 'reset_demo',
+      demo_type: 'parallel_chaining',
+      scenario_id: selectedScenario.id,
+      total_chains: selectedScenario.chains.length
+    });
+
     const resetChains = selectedScenario.chains.map(chain => ({
       ...chain,
       status: 'pending' as const,
@@ -276,9 +285,17 @@ export const ParallelChainingDemo: React.FC = () => {
   };
 
   const runParallelExecution = async () => {
+    trackEvent('Demo Interaction', {
+      action: 'start_parallel_execution',
+      demo_type: 'parallel_chaining',
+      scenario_id: selectedScenario.id,
+      total_chains: selectedScenario.chains.length,
+      execution_speed: speed
+    });
+
     setIsRunning(true);
     resetDemo();
-    
+
     setExecutionLog(['🚀 Starting parallel chain execution...']);
     
     // Execute all chains in parallel

@@ -1,0 +1,420 @@
+import { PatternScenario } from './types';
+import { nodeStyle, edgeStyle } from './styles';
+
+export const a2aProtocolPattern: PatternScenario = {
+  id: 'a2a-protocol',
+  title: 'A2A Protocol (Agent2Agent)',
+  initialNodes: [
+    {
+      id: 'enterprise-request',
+      position: { x: 400, y: 50 },
+      data: { label: '🎯 Enterprise Request\n"Analyze market data and create sales strategy"' },
+      style: { ...nodeStyle, background: '#10b981', minWidth: 320 },
+    },
+    {
+      id: 'a2a-orchestrator',
+      position: { x: 375, y: 150 },
+      data: { label: '🌐 A2A Protocol Orchestrator\nAgent discovery & coordination' },
+      style: { ...nodeStyle, background: '#3b82f6', minWidth: 250 },
+    },
+    // Discovery Layer
+    {
+      id: 'agent-registry',
+      position: { x: 100, y: 250 },
+      data: { label: '📚 Agent Registry\nAgent Cards & Capabilities' },
+      style: { ...nodeStyle, background: '#7c3aed', minWidth: 180 },
+    },
+    {
+      id: 'capability-matcher',
+      position: { x: 300, y: 250 },
+      data: { label: '🔍 Capability Matcher\nMatch task requirements' },
+      style: { ...nodeStyle, background: '#7c3aed', minWidth: 180 },
+    },
+    {
+      id: 'auth-manager',
+      position: { x: 500, y: 250 },
+      data: { label: '🔐 Auth Manager\nOpenAPI authentication' },
+      style: { ...nodeStyle, background: '#7c3aed', minWidth: 180 },
+    },
+    {
+      id: 'modality-negotiator',
+      position: { x: 700, y: 250 },
+      data: { label: '💬 Modality Negotiator\nText, forms, media, etc.' },
+      style: { ...nodeStyle, background: '#7c3aed', minWidth: 180 },
+    },
+    // Participating Agents (Different Platforms)
+    {
+      id: 'salesforce-agent',
+      position: { x: 50, y: 380 },
+      data: { label: '☁️ Salesforce Agent\nCRM Analytics\nAgent Card: v2.1' },
+      style: { ...nodeStyle, background: '#00a1e0', minWidth: 150 },
+    },
+    {
+      id: 'azure-agent',
+      position: { x: 200, y: 380 },
+      data: { label: '🔷 Azure AI Agent\nData Analysis\nAgent Card: v1.8' },
+      style: { ...nodeStyle, background: '#0078d4', minWidth: 150 },
+    },
+    {
+      id: 'aws-agent',
+      position: { x: 350, y: 380 },
+      data: { label: '🟠 AWS Q Agent\nMarket Intelligence\nAgent Card: v3.0' },
+      style: { ...nodeStyle, background: '#ff9900', minWidth: 150 },
+    },
+    {
+      id: 'google-agent',
+      position: { x: 500, y: 380 },
+      data: { label: '🔵 Google Agent\nStrategy Generation\nAgent Card: v2.5' },
+      style: { ...nodeStyle, background: '#4285f4', minWidth: 150 },
+    },
+    {
+      id: 'servicenow-agent',
+      position: { x: 650, y: 380 },
+      data: { label: '🟢 ServiceNow Agent\nWorkflow Automation\nAgent Card: v1.2' },
+      style: { ...nodeStyle, background: '#89c149', minWidth: 150 },
+    },
+    // Communication Layer
+    {
+      id: 'jsonrpc-handler',
+      position: { x: 150, y: 520 },
+      data: { label: '📡 JSON-RPC Handler\nStandardized messaging' },
+      style: { ...nodeStyle, background: '#f59e0b', minWidth: 180 },
+    },
+    {
+      id: 'http-sse-transport',
+      position: { x: 350, y: 520 },
+      data: { label: '🚀 HTTP/SSE Transport\nStreaming & push notifications' },
+      style: { ...nodeStyle, background: '#f59e0b', minWidth: 180 },
+    },
+    {
+      id: 'session-manager',
+      position: { x: 550, y: 520 },
+      data: { label: '🔄 Session Manager\nLong-running task coordination' },
+      style: { ...nodeStyle, background: '#f59e0b', minWidth: 180 },
+    },
+    // Collaboration Features
+    {
+      id: 'task-coordinator',
+      position: { x: 100, y: 650 },
+      data: { label: '📋 Task Coordinator\nDistribute & track subtasks' },
+      style: { ...nodeStyle, background: '#ef4444', minWidth: 180 },
+    },
+    {
+      id: 'context-sharer',
+      position: { x: 300, y: 650 },
+      data: { label: '🔗 Context Sharer\nSecure info exchange' },
+      style: { ...nodeStyle, background: '#ef4444', minWidth: 180 },
+    },
+    {
+      id: 'privacy-guardian',
+      position: { x: 500, y: 650 },
+      data: { label: '🛡️ Privacy Guardian\nNo internal state exposure' },
+      style: { ...nodeStyle, background: '#ef4444', minWidth: 180 },
+    },
+    {
+      id: 'result-aggregator',
+      position: { x: 700, y: 650 },
+      data: { label: '📊 Result Aggregator\nCombine agent outputs' },
+      style: { ...nodeStyle, background: '#ef4444', minWidth: 180 },
+    },
+    // Integration with MCP
+    {
+      id: 'mcp-bridge',
+      position: { x: 250, y: 780 },
+      data: { label: '🌉 MCP Bridge\nConnect to tools & data sources' },
+      style: { ...nodeStyle, background: '#6366f1', minWidth: 200 },
+    },
+    {
+      id: 'error-handler',
+      position: { x: 450, y: 780 },
+      data: { label: '⚠️ Error Handler\nFallback & retry logic' },
+      style: { ...nodeStyle, background: '#6366f1', minWidth: 180 },
+    },
+    {
+      id: 'audit-logger',
+      position: { x: 650, y: 780 },
+      data: { label: '📝 Audit Logger\nCompliance & tracking' },
+      style: { ...nodeStyle, background: '#6366f1', minWidth: 180 },
+    },
+    {
+      id: 'output',
+      position: { x: 400, y: 900 },
+      data: { label: '✨ Unified Result\nComprehensive sales strategy from multiple agents' },
+      style: { ...nodeStyle, background: '#10b981', minWidth: 320 },
+    },
+  ],
+  initialEdges: [
+    {
+      id: 'request-orchestrator',
+      source: 'enterprise-request',
+      target: 'a2a-orchestrator',
+      style: { ...edgeStyle, stroke: '#3b82f6' },
+      animated: true,
+    },
+    {
+      id: 'orchestrator-registry',
+      source: 'a2a-orchestrator',
+      target: 'agent-registry',
+      style: { ...edgeStyle, stroke: '#7c3aed' },
+      label: 'Discover',
+    },
+    {
+      id: 'orchestrator-matcher',
+      source: 'a2a-orchestrator',
+      target: 'capability-matcher',
+      style: { ...edgeStyle, stroke: '#7c3aed' },
+      label: 'Match',
+    },
+    {
+      id: 'orchestrator-auth',
+      source: 'a2a-orchestrator',
+      target: 'auth-manager',
+      style: { ...edgeStyle, stroke: '#7c3aed' },
+      label: 'Authenticate',
+    },
+    {
+      id: 'orchestrator-modality',
+      source: 'a2a-orchestrator',
+      target: 'modality-negotiator',
+      style: { ...edgeStyle, stroke: '#7c3aed' },
+      label: 'Negotiate',
+    },
+    // Registry to agents
+    {
+      id: 'registry-salesforce',
+      source: 'agent-registry',
+      target: 'salesforce-agent',
+      style: { ...edgeStyle, stroke: '#00a1e0', strokeDasharray: '5 5' },
+      label: 'Card',
+    },
+    {
+      id: 'registry-azure',
+      source: 'agent-registry',
+      target: 'azure-agent',
+      style: { ...edgeStyle, stroke: '#0078d4', strokeDasharray: '5 5' },
+      label: 'Card',
+    },
+    {
+      id: 'registry-aws',
+      source: 'agent-registry',
+      target: 'aws-agent',
+      style: { ...edgeStyle, stroke: '#ff9900', strokeDasharray: '5 5' },
+      label: 'Card',
+    },
+    {
+      id: 'registry-google',
+      source: 'agent-registry',
+      target: 'google-agent',
+      style: { ...edgeStyle, stroke: '#4285f4', strokeDasharray: '5 5' },
+      label: 'Card',
+    },
+    {
+      id: 'registry-servicenow',
+      source: 'agent-registry',
+      target: 'servicenow-agent',
+      style: { ...edgeStyle, stroke: '#89c149', strokeDasharray: '5 5' },
+      label: 'Card',
+    },
+    // Agents to communication layer
+    {
+      id: 'salesforce-jsonrpc',
+      source: 'salesforce-agent',
+      target: 'jsonrpc-handler',
+      style: { ...edgeStyle, stroke: '#f59e0b' },
+    },
+    {
+      id: 'azure-jsonrpc',
+      source: 'azure-agent',
+      target: 'jsonrpc-handler',
+      style: { ...edgeStyle, stroke: '#f59e0b' },
+    },
+    {
+      id: 'aws-http',
+      source: 'aws-agent',
+      target: 'http-sse-transport',
+      style: { ...edgeStyle, stroke: '#f59e0b' },
+    },
+    {
+      id: 'google-http',
+      source: 'google-agent',
+      target: 'http-sse-transport',
+      style: { ...edgeStyle, stroke: '#f59e0b' },
+    },
+    {
+      id: 'servicenow-session',
+      source: 'servicenow-agent',
+      target: 'session-manager',
+      style: { ...edgeStyle, stroke: '#f59e0b' },
+    },
+    // Communication to collaboration
+    {
+      id: 'jsonrpc-coordinator',
+      source: 'jsonrpc-handler',
+      target: 'task-coordinator',
+      style: { ...edgeStyle, stroke: '#ef4444' },
+    },
+    {
+      id: 'http-context',
+      source: 'http-sse-transport',
+      target: 'context-sharer',
+      style: { ...edgeStyle, stroke: '#ef4444' },
+    },
+    {
+      id: 'session-privacy',
+      source: 'session-manager',
+      target: 'privacy-guardian',
+      style: { ...edgeStyle, stroke: '#ef4444' },
+    },
+    // Collaboration to aggregation
+    {
+      id: 'coordinator-aggregator',
+      source: 'task-coordinator',
+      target: 'result-aggregator',
+      style: { ...edgeStyle, stroke: '#ef4444' },
+    },
+    {
+      id: 'context-aggregator',
+      source: 'context-sharer',
+      target: 'result-aggregator',
+      style: { ...edgeStyle, stroke: '#ef4444' },
+    },
+    {
+      id: 'privacy-aggregator',
+      source: 'privacy-guardian',
+      target: 'result-aggregator',
+      style: { ...edgeStyle, stroke: '#ef4444' },
+    },
+    // Integration features
+    {
+      id: 'coordinator-mcp',
+      source: 'task-coordinator',
+      target: 'mcp-bridge',
+      style: { ...edgeStyle, stroke: '#6366f1' },
+      label: 'Tools',
+    },
+    {
+      id: 'aggregator-error',
+      source: 'result-aggregator',
+      target: 'error-handler',
+      style: { ...edgeStyle, stroke: '#6366f1' },
+      label: 'Validate',
+    },
+    {
+      id: 'aggregator-audit',
+      source: 'result-aggregator',
+      target: 'audit-logger',
+      style: { ...edgeStyle, stroke: '#6366f1' },
+      label: 'Log',
+    },
+    // Final output
+    {
+      id: 'mcp-output',
+      source: 'mcp-bridge',
+      target: 'output',
+      style: { ...edgeStyle, stroke: '#10b981' },
+    },
+    {
+      id: 'error-output',
+      source: 'error-handler',
+      target: 'output',
+      style: { ...edgeStyle, stroke: '#10b981' },
+    },
+    {
+      id: 'audit-output',
+      source: 'audit-logger',
+      target: 'output',
+      style: { ...edgeStyle, stroke: '#10b981' },
+    },
+    // Cross-agent communication
+    {
+      id: 'salesforce-azure',
+      source: 'salesforce-agent',
+      target: 'azure-agent',
+      style: { ...edgeStyle, stroke: '#64748b', strokeDasharray: '3 3' },
+      label: 'A2A',
+    },
+    {
+      id: 'azure-aws',
+      source: 'azure-agent',
+      target: 'aws-agent',
+      style: { ...edgeStyle, stroke: '#64748b', strokeDasharray: '3 3' },
+      label: 'A2A',
+    },
+    {
+      id: 'aws-google',
+      source: 'aws-agent',
+      target: 'google-agent',
+      style: { ...edgeStyle, stroke: '#64748b', strokeDasharray: '3 3' },
+      label: 'A2A',
+    },
+    {
+      id: 'google-servicenow',
+      source: 'google-agent',
+      target: 'servicenow-agent',
+      style: { ...edgeStyle, stroke: '#64748b', strokeDasharray: '3 3' },
+      label: 'A2A',
+    },
+  ],
+  steps: [
+    {
+      title: 'Enterprise Request',
+      description: 'Complex task requiring multiple agent collaboration',
+      activeNodes: ['enterprise-request'],
+      activeEdges: ['request-orchestrator'],
+    },
+    {
+      title: 'A2A Discovery',
+      description: 'Discover available agents and their capabilities via Agent Cards',
+      activeNodes: ['a2a-orchestrator', 'agent-registry', 'capability-matcher'],
+      activeEdges: ['orchestrator-registry', 'orchestrator-matcher'],
+    },
+    {
+      title: 'Authentication & Negotiation',
+      description: 'Authenticate agents and negotiate interaction modalities',
+      activeNodes: ['auth-manager', 'modality-negotiator'],
+      activeEdges: ['orchestrator-auth', 'orchestrator-modality'],
+    },
+    {
+      title: 'Agent Registration',
+      description: 'Agents from different platforms register via Agent Cards',
+      activeNodes: ['agent-registry', 'salesforce-agent', 'azure-agent', 'aws-agent', 'google-agent', 'servicenow-agent'],
+      activeEdges: ['registry-salesforce', 'registry-azure', 'registry-aws', 'registry-google', 'registry-servicenow'],
+    },
+    {
+      title: 'Cross-Platform Communication',
+      description: 'Agents communicate using A2A protocol standards',
+      activeNodes: ['salesforce-agent', 'azure-agent', 'aws-agent', 'google-agent', 'servicenow-agent'],
+      activeEdges: ['salesforce-azure', 'azure-aws', 'aws-google', 'google-servicenow'],
+    },
+    {
+      title: 'Protocol Handling',
+      description: 'JSON-RPC messaging and HTTP/SSE transport for communication',
+      activeNodes: ['jsonrpc-handler', 'http-sse-transport', 'session-manager'],
+      activeEdges: ['salesforce-jsonrpc', 'azure-jsonrpc', 'aws-http', 'google-http', 'servicenow-session'],
+    },
+    {
+      title: 'Task Coordination',
+      description: 'Distribute tasks and share context securely between agents',
+      activeNodes: ['task-coordinator', 'context-sharer', 'privacy-guardian'],
+      activeEdges: ['jsonrpc-coordinator', 'http-context', 'session-privacy'],
+    },
+    {
+      title: 'Result Aggregation',
+      description: 'Combine outputs from all participating agents',
+      activeNodes: ['result-aggregator', 'task-coordinator', 'context-sharer', 'privacy-guardian'],
+      activeEdges: ['coordinator-aggregator', 'context-aggregator', 'privacy-aggregator'],
+    },
+    {
+      title: 'MCP Integration',
+      description: 'Connect to tools and data sources via Model Context Protocol',
+      activeNodes: ['mcp-bridge', 'error-handler', 'audit-logger'],
+      activeEdges: ['coordinator-mcp', 'aggregator-error', 'aggregator-audit'],
+    },
+    {
+      title: 'Unified Output',
+      description: 'Deliver comprehensive result from cross-platform collaboration',
+      activeNodes: ['output', 'mcp-bridge', 'error-handler', 'audit-logger'],
+      activeEdges: ['mcp-output', 'error-output', 'audit-output'],
+    },
+  ],
+};

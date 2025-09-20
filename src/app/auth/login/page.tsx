@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
 import { Sparkles, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { usePlausible } from '@/hooks/usePlausible';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -20,6 +21,7 @@ export default function LoginPage() {
   const [emailFocused, setEmailFocused] = useState(false);
   const [sparkles, setSparkles] = useState<Array<{id: number, x: number, y: number}>>([]);
   const { signIn, signInWithGoogle, signInWithGitHub } = useAuth();
+  const { trackAuth } = usePlausible();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -30,13 +32,20 @@ export default function LoginPage() {
 
     try {
       await signIn(email, password);
+
+      // Track successful login
+      trackAuth('login');
+
       router.push('/learning-hub');
     } catch (err: any) {
       const errorMessage = err.message || 'Failed to sign in';
       setError(errorMessage);
-      
+
+      // Track failed login attempt
+      trackAuth('login_failed');
+
       // Show resend confirmation option if email not confirmed
-      if (errorMessage.includes('confirmation link') || 
+      if (errorMessage.includes('confirmation link') ||
           errorMessage.includes('activate your account') ||
           errorMessage.toLowerCase().includes('email not confirmed') ||
           errorMessage.toLowerCase().includes('check your email')) {

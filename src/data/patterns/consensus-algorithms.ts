@@ -1,0 +1,517 @@
+import { PatternScenario } from './types';
+import { nodeStyle, edgeStyle } from './styles';
+
+export const consensusAlgorithmsPattern: PatternScenario = {
+  id: 'consensus-algorithms',
+  title: 'Consensus Algorithms',
+  initialNodes: [
+    {
+      id: 'decision-problem',
+      position: { x: 400, y: 50 },
+      data: { label: '🎯 Decision Problem\n"Select best architecture for distributed system"' },
+      style: { ...nodeStyle, background: '#10b981', minWidth: 380 },
+    },
+    // Participating Agents
+    {
+      id: 'agent-1',
+      position: { x: 100, y: 180 },
+      data: { label: '🤖 Agent 1\nProposal: Microservices\nVote weight: 1.0' },
+      style: { ...nodeStyle, background: '#3b82f6', minWidth: 160 },
+    },
+    {
+      id: 'agent-2',
+      position: { x: 280, y: 180 },
+      data: { label: '🤖 Agent 2\nProposal: Serverless\nVote weight: 0.8' },
+      style: { ...nodeStyle, background: '#3b82f6', minWidth: 160 },
+    },
+    {
+      id: 'agent-3',
+      position: { x: 460, y: 180 },
+      data: { label: '🤖 Agent 3\nProposal: Hybrid\nVote weight: 1.2' },
+      style: { ...nodeStyle, background: '#3b82f6', minWidth: 160 },
+    },
+    {
+      id: 'agent-4',
+      position: { x: 640, y: 180 },
+      data: { label: '🤖 Agent 4\nProposal: Monolith\nVote weight: 0.6' },
+      style: { ...nodeStyle, background: '#3b82f6', minWidth: 160 },
+    },
+    {
+      id: 'agent-5',
+      position: { x: 820, y: 180 },
+      data: { label: '🤖 Agent 5\nProposal: Event-driven\nVote weight: 0.9' },
+      style: { ...nodeStyle, background: '#3b82f6', minWidth: 160 },
+    },
+    // Consensus Mechanisms
+    {
+      id: 'mechanism-selector',
+      position: { x: 400, y: 300 },
+      data: { label: '🎛️ Mechanism Selector\nChoose consensus algorithm' },
+      style: { ...nodeStyle, background: '#7c3aed', minWidth: 220 },
+    },
+    // Different Consensus Algorithms
+    {
+      id: 'majority-voting',
+      position: { x: 100, y: 420 },
+      data: { label: '🗳️ Majority Voting\n>50% agreement\nResult: Microservices' },
+      style: { ...nodeStyle, background: '#f59e0b', minWidth: 160 },
+    },
+    {
+      id: 'weighted-voting',
+      position: { x: 280, y: 420 },
+      data: { label: '⚖️ Weighted Voting\nExpertise-based\nResult: Hybrid' },
+      style: { ...nodeStyle, background: '#f59e0b', minWidth: 160 },
+    },
+    {
+      id: 'byzantine-fault',
+      position: { x: 460, y: 420 },
+      data: { label: '🛡️ Byzantine Fault\nTolerant (BFT)\nResult: Validated' },
+      style: { ...nodeStyle, background: '#f59e0b', minWidth: 160 },
+    },
+    {
+      id: 'raft-consensus',
+      position: { x: 640, y: 420 },
+      data: { label: '📜 Raft Algorithm\nLeader election\nResult: Leader choice' },
+      style: { ...nodeStyle, background: '#f59e0b', minWidth: 160 },
+    },
+    {
+      id: 'paxos-algorithm',
+      position: { x: 820, y: 420 },
+      data: { label: '🏛️ Paxos Algorithm\n2-phase commit\nResult: Agreed' },
+      style: { ...nodeStyle, background: '#f59e0b', minWidth: 160 },
+    },
+    // Consensus Process Components
+    {
+      id: 'proposal-phase',
+      position: { x: 150, y: 540 },
+      data: { label: '💡 Proposal Phase\nAgents submit candidates' },
+      style: { ...nodeStyle, background: '#ec4899', minWidth: 180 },
+    },
+    {
+      id: 'voting-phase',
+      position: { x: 350, y: 540 },
+      data: { label: '🗳️ Voting Phase\nCast votes/preferences' },
+      style: { ...nodeStyle, background: '#ec4899', minWidth: 180 },
+    },
+    {
+      id: 'validation-phase',
+      position: { x: 550, y: 540 },
+      data: { label: '✅ Validation Phase\nVerify votes' },
+      style: { ...nodeStyle, background: '#ec4899', minWidth: 180 },
+    },
+    {
+      id: 'commit-phase',
+      position: { x: 750, y: 540 },
+      data: { label: '🔒 Commit Phase\nFinalize decision' },
+      style: { ...nodeStyle, background: '#ec4899', minWidth: 180 },
+    },
+    // Consensus Properties
+    {
+      id: 'safety-checker',
+      position: { x: 100, y: 660 },
+      data: { label: '🔐 Safety\nNo conflicting decisions' },
+      style: { ...nodeStyle, background: '#ef4444', minWidth: 160 },
+    },
+    {
+      id: 'liveness-monitor',
+      position: { x: 280, y: 660 },
+      data: { label: '♾️ Liveness\nEventual decision' },
+      style: { ...nodeStyle, background: '#ef4444', minWidth: 160 },
+    },
+    {
+      id: 'fault-tolerance',
+      position: { x: 460, y: 660 },
+      data: { label: '🛡️ Fault Tolerance\nHandle failures' },
+      style: { ...nodeStyle, background: '#ef4444', minWidth: 160 },
+    },
+    {
+      id: 'agreement-verifier',
+      position: { x: 640, y: 660 },
+      data: { label: '🤝 Agreement\nAll agree on value' },
+      style: { ...nodeStyle, background: '#ef4444', minWidth: 160 },
+    },
+    {
+      id: 'termination-guarantee',
+      position: { x: 820, y: 660 },
+      data: { label: '🏁 Termination\nGuaranteed completion' },
+      style: { ...nodeStyle, background: '#ef4444', minWidth: 160 },
+    },
+    // Quorum & Thresholds
+    {
+      id: 'quorum-calculator',
+      position: { x: 200, y: 780 },
+      data: { label: '📊 Quorum Calculator\n3/5 agents required' },
+      style: { ...nodeStyle, background: '#6366f1', minWidth: 180 },
+    },
+    {
+      id: 'threshold-manager',
+      position: { x: 400, y: 780 },
+      data: { label: '🎚️ Threshold Manager\n66% supermajority' },
+      style: { ...nodeStyle, background: '#6366f1', minWidth: 180 },
+    },
+    {
+      id: 'timeout-handler',
+      position: { x: 600, y: 780 },
+      data: { label: '⏱️ Timeout Handler\n30s decision window' },
+      style: { ...nodeStyle, background: '#6366f1', minWidth: 180 },
+    },
+    // Conflict Resolution
+    {
+      id: 'tie-breaker',
+      position: { x: 150, y: 900 },
+      data: { label: '🎲 Tie Breaker\nResolve deadlocks' },
+      style: { ...nodeStyle, background: '#22c55e', minWidth: 160 },
+    },
+    {
+      id: 'revote-mechanism',
+      position: { x: 320, y: 900 },
+      data: { label: '🔄 Revote Mechanism\nMultiple rounds' },
+      style: { ...nodeStyle, background: '#22c55e', minWidth: 160 },
+    },
+    {
+      id: 'leader-election',
+      position: { x: 490, y: 900 },
+      data: { label: '👑 Leader Election\nDesignate decider' },
+      style: { ...nodeStyle, background: '#22c55e', minWidth: 160 },
+    },
+    {
+      id: 'consensus-log',
+      position: { x: 660, y: 900 },
+      data: { label: '📖 Consensus Log\nImmutable record' },
+      style: { ...nodeStyle, background: '#22c55e', minWidth: 160 },
+    },
+    {
+      id: 'final-consensus',
+      position: { x: 400, y: 1020 },
+      data: { label: '✨ Final Consensus\nHybrid architecture selected with 68% agreement' },
+      style: { ...nodeStyle, background: '#10b981', minWidth: 350 },
+    },
+  ],
+  initialEdges: [
+    // Problem to agents
+    {
+      id: 'problem-agent1',
+      source: 'decision-problem',
+      target: 'agent-1',
+      style: { ...edgeStyle, stroke: '#3b82f6' },
+      animated: true,
+    },
+    {
+      id: 'problem-agent2',
+      source: 'decision-problem',
+      target: 'agent-2',
+      style: { ...edgeStyle, stroke: '#3b82f6' },
+      animated: true,
+    },
+    {
+      id: 'problem-agent3',
+      source: 'decision-problem',
+      target: 'agent-3',
+      style: { ...edgeStyle, stroke: '#3b82f6' },
+      animated: true,
+    },
+    {
+      id: 'problem-agent4',
+      source: 'decision-problem',
+      target: 'agent-4',
+      style: { ...edgeStyle, stroke: '#3b82f6' },
+      animated: true,
+    },
+    {
+      id: 'problem-agent5',
+      source: 'decision-problem',
+      target: 'agent-5',
+      style: { ...edgeStyle, stroke: '#3b82f6' },
+      animated: true,
+    },
+    // Agents to mechanism selector
+    {
+      id: 'agent1-mechanism',
+      source: 'agent-1',
+      target: 'mechanism-selector',
+      style: { ...edgeStyle, stroke: '#7c3aed' },
+    },
+    {
+      id: 'agent2-mechanism',
+      source: 'agent-2',
+      target: 'mechanism-selector',
+      style: { ...edgeStyle, stroke: '#7c3aed' },
+    },
+    {
+      id: 'agent3-mechanism',
+      source: 'agent-3',
+      target: 'mechanism-selector',
+      style: { ...edgeStyle, stroke: '#7c3aed' },
+    },
+    {
+      id: 'agent4-mechanism',
+      source: 'agent-4',
+      target: 'mechanism-selector',
+      style: { ...edgeStyle, stroke: '#7c3aed' },
+    },
+    {
+      id: 'agent5-mechanism',
+      source: 'agent-5',
+      target: 'mechanism-selector',
+      style: { ...edgeStyle, stroke: '#7c3aed' },
+    },
+    // Mechanism to algorithms
+    {
+      id: 'mechanism-majority',
+      source: 'mechanism-selector',
+      target: 'majority-voting',
+      style: { ...edgeStyle, stroke: '#f59e0b' },
+      label: 'Simple',
+    },
+    {
+      id: 'mechanism-weighted',
+      source: 'mechanism-selector',
+      target: 'weighted-voting',
+      style: { ...edgeStyle, stroke: '#f59e0b' },
+      label: 'Weighted',
+    },
+    {
+      id: 'mechanism-byzantine',
+      source: 'mechanism-selector',
+      target: 'byzantine-fault',
+      style: { ...edgeStyle, stroke: '#f59e0b' },
+      label: 'Secure',
+    },
+    {
+      id: 'mechanism-raft',
+      source: 'mechanism-selector',
+      target: 'raft-consensus',
+      style: { ...edgeStyle, stroke: '#f59e0b' },
+      label: 'Leader',
+    },
+    {
+      id: 'mechanism-paxos',
+      source: 'mechanism-selector',
+      target: 'paxos-algorithm',
+      style: { ...edgeStyle, stroke: '#f59e0b' },
+      label: 'Distributed',
+    },
+    // Consensus process flow
+    {
+      id: 'weighted-proposal',
+      source: 'weighted-voting',
+      target: 'proposal-phase',
+      style: { ...edgeStyle, stroke: '#ec4899', strokeWidth: 3 },
+      animated: true,
+    },
+    {
+      id: 'proposal-voting',
+      source: 'proposal-phase',
+      target: 'voting-phase',
+      style: { ...edgeStyle, stroke: '#ec4899', strokeWidth: 3 },
+      animated: true,
+    },
+    {
+      id: 'voting-validation',
+      source: 'voting-phase',
+      target: 'validation-phase',
+      style: { ...edgeStyle, stroke: '#ec4899', strokeWidth: 3 },
+      animated: true,
+    },
+    {
+      id: 'validation-commit',
+      source: 'validation-phase',
+      target: 'commit-phase',
+      style: { ...edgeStyle, stroke: '#ec4899', strokeWidth: 3 },
+      animated: true,
+    },
+    // Properties verification
+    {
+      id: 'validation-safety',
+      source: 'validation-phase',
+      target: 'safety-checker',
+      style: { ...edgeStyle, stroke: '#ef4444' },
+    },
+    {
+      id: 'voting-liveness',
+      source: 'voting-phase',
+      target: 'liveness-monitor',
+      style: { ...edgeStyle, stroke: '#ef4444' },
+    },
+    {
+      id: 'byzantine-fault-tol',
+      source: 'byzantine-fault',
+      target: 'fault-tolerance',
+      style: { ...edgeStyle, stroke: '#ef4444' },
+    },
+    {
+      id: 'commit-agreement',
+      source: 'commit-phase',
+      target: 'agreement-verifier',
+      style: { ...edgeStyle, stroke: '#ef4444' },
+    },
+    {
+      id: 'timeout-termination',
+      source: 'timeout-handler',
+      target: 'termination-guarantee',
+      style: { ...edgeStyle, stroke: '#ef4444' },
+    },
+    // Quorum and thresholds
+    {
+      id: 'voting-quorum',
+      source: 'voting-phase',
+      target: 'quorum-calculator',
+      style: { ...edgeStyle, stroke: '#6366f1' },
+      label: 'Check',
+    },
+    {
+      id: 'quorum-threshold',
+      source: 'quorum-calculator',
+      target: 'threshold-manager',
+      style: { ...edgeStyle, stroke: '#6366f1' },
+    },
+    {
+      id: 'threshold-timeout',
+      source: 'threshold-manager',
+      target: 'timeout-handler',
+      style: { ...edgeStyle, stroke: '#6366f1' },
+    },
+    // Conflict resolution
+    {
+      id: 'voting-tie',
+      source: 'voting-phase',
+      target: 'tie-breaker',
+      style: { ...edgeStyle, stroke: '#22c55e', strokeDasharray: '5 5' },
+      label: 'If tie',
+    },
+    {
+      id: 'tie-revote',
+      source: 'tie-breaker',
+      target: 'revote-mechanism',
+      style: { ...edgeStyle, stroke: '#22c55e' },
+    },
+    {
+      id: 'raft-leader',
+      source: 'raft-consensus',
+      target: 'leader-election',
+      style: { ...edgeStyle, stroke: '#22c55e' },
+    },
+    {
+      id: 'commit-log',
+      source: 'commit-phase',
+      target: 'consensus-log',
+      style: { ...edgeStyle, stroke: '#22c55e' },
+    },
+    // Final consensus
+    {
+      id: 'agreement-final',
+      source: 'agreement-verifier',
+      target: 'final-consensus',
+      style: { ...edgeStyle, stroke: '#10b981' },
+    },
+    {
+      id: 'log-final',
+      source: 'consensus-log',
+      target: 'final-consensus',
+      style: { ...edgeStyle, stroke: '#10b981' },
+    },
+    {
+      id: 'termination-final',
+      source: 'termination-guarantee',
+      target: 'final-consensus',
+      style: { ...edgeStyle, stroke: '#10b981' },
+    },
+    // Inter-agent communication
+    {
+      id: 'agent1-agent2',
+      source: 'agent-1',
+      target: 'agent-2',
+      style: { ...edgeStyle, stroke: '#64748b', strokeDasharray: '3 3' },
+      label: 'Msg',
+    },
+    {
+      id: 'agent2-agent3',
+      source: 'agent-2',
+      target: 'agent-3',
+      style: { ...edgeStyle, stroke: '#64748b', strokeDasharray: '3 3' },
+      label: 'Msg',
+    },
+    {
+      id: 'agent3-agent4',
+      source: 'agent-3',
+      target: 'agent-4',
+      style: { ...edgeStyle, stroke: '#64748b', strokeDasharray: '3 3' },
+      label: 'Msg',
+    },
+    {
+      id: 'agent4-agent5',
+      source: 'agent-4',
+      target: 'agent-5',
+      style: { ...edgeStyle, stroke: '#64748b', strokeDasharray: '3 3' },
+      label: 'Msg',
+    },
+  ],
+  steps: [
+    {
+      title: 'Problem Distribution',
+      description: 'Decision problem sent to all participating agents',
+      activeNodes: ['decision-problem', 'agent-1', 'agent-2', 'agent-3', 'agent-4', 'agent-5'],
+      activeEdges: ['problem-agent1', 'problem-agent2', 'problem-agent3', 'problem-agent4', 'problem-agent5'],
+    },
+    {
+      title: 'Inter-Agent Communication',
+      description: 'Agents exchange proposals and preferences',
+      activeNodes: ['agent-1', 'agent-2', 'agent-3', 'agent-4', 'agent-5'],
+      activeEdges: ['agent1-agent2', 'agent2-agent3', 'agent3-agent4', 'agent4-agent5'],
+    },
+    {
+      title: 'Algorithm Selection',
+      description: 'Choose appropriate consensus mechanism',
+      activeNodes: ['mechanism-selector', 'majority-voting', 'weighted-voting', 'byzantine-fault', 'raft-consensus', 'paxos-algorithm'],
+      activeEdges: ['agent1-mechanism', 'agent2-mechanism', 'agent3-mechanism', 'mechanism-majority', 'mechanism-weighted', 'mechanism-byzantine', 'mechanism-raft', 'mechanism-paxos'],
+    },
+    {
+      title: 'Proposal Phase',
+      description: 'Agents submit their proposals formally',
+      activeNodes: ['weighted-voting', 'proposal-phase'],
+      activeEdges: ['weighted-proposal'],
+    },
+    {
+      title: 'Voting Phase',
+      description: 'Agents cast weighted votes on proposals',
+      activeNodes: ['proposal-phase', 'voting-phase', 'quorum-calculator'],
+      activeEdges: ['proposal-voting', 'voting-quorum'],
+    },
+    {
+      title: 'Quorum Check',
+      description: 'Verify sufficient participation (3/5 agents)',
+      activeNodes: ['quorum-calculator', 'threshold-manager', 'timeout-handler'],
+      activeEdges: ['quorum-threshold', 'threshold-timeout'],
+    },
+    {
+      title: 'Validation Phase',
+      description: 'Validate votes and check safety properties',
+      activeNodes: ['voting-phase', 'validation-phase', 'safety-checker'],
+      activeEdges: ['voting-validation', 'validation-safety'],
+    },
+    {
+      title: 'Conflict Resolution',
+      description: 'Handle ties and deadlocks if needed',
+      activeNodes: ['tie-breaker', 'revote-mechanism', 'leader-election'],
+      activeEdges: ['voting-tie', 'tie-revote', 'raft-leader'],
+    },
+    {
+      title: 'Commit Phase',
+      description: 'Finalize and commit the consensus decision',
+      activeNodes: ['validation-phase', 'commit-phase', 'consensus-log'],
+      activeEdges: ['validation-commit', 'commit-log'],
+    },
+    {
+      title: 'Property Verification',
+      description: 'Ensure consensus properties are satisfied',
+      activeNodes: ['safety-checker', 'liveness-monitor', 'fault-tolerance', 'agreement-verifier', 'termination-guarantee'],
+      activeEdges: ['commit-agreement', 'timeout-termination', 'byzantine-fault-tol', 'voting-liveness'],
+    },
+    {
+      title: 'Final Consensus',
+      description: 'Achieve agreement on hybrid architecture',
+      activeNodes: ['final-consensus', 'agreement-verifier', 'consensus-log', 'termination-guarantee'],
+      activeEdges: ['agreement-final', 'log-final', 'termination-final'],
+    },
+  ],
+};

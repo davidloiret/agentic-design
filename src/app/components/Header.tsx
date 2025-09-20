@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BrainMascot, BrainExpression } from '@/components/BrainMascot';
+import { usePlausible } from '@/hooks/usePlausible';
 
 // Component to show either tour button or tagline based on tour status
 const TourButtonOrTagline = () => {
@@ -68,6 +69,7 @@ export const Header = () => {
   const { user, loading } = useAuth();
   const { currentStreak } = useLearningHub();
   const { openSearch } = useSearch();
+  const { trackEvent } = usePlausible();
   const router = useRouter();
   const pathname = usePathname();
   const isLearningHubActive = pathname === '/learning-hub' || pathname.startsWith('/learning-hub/');
@@ -97,7 +99,11 @@ export const Header = () => {
           {/* Left side - Logo and Title */}
           <div className="flex items-center space-x-3 flex-shrink-0">
             <div className="flex items-center space-x-3">
-              <Link href="/" className="flex items-center space-x-3 group">
+              <Link
+                href="/"
+                className="flex items-center space-x-3 group"
+                onClick={() => trackEvent('Header Navigation', { action: 'logo_click', destination: 'home' })}
+              >
                 <motion.div
                   className="flex items-center justify-center"
                   whileHover={{ scale: 1.1 }}
@@ -144,7 +150,10 @@ export const Header = () => {
             }}
           >
             <button
-              onClick={openSearch}
+              onClick={() => {
+                trackEvent('Header Navigation', { action: 'search_open', source: 'search_bar' });
+                openSearch();
+              }}
               className="w-full relative group"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-lg blur-xl group-hover:blur-2xl transition-all duration-300 opacity-0 group-hover:opacity-100"></div>

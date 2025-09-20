@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
 import { Sparkles, Mail, Lock, Eye, EyeOff, User, CheckCircle, Heart } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { usePlausible } from '@/hooks/usePlausible';
 
 export default function RegisterPage() {
   const [email, setEmail] = useState('');
@@ -19,6 +20,7 @@ export default function RegisterPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
   const { signUp, signInWithGoogle, signInWithGitHub } = useAuth();
+  const { trackAuth } = usePlausible();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -39,8 +41,15 @@ export default function RegisterPage() {
 
     try {
       await signUp(email, password, firstName, lastName);
+
+      // Track successful registration
+      trackAuth('register');
+
       setRegistrationSuccess(true);
     } catch (err: any) {
+      // Track failed registration
+      trackAuth('register_failed');
+
       setError(err.message || 'Failed to create account');
     } finally {
       setLoading(false);

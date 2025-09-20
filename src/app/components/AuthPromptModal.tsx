@@ -2,12 +2,12 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { 
-  X, 
-  GraduationCap, 
-  CheckCircle, 
-  Star, 
-  Trophy, 
+import {
+  X,
+  GraduationCap,
+  CheckCircle,
+  Star,
+  Trophy,
   Target,
   BookOpen,
   Users,
@@ -15,6 +15,7 @@ import {
   TrendingUp,
   Sparkles
 } from 'lucide-react';
+import { usePlausible } from '@/hooks/usePlausible';
 
 interface AuthPromptModalProps {
   isOpen: boolean;
@@ -25,6 +26,7 @@ interface AuthPromptModalProps {
 
 export const AuthPromptModal = ({ isOpen, onClose, feature, description }: AuthPromptModalProps) => {
   const router = useRouter();
+  const { trackEvent } = usePlausible();
 
   if (!isOpen) return null;
 
@@ -62,16 +64,31 @@ export const AuthPromptModal = ({ isOpen, onClose, feature, description }: AuthP
   ];
 
   const handleSignUp = () => {
+    trackEvent('Auth Prompt Modal', {
+      action: 'sign_up_click',
+      feature: feature,
+      description: description
+    });
     onClose();
     router.push('/auth/register');
   };
 
   const handleSignIn = () => {
+    trackEvent('Auth Prompt Modal', {
+      action: 'sign_in_click',
+      feature: feature,
+      description: description
+    });
     onClose();
     router.push('/auth/login');
   };
 
   const handleContinueAsGuest = () => {
+    trackEvent('Auth Prompt Modal', {
+      action: 'continue_as_guest',
+      feature: feature,
+      description: description
+    });
     onClose();
     router.push('/learning-hub');
   };
@@ -82,7 +99,14 @@ export const AuthPromptModal = ({ isOpen, onClose, feature, description }: AuthP
         {/* Header */}
         <div className="relative p-6 border-b border-gray-800">
           <button
-            onClick={onClose}
+            onClick={() => {
+              trackEvent('Auth Prompt Modal', {
+                action: 'close_modal',
+                feature: feature,
+                description: description
+              });
+              onClose();
+            }}
             className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-300 hover:bg-gray-800 rounded-lg transition-colors duration-200"
           >
             <X className="w-5 h-5" />

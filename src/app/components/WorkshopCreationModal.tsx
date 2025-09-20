@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { X, Plus, Calendar, Users, DollarSign, Sparkles } from 'lucide-react'
 import { workshopApi } from '@/lib/workshop-api'
+import { usePlausible } from '@/hooks/usePlausible'
 
 interface WorkshopCreationModalProps {
   isOpen: boolean
@@ -16,6 +17,7 @@ const WorkshopCreationModal: React.FC<WorkshopCreationModalProps> = ({
   onClose,
   onWorkshopCreated
 }) => {
+  const { trackEvent } = usePlausible()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [formData, setFormData] = useState({
@@ -37,6 +39,15 @@ const WorkshopCreationModal: React.FC<WorkshopCreationModalProps> = ({
     setError('')
     setLoading(true)
 
+    trackEvent('Workshop Creation Modal', {
+      action: 'create_attempt',
+      workshop_type: formData.type,
+      workshop_tier: formData.tier,
+      max_participants: formData.maxParticipants,
+      price: formData.price,
+      xp_reward: formData.totalXpReward
+    });
+
     try {
       const workshopData = {
         ...formData,
@@ -50,13 +61,20 @@ const WorkshopCreationModal: React.FC<WorkshopCreationModalProps> = ({
       }
 
       const workshop = await workshopApi.createWorkshop(workshopData)
-      
+
+      trackEvent('Workshop Creation Modal', {
+        action: 'create_success',
+        workshop_id: workshop.id,
+        workshop_type: formData.type,
+        workshop_tier: formData.tier
+      });
+
       if (onWorkshopCreated) {
         onWorkshopCreated(workshop)
       }
-      
+
       onClose()
-      
+
       // Reset form
       setFormData({
         title: '',
@@ -71,8 +89,12 @@ const WorkshopCreationModal: React.FC<WorkshopCreationModalProps> = ({
         learningOutcomes: '',
         totalXpReward: 1000
       })
-      
+
     } catch (err: any) {
+      trackEvent('Workshop Creation Modal', {
+        action: 'create_error',
+        error_message: err.message || 'Failed to create workshop'
+      });
       setError(err.message || 'Failed to create workshop')
     } finally {
       setLoading(false)
@@ -100,7 +122,12 @@ const WorkshopCreationModal: React.FC<WorkshopCreationModalProps> = ({
         {/* Header */}
         <div className="relative p-6 pb-0">
           <button
-            onClick={onClose}
+            onClick={() => {
+              trackEvent('Workshop Creation Modal', {
+                action: 'close_modal'
+              });
+              onClose();
+            }}
             className="absolute top-4 right-4 p-2 rounded-lg hover:bg-white/10 transition-colors"
           >
             <X className="w-5 h-5 text-white" />

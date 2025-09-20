@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle, XCircle, Brain, AlertCircle, ChevronRight, Award } from 'lucide-react';
 import { QuizQuestion } from '@/data/ai-agent-fundamentals';
+import { usePlausible } from '@/hooks/usePlausible';
 
 interface AIAgentQuizProps {
   questions: QuizQuestion[];
@@ -14,6 +15,7 @@ export const AIAgentQuiz: React.FC<AIAgentQuizProps> = ({
   questions,
   onComplete
 }) => {
+  const { trackEvent } = usePlausible();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({});
   const [showExplanation, setShowExplanation] = useState(false);
@@ -25,6 +27,17 @@ export const AIAgentQuiz: React.FC<AIAgentQuizProps> = ({
 
   const handleAnswerSelect = (optionId: string) => {
     if (!isAnswered) {
+      const isCorrect = currentQuestion.correctAnswer === optionId;
+
+      trackEvent('Quiz Interaction', {
+        action: 'answer_selected',
+        question_id: currentQuestion.id,
+        question_index: currentQuestionIndex,
+        selected_option: optionId,
+        is_correct: isCorrect,
+        total_questions: questions.length
+      });
+
       setSelectedAnswers({
         ...selectedAnswers,
         [currentQuestion.id]: optionId
@@ -35,11 +48,31 @@ export const AIAgentQuiz: React.FC<AIAgentQuizProps> = ({
 
   const handleNextQuestion = () => {
     if (currentQuestionIndex < questions.length - 1) {
+      trackEvent('Quiz Interaction', {
+        action: 'next_question',
+        from_question_index: currentQuestionIndex,
+        to_question_index: currentQuestionIndex + 1,
+        total_questions: questions.length
+      });
+
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setShowExplanation(false);
     } else {
       // Quiz completed
       const score = calculateScore();
+      const correctAnswers = Object.keys(selectedAnswers).filter(questionId => {
+        const question = questions.find(q => q.id === questionId);
+        return question && selectedAnswers[questionId] === question.correctAnswer;
+      }).length;
+
+      trackEvent('Quiz Interaction', {
+        action: 'quiz_completed',
+        final_score: score,
+        correct_answers: correctAnswers,
+        total_questions: questions.length,
+        completion_rate: (correctAnswers / questions.length) * 100
+      });
+
       setQuizCompleted(true);
       onComplete?.(score, selectedAnswers);
     }

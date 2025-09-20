@@ -6,9 +6,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { BrainMascot, BrainExpression } from '@/components/BrainMascot';
 import { ArrowRight, Sparkles, Brain, Code, Shield, Zap, BookOpen, Users, Star } from 'lucide-react';
 import Link from 'next/link';
+import { usePlausible } from '@/hooks/usePlausible';
 
 export default function Home() {
   const router = useRouter();
+  const { trackEvent } = usePlausible();
   const [mascotExpression, setMascotExpression] = useState<BrainExpression>('happy');
   const [isHovering, setIsHovering] = useState(false);
   
@@ -77,7 +79,10 @@ export default function Home() {
         {/* Auth Buttons - Top Right */}
         <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20">
           <div className="flex items-center gap-3">
-            <Link href="/auth/login">
+            <Link
+              href="/auth/login"
+              onClick={() => trackEvent('Homepage CTA', { action: 'sign_in', location: 'header' })}
+            >
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -86,7 +91,10 @@ export default function Home() {
                 Sign In
               </motion.button>
             </Link>
-            <Link href="/auth/register">
+            <Link
+              href="/auth/register"
+              onClick={() => trackEvent('Homepage CTA', { action: 'sign_up', location: 'header' })}
+            >
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -164,7 +172,11 @@ export default function Home() {
               transition={{ delay: 0.4 }}
               className="flex flex-col sm:flex-row gap-4 justify-center"
             >
-              <Link href="/patterns" data-tour="patterns-link">
+              <Link
+                href="/patterns"
+                data-tour="patterns-link"
+                onClick={() => trackEvent('Homepage CTA', { action: 'explore_patterns', location: 'hero' })}
+              >
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -174,7 +186,11 @@ export default function Home() {
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </motion.button>
               </Link>
-              <Link href="/learning-hub" data-tour="learning-hub-link">
+              <Link
+                href="/learning-hub"
+                data-tour="learning-hub-link"
+                onClick={() => trackEvent('Homepage CTA', { action: 'learning_hub', location: 'hero' })}
+              >
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -308,7 +324,10 @@ export default function Home() {
             <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
               Join thousands of developers building the next generation of intelligent systems
             </p>
-            <Link href="/patterns">
+            <Link
+              href="/patterns"
+              onClick={() => trackEvent('Homepage CTA', { action: 'start_learning', location: 'bottom_cta' })}
+            >
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}

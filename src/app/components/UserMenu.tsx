@@ -5,16 +5,17 @@ import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
-import { 
-  User, 
-  Settings, 
-  LogOut, 
+import {
+  User,
+  Settings,
+  LogOut,
   ChevronDown,
   UserCircle,
   CreditCard,
   Bell,
   HelpCircle
 } from 'lucide-react';
+import { usePlausible } from '@/hooks/usePlausible';
 
 export const UserMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,6 +24,7 @@ export const UserMenu = () => {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, right: 0 });
   const { user, signOut } = useAuth();
+  const { trackEvent } = usePlausible();
   const router = useRouter();
 
   // Set mounted state
@@ -92,6 +94,7 @@ export const UserMenu = () => {
       <button
         ref={buttonRef}
         onClick={() => {
+          trackEvent('User Menu', { action: isOpen ? 'close' : 'open' });
           if (!isOpen) {
             updateDropdownPosition();
           }
@@ -140,16 +143,22 @@ export const UserMenu = () => {
             <Link
               href="/profile"
               className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-300 hover:bg-gray-800/50 hover:text-white transition-colors duration-150"
-              onClick={() => setIsOpen(false)}
+              onClick={() => {
+                trackEvent('User Menu Navigation', { destination: 'profile' });
+                setIsOpen(false);
+              }}
             >
               <UserCircle className="w-4 h-4" />
               <span>Your Profile</span>
             </Link>
-            
+
             <Link
               href="/settings"
               className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-300 hover:bg-gray-800/50 hover:text-white transition-colors duration-150"
-              onClick={() => setIsOpen(false)}
+              onClick={() => {
+                trackEvent('User Menu Navigation', { destination: 'settings' });
+                setIsOpen(false);
+              }}
             >
               <Settings className="w-4 h-4" />
               <span>Settings</span>
@@ -158,7 +167,10 @@ export const UserMenu = () => {
             <Link
               href="/billing"
               className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-300 hover:bg-gray-800/50 hover:text-white transition-colors duration-150"
-              onClick={() => setIsOpen(false)}
+              onClick={() => {
+                trackEvent('User Menu Navigation', { destination: 'billing' });
+                setIsOpen(false);
+              }}
             >
               <CreditCard className="w-4 h-4" />
               <span>Billing</span>
@@ -167,7 +179,10 @@ export const UserMenu = () => {
             <Link
               href="/notifications"
               className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-300 hover:bg-gray-800/50 hover:text-white transition-colors duration-150"
-              onClick={() => setIsOpen(false)}
+              onClick={() => {
+                trackEvent('User Menu Navigation', { destination: 'notifications' });
+                setIsOpen(false);
+              }}
             >
               <Bell className="w-4 h-4" />
               <span>Notifications</span>

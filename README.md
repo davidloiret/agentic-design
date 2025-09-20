@@ -2323,3 +2323,98 @@ Encrypt to recipient plublic key; so only know user can access it
 
 good now implement ui-ux-patterns/agent-collaboration-ux detail page, conduct research and ensure every information is        │
 │   backed by authoritative reference, think hard.      
+
+
+traduire en francais
+
+---
+
+knwoledge representtaion
+
+light theme
+
+lingui translate
+
+generique worker etc
+
+---
+
+
+ ✅ Complete Feature Parity with Marker
+
+  - All 25+ processors implemented matching Marker's exact algorithms
+  - Exact thresholds and constants from Marker (1.5% intersection, 80% vertical overlap, etc.)
+  - Same processing pipeline order as Marker
+  - Cross-page continuity tracking
+  - Confidence scoring system
+  - All document element types supported
+
+  ✅ Vision LLM Integration
+
+  - Replaced traditional OCR (tesseract/Surya) with Vision LLMs (GPT-4o/Claude)
+  - Production-grade gRPC client with circuit breakers and retry logic
+  - Multi-pass processing for low-confidence regions
+  - Structured extraction using BAML schemas
+
+  ✅ Production-Ready Architecture
+
+  - Domain-driven design with hexagonal architecture
+  - Complete error handling
+  - Comprehensive metadata tracking
+  - Thread-safe async processing
+  - Connection pooling and rate limiting
+
+  Key Achievements:
+
+  1. Fixed 295 compilation errors systematically
+  2. Implemented all missing processors from Marker
+  3. Integrated Vision LLM processing via gRPC
+  4. Maintained exact algorithmic parity with Marker
+  5. Created production-grade infrastructure with proper error handling
+
+  The library is now ready for testing with real PDFs and can be used in production to convert PDFs to markdown using Vision LLMs instead of traditional OCR!
+
+  use OCR latest
+https://github.com/PaddlePaddle/PaddleOCR
+
+  ===
+
+
+knowledge representation (shacl, owl, rdf)
+
+real example flow vis
+
+
+
+
+markify handle ocr, multi modality, video etc
+
+there is some duplication between techniques, identify it and give me a plan to improve.
+
+self improving coding agent
+
+keep markify usage to convert to md as it is fast and working great but for other but maybe put it in document-service
+
+
+add a disclaimer saying that this application is under construction
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Now do Intrinsic Alignment Pattern (Internal observation points that cannot be manipulated by the agent, preventing deep scheming) with concrete example and focus on main concept to help the learner understand.
+
+rabbitmq kafka vs grpc

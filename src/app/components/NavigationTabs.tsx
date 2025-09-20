@@ -3,6 +3,7 @@ import { BookOpen, Lightbulb, Share2, FlaskConical, Brain, Boxes, Newspaper, Fol
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
+import { usePlausible } from '@/hooks/usePlausible';
 
 interface Tab {
   id: string;
@@ -23,6 +24,7 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
   const [navbarHeight, setNavbarHeight] = useState(0);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const navbarRef = useRef<HTMLDivElement>(null);
+  const { trackEvent } = usePlausible();
   const router = useRouter();
   const pathname = usePathname();
   const { user, loading } = useAuth();
@@ -160,6 +162,14 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
   const allTabs = tabGroups.flatMap(group => group.tabs);
 
   const handleTabClick = (tabId: string, route?: string) => {
+    // Track tab navigation
+    trackEvent('Navigation Tab Click', {
+      tab_id: tabId,
+      route: route,
+      previous_tab: activeTab,
+      current_page: pathname
+    });
+
     setActiveTab(tabId);
     setIsMobileMenuOpen(false);
     if (route) {
@@ -249,7 +259,13 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
             </div>
             <button
               id="mobile-nav-toggle"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              onClick={() => {
+                trackEvent('Mobile Menu Toggle', {
+                  action: isMobileMenuOpen ? 'close' : 'open',
+                  current_tab: activeTab
+                });
+                setIsMobileMenuOpen(!isMobileMenuOpen);
+              }}
               className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
               aria-label="Toggle navigation menu"
               aria-expanded={isMobileMenuOpen}

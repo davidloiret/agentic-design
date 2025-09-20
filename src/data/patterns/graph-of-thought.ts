@@ -1,227 +1,190 @@
 import { PatternScenario } from './types';
+import { nodeStyle, edgeStyle } from './styles';
 
 export const graphOfThoughtPattern: PatternScenario = {
   id: 'got',
   title: 'Graph-of-Thought (GoT)',
   description: 'Non-linear reasoning where thoughts are vertices and dependencies are edges in a dynamic graph structure',
-  steps: [
-    {
-      id: 'step1',
-      title: 'Initial Thought Generation',
-      description: 'Generate multiple initial thought nodes for the problem',
-      input: 'Problem: "Design sustainable smart city"',
-      output: 'Core thought nodes: Energy, Transport, Housing, Economics',
-      activeNodes: ['problem', 'energy-thought', 'transport-thought', 'housing-thought', 'economic-thought'],
-      activeEdges: ['problem-energy', 'problem-transport', 'problem-housing', 'problem-economic']
-    },
-    {
-      id: 'step2',
-      title: 'Dependency Mapping',
-      description: 'Establish connections and dependencies between thoughts',
-      input: 'Core thought nodes',
-      output: 'Interconnected graph with bidirectional dependencies',
-      activeNodes: ['energy-thought', 'transport-thought', 'housing-thought', 'economic-thought'],
-      activeEdges: ['energy-transport', 'energy-housing', 'transport-housing', 'housing-economic', 'economic-energy'],
-    },
-    {
-      id: 'step3',
-      title: 'Synergistic Expansion',
-      description: 'Generate new thoughts from combinations and intersections',
-      input: 'Interconnected thought network',
-      output: 'Synergistic nodes: Solar+Transit, Green+Water, Mixed-Use zones',
-      activeNodes: ['energy-thought', 'transport-thought', 'housing-thought', 'synergy1', 'synergy2', 'synergy3'],
-      activeEdges: ['energy-synergy1', 'transport-synergy1', 'housing-synergy2', 'synergy2-synergy3'],
-      newNodes: [
-        {
-          id: 'synergy1',
-          position: { x: 300, y: 50 },
-          data: { 
-            label: 'Solar + Transit\nSynergy',
-            style: { backgroundColor: '#F59E0B', color: 'white', borderRadius: '20px' }
-          },
-          type: 'default'
-        },
-        {
-          id: 'synergy2',
-          position: { x: 500, y: 50 },
-          data: { 
-            label: 'Green + Water\nIntegration',
-            style: { backgroundColor: '#10B981', color: 'white', borderRadius: '20px' }
-          },
-          type: 'default'
-        },
-        {
-          id: 'synergy3',
-          position: { x: 400, y: 250 },
-          data: { 
-            label: 'Mixed-Use\nDevelopment',
-            style: { backgroundColor: '#8B5CF6', color: 'white', borderRadius: '20px' }
-          },
-          type: 'default'
-        }
-      ]
-    },
-    {
-      id: 'step4',
-      title: 'Feedback Integration',
-      description: 'Refine thoughts through feedback loops and backtracking',
-      input: 'Expanded graph with synergies',
-      output: 'Refined graph with feedback-adjusted strengths',
-      activeNodes: ['synergy1', 'synergy2', 'synergy3', 'feedback-node'],
-      activeEdges: ['feedback-synergy1', 'feedback-synergy2', 'feedback-synergy3'],
-      newNodes: [
-        {
-          id: 'feedback-node',
-          position: { x: 400, y: 150 },
-          data: { 
-            label: 'Feedback\nIntegration',
-            style: { backgroundColor: '#DC2626', color: 'white', borderRadius: '15px' }
-          },
-          type: 'default'
-        }
-      ]
-    },
-    {
-      id: 'step5',
-      title: 'Solution Distillation',
-      description: 'Extract coherent solution from the refined thought graph',
-      input: 'Refined thought network with feedback',
-      output: 'Integrated eco-districts with energy-positive buildings and autonomous transit',
-      activeNodes: ['synergy1', 'synergy2', 'synergy3', 'solution'],
-      activeEdges: ['synergy1-solution', 'synergy2-solution', 'synergy3-solution'],
-      newNodes: [
-        {
-          id: 'solution',
-          position: { x: 700, y: 150 },
-          data: { 
-            label: 'Distilled Solution\nEco-Districts',
-            style: { backgroundColor: '#059669', color: 'white', borderRadius: '25px', fontSize: '12px' }
-          },
-          type: 'default'
-        }
-      ]
-    }
-  ],
   initialNodes: [
     {
-      id: 'problem',
-      position: { x: 100, y: 150 },
-      data: { 
-        label: 'Problem:\nSustainable\nSmart City',
-        style: { backgroundColor: '#1F2937', color: 'white' }
-      },
-      type: 'default'
+      id: 'query',
+      position: { x: 400, y: 50 },
+      data: { label: '❓ Problem\n"How to reduce carbon\nfootprint of our\noffice building?"' },
+      style: { ...nodeStyle, background: '#10b981', minWidth: 200 },
     },
     {
       id: 'energy-thought',
-      position: { x: 300, y: 100 },
-      data: { 
-        label: 'Energy\nSystems',
-        style: { backgroundColor: '#F59E0B', color: 'white' }
-      },
-      type: 'default'
+      position: { x: 150, y: 200 },
+      data: { label: '💡 Energy Systems\n"Switch to renewable\nsources + efficiency"' },
+      style: { ...nodeStyle, background: '#f59e0b', minWidth: 180 },
     },
     {
       id: 'transport-thought',
-      position: { x: 300, y: 200 },
-      data: { 
-        label: 'Transportation\nNetworks',
-        style: { backgroundColor: '#3B82F6', color: 'white' }
-      },
-      type: 'default'
+      position: { x: 400, y: 200 },
+      data: { label: '🚗 Transportation\n"Encourage public\ntransit + remote work"' },
+      style: { ...nodeStyle, background: '#06b6d4', minWidth: 180 },
     },
     {
-      id: 'housing-thought',
-      position: { x: 500, y: 100 },
-      data: { 
-        label: 'Housing\nPolicies',
-        style: { backgroundColor: '#10B981', color: 'white' }
-      },
-      type: 'default'
+      id: 'waste-thought',
+      position: { x: 650, y: 200 },
+      data: { label: '♻️ Waste Management\n"Implement recycling\n+ composting programs"' },
+      style: { ...nodeStyle, background: '#8b5cf6', minWidth: 180 },
     },
     {
-      id: 'economic-thought',
-      position: { x: 500, y: 200 },
-      data: { 
-        label: 'Economic\nZones',
-        style: { backgroundColor: '#8B5CF6', color: 'white' }
-      },
-      type: 'default'
-    }
+      id: 'dependency-1',
+      position: { x: 275, y: 350 },
+      data: { label: '🔗 Energy-Transport\n"Electric vehicle\ncharging stations"' },
+      style: { ...nodeStyle, background: '#ef4444', minWidth: 180 },
+    },
+    {
+      id: 'dependency-2',
+      position: { x: 525, y: 350 },
+      data: { label: '🔗 Transport-Waste\n"Reduce delivery\npackaging waste"' },
+      style: { ...nodeStyle, background: '#ef4444', minWidth: 180 },
+    },
+    {
+      id: 'synergy',
+      position: { x: 400, y: 500 },
+      data: { label: '✨ Synergistic Solution\n"Smart building system:\nSolar + EV charging +\nWaste-to-energy"' },
+      style: { ...nodeStyle, background: '#10b981', minWidth: 220 },
+    },
+    {
+      id: 'feedback',
+      position: { x: 150, y: 500 },
+      data: { label: '🔄 Feedback Loop\n"Monitor & adjust\nbased on results"' },
+      style: { ...nodeStyle, background: '#6b7280', minWidth: 180 },
+    },
+    {
+      id: 'final-plan',
+      position: { x: 400, y: 650 },
+      data: { label: '📋 Integrated Plan\n"30% reduction via\nsolar + transit + waste\nmanagement system"' },
+      style: { ...nodeStyle, background: '#059669', minWidth: 220 },
+    },
   ],
   initialEdges: [
     {
-      id: 'problem-energy',
-      source: 'problem',
+      id: 'e1',
+      source: 'query',
       target: 'energy-thought',
-      type: 'smoothstep',
-      animated: false
+      ...edgeStyle,
+      label: 'analyze'
     },
     {
-      id: 'problem-transport',
-      source: 'problem',
+      id: 'e2',
+      source: 'query',
       target: 'transport-thought',
-      type: 'smoothstep',
-      animated: false
+      ...edgeStyle,
+      label: 'analyze'
     },
     {
-      id: 'problem-housing',
-      source: 'problem',
-      target: 'housing-thought',
-      type: 'smoothstep',
-      animated: false
+      id: 'e3',
+      source: 'query',
+      target: 'waste-thought',
+      ...edgeStyle,
+      label: 'analyze'
     },
     {
-      id: 'problem-economic',
-      source: 'problem',
-      target: 'economic-thought',
-      type: 'smoothstep',
-      animated: false
-    },
-    {
-      id: 'energy-transport',
+      id: 'e4',
       source: 'energy-thought',
-      target: 'transport-thought',
-      type: 'smoothstep',
-      animated: false,
-      style: { stroke: '#6B7280', strokeDasharray: '3,3' },
-      label: 'influences'
+      target: 'dependency-1',
+      ...edgeStyle,
+      label: 'connects to'
     },
     {
-      id: 'energy-housing',
-      source: 'energy-thought',
-      target: 'housing-thought',
-      type: 'smoothstep',
-      animated: false,
-      style: { stroke: '#6B7280', strokeDasharray: '3,3' },
-      label: 'affects'
-    },
-    {
-      id: 'transport-housing',
+      id: 'e5',
       source: 'transport-thought',
-      target: 'housing-thought',
-      type: 'smoothstep',
-      animated: false,
-      style: { stroke: '#6B7280', strokeDasharray: '3,3' },
-      label: 'connects'
+      target: 'dependency-1',
+      ...edgeStyle,
+      label: 'connects to'
     },
     {
-      id: 'housing-economic',
-      source: 'housing-thought',
-      target: 'economic-thought',
-      type: 'smoothstep',
-      animated: false,
-      style: { stroke: '#6B7280', strokeDasharray: '3,3' },
-      label: 'enables'
+      id: 'e6',
+      source: 'transport-thought',
+      target: 'dependency-2',
+      ...edgeStyle,
+      label: 'connects to'
     },
     {
-      id: 'economic-energy',
-      source: 'economic-thought',
+      id: 'e7',
+      source: 'waste-thought',
+      target: 'dependency-2',
+      ...edgeStyle,
+      label: 'connects to'
+    },
+    {
+      id: 'e8',
+      source: 'dependency-1',
+      target: 'synergy',
+      ...edgeStyle,
+      label: 'contributes'
+    },
+    {
+      id: 'e9',
+      source: 'dependency-2',
+      target: 'synergy',
+      ...edgeStyle,
+      label: 'contributes'
+    },
+    {
+      id: 'e10',
+      source: 'waste-thought',
+      target: 'synergy',
+      ...edgeStyle,
+      label: 'direct input'
+    },
+    {
+      id: 'e11',
+      source: 'synergy',
+      target: 'feedback',
+      ...edgeStyle,
+      label: 'monitor'
+    },
+    {
+      id: 'e12',
+      source: 'feedback',
       target: 'energy-thought',
-      type: 'smoothstep',
-      animated: false,
-      style: { stroke: '#6B7280', strokeDasharray: '3,3' },
-      label: 'funds'
+      ...edgeStyle,
+      label: 'refine',
+      style: { ...edgeStyle.style, strokeDasharray: '5,5' }
+    },
+    {
+      id: 'e13',
+      source: 'synergy',
+      target: 'final-plan',
+      ...edgeStyle,
+      label: 'formulate'
+    },
+  ],
+  steps: [
+    {
+      title: "Multi-Dimensional Thought Generation",
+      description: "Problem decomposed into independent thought vertices: energy systems, transportation, and waste management - each explored separately.",
+      activeNodes: ['query', 'energy-thought', 'transport-thought', 'waste-thought'],
+      activeEdges: ['e1', 'e2', 'e3']
+    },
+    {
+      title: "Dependency Discovery",
+      description: "Graph edges reveal unexpected connections: energy systems enable EV charging, transportation choices affect packaging waste.",
+      activeNodes: ['dependency-1', 'dependency-2'],
+      activeEdges: ['e4', 'e5', 'e6', 'e7']
+    },
+    {
+      title: "Synergistic Synthesis",
+      description: "Multiple thought paths converge into synergistic solution: smart building system integrating all three domains with multiplicative benefits.",
+      activeNodes: ['synergy'],
+      activeEdges: ['e8', 'e9', 'e10']
+    },
+    {
+      title: "Non-Linear Feedback Integration",
+      description: "Feedback loops allow backtracking and refinement - monitoring results can update original energy thoughts dynamically.",
+      activeNodes: ['feedback'],
+      activeEdges: ['e11', 'e12']
+    },
+    {
+      title: "Graph-Informed Final Solution",
+      description: "Solution emerges from graph structure: 30% carbon reduction through integrated approach impossible with linear thinking.",
+      activeNodes: ['final-plan'],
+      activeEdges: ['e13']
     }
   ]
-}; 
+};

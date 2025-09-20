@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { RotateCcw, ChevronLeft, ChevronRight, Sparkles, Brain, Tag } from 'lucide-react';
 import { Flashcard } from '@/data/ai-agent-fundamentals';
+import { usePlausible } from '@/hooks/usePlausible';
 
 interface AIAgentFlashcardProps {
   flashcard: Flashcard;
@@ -24,9 +25,19 @@ export const AIAgentFlashcard: React.FC<AIAgentFlashcardProps> = ({
   currentIndex = 0,
   totalCards = 1
 }) => {
+  const { trackEvent } = usePlausible();
   const [isFlipped, setIsFlipped] = useState(false);
 
   const handleFlip = () => {
+    trackEvent('Flashcard Interaction', {
+      action: isFlipped ? 'flip_to_front' : 'flip_to_back',
+      flashcard_id: flashcard.id,
+      current_index: currentIndex,
+      total_cards: totalCards,
+      difficulty: flashcard.difficulty,
+      category: flashcard.category
+    });
+
     setIsFlipped(!isFlipped);
   };
 
@@ -145,7 +156,17 @@ export const AIAgentFlashcard: React.FC<AIAgentFlashcardProps> = ({
       {/* Navigation controls */}
       <div className="flex items-center justify-between">
         <button
-          onClick={onPrevious}
+          onClick={() => {
+            if (hasPrevious && onPrevious) {
+              trackEvent('Flashcard Interaction', {
+                action: 'navigate_previous',
+                current_index: currentIndex,
+                total_cards: totalCards,
+                flashcard_id: flashcard.id
+              });
+              onPrevious();
+            }
+          }}
           disabled={!hasPrevious}
           className={`
             flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all
@@ -171,7 +192,17 @@ export const AIAgentFlashcard: React.FC<AIAgentFlashcardProps> = ({
         </button>
 
         <button
-          onClick={onNext}
+          onClick={() => {
+            if (hasNext && onNext) {
+              trackEvent('Flashcard Interaction', {
+                action: 'navigate_next',
+                current_index: currentIndex,
+                total_cards: totalCards,
+                flashcard_id: flashcard.id
+              });
+              onNext();
+            }
+          }}
           disabled={!hasNext}
           className={`
             flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all

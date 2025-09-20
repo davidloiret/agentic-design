@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Play, Pause, RotateCcw, Zap, CheckCircle, AlertCircle, Clock, Database, Cloud, Search, Calendar, Calculator, Mail, TrendingUp, Shield, Settings, Activity } from 'lucide-react';
+import { usePlausible } from '@/hooks/usePlausible';
 
 interface FunctionCall {
   id: string;
@@ -179,6 +180,7 @@ const scenarios: ScenarioConfig[] = [
 ];
 
 const ToolUseDemo: React.FC = () => {
+  const { trackEvent } = usePlausible();
   const [selectedScenario, setSelectedScenario] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [currentSession, setCurrentSession] = useState<ToolSession | null>(null);
@@ -204,9 +206,17 @@ const ToolUseDemo: React.FC = () => {
   };
 
   const runToolUseDemo = async () => {
+    trackEvent('Demo Interaction', {
+      action: 'start_tool_use_demo',
+      demo_type: 'tool_use',
+      scenario_id: selectedScenario,
+      scenario_name: scenario.name,
+      expected_functions: scenario.expectedFunctions.length
+    });
+
     setIsRunning(true);
     const startTime = Date.now();
-    
+
     addLog(`Started tool use session: ${scenario.name}`);
     addLog(`User query: "${scenario.query}"`);
 

@@ -1,581 +1,456 @@
 import { PatternScenario } from './types';
+import { nodeStyle, edgeStyle } from './styles';
 
 export const workingMemoryPatternsPattern: PatternScenario = {
   id: 'working-memory-patterns',
   title: 'Working Memory Patterns',
-  description: 'Short-term context management for active cognitive processing with limited capacity management and priority-based retention',
-  steps: [
-    {
-      id: 'input-processing',
-      title: 'Input Processing & Attention Control',
-      description: 'Filter incoming information and direct attention to relevant stimuli',
-      input: 'Raw sensory input, task demands, and environmental stimuli',
-      output: 'Filtered information streams and attention allocation priorities',
-      activeNodes: ['attention-filter', 'stimulus-processor', 'priority-detector', 'relevance-assessor'],
-      activeEdges: ['input-to-filter', 'filter-to-processor', 'processor-to-priority', 'priority-to-assessor']
-    },
-    {
-      id: 'capacity-management',
-      title: 'Capacity Management & Load Balancing',
-      description: 'Manage the 7±2 item limit and distribute cognitive load effectively',
-      input: 'Filtered information and current working memory load',
-      output: 'Optimized memory allocation and load distribution',
-      activeNodes: ['capacity-monitor', 'load-balancer', 'chunk-organizer', 'overflow-handler'],
-      activeEdges: ['assessor-to-monitor', 'monitor-to-balancer', 'balancer-to-organizer', 'organizer-to-overflow']
-    },
-    {
-      id: 'active-maintenance',
-      title: 'Active Information Maintenance',
-      description: 'Keep relevant information active through rehearsal and refresh cycles',
-      input: 'Priority-weighted information items and maintenance schedules',
-      output: 'Actively maintained working memory contents',
-      activeNodes: ['rehearsal-system', 'refresh-controller', 'decay-preventer', 'activation-booster'],
-      activeEdges: ['overflow-to-rehearsal', 'rehearsal-to-refresh', 'refresh-to-decay', 'decay-to-activation']
-    },
-    {
-      id: 'context-updating',
-      title: 'Real-time Context Updates',
-      description: 'Dynamically update working memory based on task progression and new information',
-      input: 'Active memory contents and contextual changes',
-      output: 'Updated working memory state with current context',
-      activeNodes: ['context-monitor', 'update-scheduler', 'conflict-resolver', 'synchronizer'],
-      activeEdges: ['activation-to-context', 'context-to-scheduler', 'scheduler-to-resolver', 'resolver-to-sync']
-    },
-    {
-      id: 'goal-management',
-      title: 'Goal Management & Task Coordination',
-      description: 'Maintain current goals and coordinate sub-task execution',
-      input: 'Current goals, sub-tasks, and execution status',
-      output: 'Goal hierarchy and task coordination signals',
-      activeNodes: ['goal-tracker', 'task-coordinator', 'sub-goal-manager', 'execution-monitor'],
-      activeEdges: ['sync-to-goal', 'goal-to-coordinator', 'coordinator-to-subgoal', 'subgoal-to-execution']
-    },
-    {
-      id: 'interference-control',
-      title: 'Interference Control & Distraction Management',
-      description: 'Prevent irrelevant information from disrupting active processing',
-      input: 'Competing information and distraction sources',
-      output: 'Protected working memory with interference suppression',
-      activeNodes: ['interference-detector', 'distraction-filter', 'suppression-system', 'focus-maintainer'],
-      activeEdges: ['execution-to-interference', 'interference-to-distraction', 'distraction-to-suppression', 'suppression-to-focus']
-    },
-    {
-      id: 'memory-integration',
-      title: 'Working Memory Integration & Transfer',
-      description: 'Integrate information across different working memory subsystems',
-      input: 'Multi-modal working memory contents and integration requirements',
-      output: 'Coherent integrated working memory representation',
-      activeNodes: ['integration-controller', 'cross-modal-linker', 'coherence-checker', 'transfer-manager'],
-      activeEdges: ['focus-to-integration', 'integration-to-modal', 'modal-to-coherence', 'coherence-to-transfer']
-    }
-  ],
   initialNodes: [
     {
+      id: 'task-input',
+      position: { x: 400, y: 50 },
+      data: { label: '🎯 Task Input\n"Solve complex problem while tracking constraints"' },
+      style: { ...nodeStyle, background: '#10b981', minWidth: 380 },
+    },
+    // Working Memory Core
+    {
+      id: 'working-memory-core',
+      position: { x: 375, y: 150 },
+      data: { label: '🧠 Working Memory Core\n7±2 item capacity' },
+      style: { ...nodeStyle, background: '#dc2626', minWidth: 250 },
+    },
+    // Attention Control
+    {
       id: 'attention-filter',
-      type: 'input',
-      position: { x: 50, y: 100 },
-      data: {
-        label: 'Attention Filter',
-        description: 'Filters incoming information based on relevance and priority',
-        type: 'input',
-        status: 'idle'
-      }
+      position: { x: 100, y: 250 },
+      data: { label: '🔍 Attention Filter\nRelevance screening\nPriority detection' },
+      style: { ...nodeStyle, background: '#3b82f6', minWidth: 180 },
     },
     {
-      id: 'stimulus-processor',
-      type: 'default',
-      position: { x: 250, y: 100 },
-      data: {
-        label: 'Stimulus Processor',
-        description: 'Processes and categorizes filtered stimuli',
-        type: 'processor',
-        status: 'idle'
-      }
-    },
-    {
-      id: 'priority-detector',
-      type: 'default',
-      position: { x: 450, y: 100 },
-      data: {
-        label: 'Priority Detector',
-        description: 'Detects priority levels of processed stimuli',
-        type: 'detector',
-        status: 'idle'
-      }
-    },
-    {
-      id: 'relevance-assessor',
-      type: 'default',
-      position: { x: 650, y: 100 },
-      data: {
-        label: 'Relevance Assessor',
-        description: 'Assesses relevance to current task context',
-        type: 'assessor',
-        status: 'idle'
-      }
+      id: 'focus-controller',
+      position: { x: 300, y: 250 },
+      data: { label: '🎯 Focus Controller\nSelective attention\nDistraction suppression' },
+      style: { ...nodeStyle, background: '#3b82f6', minWidth: 180 },
     },
     {
       id: 'capacity-monitor',
-      type: 'default',
-      position: { x: 100, y: 250 },
-      data: {
-        label: 'Capacity Monitor',
-        description: 'Monitors current memory load (7±2 items)',
-        type: 'monitor',
-        status: 'idle'
-      }
-    },
-    {
-      id: 'load-balancer',
-      type: 'default',
-      position: { x: 300, y: 250 },
-      data: {
-        label: 'Load Balancer',
-        description: 'Distributes cognitive load across memory systems',
-        type: 'balancer',
-        status: 'idle'
-      }
-    },
-    {
-      id: 'chunk-organizer',
-      type: 'default',
       position: { x: 500, y: 250 },
-      data: {
-        label: 'Chunk Organizer',
-        description: 'Organizes information into meaningful chunks',
-        type: 'organizer',
-        status: 'idle'
-      }
+      data: { label: '📊 Capacity Monitor\nLoad tracking\nOverflow detection' },
+      style: { ...nodeStyle, background: '#3b82f6', minWidth: 180 },
     },
     {
-      id: 'overflow-handler',
-      type: 'default',
+      id: 'refresh-system',
       position: { x: 700, y: 250 },
-      data: {
-        label: 'Overflow Handler',
-        description: 'Manages information when capacity is exceeded',
-        type: 'handler',
-        status: 'idle'
-      }
+      data: { label: '🔄 Refresh System\nActive maintenance\nDecay prevention' },
+      style: { ...nodeStyle, background: '#3b82f6', minWidth: 180 },
+    },
+    // Memory Components
+    {
+      id: 'phonological-loop',
+      position: { x: 50, y: 380 },
+      data: { label: '🗣️ Phonological Loop\nVerbal information\nInner speech' },
+      style: { ...nodeStyle, background: '#7c3aed', minWidth: 160 },
     },
     {
-      id: 'rehearsal-system',
-      type: 'default',
-      position: { x: 150, y: 400 },
-      data: {
-        label: 'Rehearsal System',
-        description: 'Maintains information through active rehearsal',
-        type: 'system',
-        status: 'idle'
-      }
+      id: 'visuospatial-sketchpad',
+      position: { x: 220, y: 380 },
+      data: { label: '👁️ Visuospatial Pad\nVisual imagery\nSpatial relations' },
+      style: { ...nodeStyle, background: '#7c3aed', minWidth: 160 },
     },
     {
-      id: 'refresh-controller',
-      type: 'default',
-      position: { x: 350, y: 400 },
-      data: {
-        label: 'Refresh Controller',
-        description: 'Controls refresh cycles for active information',
-        type: 'controller',
-        status: 'idle'
-      }
+      id: 'episodic-buffer',
+      position: { x: 390, y: 380 },
+      data: { label: '📚 Episodic Buffer\nIntegrated info\nMultimodal binding' },
+      style: { ...nodeStyle, background: '#7c3aed', minWidth: 160 },
     },
     {
-      id: 'decay-preventer',
-      type: 'default',
-      position: { x: 550, y: 400 },
-      data: {
-        label: 'Decay Preventer',
-        description: 'Prevents information decay through activation',
-        type: 'preventer',
-        status: 'idle'
-      }
+      id: 'central-executive',
+      position: { x: 560, y: 380 },
+      data: { label: '⚙️ Central Executive\nCoordination\nTask switching' },
+      style: { ...nodeStyle, background: '#7c3aed', minWidth: 160 },
     },
     {
-      id: 'activation-booster',
-      type: 'default',
-      position: { x: 750, y: 400 },
-      data: {
-        label: 'Activation Booster',
-        description: 'Boosts activation levels of important information',
-        type: 'booster',
-        status: 'idle'
-      }
+      id: 'goal-stack',
+      position: { x: 730, y: 380 },
+      data: { label: '🎯 Goal Stack\nActive goals\nSub-tasks' },
+      style: { ...nodeStyle, background: '#7c3aed', minWidth: 160 },
+    },
+    // Processing Strategies
+    {
+      id: 'chunking-processor',
+      position: { x: 100, y: 520 },
+      data: { label: '🔢 Chunking\nGroup related items\nExpand capacity' },
+      style: { ...nodeStyle, background: '#f59e0b', minWidth: 160 },
     },
     {
-      id: 'context-monitor',
-      type: 'default',
-      position: { x: 100, y: 550 },
-      data: {
-        label: 'Context Monitor',
-        description: 'Monitors changes in task context and environment',
-        type: 'monitor',
-        status: 'idle'
-      }
+      id: 'rehearsal-loop',
+      position: { x: 280, y: 520 },
+      data: { label: '🔁 Rehearsal Loop\nMaintenance rehearsal\nElaborative rehearsal' },
+      style: { ...nodeStyle, background: '#f59e0b', minWidth: 160 },
     },
     {
-      id: 'update-scheduler',
-      type: 'default',
-      position: { x: 300, y: 550 },
-      data: {
-        label: 'Update Scheduler',
-        description: 'Schedules context updates and memory refreshes',
-        type: 'scheduler',
-        status: 'idle'
-      }
+      id: 'updating-mechanism',
+      position: { x: 460, y: 520 },
+      data: { label: '🔄 Updating\nReplace old info\nMaintain relevance' },
+      style: { ...nodeStyle, background: '#f59e0b', minWidth: 160 },
     },
     {
-      id: 'conflict-resolver',
-      type: 'default',
-      position: { x: 500, y: 550 },
-      data: {
-        label: 'Conflict Resolver',
-        description: 'Resolves conflicts between competing information',
-        type: 'resolver',
-        status: 'idle'
-      }
+      id: 'switching-control',
+      position: { x: 640, y: 520 },
+      data: { label: '🔀 Task Switching\nContext switching\nSet reconfiguration' },
+      style: { ...nodeStyle, background: '#f59e0b', minWidth: 160 },
+    },
+    // Interference Management
+    {
+      id: 'proactive-interference',
+      position: { x: 50, y: 640 },
+      data: { label: '⬅️ Proactive Interference\nOld info disrupts new' },
+      style: { ...nodeStyle, background: '#ec4899', minWidth: 180 },
     },
     {
-      id: 'synchronizer',
-      type: 'default',
-      position: { x: 700, y: 550 },
-      data: {
-        label: 'Synchronizer',
-        description: 'Synchronizes working memory with task demands',
-        type: 'synchronizer',
-        status: 'idle'
-      }
+      id: 'retroactive-interference',
+      position: { x: 250, y: 640 },
+      data: { label: '➡️ Retroactive Interference\nNew info disrupts old' },
+      style: { ...nodeStyle, background: '#ec4899', minWidth: 180 },
     },
     {
-      id: 'goal-tracker',
-      type: 'default',
-      position: { x: 150, y: 700 },
-      data: {
-        label: 'Goal Tracker',
-        description: 'Tracks current goals and their status',
-        type: 'tracker',
-        status: 'idle'
-      }
+      id: 'interference-resolution',
+      position: { x: 450, y: 640 },
+      data: { label: '🛡️ Interference Resolution\nConflict detection\nSuppression' },
+      style: { ...nodeStyle, background: '#ec4899', minWidth: 180 },
     },
     {
-      id: 'task-coordinator',
-      type: 'default',
-      position: { x: 350, y: 700 },
-      data: {
-        label: 'Task Coordinator',
-        description: 'Coordinates execution of multiple tasks',
-        type: 'coordinator',
-        status: 'idle'
-      }
+      id: 'cognitive-control',
+      position: { x: 650, y: 640 },
+      data: { label: '🎮 Cognitive Control\nInhibition\nFlexibility' },
+      style: { ...nodeStyle, background: '#ec4899', minWidth: 180 },
+    },
+    // Load Management
+    {
+      id: 'intrinsic-load',
+      position: { x: 100, y: 760 },
+      data: { label: '📏 Intrinsic Load\nTask complexity\nInherent difficulty' },
+      style: { ...nodeStyle, background: '#ef4444', minWidth: 160 },
     },
     {
-      id: 'sub-goal-manager',
-      type: 'default',
-      position: { x: 550, y: 700 },
-      data: {
-        label: 'Sub-goal Manager',
-        description: 'Manages hierarchy of sub-goals and dependencies',
-        type: 'manager',
-        status: 'idle'
-      }
+      id: 'extraneous-load',
+      position: { x: 280, y: 760 },
+      data: { label: '🌀 Extraneous Load\nIrrelevant processing\nPoor design' },
+      style: { ...nodeStyle, background: '#ef4444', minWidth: 160 },
     },
     {
-      id: 'execution-monitor',
-      type: 'default',
-      position: { x: 750, y: 700 },
-      data: {
-        label: 'Execution Monitor',
-        description: 'Monitors task execution progress and outcomes',
-        type: 'monitor',
-        status: 'idle'
-      }
+      id: 'germane-load',
+      position: { x: 460, y: 760 },
+      data: { label: '💡 Germane Load\nSchema construction\nDeep processing' },
+      style: { ...nodeStyle, background: '#ef4444', minWidth: 160 },
     },
     {
-      id: 'interference-detector',
-      type: 'default',
-      position: { x: 100, y: 850 },
-      data: {
-        label: 'Interference Detector',
-        description: 'Detects sources of cognitive interference',
-        type: 'detector',
-        status: 'idle'
-      }
+      id: 'load-balancing',
+      position: { x: 640, y: 760 },
+      data: { label: '⚖️ Load Balancing\nOptimal distribution\nResource allocation' },
+      style: { ...nodeStyle, background: '#ef4444', minWidth: 160 },
+    },
+    // Performance Optimization
+    {
+      id: 'dual-coding',
+      position: { x: 150, y: 880 },
+      data: { label: '🎨 Dual Coding\nVerbal + visual\nEnhanced encoding' },
+      style: { ...nodeStyle, background: '#6366f1', minWidth: 180 },
     },
     {
-      id: 'distraction-filter',
-      type: 'default',
-      position: { x: 300, y: 850 },
-      data: {
-        label: 'Distraction Filter',
-        description: 'Filters out irrelevant distracting information',
-        type: 'filter',
-        status: 'idle'
-      }
+      id: 'external-aids',
+      position: { x: 350, y: 880 },
+      data: { label: '📝 External Aids\nNote-taking\nDiagrams' },
+      style: { ...nodeStyle, background: '#6366f1', minWidth: 180 },
     },
     {
-      id: 'suppression-system',
-      type: 'default',
-      position: { x: 500, y: 850 },
-      data: {
-        label: 'Suppression System',
-        description: 'Suppresses competing irrelevant activations',
-        type: 'system',
-        status: 'idle'
-      }
+      id: 'metacognitive-monitoring',
+      position: { x: 550, y: 880 },
+      data: { label: '🔍 Metacognition\nSelf-monitoring\nStrategy selection' },
+      style: { ...nodeStyle, background: '#6366f1', minWidth: 180 },
     },
     {
-      id: 'focus-maintainer',
-      type: 'default',
-      position: { x: 700, y: 850 },
-      data: {
-        label: 'Focus Maintainer',
-        description: 'Maintains focus on task-relevant information',
-        type: 'maintainer',
-        status: 'idle'
-      }
+      id: 'optimized-processing',
+      position: { x: 400, y: 1000 },
+      data: { label: '✨ Optimized Processing\nEfficient working memory utilization for complex tasks' },
+      style: { ...nodeStyle, background: '#10b981', minWidth: 400 },
     },
-    {
-      id: 'integration-controller',
-      type: 'default',
-      position: { x: 150, y: 1000 },
-      data: {
-        label: 'Integration Controller',
-        description: 'Controls integration across memory subsystems',
-        type: 'controller',
-        status: 'idle'
-      }
-    },
-    {
-      id: 'cross-modal-linker',
-      type: 'default',
-      position: { x: 350, y: 1000 },
-      data: {
-        label: 'Cross-modal Linker',
-        description: 'Links information across different modalities',
-        type: 'linker',
-        status: 'idle'
-      }
-    },
-    {
-      id: 'coherence-checker',
-      type: 'default',
-      position: { x: 550, y: 1000 },
-      data: {
-        label: 'Coherence Checker',
-        description: 'Ensures coherence of integrated representations',
-        type: 'checker',
-        status: 'idle'
-      }
-    },
-    {
-      id: 'transfer-manager',
-      type: 'output',
-      position: { x: 750, y: 1000 },
-      data: {
-        label: 'Transfer Manager',
-        description: 'Manages transfer to long-term memory systems',
-        type: 'output',
-        status: 'idle'
-      }
-    }
   ],
   initialEdges: [
+    // Input to core
     {
-      id: 'input-to-filter',
-      source: 'attention-filter',
-      target: 'stimulus-processor',
-      type: 'smoothstep',
-      label: 'filtered stimuli'
+      id: 'input-core',
+      source: 'task-input',
+      target: 'working-memory-core',
+      style: { ...edgeStyle, stroke: '#dc2626', strokeWidth: 3 },
+      animated: true,
     },
+    // Core to controllers
     {
-      id: 'filter-to-processor',
-      source: 'stimulus-processor',
-      target: 'priority-detector',
-      type: 'smoothstep',
-      label: 'processed information'
-    },
-    {
-      id: 'processor-to-priority',
-      source: 'priority-detector',
-      target: 'relevance-assessor',
-      type: 'smoothstep',
-      label: 'priority-tagged items'
-    },
-    {
-      id: 'priority-to-assessor',
-      source: 'relevance-assessor',
-      target: 'capacity-monitor',
-      type: 'smoothstep',
-      label: 'relevance scores'
-    },
-    {
-      id: 'assessor-to-monitor',
-      source: 'capacity-monitor',
-      target: 'load-balancer',
-      type: 'smoothstep',
-      label: 'capacity status'
-    },
-    {
-      id: 'monitor-to-balancer',
-      source: 'load-balancer',
-      target: 'chunk-organizer',
-      type: 'smoothstep',
-      label: 'load distribution'
-    },
-    {
-      id: 'balancer-to-organizer',
-      source: 'chunk-organizer',
-      target: 'overflow-handler',
-      type: 'smoothstep',
-      label: 'organized chunks'
-    },
-    {
-      id: 'organizer-to-overflow',
-      source: 'overflow-handler',
-      target: 'rehearsal-system',
-      type: 'smoothstep',
-      label: 'managed overflow'
-    },
-    {
-      id: 'overflow-to-rehearsal',
-      source: 'rehearsal-system',
-      target: 'refresh-controller',
-      type: 'smoothstep',
-      label: 'rehearsed items'
-    },
-    {
-      id: 'rehearsal-to-refresh',
-      source: 'refresh-controller',
-      target: 'decay-preventer',
-      type: 'smoothstep',
-      label: 'refresh cycles'
-    },
-    {
-      id: 'refresh-to-decay',
-      source: 'decay-preventer',
-      target: 'activation-booster',
-      type: 'smoothstep',
-      label: 'preserved activation'
-    },
-    {
-      id: 'decay-to-activation',
-      source: 'activation-booster',
-      target: 'context-monitor',
-      type: 'smoothstep',
-      label: 'boosted signals'
-    },
-    {
-      id: 'activation-to-context',
-      source: 'context-monitor',
-      target: 'update-scheduler',
-      type: 'smoothstep',
-      label: 'context changes'
-    },
-    {
-      id: 'context-to-scheduler',
-      source: 'update-scheduler',
-      target: 'conflict-resolver',
-      type: 'smoothstep',
-      label: 'update schedules'
-    },
-    {
-      id: 'scheduler-to-resolver',
-      source: 'conflict-resolver',
-      target: 'synchronizer',
-      type: 'smoothstep',
-      label: 'resolved conflicts'
-    },
-    {
-      id: 'resolver-to-sync',
-      source: 'synchronizer',
-      target: 'goal-tracker',
-      type: 'smoothstep',
-      label: 'synchronized state'
-    },
-    {
-      id: 'sync-to-goal',
-      source: 'goal-tracker',
-      target: 'task-coordinator',
-      type: 'smoothstep',
-      label: 'goal status'
-    },
-    {
-      id: 'goal-to-coordinator',
-      source: 'task-coordinator',
-      target: 'sub-goal-manager',
-      type: 'smoothstep',
-      label: 'task coordination'
-    },
-    {
-      id: 'coordinator-to-subgoal',
-      source: 'sub-goal-manager',
-      target: 'execution-monitor',
-      type: 'smoothstep',
-      label: 'sub-goal hierarchy'
-    },
-    {
-      id: 'subgoal-to-execution',
-      source: 'execution-monitor',
-      target: 'interference-detector',
-      type: 'smoothstep',
-      label: 'execution feedback'
-    },
-    {
-      id: 'execution-to-interference',
-      source: 'interference-detector',
-      target: 'distraction-filter',
-      type: 'smoothstep',
-      label: 'interference signals'
-    },
-    {
-      id: 'interference-to-distraction',
-      source: 'distraction-filter',
-      target: 'suppression-system',
-      type: 'smoothstep',
-      label: 'filtered distractions'
-    },
-    {
-      id: 'distraction-to-suppression',
-      source: 'suppression-system',
-      target: 'focus-maintainer',
-      type: 'smoothstep',
-      label: 'suppression signals'
-    },
-    {
-      id: 'suppression-to-focus',
-      source: 'focus-maintainer',
-      target: 'integration-controller',
-      type: 'smoothstep',
-      label: 'focused attention'
-    },
-    {
-      id: 'focus-to-integration',
-      source: 'integration-controller',
-      target: 'cross-modal-linker',
-      type: 'smoothstep',
-      label: 'integration commands'
-    },
-    {
-      id: 'integration-to-modal',
-      source: 'cross-modal-linker',
-      target: 'coherence-checker',
-      type: 'smoothstep',
-      label: 'cross-modal links'
-    },
-    {
-      id: 'modal-to-coherence',
-      source: 'coherence-checker',
-      target: 'transfer-manager',
-      type: 'smoothstep',
-      label: 'coherent representation'
-    },
-    {
-      id: 'coherence-to-transfer',
-      source: 'transfer-manager',
+      id: 'core-attention',
+      source: 'working-memory-core',
       target: 'attention-filter',
-      type: 'smoothstep',
-      label: 'memory transfer',
-      style: { strokeDasharray: '5,5' }
-    }
-  ]
+      style: { ...edgeStyle, stroke: '#3b82f6', strokeWidth: 2 },
+      label: 'Filter',
+    },
+    {
+      id: 'core-focus',
+      source: 'working-memory-core',
+      target: 'focus-controller',
+      style: { ...edgeStyle, stroke: '#3b82f6', strokeWidth: 2 },
+      label: 'Focus',
+    },
+    {
+      id: 'core-capacity',
+      source: 'working-memory-core',
+      target: 'capacity-monitor',
+      style: { ...edgeStyle, stroke: '#3b82f6', strokeWidth: 2 },
+      label: 'Monitor',
+    },
+    {
+      id: 'core-refresh',
+      source: 'working-memory-core',
+      target: 'refresh-system',
+      style: { ...edgeStyle, stroke: '#3b82f6', strokeWidth: 2 },
+      label: 'Refresh',
+    },
+    // Controllers to components
+    {
+      id: 'attention-phonological',
+      source: 'attention-filter',
+      target: 'phonological-loop',
+      style: { ...edgeStyle, stroke: '#7c3aed' },
+      animated: true,
+    },
+    {
+      id: 'focus-visuospatial',
+      source: 'focus-controller',
+      target: 'visuospatial-sketchpad',
+      style: { ...edgeStyle, stroke: '#7c3aed' },
+      animated: true,
+    },
+    {
+      id: 'capacity-episodic',
+      source: 'capacity-monitor',
+      target: 'episodic-buffer',
+      style: { ...edgeStyle, stroke: '#7c3aed' },
+      animated: true,
+    },
+    {
+      id: 'refresh-executive',
+      source: 'refresh-system',
+      target: 'central-executive',
+      style: { ...edgeStyle, stroke: '#7c3aed' },
+      animated: true,
+    },
+    {
+      id: 'executive-goals',
+      source: 'central-executive',
+      target: 'goal-stack',
+      style: { ...edgeStyle, stroke: '#7c3aed' },
+      animated: true,
+    },
+    // Components to strategies
+    {
+      id: 'phonological-chunking',
+      source: 'phonological-loop',
+      target: 'chunking-processor',
+      style: { ...edgeStyle, stroke: '#f59e0b' },
+    },
+    {
+      id: 'visuospatial-rehearsal',
+      source: 'visuospatial-sketchpad',
+      target: 'rehearsal-loop',
+      style: { ...edgeStyle, stroke: '#f59e0b' },
+    },
+    {
+      id: 'episodic-updating',
+      source: 'episodic-buffer',
+      target: 'updating-mechanism',
+      style: { ...edgeStyle, stroke: '#f59e0b' },
+    },
+    {
+      id: 'goals-switching',
+      source: 'goal-stack',
+      target: 'switching-control',
+      style: { ...edgeStyle, stroke: '#f59e0b' },
+    },
+    // Strategies to interference
+    {
+      id: 'chunking-proactive',
+      source: 'chunking-processor',
+      target: 'proactive-interference',
+      style: { ...edgeStyle, stroke: '#ec4899' },
+    },
+    {
+      id: 'rehearsal-retroactive',
+      source: 'rehearsal-loop',
+      target: 'retroactive-interference',
+      style: { ...edgeStyle, stroke: '#ec4899' },
+    },
+    {
+      id: 'updating-resolution',
+      source: 'updating-mechanism',
+      target: 'interference-resolution',
+      style: { ...edgeStyle, stroke: '#ec4899' },
+    },
+    {
+      id: 'switching-control',
+      source: 'switching-control',
+      target: 'cognitive-control',
+      style: { ...edgeStyle, stroke: '#ec4899' },
+    },
+    // Interference to load
+    {
+      id: 'proactive-intrinsic',
+      source: 'proactive-interference',
+      target: 'intrinsic-load',
+      style: { ...edgeStyle, stroke: '#ef4444' },
+    },
+    {
+      id: 'retroactive-extraneous',
+      source: 'retroactive-interference',
+      target: 'extraneous-load',
+      style: { ...edgeStyle, stroke: '#ef4444' },
+    },
+    {
+      id: 'resolution-germane',
+      source: 'interference-resolution',
+      target: 'germane-load',
+      style: { ...edgeStyle, stroke: '#ef4444' },
+    },
+    {
+      id: 'cognitive-balancing',
+      source: 'cognitive-control',
+      target: 'load-balancing',
+      style: { ...edgeStyle, stroke: '#ef4444' },
+    },
+    // Load to optimization
+    {
+      id: 'intrinsic-dual',
+      source: 'intrinsic-load',
+      target: 'dual-coding',
+      style: { ...edgeStyle, stroke: '#6366f1' },
+    },
+    {
+      id: 'extraneous-external',
+      source: 'extraneous-load',
+      target: 'external-aids',
+      style: { ...edgeStyle, stroke: '#6366f1' },
+    },
+    {
+      id: 'germane-metacognitive',
+      source: 'germane-load',
+      target: 'metacognitive-monitoring',
+      style: { ...edgeStyle, stroke: '#6366f1' },
+    },
+    // Balancing to optimization
+    {
+      id: 'balancing-dual',
+      source: 'load-balancing',
+      target: 'dual-coding',
+      style: { ...edgeStyle, stroke: '#6366f1', strokeDasharray: '5 5' },
+    },
+    {
+      id: 'balancing-external',
+      source: 'load-balancing',
+      target: 'external-aids',
+      style: { ...edgeStyle, stroke: '#6366f1', strokeDasharray: '5 5' },
+    },
+    {
+      id: 'balancing-metacognitive',
+      source: 'load-balancing',
+      target: 'metacognitive-monitoring',
+      style: { ...edgeStyle, stroke: '#6366f1', strokeDasharray: '5 5' },
+    },
+    // Optimization to output
+    {
+      id: 'dual-output',
+      source: 'dual-coding',
+      target: 'optimized-processing',
+      style: { ...edgeStyle, stroke: '#10b981' },
+    },
+    {
+      id: 'external-output',
+      source: 'external-aids',
+      target: 'optimized-processing',
+      style: { ...edgeStyle, stroke: '#10b981' },
+    },
+    {
+      id: 'metacognitive-output',
+      source: 'metacognitive-monitoring',
+      target: 'optimized-processing',
+      style: { ...edgeStyle, stroke: '#10b981', strokeWidth: 3 },
+      animated: true,
+    },
+    // Feedback loop
+    {
+      id: 'output-feedback',
+      source: 'optimized-processing',
+      target: 'working-memory-core',
+      style: { ...edgeStyle, stroke: '#10b981', strokeDasharray: '5 5' },
+      label: 'Feedback',
+    },
+  ],
+  steps: [
+    {
+      title: 'Task Input',
+      description: 'Complex task requiring working memory',
+      activeNodes: ['task-input', 'working-memory-core'],
+      activeEdges: ['input-core'],
+    },
+    {
+      title: 'Attention Control',
+      description: 'Filtering and focusing on relevant information',
+      activeNodes: ['working-memory-core', 'attention-filter', 'focus-controller', 'capacity-monitor', 'refresh-system'],
+      activeEdges: ['core-attention', 'core-focus', 'core-capacity', 'core-refresh'],
+    },
+    {
+      title: 'Memory Components',
+      description: 'Distributing information across working memory subsystems',
+      activeNodes: ['phonological-loop', 'visuospatial-sketchpad', 'episodic-buffer', 'central-executive', 'goal-stack'],
+      activeEdges: ['attention-phonological', 'focus-visuospatial', 'capacity-episodic', 'refresh-executive', 'executive-goals'],
+    },
+    {
+      title: 'Processing Strategies',
+      description: 'Applying chunking, rehearsal, updating, and switching',
+      activeNodes: ['chunking-processor', 'rehearsal-loop', 'updating-mechanism', 'switching-control'],
+      activeEdges: ['phonological-chunking', 'visuospatial-rehearsal', 'episodic-updating', 'goals-switching'],
+    },
+    {
+      title: 'Interference Management',
+      description: 'Handling proactive and retroactive interference',
+      activeNodes: ['proactive-interference', 'retroactive-interference', 'interference-resolution', 'cognitive-control'],
+      activeEdges: ['chunking-proactive', 'rehearsal-retroactive', 'updating-resolution', 'switching-control'],
+    },
+    {
+      title: 'Cognitive Load',
+      description: 'Managing intrinsic, extraneous, and germane load',
+      activeNodes: ['intrinsic-load', 'extraneous-load', 'germane-load', 'load-balancing'],
+      activeEdges: ['proactive-intrinsic', 'retroactive-extraneous', 'resolution-germane', 'cognitive-balancing'],
+    },
+    {
+      title: 'Load Distribution',
+      description: 'Balancing cognitive load across resources',
+      activeNodes: ['load-balancing', 'dual-coding', 'external-aids', 'metacognitive-monitoring'],
+      activeEdges: ['balancing-dual', 'balancing-external', 'balancing-metacognitive'],
+    },
+    {
+      title: 'Performance Optimization',
+      description: 'Applying optimization strategies',
+      activeNodes: ['dual-coding', 'external-aids', 'metacognitive-monitoring'],
+      activeEdges: ['intrinsic-dual', 'extraneous-external', 'germane-metacognitive'],
+    },
+    {
+      title: 'Optimized Output',
+      description: 'Achieving efficient working memory utilization',
+      activeNodes: ['dual-coding', 'external-aids', 'metacognitive-monitoring', 'optimized-processing'],
+      activeEdges: ['dual-output', 'external-output', 'metacognitive-output'],
+    },
+    {
+      title: 'Feedback Loop',
+      description: 'Learning from performance to improve future processing',
+      activeNodes: ['optimized-processing', 'working-memory-core'],
+      activeEdges: ['output-feedback'],
+    },
+  ],
 };

@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { X, Key, Copy, Check, Users, Sparkles } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { workshopApi } from '@/lib/workshop-api'
+import { usePlausible } from '@/hooks/usePlausible'
 
 interface SessionCodeModalProps {
   isOpen: boolean
@@ -18,6 +19,7 @@ const SessionCodeModal: React.FC<SessionCodeModalProps> = ({
   onJoinSession
 }) => {
   const router = useRouter()
+  const { trackEvent } = usePlausible()
   const [sessionCode, setSessionCode] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -28,9 +30,20 @@ const SessionCodeModal: React.FC<SessionCodeModalProps> = ({
     setError('')
     setLoading(true)
 
+    trackEvent('Session Code Modal', {
+      action: 'join_attempt',
+      code_length: sessionCode.length
+    });
+
     try {
       const result = await workshopApi.joinByCode(sessionCode.toUpperCase())
-      
+
+      trackEvent('Session Code Modal', {
+        action: 'join_success',
+        result_type: result.type,
+        workshop_id: result.workshopId
+      });
+
       // Success - redirect based on type
       if (result.type === 'live_workshop') {
         // Join live workshop session immediately
@@ -57,6 +70,10 @@ const SessionCodeModal: React.FC<SessionCodeModalProps> = ({
         }
       }
     } catch (err: any) {
+      trackEvent('Session Code Modal', {
+        action: 'join_error',
+        error_message: err.message || 'Invalid code'
+      });
       setError(err.message || 'Invalid code')
     } finally {
       setLoading(false)
@@ -64,6 +81,9 @@ const SessionCodeModal: React.FC<SessionCodeModalProps> = ({
   }
 
   const handleCopyExample = () => {
+    trackEvent('Session Code Modal', {
+      action: 'copy_example_code'
+    });
     navigator.clipboard.writeText('WORKSHOP-2024-ABCD')
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
@@ -82,7 +102,12 @@ const SessionCodeModal: React.FC<SessionCodeModalProps> = ({
         {/* Header */}
         <div className="relative p-6 pb-0">
           <button
-            onClick={onClose}
+            onClick={() => {
+              trackEvent('Session Code Modal', {
+                action: 'close_modal'
+              });
+              onClose();
+            }}
             className="absolute top-4 right-4 p-2 rounded-lg hover:bg-white/10 transition-colors"
           >
             <X className="w-5 h-5 text-white" />

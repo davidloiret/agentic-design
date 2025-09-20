@@ -1,8 +1,9 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BookOpen, Code, Check, Brain, GitBranch, Play, Sparkles, ArrowRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
+import { usePlausible } from '@/hooks/usePlausible';
 import CodeSandbox from '../../components/CodeSandbox';
 import { getComplexityColor, getCategoryColor } from '@/lib/design-system';
 import { SelfCritiqueDetails } from './technique-details/SelfCritiqueDetails';
@@ -140,6 +141,7 @@ import ScenarioPlanningDemo from '../../components/demos/ScenarioPlanningDemo';
 import SequentialChainingDemo from '../../components/demos/SequentialChainingDemo';
 import ParallelChainingDemo from '../../components/demos/ParallelChainingDemo';
 import ConditionalChainingDemo from '../../components/demos/ConditionalChainingDemo';
+import LLMBasedRoutingFlowVisualization from '../../components/demos/LLMBasedRoutingFlowVisualization';
 import { patternExamples, type PatternId, type LanguageType } from '../pattern-examples';
 import { patternScenarios } from '../../data/patterns';
 import DomainReasoningDetails from './technique-details/DomainReasoningDetails';
@@ -303,14 +305,31 @@ export const TechniqueDetails = ({
   const [localSelectedLanguage, setLocalSelectedLanguage] = useState<LanguageType>('typescript');
   const { user, loading } = useAuth();
   const router = useRouter();
+  const { trackTechniqueView, trackEvent } = usePlausible();
   
   const detailsTab = propDetailsTab || localDetailsTab;
   const setDetailsTab = propSetDetailsTab || setLocalDetailsTab;
   const selectedLanguage = propSelectedLanguage || localSelectedLanguage;
   const setSelectedLanguage = propSetSelectedLanguage || setLocalSelectedLanguage;
 
+  // Track technique views
+  useEffect(() => {
+    if (selectedTechnique) {
+      const category = categories.find(c => c.id === selectedTechnique.category);
+      trackTechniqueView(selectedTechnique.id, category?.name || 'unknown');
+    }
+  }, [selectedTechnique?.id, trackTechniqueView, categories]);
+
   // Handle tab switching with auth checks
   const handleTabChange = (tab: 'overview' | 'flow' | 'interactive' | 'code' | 'deepdive') => {
+    // Track tab changes
+    trackEvent('Technique Tab Change', {
+      technique: selectedTechnique?.id,
+      tab: tab,
+      category: selectedTechnique?.category,
+      user_authenticated: !!user
+    });
+
     // Check if user is trying to access protected content
     if ((tab === 'interactive' || tab === 'code') && !user) {
       // Don't switch tab, let the content section handle showing auth prompt
@@ -1459,6 +1478,8 @@ export const TechniqueDetails = ({
                     <ParallelChainingDemo />
                   ) : selectedTechnique.id === 'conditional-chaining' ? (
                     <ConditionalChainingDemo />
+                  ) : selectedTechnique.id === 'llm-based-routing' ? (
+                    <LLMBasedRoutingFlowVisualization />
                   ) : (
                     <div className="p-8 text-center">
                       <Play className="w-12 h-12 mx-auto text-gray-500 mb-4" />

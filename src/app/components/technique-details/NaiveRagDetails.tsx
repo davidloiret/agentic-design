@@ -86,7 +86,7 @@ export const NaiveRagDetails: React.FC<NaiveRagDetailsProps> = ({ selectedTechni
         { title: 'Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks (Lewis et al., 2020)', url: 'https://arxiv.org/abs/2005.11401' },
         { title: 'Dense Passage Retrieval for Open-Domain Question Answering (Karpukhin et al., 2020)', url: 'https://arxiv.org/abs/2004.04906' },
         { title: 'RAG vs FiD: Comparing Retrieval-Augmented Generation Models (Izacard & Grave, 2021)', url: 'https://arxiv.org/abs/2007.01282' },
-        { title: 'Leveraging Passage Retrieval with Generative Models (Izacard et al., 2022)', url: 'https://arxiv.org/abs/2007.01282' }
+        { title: 'Leveraging Passage Retrieval with Generative Models (Izacard et al., 2022)', url: 'https://arxiv.org/abs/2104.07567' }
       ]
     },
     {

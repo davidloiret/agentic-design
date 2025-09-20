@@ -14,6 +14,7 @@ import {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { Play, Pause, RotateCcw, ChevronRight } from 'lucide-react';
+import { usePlausible } from '@/hooks/usePlausible';
 
 interface PatternScenario {
   id: string;
@@ -25,13 +26,13 @@ interface PatternScenario {
 }
 
 interface ScenarioStep {
-  id: string;
+  id?: string;
   title: string;
   description: string;
   input?: string;
   output?: string;
-  activeNodes: string[];
-  activeEdges: string[];
+  activeNodes?: string[];
+  activeEdges?: string[];
   newNodes?: Node[];
   newEdges?: Edge[];
   nodeUpdates?: { [nodeId: string]: Partial<Node> };
@@ -59,19 +60,23 @@ export const InteractivePatternFlow: React.FC<InteractivePatternFlowProps> = ({
   const [currentStep, setCurrentStep] = useState(-1);
   const [isPlaying, setIsPlaying] = useState(false);
   const [showIOPanel, setShowIOPanel] = useState(true);
+  const { trackDemo } = usePlausible();
 
   const resetScenario = useCallback(() => {
+    // Track demo reset
+    trackDemo(scenario.id, 'reset');
+
     setCurrentStep(-1);
     setIsPlaying(false);
     setNodes(scenario.initialNodes);
     setEdges(scenario.initialEdges);
-  }, [scenario, setNodes, setEdges]);
+  }, [scenario, setNodes, setEdges, trackDemo]);
 
   const updateNodesForStep = useCallback((step: ScenarioStep) => {
     setNodes((prevNodes) => {
       return prevNodes.map((node) => {
-        const isActive = step.activeNodes.includes(node.id);
-        const isCompleted = currentStep > scenario.steps.findIndex(s => s.activeNodes.includes(node.id));
+        const isActive = step.activeNodes?.includes(node.id) || false;
+        const isCompleted = currentStep > scenario.steps.findIndex(s => s.activeNodes?.includes(node.id)) || false;
         const updates = step.nodeUpdates?.[node.id] || {};
         
         return {
@@ -93,8 +98,8 @@ export const InteractivePatternFlow: React.FC<InteractivePatternFlowProps> = ({
 
     setEdges((prevEdges) => {
       return prevEdges.map((edge) => {
-        const isActive = step.activeEdges.includes(edge.id);
-        const isCompleted = currentStep > scenario.steps.findIndex(s => s.activeEdges.includes(edge.id));
+        const isActive = step.activeEdges?.includes(edge.id) || false;
+        const isCompleted = currentStep > scenario.steps.findIndex(s => s.activeEdges?.includes(edge.id)) || false;
         
         return {
           ...edge,
@@ -123,12 +128,22 @@ export const InteractivePatternFlow: React.FC<InteractivePatternFlowProps> = ({
   const nextStep = useCallback(() => {
     if (currentStep < scenario.steps.length - 1) {
       const newStep = currentStep + 1;
+
+      // Track demo step progression
+      trackDemo(scenario.id, 'step', {
+        step: newStep + 1,
+        total_steps: scenario.steps.length,
+        step_title: scenario.steps[newStep].title
+      });
+
       setCurrentStep(newStep);
       updateNodesForStep(scenario.steps[newStep]);
     } else {
+      // Track demo completion
+      trackDemo(scenario.id, 'complete');
       setIsPlaying(false);
     }
-  }, [currentStep, scenario.steps, updateNodesForStep]);
+  }, [currentStep, scenario.steps, updateNodesForStep, trackDemo, scenario.id]);
 
   const prevStep = useCallback(() => {
     if (currentStep > -1) {
@@ -143,8 +158,16 @@ export const InteractivePatternFlow: React.FC<InteractivePatternFlowProps> = ({
   }, [currentStep, scenario.steps, updateNodesForStep, resetScenario]);
 
   const togglePlayback = useCallback(() => {
-    setIsPlaying(!isPlaying);
-  }, [isPlaying]);
+    const newPlayingState = !isPlaying;
+
+    // Track play/pause actions
+    trackDemo(scenario.id, newPlayingState ? 'play' : 'pause', {
+      current_step: currentStep + 1,
+      total_steps: scenario.steps.length
+    });
+
+    setIsPlaying(newPlayingState);
+  }, [isPlaying, scenario.id, trackDemo, currentStep, scenario.steps.length]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;

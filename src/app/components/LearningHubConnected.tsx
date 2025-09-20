@@ -27,6 +27,7 @@ import { FlashcardComponent } from './learning/FlashcardComponent';
 import { CodeChallengeComponent } from './learning/CodeChallengeComponent';
 import { learningContent } from '../data/learning-content';
 import { motion, AnimatePresence } from 'framer-motion';
+import { usePlausible } from '@/hooks/usePlausible';
 
 interface LearningHubProps {
   // We'll pass in techniques and categories for learning content
@@ -78,18 +79,19 @@ interface Achievement {
 }
 
 export const LearningHubConnected: React.FC<LearningHubProps> = ({ techniques = [], categories = [] }) => {
-  const { 
-    progress, 
-    achievements, 
-    loading, 
-    error, 
-    updateProgress, 
+  const {
+    progress,
+    achievements,
+    loading,
+    error,
+    updateProgress,
     refreshData,
     level,
     totalXp,
     currentStreak,
-    completedChallenges 
+    completedChallenges
   } = useLearningHub();
+  const { trackLearningHub } = usePlausible();
 
   const [activeView, setActiveView] = useState<'dashboard' | 'learning' | 'achievements' | 'certification' | 'challenge'>('dashboard');
   const [selectedModule, setSelectedModule] = useState<string>('');
@@ -367,6 +369,14 @@ export const LearningHubConnected: React.FC<LearningHubProps> = ({ techniques = 
   const handleChallengeComplete = async (challengeId: string, score: number, xpEarned: number) => {
     console.log('[Learning Hub] Challenge completed:', { challengeId, score, xpEarned });
     console.log('[Learning Hub] Score represents percentage:', score, '%');
+
+    // Track challenge completion
+    trackLearningHub('challenge_complete', challengeId, {
+      score: score,
+      xp_earned: xpEarned,
+      performance: score >= 80 ? 'excellent' : score >= 60 ? 'good' : 'needs_improvement'
+    });
+
     setSaveError(null);
     setSaveSuccess(false);
     setSavingProgress(true);
@@ -467,11 +477,15 @@ export const LearningHubConnected: React.FC<LearningHubProps> = ({ techniques = 
   };
 
   const handleChallengeStart = (challenge: Challenge) => {
+    trackLearningHub('challenge_start', challenge.id);
     setSelectedChallenge(challenge);
     setActiveView('challenge');
   };
 
   const handleChallengeExit = () => {
+    if (selectedChallenge) {
+      trackLearningHub('challenge_exit', selectedChallenge.id);
+    }
     setSavingProgress(false);
     setSaveError(null);
     setSaveSuccess(false);

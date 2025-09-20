@@ -6,6 +6,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >& /dev/null && pwd)"
 CERTBOT_DIR="$SCRIPT_DIR/certbot"
 FRONTEND_DOMAIN="agentic-design.ai"
 BACKEND_DOMAIN="backend.agentic-design.ai"
+PLAUSIBLE_DOMAIN="plausible.agentic-design.ai"
 RSA_KEY_SIZE=4096
 DEFAULT_EMAIL="contact@agentic-design.ai"
 EMAIL="${SSL_EMAIL:-$DEFAULT_EMAIL}"
@@ -24,6 +25,7 @@ fi
 echo "🔒 Initializing Let's Encrypt for domains:"
 echo "   Frontend: $FRONTEND_DOMAIN (+ www.$FRONTEND_DOMAIN)"
 echo "   Backend:  $BACKEND_DOMAIN"
+echo "   Plausible: $PLAUSIBLE_DOMAIN"
 
 # ─── Prepare directories ────────────────────────────────────────────────────────
 mkdir -p \
@@ -35,6 +37,7 @@ mkdir -p \
 # ─── Existing‐certificate logic ─────────────────────────────────────────────────
 FRONTEND_CERT_EXISTS=false
 BACKEND_CERT_EXISTS=false
+PLAUSIBLE_CERT_EXISTS=false
 
 if [ -d "$CERTBOT_DIR/conf/live/$FRONTEND_DOMAIN" ]; then
   FRONTEND_CERT_EXISTS=true
@@ -46,7 +49,12 @@ if [ -d "$CERTBOT_DIR/conf/live/$BACKEND_DOMAIN" ]; then
   echo "⚠️  Certificates for $BACKEND_DOMAIN already exist!"
 fi
 
-if [ "$FRONTEND_CERT_EXISTS" = true ] || [ "$BACKEND_CERT_EXISTS" = true ]; then
+if [ -d "$CERTBOT_DIR/conf/live/$PLAUSIBLE_DOMAIN" ]; then
+  PLAUSIBLE_CERT_EXISTS=true
+  echo "⚠️  Certificates for $PLAUSIBLE_DOMAIN already exist!"
+fi
+
+if [ "$FRONTEND_CERT_EXISTS" = true ] || [ "$BACKEND_CERT_EXISTS" = true ] || [ "$PLAUSIBLE_CERT_EXISTS" = true ]; then
   read -p "Do you want to recreate existing certificates? (y/N): " -n 1 -r
   echo
   if [[ ! $REPLY =~ ^[Yy]$ ]]; then
@@ -67,6 +75,13 @@ if [ "$FRONTEND_CERT_EXISTS" = true ] || [ "$BACKEND_CERT_EXISTS" = true ]; then
       "$CERTBOT_DIR/conf/live/$BACKEND_DOMAIN" \
       "$CERTBOT_DIR/conf/archive/$BACKEND_DOMAIN" \
       "$CERTBOT_DIR/conf/renewal/$BACKEND_DOMAIN.conf"
+  fi
+
+  if [ "$PLAUSIBLE_CERT_EXISTS" = true ]; then
+    sudo rm -rf \
+      "$CERTBOT_DIR/conf/live/$PLAUSIBLE_DOMAIN" \
+      "$CERTBOT_DIR/conf/archive/$PLAUSIBLE_DOMAIN" \
+      "$CERTBOT_DIR/conf/renewal/$PLAUSIBLE_DOMAIN.conf"
   fi
 fi
 
@@ -100,12 +115,21 @@ if [ -z "$BACKEND_IP" ]; then
 fi
 echo "✅ Domain $BACKEND_DOMAIN resolves to: $BACKEND_IP"
 
+echo "Checking $PLAUSIBLE_DOMAIN..."
+PLAUSIBLE_IP=$(dig +short "$PLAUSIBLE_DOMAIN")
+if [ -z "$PLAUSIBLE_IP" ]; then
+  echo "❌ Error: Domain $PLAUSIBLE_DOMAIN does not resolve to an IP address!"
+  echo "Please configure your DNS to point to this server's IP address."
+  exit 1
+fi
+echo "✅ Domain $PLAUSIBLE_DOMAIN resolves to: $PLAUSIBLE_IP"
+
 # ─── Fire up temporary Nginx for HTTP-01 challenge ─────────────────────────────
 echo "🚀 Starting temporary web server for Let's Encrypt challenge..."
 cat > "$CERTBOT_DIR/nginx-temp.conf" <<EOF
 server {
     listen 80;
-    server_name $FRONTEND_DOMAIN www.$FRONTEND_DOMAIN $BACKEND_DOMAIN;
+    server_name $FRONTEND_DOMAIN www.$FRONTEND_DOMAIN $BACKEND_DOMAIN $PLAUSIBLE_DOMAIN;
     location /.well-known/acme-challenge/ {
         root /var/www/certbot;
     }
@@ -168,8 +192,28 @@ docker run --rm \
     -d "$BACKEND_DOMAIN"
 BACKEND_CERTBOT_EXIT=$?
 
-# Check if both certificates were obtained successfully
-if [ $FRONTEND_CERTBOT_EXIT -ne 0 ] || [ $BACKEND_CERTBOT_EXIT -ne 0 ]; then
+# Request certificate for plausible domain
+echo "Getting certificate for $PLAUSIBLE_DOMAIN..."
+docker run --rm \
+  -v "$CERTBOT_DIR/conf:/etc/letsencrypt" \
+  -v "$CERTBOT_DIR/lib:/var/lib/letsencrypt" \
+  -v "$CERTBOT_DIR/log:/var/log/letsencrypt" \
+  -v "$CERTBOT_DIR/www:/var/www/certbot" \
+  certbot/certbot certonly \
+    --config-dir    /etc/letsencrypt \
+    --work-dir      /var/lib/letsencrypt \
+    --logs-dir      /var/log/letsencrypt \
+    --webroot       -w /var/www/certbot \
+    --email         "$EMAIL" \
+    --agree-tos \
+    --no-eff-email \
+    --non-interactive \
+    --rsa-key-size  "$RSA_KEY_SIZE" \
+    -d "$PLAUSIBLE_DOMAIN"
+PLAUSIBLE_CERTBOT_EXIT=$?
+
+# Check if all certificates were obtained successfully
+if [ $FRONTEND_CERTBOT_EXIT -ne 0 ] || [ $BACKEND_CERTBOT_EXIT -ne 0 ] || [ $PLAUSIBLE_CERTBOT_EXIT -ne 0 ]; then
   CERTBOT_EXIT=1
 else
   CERTBOT_EXIT=0
@@ -195,15 +239,21 @@ if [ $CERTBOT_EXIT -ne 0 ]; then
   if [ $BACKEND_CERTBOT_EXIT -ne 0 ]; then
     echo "   Backend domain ($BACKEND_DOMAIN) failed"
   fi
+  if [ $PLAUSIBLE_CERTBOT_EXIT -ne 0 ]; then
+    echo "   Plausible domain ($PLAUSIBLE_DOMAIN) failed"
+  fi
   exit 1
 else
-  echo "✅ SSL certificates successfully obtained for both domains!"
+  echo "✅ SSL certificates successfully obtained for all domains!"
   echo ""
   echo "📅 Frontend certificate ($FRONTEND_DOMAIN) expires at:"
   openssl x509 -enddate -noout -in "$CERTBOT_DIR/conf/live/$FRONTEND_DOMAIN/fullchain.pem"
   echo ""
   echo "📅 Backend certificate ($BACKEND_DOMAIN) expires at:"
   openssl x509 -enddate -noout -in "$CERTBOT_DIR/conf/live/$BACKEND_DOMAIN/fullchain.pem"
+  echo ""
+  echo "📅 Plausible certificate ($PLAUSIBLE_DOMAIN) expires at:"
+  openssl x509 -enddate -noout -in "$CERTBOT_DIR/conf/live/$PLAUSIBLE_DOMAIN/fullchain.pem"
   echo ""
   echo "🚀 You can now:"
   echo "   1. Ensure your .env.prod is configured"

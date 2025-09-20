@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { Play, Pause, RotateCcw, ArrowRight, ArrowLeft, Database, Clock, Zap, TrendingUp, Activity, BarChart3, Settings, AlertTriangle, CheckCircle } from 'lucide-react';
+import { usePlausible } from '@/hooks/usePlausible';
 
 interface WindowItem {
   id: string;
@@ -86,6 +87,7 @@ const newDataItems = [
 ];
 
 export const SlidingWindowDemo: React.FC = () => {
+  const { trackEvent } = usePlausible();
   const [isRunning, setIsRunning] = useState(false);
   const [windowItems, setWindowItems] = useState<WindowItem[]>(initialWindowItems);
   const [windowSize] = useState(5);
@@ -109,6 +111,13 @@ export const SlidingWindowDemo: React.FC = () => {
   };
 
   const resetDemo = useCallback(() => {
+    trackEvent('Demo Interaction', {
+      action: 'reset_demo',
+      demo_type: 'sliding_window',
+      final_processed_items: processedItems,
+      final_item_index: currentItemIndex
+    });
+
     setIsRunning(false);
     setWindowItems(initialWindowItems);
     setCurrentItemIndex(0);
@@ -228,11 +237,25 @@ export const SlidingWindowDemo: React.FC = () => {
   }, [isRunning, addNewItem]);
 
   const startDemo = () => {
+    trackEvent('Demo Interaction', {
+      action: 'start_demo',
+      demo_type: 'sliding_window',
+      window_size: windowSize,
+      current_item_index: currentItemIndex
+    });
+
     setIsRunning(true);
     addLogEntry('Sliding window simulation started');
   };
 
   const pauseDemo = () => {
+    trackEvent('Demo Interaction', {
+      action: 'pause_demo',
+      demo_type: 'sliding_window',
+      processed_items: processedItems,
+      current_item_index: currentItemIndex
+    });
+
     setIsRunning(false);
     addLogEntry('Simulation paused');
   };

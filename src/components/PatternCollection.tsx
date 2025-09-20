@@ -5,16 +5,18 @@ import { PatternCard } from './PatternCard';
 import { PatternCard as PatternCardType, PatternRarity, PatternType } from '@/types/pattern-cards';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Filter, TrendingUp, Package, Search } from 'lucide-react';
+import { usePlausible } from '@/hooks/usePlausible';
 
 interface PatternCollectionProps {
   patterns: PatternCardType[];
   onPatternClick?: (pattern: PatternCardType) => void;
 }
 
-export const PatternCollection: React.FC<PatternCollectionProps> = ({ 
-  patterns, 
-  onPatternClick 
+export const PatternCollection: React.FC<PatternCollectionProps> = ({
+  patterns,
+  onPatternClick
 }) => {
+  const { trackEvent } = usePlausible();
   const [selectedRarity, setSelectedRarity] = useState<PatternRarity | 'all'>('all');
   const [selectedType, setSelectedType] = useState<PatternType | 'all'>('all');
   const [showOnlyOwned, setShowOnlyOwned] = useState(false);
@@ -222,7 +224,16 @@ export const PatternCollection: React.FC<PatternCollectionProps> = ({
               <PatternCard
                 pattern={pattern}
                 size="small"
-                onClick={() => onPatternClick?.(pattern)}
+                onClick={() => {
+                  trackEvent('Pattern Card Click', {
+                    pattern_name: pattern.name,
+                    pattern_type: pattern.type,
+                    pattern_rarity: pattern.rarity,
+                    pattern_level: pattern.level,
+                    owned: pattern.owned
+                  });
+                  onPatternClick?.(pattern);
+                }}
               />
             </motion.div>
           ))}

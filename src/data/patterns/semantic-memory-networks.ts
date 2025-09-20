@@ -1,0 +1,504 @@
+import { PatternScenario } from './types';
+import { nodeStyle, edgeStyle } from './styles';
+
+export const semanticMemoryNetworksPattern: PatternScenario = {
+  id: 'semantic-memory-networks',
+  title: 'Semantic Memory Networks',
+  initialNodes: [
+    {
+      id: 'knowledge-query',
+      position: { x: 400, y: 50 },
+      data: { label: '❓ Knowledge Query\n"What are the relationships between climate change and agriculture?"' },
+      style: { ...nodeStyle, background: '#10b981', minWidth: 400 },
+    },
+    // Semantic Network Core
+    {
+      id: 'semantic-core',
+      position: { x: 375, y: 150 },
+      data: { label: '🧠 Semantic Network Core\nGraph-based knowledge representation' },
+      style: { ...nodeStyle, background: '#dc2626', minWidth: 280 },
+    },
+    // Knowledge Representation Layers
+    {
+      id: 'concept-nodes',
+      position: { x: 100, y: 250 },
+      data: { label: '🔵 Concept Nodes\nEntities & abstractions' },
+      style: { ...nodeStyle, background: '#3b82f6', minWidth: 180 },
+    },
+    {
+      id: 'relation-edges',
+      position: { x: 300, y: 250 },
+      data: { label: '🔗 Relation Edges\nSemantic connections' },
+      style: { ...nodeStyle, background: '#3b82f6', minWidth: 180 },
+    },
+    {
+      id: 'attribute-properties',
+      position: { x: 500, y: 250 },
+      data: { label: '📋 Attributes\nProperties & features' },
+      style: { ...nodeStyle, background: '#3b82f6', minWidth: 180 },
+    },
+    {
+      id: 'hierarchical-structure',
+      position: { x: 700, y: 250 },
+      data: { label: '📊 Hierarchies\nTaxonomies & ontologies' },
+      style: { ...nodeStyle, background: '#3b82f6', minWidth: 180 },
+    },
+    // Concept Examples
+    {
+      id: 'climate-concept',
+      position: { x: 50, y: 380 },
+      data: { label: '🌡️ Climate Change\nConcept: Environmental\nLevel: Global' },
+      style: { ...nodeStyle, background: '#7c3aed', minWidth: 160 },
+    },
+    {
+      id: 'agriculture-concept',
+      position: { x: 220, y: 380 },
+      data: { label: '🌾 Agriculture\nConcept: Industry\nLevel: Sector' },
+      style: { ...nodeStyle, background: '#7c3aed', minWidth: 160 },
+    },
+    {
+      id: 'crops-concept',
+      position: { x: 390, y: 380 },
+      data: { label: '🌽 Crop Yields\nConcept: Output\nLevel: Specific' },
+      style: { ...nodeStyle, background: '#7c3aed', minWidth: 160 },
+    },
+    {
+      id: 'weather-concept',
+      position: { x: 560, y: 380 },
+      data: { label: '☁️ Weather Patterns\nConcept: Phenomena\nLevel: Regional' },
+      style: { ...nodeStyle, background: '#7c3aed', minWidth: 160 },
+    },
+    {
+      id: 'soil-concept',
+      position: { x: 730, y: 380 },
+      data: { label: '🪨 Soil Health\nConcept: Resource\nLevel: Local' },
+      style: { ...nodeStyle, background: '#7c3aed', minWidth: 160 },
+    },
+    // Semantic Relations
+    {
+      id: 'causal-relation',
+      position: { x: 100, y: 520 },
+      data: { label: '➡️ Causal\n"affects"\n"influences"' },
+      style: { ...nodeStyle, background: '#f59e0b', minWidth: 140 },
+    },
+    {
+      id: 'temporal-relation',
+      position: { x: 250, y: 520 },
+      data: { label: '⏰ Temporal\n"precedes"\n"follows"' },
+      style: { ...nodeStyle, background: '#f59e0b', minWidth: 140 },
+    },
+    {
+      id: 'spatial-relation',
+      position: { x: 400, y: 520 },
+      data: { label: '📍 Spatial\n"located in"\n"adjacent to"' },
+      style: { ...nodeStyle, background: '#f59e0b', minWidth: 140 },
+    },
+    {
+      id: 'taxonomic-relation',
+      position: { x: 550, y: 520 },
+      data: { label: '🌳 Taxonomic\n"is-a"\n"part-of"' },
+      style: { ...nodeStyle, background: '#f59e0b', minWidth: 140 },
+    },
+    {
+      id: 'functional-relation',
+      position: { x: 700, y: 520 },
+      data: { label: '⚙️ Functional\n"used-for"\n"enables"' },
+      style: { ...nodeStyle, background: '#f59e0b', minWidth: 140 },
+    },
+    // Inference Mechanisms
+    {
+      id: 'spreading-activation',
+      position: { x: 50, y: 640 },
+      data: { label: '🌊 Spreading Activation\nActivation propagation' },
+      style: { ...nodeStyle, background: '#ec4899', minWidth: 180 },
+    },
+    {
+      id: 'path-finding',
+      position: { x: 250, y: 640 },
+      data: { label: '🛤️ Path Finding\nShortest semantic path' },
+      style: { ...nodeStyle, background: '#ec4899', minWidth: 180 },
+    },
+    {
+      id: 'pattern-completion',
+      position: { x: 450, y: 640 },
+      data: { label: '🧩 Pattern Completion\nFill knowledge gaps' },
+      style: { ...nodeStyle, background: '#ec4899', minWidth: 180 },
+    },
+    {
+      id: 'analogical-reasoning',
+      position: { x: 650, y: 640 },
+      data: { label: '🔄 Analogical Reasoning\nStructural mapping' },
+      style: { ...nodeStyle, background: '#ec4899', minWidth: 180 },
+    },
+    // Knowledge Integration
+    {
+      id: 'multi-hop-reasoning',
+      position: { x: 100, y: 760 },
+      data: { label: '🔀 Multi-hop Reasoning\nClimate → Weather → Crops' },
+      style: { ...nodeStyle, background: '#ef4444', minWidth: 180 },
+    },
+    {
+      id: 'context-integration',
+      position: { x: 300, y: 760 },
+      data: { label: '🎯 Context Integration\nCombine local & global' },
+      style: { ...nodeStyle, background: '#ef4444', minWidth: 180 },
+    },
+    {
+      id: 'abstraction-levels',
+      position: { x: 500, y: 760 },
+      data: { label: '📈 Abstraction Levels\nGeneral ↔ Specific' },
+      style: { ...nodeStyle, background: '#ef4444', minWidth: 180 },
+    },
+    {
+      id: 'cross-domain-transfer',
+      position: { x: 700, y: 760 },
+      data: { label: '🌐 Cross-domain Transfer\nApply across contexts' },
+      style: { ...nodeStyle, background: '#ef4444', minWidth: 180 },
+    },
+    // Memory Operations
+    {
+      id: 'knowledge-encoding',
+      position: { x: 150, y: 880 },
+      data: { label: '💾 Knowledge Encoding\nStructured storage' },
+      style: { ...nodeStyle, background: '#6366f1', minWidth: 160 },
+    },
+    {
+      id: 'semantic-indexing',
+      position: { x: 320, y: 880 },
+      data: { label: '🗂️ Semantic Indexing\nEfficient retrieval' },
+      style: { ...nodeStyle, background: '#6366f1', minWidth: 160 },
+    },
+    {
+      id: 'memory-consolidation',
+      position: { x: 490, y: 880 },
+      data: { label: '🔗 Consolidation\nStrengthen connections' },
+      style: { ...nodeStyle, background: '#6366f1', minWidth: 160 },
+    },
+    {
+      id: 'knowledge-synthesis',
+      position: { x: 660, y: 880 },
+      data: { label: '✨ Knowledge Synthesis\nGenerate insights' },
+      style: { ...nodeStyle, background: '#22c55e', minWidth: 160 },
+    },
+    {
+      id: 'comprehensive-answer',
+      position: { x: 400, y: 1000 },
+      data: { label: '📊 Comprehensive Answer\n"Climate change affects agriculture through altered weather patterns,\nsoil degradation, and reduced crop yields in vulnerable regions"' },
+      style: { ...nodeStyle, background: '#10b981', minWidth: 420 },
+    },
+  ],
+  initialEdges: [
+    // Query to core
+    {
+      id: 'query-core',
+      source: 'knowledge-query',
+      target: 'semantic-core',
+      style: { ...edgeStyle, stroke: '#dc2626', strokeWidth: 3 },
+      animated: true,
+    },
+    // Core to representation layers
+    {
+      id: 'core-concepts',
+      source: 'semantic-core',
+      target: 'concept-nodes',
+      style: { ...edgeStyle, stroke: '#3b82f6', strokeWidth: 2 },
+      label: 'Extract',
+    },
+    {
+      id: 'core-relations',
+      source: 'semantic-core',
+      target: 'relation-edges',
+      style: { ...edgeStyle, stroke: '#3b82f6', strokeWidth: 2 },
+      label: 'Map',
+    },
+    {
+      id: 'core-attributes',
+      source: 'semantic-core',
+      target: 'attribute-properties',
+      style: { ...edgeStyle, stroke: '#3b82f6', strokeWidth: 2 },
+      label: 'Identify',
+    },
+    {
+      id: 'core-hierarchies',
+      source: 'semantic-core',
+      target: 'hierarchical-structure',
+      style: { ...edgeStyle, stroke: '#3b82f6', strokeWidth: 2 },
+      label: 'Organize',
+    },
+    // Concepts to nodes
+    {
+      id: 'concepts-climate',
+      source: 'concept-nodes',
+      target: 'climate-concept',
+      style: { ...edgeStyle, stroke: '#7c3aed' },
+    },
+    {
+      id: 'concepts-agriculture',
+      source: 'concept-nodes',
+      target: 'agriculture-concept',
+      style: { ...edgeStyle, stroke: '#7c3aed' },
+    },
+    {
+      id: 'concepts-crops',
+      source: 'concept-nodes',
+      target: 'crops-concept',
+      style: { ...edgeStyle, stroke: '#7c3aed' },
+    },
+    {
+      id: 'concepts-weather',
+      source: 'concept-nodes',
+      target: 'weather-concept',
+      style: { ...edgeStyle, stroke: '#7c3aed' },
+    },
+    {
+      id: 'concepts-soil',
+      source: 'concept-nodes',
+      target: 'soil-concept',
+      style: { ...edgeStyle, stroke: '#7c3aed' },
+    },
+    // Semantic relations between concepts
+    {
+      id: 'climate-weather',
+      source: 'climate-concept',
+      target: 'weather-concept',
+      style: { ...edgeStyle, stroke: '#f59e0b', strokeWidth: 2 },
+      label: 'causes',
+      animated: true,
+    },
+    {
+      id: 'weather-crops',
+      source: 'weather-concept',
+      target: 'crops-concept',
+      style: { ...edgeStyle, stroke: '#f59e0b', strokeWidth: 2 },
+      label: 'affects',
+      animated: true,
+    },
+    {
+      id: 'agriculture-crops',
+      source: 'agriculture-concept',
+      target: 'crops-concept',
+      style: { ...edgeStyle, stroke: '#f59e0b', strokeWidth: 2 },
+      label: 'produces',
+    },
+    {
+      id: 'soil-crops',
+      source: 'soil-concept',
+      target: 'crops-concept',
+      style: { ...edgeStyle, stroke: '#f59e0b', strokeWidth: 2 },
+      label: 'supports',
+    },
+    {
+      id: 'climate-agriculture',
+      source: 'climate-concept',
+      target: 'agriculture-concept',
+      style: { ...edgeStyle, stroke: '#f59e0b', strokeWidth: 3 },
+      label: 'impacts',
+      animated: true,
+    },
+    // Relations to relation types
+    {
+      id: 'climate-weather-causal',
+      source: 'causal-relation',
+      target: 'relation-edges',
+      style: { ...edgeStyle, stroke: '#f59e0b', strokeDasharray: '5 5' },
+    },
+    {
+      id: 'temporal-edges',
+      source: 'temporal-relation',
+      target: 'relation-edges',
+      style: { ...edgeStyle, stroke: '#f59e0b', strokeDasharray: '5 5' },
+    },
+    {
+      id: 'spatial-edges',
+      source: 'spatial-relation',
+      target: 'relation-edges',
+      style: { ...edgeStyle, stroke: '#f59e0b', strokeDasharray: '5 5' },
+    },
+    {
+      id: 'taxonomic-edges',
+      source: 'taxonomic-relation',
+      target: 'relation-edges',
+      style: { ...edgeStyle, stroke: '#f59e0b', strokeDasharray: '5 5' },
+    },
+    {
+      id: 'functional-edges',
+      source: 'functional-relation',
+      target: 'relation-edges',
+      style: { ...edgeStyle, stroke: '#f59e0b', strokeDasharray: '5 5' },
+    },
+    // Inference mechanisms
+    {
+      id: 'climate-spreading',
+      source: 'climate-concept',
+      target: 'spreading-activation',
+      style: { ...edgeStyle, stroke: '#ec4899' },
+      animated: true,
+    },
+    {
+      id: 'spreading-path',
+      source: 'spreading-activation',
+      target: 'path-finding',
+      style: { ...edgeStyle, stroke: '#ec4899' },
+      animated: true,
+    },
+    {
+      id: 'path-pattern',
+      source: 'path-finding',
+      target: 'pattern-completion',
+      style: { ...edgeStyle, stroke: '#ec4899' },
+      animated: true,
+    },
+    {
+      id: 'pattern-analogical',
+      source: 'pattern-completion',
+      target: 'analogical-reasoning',
+      style: { ...edgeStyle, stroke: '#ec4899' },
+      animated: true,
+    },
+    // Knowledge integration
+    {
+      id: 'spreading-multihop',
+      source: 'spreading-activation',
+      target: 'multi-hop-reasoning',
+      style: { ...edgeStyle, stroke: '#ef4444' },
+    },
+    {
+      id: 'path-context',
+      source: 'path-finding',
+      target: 'context-integration',
+      style: { ...edgeStyle, stroke: '#ef4444' },
+    },
+    {
+      id: 'pattern-abstraction',
+      source: 'pattern-completion',
+      target: 'abstraction-levels',
+      style: { ...edgeStyle, stroke: '#ef4444' },
+    },
+    {
+      id: 'analogical-crossdomain',
+      source: 'analogical-reasoning',
+      target: 'cross-domain-transfer',
+      style: { ...edgeStyle, stroke: '#ef4444' },
+    },
+    // Memory operations
+    {
+      id: 'multihop-encoding',
+      source: 'multi-hop-reasoning',
+      target: 'knowledge-encoding',
+      style: { ...edgeStyle, stroke: '#6366f1' },
+    },
+    {
+      id: 'context-indexing',
+      source: 'context-integration',
+      target: 'semantic-indexing',
+      style: { ...edgeStyle, stroke: '#6366f1' },
+    },
+    {
+      id: 'abstraction-consolidation',
+      source: 'abstraction-levels',
+      target: 'memory-consolidation',
+      style: { ...edgeStyle, stroke: '#6366f1' },
+    },
+    {
+      id: 'crossdomain-synthesis',
+      source: 'cross-domain-transfer',
+      target: 'knowledge-synthesis',
+      style: { ...edgeStyle, stroke: '#22c55e' },
+      animated: true,
+    },
+    // Final answer
+    {
+      id: 'encoding-answer',
+      source: 'knowledge-encoding',
+      target: 'comprehensive-answer',
+      style: { ...edgeStyle, stroke: '#10b981' },
+    },
+    {
+      id: 'indexing-answer',
+      source: 'semantic-indexing',
+      target: 'comprehensive-answer',
+      style: { ...edgeStyle, stroke: '#10b981' },
+    },
+    {
+      id: 'consolidation-answer',
+      source: 'memory-consolidation',
+      target: 'comprehensive-answer',
+      style: { ...edgeStyle, stroke: '#10b981' },
+    },
+    {
+      id: 'synthesis-answer',
+      source: 'knowledge-synthesis',
+      target: 'comprehensive-answer',
+      style: { ...edgeStyle, stroke: '#10b981', strokeWidth: 3 },
+      animated: true,
+    },
+  ],
+  steps: [
+    {
+      title: 'Knowledge Query',
+      description: 'Complex query about climate-agriculture relationships',
+      activeNodes: ['knowledge-query', 'semantic-core'],
+      activeEdges: ['query-core'],
+    },
+    {
+      title: 'Semantic Decomposition',
+      description: 'Breaking down into concepts, relations, attributes, and hierarchies',
+      activeNodes: ['semantic-core', 'concept-nodes', 'relation-edges', 'attribute-properties', 'hierarchical-structure'],
+      activeEdges: ['core-concepts', 'core-relations', 'core-attributes', 'core-hierarchies'],
+    },
+    {
+      title: 'Concept Identification',
+      description: 'Identifying relevant semantic concepts',
+      activeNodes: ['concept-nodes', 'climate-concept', 'agriculture-concept', 'crops-concept', 'weather-concept', 'soil-concept'],
+      activeEdges: ['concepts-climate', 'concepts-agriculture', 'concepts-crops', 'concepts-weather', 'concepts-soil'],
+    },
+    {
+      title: 'Relation Mapping',
+      description: 'Establishing semantic relationships between concepts',
+      activeNodes: ['climate-concept', 'agriculture-concept', 'crops-concept', 'weather-concept', 'soil-concept'],
+      activeEdges: ['climate-weather', 'weather-crops', 'agriculture-crops', 'soil-crops', 'climate-agriculture'],
+    },
+    {
+      title: 'Relation Types',
+      description: 'Categorizing relationships: causal, temporal, spatial, taxonomic, functional',
+      activeNodes: ['causal-relation', 'temporal-relation', 'spatial-relation', 'taxonomic-relation', 'functional-relation', 'relation-edges'],
+      activeEdges: ['climate-weather-causal', 'temporal-edges', 'spatial-edges', 'taxonomic-edges', 'functional-edges'],
+    },
+    {
+      title: 'Spreading Activation',
+      description: 'Activating related concepts through network propagation',
+      activeNodes: ['climate-concept', 'spreading-activation', 'path-finding'],
+      activeEdges: ['climate-spreading', 'spreading-path'],
+    },
+    {
+      title: 'Pattern Inference',
+      description: 'Completing patterns and analogical reasoning',
+      activeNodes: ['pattern-completion', 'analogical-reasoning'],
+      activeEdges: ['path-pattern', 'pattern-analogical'],
+    },
+    {
+      title: 'Knowledge Integration',
+      description: 'Multi-hop reasoning and context integration',
+      activeNodes: ['multi-hop-reasoning', 'context-integration', 'abstraction-levels', 'cross-domain-transfer'],
+      activeEdges: ['spreading-multihop', 'path-context', 'pattern-abstraction', 'analogical-crossdomain'],
+    },
+    {
+      title: 'Memory Operations',
+      description: 'Encoding, indexing, and consolidating semantic knowledge',
+      activeNodes: ['knowledge-encoding', 'semantic-indexing', 'memory-consolidation'],
+      activeEdges: ['multihop-encoding', 'context-indexing', 'abstraction-consolidation'],
+    },
+    {
+      title: 'Knowledge Synthesis',
+      description: 'Generating comprehensive insights from semantic network',
+      activeNodes: ['knowledge-synthesis', 'cross-domain-transfer'],
+      activeEdges: ['crossdomain-synthesis'],
+    },
+    {
+      title: 'Comprehensive Answer',
+      description: 'Delivering integrated knowledge from semantic memory',
+      activeNodes: ['knowledge-encoding', 'semantic-indexing', 'memory-consolidation', 'knowledge-synthesis', 'comprehensive-answer'],
+      activeEdges: ['encoding-answer', 'indexing-answer', 'consolidation-answer', 'synthesis-answer'],
+    },
+  ],
+};

@@ -36,12 +36,64 @@ services:
     networks:
       - agentic-network
 
+  plausible_db:
+    image: postgres:14-alpine
+    restart: always
+    container_name: plausible_postgres
+    volumes:
+      - plausible_db_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=plausible
+    networks:
+      - agentic-network
+
+  plausible_events_db:
+    image: clickhouse/clickhouse-server:22.6-alpine
+    restart: always
+    container_name: plausible_clickhouse
+    volumes:
+      - plausible_events_db_data:/var/lib/clickhouse
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    networks:
+      - agentic-network
+
+  plausible:
+    image: plausible/analytics:v2.0
+    restart: always
+    container_name: plausible_analytics
+    command: sh -c "sleep 10 && /entrypoint.sh db createdb && /entrypoint.sh db migrate && /entrypoint.sh run"
+    depends_on:
+      - plausible_db
+      - plausible_events_db
+    ports:
+      - "8000:8000"
+    environment:
+      - BASE_URL=https://plausible.agentic-design.ai
+      - SECRET_KEY_BASE=1d59dcbad9e287658ece6037a3672182c1214db49bf53031a00035789ff2cfa5
+      - DATABASE_URL=postgres://postgres:postgres@plausible_db:5432/plausible
+      - CLICKHOUSE_DATABASE_URL=http://plausible_events_db:8123/plausible_events_db
+      - ADMIN_USER_EMAIL=admin@agentic-design.ai
+      - ADMIN_USER_NAME=Admin
+      - ADMIN_USER_PWD=changeme123
+      - DISABLE_REGISTRATION=true
+    networks:
+      - agentic-network
+
 volumes:
   nextjs-cache:
     driver: local
   webpack-cache:
     driver: local
   npm-cache:
+    driver: local
+  plausible_db_data:
+    driver: local
+  plausible_events_db_data:
     driver: local
 
 networks:

@@ -19,6 +19,7 @@ import { useSearch } from '@/contexts/SearchContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getSearchSuggestions } from '@/lib/search';
 import { getAllCategories, getAllTypes } from '@/lib/searchIndex';
+import { usePlausible } from '@/hooks/usePlausible';
 
 const categoryIcons: Record<string, React.ReactNode> = {
   patterns: <Code className="w-4 h-4" />,
@@ -77,6 +78,7 @@ export const SearchModal: React.FC = () => {
   } = useSearch();
 
   const router = useRouter();
+  const { trackSearch, trackEvent } = usePlausible();
   const inputRef = useRef<HTMLInputElement>(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [suggestions, setSuggestions] = useState<string[]>([]);
@@ -138,22 +140,33 @@ export const SearchModal: React.FC = () => {
   const handleSearch = useCallback(async (query: string) => {
     setSearchQuery(query);
     setSelectedIndex(0);
-    
+
     if (query.length > 0) {
       const newSuggestions = getSearchSuggestions(query);
       setSuggestions(newSuggestions);
-      
+
       if (query.length >= 2) {
-        await performSearch(query, { 
-          categories: selectedCategories.length > 0 ? selectedCategories : undefined 
+        await performSearch(query, {
+          categories: selectedCategories.length > 0 ? selectedCategories : undefined
         });
+
+        // Track search
+        trackSearch(query, searchResults.length);
       }
     } else {
       setSuggestions([]);
     }
-  }, [setSearchQuery, performSearch, selectedCategories]);
+  }, [setSearchQuery, performSearch, selectedCategories, trackSearch, searchResults.length]);
 
   const handleResultClick = async (url: string, category?: string) => {
+    // Track search result click
+    trackEvent('Search Result Click', {
+      query: searchQuery,
+      url: url,
+      category: category,
+      result_position: searchResults.findIndex(r => r.url === url) + 1
+    });
+
     // Save the search when a result is clicked
     await saveSearchOnClick(searchQuery, category);
     router.push(url);
@@ -168,16 +181,24 @@ export const SearchModal: React.FC = () => {
     const newCategories = selectedCategories.includes(category)
       ? selectedCategories.filter(c => c !== category)
       : [...selectedCategories, category];
-    
+
     setSelectedCategories(newCategories);
-    
+
+    // Track category filter usage
+    trackEvent('Search Filter Toggle', {
+      category: category,
+      action: selectedCategories.includes(category) ? 'remove' : 'add',
+      active_filters: newCategories.length,
+      query: searchQuery
+    });
+
     // Immediately perform search with new category filters if there's a search query
     if (searchQuery.length >= 2) {
       await performSearch(searchQuery, {
         categories: newCategories.length > 0 ? newCategories : undefined
       });
     }
-  }, [selectedCategories, searchQuery, performSearch]);
+  }, [selectedCategories, searchQuery, performSearch, trackEvent]);
 
   const highlightMatch = (text: string, query: string) => {
     if (!query) return text;

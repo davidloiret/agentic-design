@@ -1,0 +1,385 @@
+import { PatternScenario } from './types';
+import { nodeStyle, edgeStyle } from './styles';
+
+export const htnPlanningPattern: PatternScenario = {
+  id: 'hierarchical-task-network-planning',
+  title: 'Hierarchical Task Network (HTN) Planning',
+  initialNodes: [
+    {
+      id: 'goal',
+      position: { x: 400, y: 50 },
+      data: { label: '🎯 High-Level Goal\n"Deploy web application"' },
+      style: { ...nodeStyle, background: '#10b981', minWidth: 220 },
+    },
+    {
+      id: 'task-analyzer',
+      position: { x: 375, y: 150 },
+      data: { label: '📊 Task Analyzer\nDecompose into subtasks' },
+      style: { ...nodeStyle, background: '#3b82f6', minWidth: 250 },
+    },
+    {
+      id: 'method-library',
+      position: { x: 650, y: 150 },
+      data: { label: '📚 Method Library\nTask decomposition templates' },
+      style: { ...nodeStyle, background: '#7c3aed', minWidth: 200 },
+    },
+    // Level 1 - High-level tasks
+    {
+      id: 'setup-infra',
+      position: { x: 100, y: 280 },
+      data: { label: '🔧 Setup Infrastructure\nAbstract task' },
+      style: { ...nodeStyle, background: '#f59e0b', minWidth: 180 },
+    },
+    {
+      id: 'build-app',
+      position: { x: 300, y: 280 },
+      data: { label: '🏗️ Build Application\nAbstract task' },
+      style: { ...nodeStyle, background: '#f59e0b', minWidth: 180 },
+    },
+    {
+      id: 'deploy-app',
+      position: { x: 500, y: 280 },
+      data: { label: '🚀 Deploy Application\nAbstract task' },
+      style: { ...nodeStyle, background: '#f59e0b', minWidth: 180 },
+    },
+    {
+      id: 'verify-deploy',
+      position: { x: 700, y: 280 },
+      data: { label: '✅ Verify Deployment\nAbstract task' },
+      style: { ...nodeStyle, background: '#f59e0b', minWidth: 180 },
+    },
+    // Level 2 - Subtasks for Setup Infrastructure
+    {
+      id: 'provision-server',
+      position: { x: 50, y: 420 },
+      data: { label: '💻 Provision Server\nSubtask' },
+      style: { ...nodeStyle, background: '#ec4899', minWidth: 150 },
+    },
+    {
+      id: 'configure-network',
+      position: { x: 200, y: 420 },
+      data: { label: '🌐 Configure Network\nSubtask' },
+      style: { ...nodeStyle, background: '#ec4899', minWidth: 150 },
+    },
+    // Level 2 - Subtasks for Build Application
+    {
+      id: 'install-deps',
+      position: { x: 350, y: 420 },
+      data: { label: '📦 Install Dependencies\nSubtask' },
+      style: { ...nodeStyle, background: '#ec4899', minWidth: 150 },
+    },
+    {
+      id: 'run-tests',
+      position: { x: 500, y: 420 },
+      data: { label: '🧪 Run Tests\nSubtask' },
+      style: { ...nodeStyle, background: '#ec4899', minWidth: 150 },
+    },
+    {
+      id: 'create-bundle',
+      position: { x: 650, y: 420 },
+      data: { label: '📁 Create Bundle\nSubtask' },
+      style: { ...nodeStyle, background: '#ec4899', minWidth: 150 },
+    },
+    // Level 3 - Primitive actions
+    {
+      id: 'action-create-vm',
+      position: { x: 20, y: 560 },
+      data: { label: '▶️ Create VM\naws ec2 run-instances' },
+      style: { ...nodeStyle, background: '#6366f1', minWidth: 140 },
+    },
+    {
+      id: 'action-install-docker',
+      position: { x: 160, y: 560 },
+      data: { label: '▶️ Install Docker\napt install docker' },
+      style: { ...nodeStyle, background: '#6366f1', minWidth: 140 },
+    },
+    {
+      id: 'action-setup-firewall',
+      position: { x: 300, y: 560 },
+      data: { label: '▶️ Setup Firewall\nufw allow 443' },
+      style: { ...nodeStyle, background: '#6366f1', minWidth: 140 },
+    },
+    {
+      id: 'action-npm-install',
+      position: { x: 440, y: 560 },
+      data: { label: '▶️ NPM Install\nnpm ci' },
+      style: { ...nodeStyle, background: '#6366f1', minWidth: 140 },
+    },
+    {
+      id: 'action-run-jest',
+      position: { x: 580, y: 560 },
+      data: { label: '▶️ Run Jest\nnpm test' },
+      style: { ...nodeStyle, background: '#6366f1', minWidth: 140 },
+    },
+    {
+      id: 'action-webpack',
+      position: { x: 720, y: 560 },
+      data: { label: '▶️ Webpack Build\nnpm run build' },
+      style: { ...nodeStyle, background: '#6366f1', minWidth: 140 },
+    },
+    // Control nodes
+    {
+      id: 'constraint-checker',
+      position: { x: 100, y: 700 },
+      data: { label: '🔒 Constraint Checker\nValidate preconditions' },
+      style: { ...nodeStyle, background: '#ef4444', minWidth: 180 },
+    },
+    {
+      id: 'execution-monitor',
+      position: { x: 350, y: 700 },
+      data: { label: '📡 Execution Monitor\nTrack progress & failures' },
+      style: { ...nodeStyle, background: '#ef4444', minWidth: 180 },
+    },
+    {
+      id: 'replanning-engine',
+      position: { x: 600, y: 700 },
+      data: { label: '🔄 Replanning Engine\nHandle failures & changes' },
+      style: { ...nodeStyle, background: '#ef4444', minWidth: 180 },
+    },
+    {
+      id: 'output',
+      position: { x: 400, y: 820 },
+      data: { label: '✨ Executed Plan\nCompleted deployment' },
+      style: { ...nodeStyle, background: '#10b981', minWidth: 200 },
+    },
+  ],
+  initialEdges: [
+    {
+      id: 'goal-analyzer',
+      source: 'goal',
+      target: 'task-analyzer',
+      style: { ...edgeStyle, stroke: '#3b82f6' },
+      animated: true,
+    },
+    {
+      id: 'analyzer-library',
+      source: 'task-analyzer',
+      target: 'method-library',
+      style: { ...edgeStyle, stroke: '#7c3aed' },
+      label: 'Query methods',
+    },
+    {
+      id: 'library-analyzer',
+      source: 'method-library',
+      target: 'task-analyzer',
+      style: { ...edgeStyle, stroke: '#7c3aed', strokeDasharray: '5 5' },
+      label: 'Return templates',
+    },
+    // Decompose to level 1
+    {
+      id: 'analyzer-setup',
+      source: 'task-analyzer',
+      target: 'setup-infra',
+      style: { ...edgeStyle, stroke: '#f59e0b' },
+      label: 'Decompose',
+    },
+    {
+      id: 'analyzer-build',
+      source: 'task-analyzer',
+      target: 'build-app',
+      style: { ...edgeStyle, stroke: '#f59e0b' },
+      label: 'Decompose',
+    },
+    {
+      id: 'analyzer-deploy',
+      source: 'task-analyzer',
+      target: 'deploy-app',
+      style: { ...edgeStyle, stroke: '#f59e0b' },
+      label: 'Decompose',
+    },
+    {
+      id: 'analyzer-verify',
+      source: 'task-analyzer',
+      target: 'verify-deploy',
+      style: { ...edgeStyle, stroke: '#f59e0b' },
+      label: 'Decompose',
+    },
+    // Task ordering dependencies
+    {
+      id: 'setup-build',
+      source: 'setup-infra',
+      target: 'build-app',
+      style: { ...edgeStyle, stroke: '#64748b', strokeDasharray: '3 3' },
+      label: 'Precedes',
+    },
+    {
+      id: 'build-deploy',
+      source: 'build-app',
+      target: 'deploy-app',
+      style: { ...edgeStyle, stroke: '#64748b', strokeDasharray: '3 3' },
+      label: 'Precedes',
+    },
+    {
+      id: 'deploy-verify',
+      source: 'deploy-app',
+      target: 'verify-deploy',
+      style: { ...edgeStyle, stroke: '#64748b', strokeDasharray: '3 3' },
+      label: 'Precedes',
+    },
+    // Decompose to level 2
+    {
+      id: 'setup-provision',
+      source: 'setup-infra',
+      target: 'provision-server',
+      style: { ...edgeStyle, stroke: '#ec4899' },
+    },
+    {
+      id: 'setup-network',
+      source: 'setup-infra',
+      target: 'configure-network',
+      style: { ...edgeStyle, stroke: '#ec4899' },
+    },
+    {
+      id: 'build-deps',
+      source: 'build-app',
+      target: 'install-deps',
+      style: { ...edgeStyle, stroke: '#ec4899' },
+    },
+    {
+      id: 'build-tests',
+      source: 'build-app',
+      target: 'run-tests',
+      style: { ...edgeStyle, stroke: '#ec4899' },
+    },
+    {
+      id: 'build-bundle',
+      source: 'build-app',
+      target: 'create-bundle',
+      style: { ...edgeStyle, stroke: '#ec4899' },
+    },
+    // Decompose to primitive actions
+    {
+      id: 'provision-vm',
+      source: 'provision-server',
+      target: 'action-create-vm',
+      style: { ...edgeStyle, stroke: '#6366f1' },
+    },
+    {
+      id: 'provision-docker',
+      source: 'provision-server',
+      target: 'action-install-docker',
+      style: { ...edgeStyle, stroke: '#6366f1' },
+    },
+    {
+      id: 'network-firewall',
+      source: 'configure-network',
+      target: 'action-setup-firewall',
+      style: { ...edgeStyle, stroke: '#6366f1' },
+    },
+    {
+      id: 'deps-npm',
+      source: 'install-deps',
+      target: 'action-npm-install',
+      style: { ...edgeStyle, stroke: '#6366f1' },
+    },
+    {
+      id: 'tests-jest',
+      source: 'run-tests',
+      target: 'action-run-jest',
+      style: { ...edgeStyle, stroke: '#6366f1' },
+    },
+    {
+      id: 'bundle-webpack',
+      source: 'create-bundle',
+      target: 'action-webpack',
+      style: { ...edgeStyle, stroke: '#6366f1' },
+    },
+    // Control flow
+    {
+      id: 'actions-constraint',
+      source: 'action-create-vm',
+      target: 'constraint-checker',
+      style: { ...edgeStyle, stroke: '#ef4444' },
+      label: 'Validate',
+    },
+    {
+      id: 'constraint-monitor',
+      source: 'constraint-checker',
+      target: 'execution-monitor',
+      style: { ...edgeStyle, stroke: '#ef4444' },
+    },
+    {
+      id: 'monitor-replan',
+      source: 'execution-monitor',
+      target: 'replanning-engine',
+      style: { ...edgeStyle, stroke: '#ef4444' },
+      label: 'On failure',
+    },
+    {
+      id: 'replan-analyzer',
+      source: 'replanning-engine',
+      target: 'task-analyzer',
+      style: { ...edgeStyle, stroke: '#f59e0b', strokeDasharray: '5 5' },
+      label: 'Replan',
+    },
+    {
+      id: 'monitor-output',
+      source: 'execution-monitor',
+      target: 'output',
+      style: { ...edgeStyle, stroke: '#10b981' },
+      label: 'Success',
+    },
+  ],
+  steps: [
+    {
+      title: 'Goal Input',
+      description: 'High-level goal to deploy web application',
+      activeNodes: ['goal'],
+      activeEdges: ['goal-analyzer'],
+    },
+    {
+      title: 'Task Analysis',
+      description: 'Analyze goal and consult method library for decomposition templates',
+      activeNodes: ['task-analyzer', 'method-library'],
+      activeEdges: ['analyzer-library', 'library-analyzer'],
+    },
+    {
+      title: 'Level 1 Decomposition',
+      description: 'Decompose goal into high-level abstract tasks',
+      activeNodes: ['setup-infra', 'build-app', 'deploy-app', 'verify-deploy'],
+      activeEdges: ['analyzer-setup', 'analyzer-build', 'analyzer-deploy', 'analyzer-verify'],
+    },
+    {
+      title: 'Task Ordering',
+      description: 'Establish temporal dependencies between tasks',
+      activeNodes: ['setup-infra', 'build-app', 'deploy-app', 'verify-deploy'],
+      activeEdges: ['setup-build', 'build-deploy', 'deploy-verify'],
+    },
+    {
+      title: 'Level 2 Decomposition',
+      description: 'Further decompose abstract tasks into subtasks',
+      activeNodes: ['provision-server', 'configure-network', 'install-deps', 'run-tests', 'create-bundle'],
+      activeEdges: ['setup-provision', 'setup-network', 'build-deps', 'build-tests', 'build-bundle'],
+    },
+    {
+      title: 'Primitive Actions',
+      description: 'Decompose subtasks into executable primitive actions',
+      activeNodes: ['action-create-vm', 'action-install-docker', 'action-setup-firewall', 'action-npm-install', 'action-run-jest', 'action-webpack'],
+      activeEdges: ['provision-vm', 'provision-docker', 'network-firewall', 'deps-npm', 'tests-jest', 'bundle-webpack'],
+    },
+    {
+      title: 'Constraint Validation',
+      description: 'Check preconditions and constraints before execution',
+      activeNodes: ['constraint-checker'],
+      activeEdges: ['actions-constraint'],
+    },
+    {
+      title: 'Execution Monitoring',
+      description: 'Execute primitive actions and monitor progress',
+      activeNodes: ['execution-monitor'],
+      activeEdges: ['constraint-monitor'],
+    },
+    {
+      title: 'Handle Failures',
+      description: 'Detect failures and trigger replanning if needed',
+      activeNodes: ['replanning-engine', 'task-analyzer'],
+      activeEdges: ['monitor-replan', 'replan-analyzer'],
+    },
+    {
+      title: 'Successful Completion',
+      description: 'All tasks completed successfully, deployment finished',
+      activeNodes: ['output'],
+      activeEdges: ['monitor-output'],
+    },
+  ],
+};
