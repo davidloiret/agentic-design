@@ -311,7 +311,7 @@ export const ModelRecommendationModal: React.FC<ModelRecommendationModalProps> =
         score: score,
         reasoning: generateReasoning(model, prefs, score),
         category: model.category,
-        difficulty: model.difficulty,
+        difficulty: model.difficulty as "Advanced" | "Beginner" | "Intermediate",
         cost: model.cost
       };
 

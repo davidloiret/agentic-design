@@ -3,8 +3,8 @@
 import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { RedTeamingAuditAuthPrompt } from '@/app/components/RedTeamingAuditAuthPrompt';
-import { 
-  Shield, 
+import {
+  Shield,
   Search,
   Filter,
   Plus,
@@ -13,7 +13,9 @@ import {
   CheckCircle,
   TrendingUp,
   ChevronRight,
-  Building2
+  Building2,
+  Construction,
+  Sparkles
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -78,13 +80,37 @@ export default function AuditDashboard() {
     );
   }
 
-  // Show authentication prompt page if user is not authenticated
+  // Show authentication prompt page with overlay if user is not authenticated
   if (!user) {
     return (
-      <RedTeamingAuditAuthPrompt
-        feature="AI Red Teaming Audit Dashboard"
-        description="Access your security audit dashboard to manage and track AI system assessments"
-      />
+      <div className="relative min-h-screen">
+        {/* Under Construction Overlay */}
+        <div className="fixed inset-x-0 bottom-0 top-[120px] z-[100] flex items-center justify-center bg-gray-950/90 backdrop-blur-md">
+          <div className="text-center p-8 max-w-md">
+            <div className="mb-6 flex justify-center">
+              <div className="p-4 bg-gradient-to-br from-red-500/20 to-orange-500/20 rounded-2xl animate-pulse">
+                <Construction className="w-16 h-16 text-red-400" />
+              </div>
+            </div>
+            <h2 className="text-3xl font-bold text-white mb-4">Under Construction</h2>
+            <p className="text-gray-400 mb-6">
+              We're building something powerful! The AI Red Teaming Audit Dashboard is coming soon.
+            </p>
+            <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-red-500/10 to-orange-500/10 border border-red-500/30 rounded-lg">
+              <Sparkles className="w-5 h-5 text-red-400 animate-pulse" />
+              <span className="text-red-400 font-semibold">Coming Soon</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Blurred Auth Prompt */}
+        <div className="filter blur-sm pointer-events-none">
+          <RedTeamingAuditAuthPrompt
+            feature="AI Red Teaming Audit Dashboard"
+            description="Access your security audit dashboard to manage and track AI system assessments"
+          />
+        </div>
+      </div>
     );
   }
 
@@ -102,9 +128,31 @@ export default function AuditDashboard() {
   };
 
   return (
-    <div className="w-full space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+    <div className="relative min-h-screen">
+      {/* Under Construction Overlay */}
+      <div className="fixed inset-x-0 bottom-0 top-[120px] z-[100] flex items-center justify-center bg-gray-950/90 backdrop-blur-md">
+        <div className="text-center p-8 max-w-md">
+          <div className="mb-6 flex justify-center">
+            <div className="p-4 bg-gradient-to-br from-red-500/20 to-orange-500/20 rounded-2xl animate-pulse">
+              <Construction className="w-16 h-16 text-red-400" />
+            </div>
+          </div>
+          <h2 className="text-3xl font-bold text-white mb-4">Under Construction</h2>
+          <p className="text-gray-400 mb-6">
+            We're building something powerful! The AI Red Teaming Audit Dashboard is coming soon.
+          </p>
+          <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-red-500/10 to-orange-500/10 border border-red-500/30 rounded-lg">
+            <Sparkles className="w-5 h-5 text-red-400 animate-pulse" />
+            <span className="text-red-400 font-semibold">Coming Soon</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Blurred Content */}
+      <div className="filter blur-sm pointer-events-none">
+        <div className="w-full space-y-6">
+          {/* Header */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center space-x-3">
           <Shield className="w-6 h-6 sm:w-8 sm:h-8 text-red-400" />
           <div>
@@ -269,6 +317,8 @@ export default function AuditDashboard() {
           )}
         </div>
       )}
+        </div>
+      </div>
     </div>
   );
 }

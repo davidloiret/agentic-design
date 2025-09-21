@@ -2,6 +2,7 @@
 
 import React from 'react';
 import ReferencesSection from './shared/ReferencesSection';
+import ContextualUnstructuredMemoryDemo from '../../../components/demos/ContextualUnstructuredMemoryDemo';
 import {
   QuickOverviewSection,
   QuickImplementationSection,
@@ -141,6 +142,8 @@ export const ContextualUnstructuredMemoryDetails: React.FC<ContextualUnstructure
       <KeyMetricsSection metrics={keyMetrics} />
 
       <TopUseCasesSection useCases={topUseCases} />
+
+      <ContextualUnstructuredMemoryDemo />
 
       <ReferencesSection categories={references} />
     </>

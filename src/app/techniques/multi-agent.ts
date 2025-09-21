@@ -22,6 +22,28 @@ export const multiAgentTechniques: Technique[] = [
     example: 'A2A Protocol Workflow:\n\n1. **Capability Discovery**:\n   • Client agent fetches Agent Card from remote agent\n   • Discovers available capabilities and supported formats\n   • JSON format: { "name": "DataAnalyzer", "capabilities": ["analysis", "visualization"] }\n\n2. **Task Initiation**:\n   • Client sends initial message with unique Task ID\n   • Remote agent acknowledges and begins processing\n   • Task lifecycle: initiated → processing → completed/failed\n\n3. **Real-time Collaboration**:\n   • Agents exchange messages with context and artifacts\n   • Support for text, audio, video streaming\n   • State updates via Server-Sent Events (SSE)\n\n4. **Cross-Platform Integration**:\n   • Research agent (Platform A) + Visualization agent (Platform B)\n   • Seamless data exchange via standardized protocol\n   • Enterprise authentication and authorization\n\nReal-world Impact:\n• Enables true multi-agent ecosystems\n• Reduces vendor lock-in\n• Accelerates agent adoption in enterprises\n• Standardizes agent communication patterns'
   },
   {
+    id: 'agent-communication-protocols',
+    name: 'Agent Communication Protocols',
+    abbr: 'ACP',
+    icon: '📡',
+    color: 'from-teal-600 to-green-600',
+    category: 'multi-agent',
+    description: 'Standardized communication mechanisms for agent interaction including message passing, publish-subscribe, and event-driven patterns',
+    features: [
+      'Asynchronous messaging',
+      'Topic-based routing',
+      'Message queuing',
+      'Event broadcasting',
+      'Delivery guarantees',
+      'Subscriber management',
+      'Message filtering',
+      'Scalable distribution'
+    ],
+    useCases: ['async-communication', 'event-driven-systems', 'workflow-coordination', 'notification-systems', 'real-time-updates'],
+    complexity: 'medium',
+    example: 'Multi-Protocol Agent Communication:\n\n**Message Passing Pattern:**\n• Order Agent → Message Queue → [Payment, Inventory, Shipping]\n• Asynchronous processing with delivery confirmations\n• Retry mechanisms for failed messages\n\n**Publish-Subscribe Pattern:**\n• Market Data Agent publishes to "stock-prices" topic\n• Subscribers: Trading Agent, Analysis Agent, Alert Agent\n• Real-time price updates to all interested parties\n\n**Event-Driven Coordination:**\n• User action triggers cascade of events\n• Multiple agents respond to relevant events\n• Loose coupling between event producers/consumers\n\n**Protocol Features:**\n• JSON message format with metadata\n• Topic-based routing and filtering\n• Guaranteed delivery and ordering\n• Scalable to thousands of agents'
+  },
+  {
     id: 'supervisor-worker-pattern',
     name: 'Supervisor-Worker Pattern',
     abbr: 'SVW',
@@ -163,46 +185,24 @@ export const multiAgentTechniques: Technique[] = [
     complexity: 'high',
     example: 'Enterprise Automation System:\n\n**Level 1: Executive Agent (CEO)**\n• Strategic oversight and resource authorization\n• Monitors overall system performance\n• Handles high-level policy decisions\n\n**Level 2: Department Managers**\n• Operations Manager: Coordinates daily workflows\n• Quality Manager: Ensures output standards\n• Resource Manager: Allocates computational resources\n\n**Level 3: Team Lead Agents**\n• Data Processing Lead: Manages data ingestion team\n• Analysis Lead: Coordinates analytical workflows\n• Output Lead: Oversees final deliverable generation\n\n**Level 4: Worker Agents**\n• Specialized task execution (ETL, ML, reporting)\n• Report status up hierarchy\n• Request resources through proper channels\n\n**E-commerce Example:**\nOrchestrator receives order → Delegates to:\n• Inventory Agent: Check stock availability\n• Payment Agent: Process payment\n• Shipping Agent: Calculate delivery options\n• Notification Agent: Send confirmation\n\nCoordinates timing, handles failures, ensures fulfillment'
   },
-  {
-    id: 'consensus-algorithms',
-    name: 'Consensus Algorithms',
-    abbr: '',
-    icon: '⚖️',
-    color: 'from-orange-600 to-red-600',
-    category: 'multi-agent',
-    description: 'Distributed agreement mechanisms for multi-agent decision making',
-    features: [
-      'Byzantine fault tolerance',
-      'Voting mechanisms', 
-      'Conflict resolution',
-      'Agreement protocols',
-      'Distributed consensus',
-      'Finality guarantees'
-    ],
-    useCases: ['distributed-systems', 'blockchain-networks', 'multi-agent-voting', 'fault-tolerant-systems'],
-    complexity: 'high',
-    example: 'Multi-Agent Investment Decision:\n\n5 Investment Agents vote on stock purchase:\n• Agent A: BUY (confidence: 85%)\n• Agent B: BUY (confidence: 78%)\n• Agent C: HOLD (confidence: 60%)\n• Agent D: BUY (confidence: 92%)\n• Agent E: SELL (confidence: 45%)\n\nConsensus algorithm weights by confidence → Final decision: BUY'
-  },
-  {
-    id: 'agent-communication-protocols',
-    name: 'Agent Communication Protocols',
-    abbr: 'ACP',
-    icon: '📡',
-    color: 'from-teal-600 to-green-600',
-    category: 'multi-agent',
-    description: 'Standardized communication mechanisms for agent interaction including message passing, publish-subscribe, and event-driven patterns',
-    features: [
-      'Asynchronous messaging',
-      'Topic-based routing',
-      'Message queuing',
-      'Event broadcasting',
-      'Delivery guarantees',
-      'Subscriber management',
-      'Message filtering',
-      'Scalable distribution'
-    ],
-    useCases: ['async-communication', 'event-driven-systems', 'workflow-coordination', 'notification-systems', 'real-time-updates'],
-    complexity: 'medium',
-    example: 'Multi-Protocol Agent Communication:\n\n**Message Passing Pattern:**\n• Order Agent → Message Queue → [Payment, Inventory, Shipping]\n• Asynchronous processing with delivery confirmations\n• Retry mechanisms for failed messages\n\n**Publish-Subscribe Pattern:**\n• Market Data Agent publishes to "stock-prices" topic\n• Subscribers: Trading Agent, Analysis Agent, Alert Agent\n• Real-time price updates to all interested parties\n\n**Event-Driven Coordination:**\n• User action triggers cascade of events\n• Multiple agents respond to relevant events\n• Loose coupling between event producers/consumers\n\n**Protocol Features:**\n• JSON message format with metadata\n• Topic-based routing and filtering\n• Guaranteed delivery and ordering\n• Scalable to thousands of agents'
-  },
+  // {
+  //   id: 'consensus-algorithms',
+  //   name: 'Consensus Algorithms',
+  //   abbr: '',
+  //   icon: '⚖️',
+  //   color: 'from-orange-600 to-red-600',
+  //   category: 'multi-agent',
+  //   description: 'Distributed agreement mechanisms for multi-agent decision making',
+  //   features: [
+  //     'Byzantine fault tolerance',
+  //     'Voting mechanisms', 
+  //     'Conflict resolution',
+  //     'Agreement protocols',
+  //     'Distributed consensus',
+  //     'Finality guarantees'
+  //   ],
+  //   useCases: ['distributed-systems', 'blockchain-networks', 'multi-agent-voting', 'fault-tolerant-systems'],
+  //   complexity: 'high',
+  //   example: 'Multi-Agent Investment Decision:\n\n5 Investment Agents vote on stock purchase:\n• Agent A: BUY (confidence: 85%)\n• Agent B: BUY (confidence: 78%)\n• Agent C: HOLD (confidence: 60%)\n• Agent D: BUY (confidence: 92%)\n• Agent E: SELL (confidence: 45%)\n\nConsensus algorithm weights by confidence → Final decision: BUY'
+  // },
 ]; 

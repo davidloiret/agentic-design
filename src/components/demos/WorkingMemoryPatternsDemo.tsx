@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Play, Pause, RotateCcw, Brain, Zap, TrendingUp, Filter, Target, Activity, BarChart3, Clock, CheckCircle, AlertTriangle, Plus, Minus } from 'lucide-react';
 
 interface WorkingMemoryItem {
@@ -159,6 +159,7 @@ const newIncomingItems = [
 
 export const WorkingMemoryPatternsDemo: React.FC = () => {
   const [isRunning, setIsRunning] = useState(false);
+  const isRunningRef = useRef(false);
   const [workingMemoryItems, setWorkingMemoryItems] = useState<WorkingMemoryItem[]>(initialWorkingMemoryItems);
   const [currentItemIndex, setCurrentItemIndex] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
@@ -347,20 +348,21 @@ export const WorkingMemoryPatternsDemo: React.FC = () => {
 
   const runDemo = useCallback(async () => {
     setIsRunning(true);
+    isRunningRef.current = true;
     addLogEntry('Working memory processing cycle started');
-    
+
     for (let i = 0; i < steps.length; i++) {
+      if (!isRunningRef.current) break;
       setCurrentStep(i);
       await processStep(i);
-      
-      if (!isRunning) break;
     }
-    
+
     setCurrentStep(-1);
     setSteps(prev => prev.map(s => ({ ...s, active: false })));
     setIsRunning(false);
+    isRunningRef.current = false;
     addLogEntry('Processing cycle completed');
-  }, [steps.length, processStep, isRunning]);
+  }, [steps.length, processStep, addLogEntry]);
 
   const startDemo = () => {
     runDemo();
@@ -368,6 +370,7 @@ export const WorkingMemoryPatternsDemo: React.FC = () => {
 
   const pauseDemo = () => {
     setIsRunning(false);
+    isRunningRef.current = false;
     addLogEntry('Processing paused');
   };
 
@@ -512,7 +515,7 @@ export const WorkingMemoryPatternsDemo: React.FC = () => {
             </div>
           </div>
 
-          <div className="space-y-3 max-h-80 overflow-y-auto">
+          <div className="space-y-3">
             {workingMemoryItems.length === 0 ? (
               <div className="text-center text-gray-400 py-8">
                 <Brain className="w-8 h-8 mx-auto mb-2 opacity-50" />
@@ -609,7 +612,7 @@ export const WorkingMemoryPatternsDemo: React.FC = () => {
               Operation Log
             </h3>
             
-            <div className="space-y-1 text-xs max-h-48 overflow-y-auto">
+            <div className="space-y-1 text-xs overflow-y-auto" style={{ maxHeight: '200px' }}>
               {operationLog.map((entry, index) => (
                 <div key={index} className="text-gray-300 py-1 border-b border-gray-700/30 last:border-b-0">
                   {entry}

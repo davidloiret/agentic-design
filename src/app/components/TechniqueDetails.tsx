@@ -142,6 +142,32 @@ import SequentialChainingDemo from '../../components/demos/SequentialChainingDem
 import ParallelChainingDemo from '../../components/demos/ParallelChainingDemo';
 import ConditionalChainingDemo from '../../components/demos/ConditionalChainingDemo';
 import LLMBasedRoutingFlowVisualization from '../../components/demos/LLMBasedRoutingFlowVisualization';
+import EmbeddingRoutingDemo from '../../components/demos/EmbeddingRoutingDemo';
+import RuleBasedRoutingDemo from '../../components/demos/RuleBasedRoutingDemo';
+import MLModelRoutingDemo from '../../components/demos/MLModelRoutingDemo';
+import ProducerCriticDemo from '../../components/demos/ProducerCriticDemo';
+import LLMAsJudgeDemo from '../../components/demos/LLMAsJudgeDemo';
+import ReflexionDemo from '../../components/demos/ReflexionDemo';
+import MetaReasoningDemo from '../../components/demos/MetaReasoningDemo';
+import HTNPlanningDemo from '../../components/demos/HTNPlanningDemo';
+import TaskManagementOrchestrationDemo from '../../components/demos/TaskManagementOrchestrationDemo';
+import A2AProtocolDemo from '../../components/demos/A2AProtocolDemo';
+import SupervisorWorkerDemo from '../../components/demos/SupervisorWorkerDemo';
+import SharedScratchpadDemo from '../../components/demos/SharedScratchpadDemo';
+import SequentialPipelineDemo from '../../components/demos/SequentialPipelineDemo';
+import ConcurrentOrchestrationDemo from '../../components/demos/ConcurrentOrchestrationDemo';
+import HandoffOrchestrationDemo from '../../components/demos/HandoffOrchestrationDemo';
+import PeerCollaborationDemo from '../../components/demos/PeerCollaborationDemo';
+import HierarchicalCoordinationDemo from '../../components/demos/HierarchicalCoordinationDemo';
+import AgentCommunicationProtocolsDemo from '../../components/demos/AgentCommunicationProtocolsDemo';
+import ParametricMemoryDemo from '../../components/demos/ParametricMemoryDemo';
+import EpisodicMemorySystemsDemo from '../../components/demos/EpisodicMemorySystemsDemo';
+import SemanticMemoryNetworksDemo from '../../components/demos/SemanticMemoryNetworksDemo';
+import TransactiveMemorySystemsDemo from '../../components/demos/TransactiveMemorySystemsDemo';
+import MemoryReadWriteOperationsDemo from '../../components/demos/MemoryReadWriteOperationsDemo';
+import ContextualStructuredMemoryDemo from '../../components/demos/ContextualStructuredMemoryDemo';
+import ContextualUnstructuredMemoryDemo from '../../components/demos/ContextualUnstructuredMemoryDemo';
+import DistributedMemoryArchitecturesDemo from '../../components/demos/DistributedMemoryArchitecturesDemo';
 import { patternExamples, type PatternId, type LanguageType } from '../pattern-examples';
 import { patternScenarios } from '../../data/patterns';
 import DomainReasoningDetails from './technique-details/DomainReasoningDetails';
@@ -1396,13 +1422,27 @@ export const TechniqueDetails = ({
                           ? 'Interactive memory consolidation process with pattern extraction, redundancy removal, and schema formation'
                           : selectedTechnique.id === 'working-memory-patterns'
                           ? 'Interactive working memory simulation with capacity management, attention control, and interference suppression'
+                          : selectedTechnique.id === 'contextual-unstructured-memory'
+                          ? 'Interactive multimodal memory system with cross-modal associations, semantic retrieval, and adaptive organization'
                           : selectedTechnique.id === 'context-compression'
                           ? 'Interactive context compression demo with lossy/lossless options, semantic preservation, and compression metrics'
+                          : selectedTechnique.id === 'embedding-based-routing'
+                          ? 'Interactive embedding-based routing with vector similarity matching and agent selection'
+                          : selectedTechnique.id === 'rule-based-routing'
+                          ? 'Interactive rule-based routing with deterministic decision trees and audit trails'
+                          : selectedTechnique.id === 'machine-learning-model-based-routing'
+                          ? 'Interactive ML model routing with feature extraction and sub-10ms inference'
+                          : selectedTechnique.id === 'producer-critic'
+                          ? 'Interactive producer-critic collaboration with iterative quality improvement'
+                          : selectedTechnique.id === 'llm-as-judge'
+                          ? 'Interactive LLM judge evaluation with structured rubrics and comparison'
+                          : selectedTechnique.id === 'reflexion-pattern'
+                          ? 'Interactive reflexion learning with self-reflection and episodic memory'
                           : 'Hands-on demonstration of the technique'
                         }
                       </span>
                       <span className="text-xs text-gray-500">
-                        {selectedTechnique.id === 'feedback-chaining' || selectedTechnique.id === 'hierarchical-chaining' || selectedTechnique.id === 'iterative-refinement' || selectedTechnique.id === 'parallel-synthesis' || selectedTechnique.id === 'dynamic-routing' || selectedTechnique.id === 'dynamic-context-assembly' || selectedTechnique.id === 'message-queuing' || selectedTechnique.id === 'latent-memory-networks' || selectedTechnique.id === 'adaptive-context-depth' || selectedTechnique.id === 'latent-knowledge-retrieval' || selectedTechnique.id === 'context-compression-advanced' || selectedTechnique.id === 'multimodal-context-integration' || selectedTechnique.id === 'sliding-window' || selectedTechnique.id === 'hierarchical-memory' || selectedTechnique.id === 'attention-mechanisms' || selectedTechnique.id === 'memory-consolidation' || selectedTechnique.id === 'working-memory-patterns' || selectedTechnique.id === 'context-compression' || selectedTechnique.id === 'content-based-routing' || selectedTechnique.id === 'capability-routing' || selectedTechnique.id === 'load-balancing' || selectedTechnique.id === 'geographic-routing' || selectedTechnique.id === 'map-reduce' || selectedTechnique.id === 'scatter-gather' || selectedTechnique.id === 'fork-join' || selectedTechnique.id === 'async-await' || selectedTechnique.id === 'self-critique' || selectedTechnique.id === 'function-calling' || selectedTechnique.id === 'code-execution' || selectedTechnique.id === 'hierarchical-planning' || selectedTechnique.id === 'goal-decomposition' || selectedTechnique.id === 'constraint-satisfaction' || selectedTechnique.id === 'scenario-planning' || selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining' || selectedTechnique.id === 'conditional-chaining' ? 'Interactive demo available' : 'Demo coming soon'}
+                        {selectedTechnique.id === 'feedback-chaining' || selectedTechnique.id === 'hierarchical-chaining' || selectedTechnique.id === 'iterative-refinement' || selectedTechnique.id === 'parallel-synthesis' || selectedTechnique.id === 'dynamic-routing' || selectedTechnique.id === 'dynamic-context-assembly' || selectedTechnique.id === 'message-queuing' || selectedTechnique.id === 'latent-memory-networks' || selectedTechnique.id === 'adaptive-context-depth' || selectedTechnique.id === 'latent-knowledge-retrieval' || selectedTechnique.id === 'context-compression-advanced' || selectedTechnique.id === 'multimodal-context-integration' || selectedTechnique.id === 'sliding-window' || selectedTechnique.id === 'hierarchical-memory' || selectedTechnique.id === 'attention-mechanisms' || selectedTechnique.id === 'memory-consolidation' || selectedTechnique.id === 'working-memory-patterns' || selectedTechnique.id === 'contextual-unstructured-memory' || selectedTechnique.id === 'context-compression' || selectedTechnique.id === 'content-based-routing' || selectedTechnique.id === 'capability-routing' || selectedTechnique.id === 'load-balancing' || selectedTechnique.id === 'geographic-routing' || selectedTechnique.id === 'map-reduce' || selectedTechnique.id === 'scatter-gather' || selectedTechnique.id === 'fork-join' || selectedTechnique.id === 'async-await' || selectedTechnique.id === 'self-critique' || selectedTechnique.id === 'producer-critic' || selectedTechnique.id === 'producer-critic-pattern' || selectedTechnique.id === 'llm-as-judge' || selectedTechnique.id === 'reflexion-pattern' || selectedTechnique.id === 'meta-reasoning' || selectedTechnique.id === 'hierarchical-task-network-planning' || selectedTechnique.id === 'task-management-orchestration' || selectedTechnique.id === 'a2a-protocol' || selectedTechnique.id === 'supervisor-worker-pattern' || selectedTechnique.id === 'shared-scratchpad-collaboration' || selectedTechnique.id === 'sequential-pipeline-agents' || selectedTechnique.id === 'concurrent-orchestration' || selectedTechnique.id === 'handoff-orchestration' || selectedTechnique.id === 'peer-collaboration' || selectedTechnique.id === 'function-calling' || selectedTechnique.id === 'code-execution' || selectedTechnique.id === 'hierarchical-planning' || selectedTechnique.id === 'goal-decomposition' || selectedTechnique.id === 'constraint-satisfaction' || selectedTechnique.id === 'scenario-planning' || selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining' || selectedTechnique.id === 'conditional-chaining' || selectedTechnique.id === 'embedding-based-routing' || selectedTechnique.id === 'rule-based-routing' || selectedTechnique.id === 'machine-learning-model-based-routing' ? 'Interactive demo available' : 'Demo coming soon'}
                       </span>
                     </div>
                   </div>
@@ -1440,6 +1480,10 @@ export const TechniqueDetails = ({
                     <MemoryConsolidationDemo />
                   ) : selectedTechnique.id === 'working-memory-patterns' ? (
                     <WorkingMemoryPatternsDemo />
+                  ) : selectedTechnique.id === 'contextual-unstructured-memory' ? (
+                    <ContextualUnstructuredMemoryDemo />
+                  ) : selectedTechnique.id === 'distributed-memory-architectures' ? (
+                    <DistributedMemoryArchitecturesDemo />
                   ) : selectedTechnique.id === 'context-compression' ? (
                     <ContextCompressionDemo />
                   ) : selectedTechnique.id === 'content-based-routing' ? (
@@ -1460,6 +1504,12 @@ export const TechniqueDetails = ({
                     <AsyncAwaitDemo />
                   ) : selectedTechnique.id === 'self-critique' ? (
                     <SelfCritiqueDemo />
+                  ) : selectedTechnique.id === 'producer-critic' ? (
+                    <ProducerCriticDemo />
+                  ) : selectedTechnique.id === 'llm-as-judge' ? (
+                    <LLMAsJudgeDemo />
+                  ) : selectedTechnique.id === 'reflexion-pattern' ? (
+                    <ReflexionDemo />
                   ) : selectedTechnique.id === 'function-calling' ? (
                     <ToolUseDemo />
                   ) : selectedTechnique.id === 'code-execution' ? (
@@ -1480,6 +1530,50 @@ export const TechniqueDetails = ({
                     <ConditionalChainingDemo />
                   ) : selectedTechnique.id === 'llm-based-routing' ? (
                     <LLMBasedRoutingFlowVisualization />
+                  ) : selectedTechnique.id === 'embedding-based-routing' ? (
+                    <EmbeddingRoutingDemo />
+                  ) : selectedTechnique.id === 'rule-based-routing' ? (
+                    <RuleBasedRoutingDemo />
+                  ) : selectedTechnique.id === 'machine-learning-model-based-routing' ? (
+                    <MLModelRoutingDemo />
+                  ) : selectedTechnique.id === 'producer-critic-pattern' ? (
+                    <ProducerCriticDemo />
+                  ) : selectedTechnique.id === 'meta-reasoning' ? (
+                    <MetaReasoningDemo />
+                  ) : selectedTechnique.id === 'hierarchical-task-network-planning' ? (
+                    <HTNPlanningDemo />
+                  ) : selectedTechnique.id === 'task-management-orchestration' ? (
+                    <TaskManagementOrchestrationDemo />
+                  ) : selectedTechnique.id === 'a2a-protocol' ? (
+                    <A2AProtocolDemo />
+                  ) : selectedTechnique.id === 'supervisor-worker-pattern' ? (
+                    <SupervisorWorkerDemo />
+                  ) : selectedTechnique.id === 'shared-scratchpad-collaboration' ? (
+                    <SharedScratchpadDemo />
+                  ) : selectedTechnique.id === 'sequential-pipeline-agents' ? (
+                    <SequentialPipelineDemo />
+                  ) : selectedTechnique.id === 'concurrent-orchestration' ? (
+                    <ConcurrentOrchestrationDemo />
+                  ) : selectedTechnique.id === 'handoff-orchestration' ? (
+                    <HandoffOrchestrationDemo />
+                  ) : selectedTechnique.id === 'peer-collaboration' ? (
+                    <PeerCollaborationDemo />
+                  ) : selectedTechnique.id === 'hierarchical-coordination' ? (
+                    <HierarchicalCoordinationDemo />
+                  ) : selectedTechnique.id === 'agent-communication-protocols' ? (
+                    <AgentCommunicationProtocolsDemo />
+                  ) : selectedTechnique.id === 'parametric-memory' ? (
+                    <ParametricMemoryDemo />
+                  ) : selectedTechnique.id === 'episodic-memory-systems' ? (
+                    <EpisodicMemorySystemsDemo />
+                  ) : selectedTechnique.id === 'semantic-memory-networks' ? (
+                    <SemanticMemoryNetworksDemo />
+                  ) : selectedTechnique.id === 'transactive-memory-systems' ? (
+                    <TransactiveMemorySystemsDemo />
+                  ) : selectedTechnique.id === 'memory-reading-writing-operations' ? (
+                    <MemoryReadWriteOperationsDemo />
+                  ) : selectedTechnique.id === 'contextual-structured-memory' ? (
+                    <ContextualStructuredMemoryDemo />
                   ) : (
                     <div className="p-8 text-center">
                       <Play className="w-12 h-12 mx-auto text-gray-500 mb-4" />

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Play, Pause, RotateCcw, Brain, FileText, Filter, TrendingUp, Database, CheckCircle, Clock, Zap, BarChart3, Target, Activity } from 'lucide-react';
 
 interface RawMemory {
@@ -138,6 +138,7 @@ const consolidationSteps = [
 
 export const MemoryConsolidationDemo: React.FC = () => {
   const [isRunning, setIsRunning] = useState(false);
+  const isRunningRef = useRef(false);
   const [currentStep, setCurrentStep] = useState(-1);
   const [rawMemories, setRawMemories] = useState<RawMemory[]>(initialRawMemories);
   const [patterns, setPatterns] = useState<Pattern[]>([]);
@@ -159,6 +160,7 @@ export const MemoryConsolidationDemo: React.FC = () => {
 
   const resetDemo = useCallback(() => {
     setIsRunning(false);
+    isRunningRef.current = false;
     setCurrentStep(-1);
     setRawMemories(initialRawMemories.map(m => ({ ...m, processed: false })));
     setPatterns([]);
@@ -290,19 +292,23 @@ export const MemoryConsolidationDemo: React.FC = () => {
 
   const runDemo = useCallback(async () => {
     setIsRunning(true);
+    isRunningRef.current = true;
     addLogEntry('Memory consolidation process started');
-    
+
     for (let i = 0; i < consolidationSteps.length; i++) {
+      if (!isRunningRef.current) break; // Check if paused
+
       setCurrentStep(i);
       await processStep(i);
-      
-      if (!isRunning) break; // Check if paused
     }
-    
-    setCurrentStep(-1);
+
+    if (isRunningRef.current) {
+      setCurrentStep(-1);
+      addLogEntry('Memory consolidation process completed');
+    }
     setIsRunning(false);
-    addLogEntry('Memory consolidation process completed');
-  }, [processStep, isRunning]);
+    isRunningRef.current = false;
+  }, [processStep, addLogEntry]);
 
   const startDemo = () => {
     runDemo();
@@ -310,6 +316,7 @@ export const MemoryConsolidationDemo: React.FC = () => {
 
   const pauseDemo = () => {
     setIsRunning(false);
+    isRunningRef.current = false;
     addLogEntry('Process paused');
   };
 

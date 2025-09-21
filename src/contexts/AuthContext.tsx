@@ -31,11 +31,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   const refreshUser = async () => {
+    // Check for development override first
+    const devLoggedIn = process.env.NEXT_PUBLIC_DEV_LOGGED_IN === 'true';
+    const isDevelopment = process.env.NODE_ENV === 'development';
+
+    if (isDevelopment && devLoggedIn) {
+      console.log('[AuthContext] Dev mode: Using mock authenticated user');
+      setUser({
+        id: 'dev-user-id',
+        userId: 'dev-user-id',
+        email: 'dev@example.com',
+        firstName: 'Dev',
+        lastName: 'User'
+      });
+      setLoading(false);
+      return;
+    }
+
     console.log('[AuthContext] Refreshing user...');
     try {
       const response = await api.get('/api/v1/auth/me');
       console.log('[AuthContext] /me response status:', response.status);
-      
+
       // Handle 401 gracefully
       if (response.status === 401) {
         console.log('[AuthContext] User not authenticated (401)');
@@ -43,10 +60,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setLoading(false);
         return;
       }
-      
+
       const data = await response.json();
       console.log('[AuthContext] /me response data:', data);
-      
+
       if (data && data.id) {
         console.log('[AuthContext] User authenticated:', data.email);
         setUser(data);

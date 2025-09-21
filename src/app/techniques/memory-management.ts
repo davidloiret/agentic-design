@@ -144,6 +144,28 @@ export const memoryManagementTechniques: Technique[] = [
     example: 'Financial analysis agents with structured company schemas enabling precise queries like "SELECT companies WHERE sector = technology AND pe_ratio < 25" with 95% query precision vs unstructured approaches.'
   },
   {
+    id: 'contextual-unstructured-memory',
+    name: 'Contextual Unstructured Memory',
+    abbr: 'CUM',
+    icon: '📄',
+    color: 'from-purple-500 to-pink-500',
+    category: 'memory-management',
+    description: 'Explicit, modality-general memory system storing information across heterogeneous inputs for multi-agent agentic AI systems',
+    features: [
+      'Modality-agnostic storage',
+      'Explicit memory traces',
+      'Heterogeneous input handling',
+      'Cross-modal memory indexing',
+      'Flexible memory structures',
+      'Multi-agent accessibility',
+      'Dynamic memory allocation',
+      'Content-based retrieval'
+    ],
+    useCases: ['cross-modal-reasoning', 'heterogeneous-data-processing', 'multi-agent-coordination', 'flexible-memory-systems', 'adaptive-storage', 'content-based-retrieval'],
+    complexity: 'high',
+    example: 'Multi-Agent Content Creation System with Contextual Unstructured Memory:\n\nScenario: 4 agents creating multimedia educational content\n\n1. Heterogeneous Input Storage:\n   \n   Text Agent Memory:\n   • Educational concepts: "Photosynthesis converts CO2 to glucose"\n   • Learning objectives: "Students will understand energy conversion"\n   • Assessment questions: "What are the inputs to photosynthesis?"\n   \n   Visual Agent Memory:\n   • Diagram sketches: [Leaf structure drawings]\n   • Image concepts: "Green plant in sunlight with arrows showing CO2"\n   • Visual metaphors: "Plant as solar panel analogy"\n   \n   Audio Agent Memory:\n   • Narration scripts: "Imagine a plant as nature\'s power plant..."\n   • Sound effects: [Water flowing, leaves rustling]\n   • Voice tone markers: "Enthusiastic for key concepts"\n   \n   Interactive Agent Memory:\n   • User interaction patterns: "Students click on leaf parts"\n   • Engagement metrics: "90% completion rate for drag-drop"\n   • Feedback mechanisms: "Immediate positive reinforcement"\n\n2. Modality-Agnostic Indexing:\n   \n   Memory Index Structure:\n   {\n     "content_id": "photosynthesis_lesson_001",\n     "modalities": ["text", "visual", "audio", "interactive"],\n     "cross_references": {\n       "text_concept_001": {"visual_diagram_003", "audio_narration_012"},\n       "visual_diagram_003": {"interactive_clickable_007", "text_concept_001"}\n     },\n     "semantic_tags": ["energy_conversion", "plant_biology", "solar_energy"],\n     "learning_level": "grade_6",\n     "access_agents": ["text-agent", "visual-agent", "audio-agent", "interactive-agent"]\n   }\n\n3. Cross-Modal Memory Access:\n   \n   Query: "Create engaging introduction to photosynthesis"\n   \n   Text Agent Retrieval:\n   • Memory access: Learning objectives, key concepts\n   • Cross-modal links: Visual diagrams available, audio narration exists\n   • Content generation: "Let\'s explore how plants make food from sunlight..."\n   \n   Visual Agent Enhancement:\n   • Memory retrieval: Diagram sketches, visual metaphors\n   • Cross-modal integration: Align with text concepts and audio timing\n   • Visual creation: Animated diagram showing CO2 → glucose conversion\n   \n   Audio Agent Synchronization:\n   • Memory access: Narration scripts, voice tone markers\n   • Cross-modal alignment: Match visual timing, complement text content\n   • Audio production: Enthusiastic narration synchronized with animation\n\n4. Multi-Agent Memory Coordination:\n   \n   Collaborative Memory Building:\n   • Text Agent stores: New concept "chlorophyll as molecular machine"\n   • Visual Agent links: Creates diagram of molecular structure\n   • Audio Agent connects: Adds sound effect of "molecular factory"\n   • Interactive Agent integrates: Clickable molecular components\n   \n   Shared Memory Evolution:\n   • All agents contribute to shared lesson memory\n   • Cross-modal consistency maintained automatically\n   • Memory grows richer with each agent contribution\n   • Quality improves through multi-modal reinforcement\n\n5. Flexible Memory Structure Benefits:\n   \n   Traditional Structured Memory Limitations:\n   • Rigid schemas: Text must fit predefined categories\n   • Modal isolation: Visual content separate from audio\n   • Limited cross-referencing: Difficult to link related content\n   \n   Contextual Unstructured Memory Advantages:\n   • Flexible storage: Any content type, any structure\n   • Rich cross-references: Automatic linking across modalities\n   • Emergent organization: Structure develops from content relationships\n   • Adaptive indexing: Memory organization evolves with usage\n\n6. Content-Based Retrieval Capabilities:\n   \n   Semantic Retrieval Examples:\n   • "Energy conversion concepts" → Text explanations + Visual diagrams + Audio analogies\n   • "Student engagement strategies" → Interactive elements + Visual attention-grabbers + Audio enthusiasm\n   • "Assessment opportunities" → Text questions + Visual drag-drop + Audio quiz narration\n   \n   Cross-Modal Pattern Recognition:\n   • Identify content gaps: "Missing visual for complex text concept"\n   • Detect redundancies: "Similar explanations in text and audio"\n   • Optimize combinations: "This visual + that audio = 95% comprehension rate"\n\nBenefits for Agentic AI:\n• 78% more flexible content storage vs structured databases\n• Cross-modal content discovery increases creativity by 65%\n• Multi-agent coordination improved through shared memory access\n• Adaptive memory organization reduces search time by 45%\n• Heterogeneous input handling enables richer multi-agent systems\n• Content quality improves through cross-modal validation and enhancement'
+  },
+  {
     id: 'memory-consolidation',
     name: 'Memory Consolidation',
     abbr: '',
@@ -179,46 +201,24 @@ export const memoryManagementTechniques: Technique[] = [
     complexity: 'medium',
     example: 'Multi-Step Problem Solving:\n\nWorking Memory State:\n┌─────────────────────────────┐\n│ Current Goal: Calculate ROI │\n│ Sub-goals: [Get costs, Get revenue, Apply formula] │\n│ Active Data: │\n│  • Revenue: $150K │\n│  • Costs: $100K │\n│  • Formula: (Rev-Cost)/Cost │\n│ Next Action: Apply formula │\n└─────────────────────────────┘\n\nCapacity: 7±2 items maintained simultaneously\nUpdate: Replace completed sub-goals with new ones'
   },
-  {
-    id: 'contextual-unstructured-memory',
-    name: 'Contextual Unstructured Memory',
-    abbr: 'CUM',
-    icon: '📄',
-    color: 'from-purple-500 to-pink-500',
-    category: 'memory-management',
-    description: 'Explicit, modality-general memory system storing information across heterogeneous inputs for multi-agent agentic AI systems',
-    features: [
-      'Modality-agnostic storage',
-      'Explicit memory traces',
-      'Heterogeneous input handling',
-      'Cross-modal memory indexing',
-      'Flexible memory structures',
-      'Multi-agent accessibility',
-      'Dynamic memory allocation',
-      'Content-based retrieval'
-    ],
-    useCases: ['cross-modal-reasoning', 'heterogeneous-data-processing', 'multi-agent-coordination', 'flexible-memory-systems', 'adaptive-storage', 'content-based-retrieval'],
-    complexity: 'high',
-    example: 'Multi-Agent Content Creation System with Contextual Unstructured Memory:\n\nScenario: 4 agents creating multimedia educational content\n\n1. Heterogeneous Input Storage:\n   \n   Text Agent Memory:\n   • Educational concepts: "Photosynthesis converts CO2 to glucose"\n   • Learning objectives: "Students will understand energy conversion"\n   • Assessment questions: "What are the inputs to photosynthesis?"\n   \n   Visual Agent Memory:\n   • Diagram sketches: [Leaf structure drawings]\n   • Image concepts: "Green plant in sunlight with arrows showing CO2"\n   • Visual metaphors: "Plant as solar panel analogy"\n   \n   Audio Agent Memory:\n   • Narration scripts: "Imagine a plant as nature\'s power plant..."\n   • Sound effects: [Water flowing, leaves rustling]\n   • Voice tone markers: "Enthusiastic for key concepts"\n   \n   Interactive Agent Memory:\n   • User interaction patterns: "Students click on leaf parts"\n   • Engagement metrics: "90% completion rate for drag-drop"\n   • Feedback mechanisms: "Immediate positive reinforcement"\n\n2. Modality-Agnostic Indexing:\n   \n   Memory Index Structure:\n   {\n     "content_id": "photosynthesis_lesson_001",\n     "modalities": ["text", "visual", "audio", "interactive"],\n     "cross_references": {\n       "text_concept_001": {"visual_diagram_003", "audio_narration_012"},\n       "visual_diagram_003": {"interactive_clickable_007", "text_concept_001"}\n     },\n     "semantic_tags": ["energy_conversion", "plant_biology", "solar_energy"],\n     "learning_level": "grade_6",\n     "access_agents": ["text-agent", "visual-agent", "audio-agent", "interactive-agent"]\n   }\n\n3. Cross-Modal Memory Access:\n   \n   Query: "Create engaging introduction to photosynthesis"\n   \n   Text Agent Retrieval:\n   • Memory access: Learning objectives, key concepts\n   • Cross-modal links: Visual diagrams available, audio narration exists\n   • Content generation: "Let\'s explore how plants make food from sunlight..."\n   \n   Visual Agent Enhancement:\n   • Memory retrieval: Diagram sketches, visual metaphors\n   • Cross-modal integration: Align with text concepts and audio timing\n   • Visual creation: Animated diagram showing CO2 → glucose conversion\n   \n   Audio Agent Synchronization:\n   • Memory access: Narration scripts, voice tone markers\n   • Cross-modal alignment: Match visual timing, complement text content\n   • Audio production: Enthusiastic narration synchronized with animation\n\n4. Multi-Agent Memory Coordination:\n   \n   Collaborative Memory Building:\n   • Text Agent stores: New concept "chlorophyll as molecular machine"\n   • Visual Agent links: Creates diagram of molecular structure\n   • Audio Agent connects: Adds sound effect of "molecular factory"\n   • Interactive Agent integrates: Clickable molecular components\n   \n   Shared Memory Evolution:\n   • All agents contribute to shared lesson memory\n   • Cross-modal consistency maintained automatically\n   • Memory grows richer with each agent contribution\n   • Quality improves through multi-modal reinforcement\n\n5. Flexible Memory Structure Benefits:\n   \n   Traditional Structured Memory Limitations:\n   • Rigid schemas: Text must fit predefined categories\n   • Modal isolation: Visual content separate from audio\n   • Limited cross-referencing: Difficult to link related content\n   \n   Contextual Unstructured Memory Advantages:\n   • Flexible storage: Any content type, any structure\n   • Rich cross-references: Automatic linking across modalities\n   • Emergent organization: Structure develops from content relationships\n   • Adaptive indexing: Memory organization evolves with usage\n\n6. Content-Based Retrieval Capabilities:\n   \n   Semantic Retrieval Examples:\n   • "Energy conversion concepts" → Text explanations + Visual diagrams + Audio analogies\n   • "Student engagement strategies" → Interactive elements + Visual attention-grabbers + Audio enthusiasm\n   • "Assessment opportunities" → Text questions + Visual drag-drop + Audio quiz narration\n   \n   Cross-Modal Pattern Recognition:\n   • Identify content gaps: "Missing visual for complex text concept"\n   • Detect redundancies: "Similar explanations in text and audio"\n   • Optimize combinations: "This visual + that audio = 95% comprehension rate"\n\nBenefits for Agentic AI:\n• 78% more flexible content storage vs structured databases\n• Cross-modal content discovery increases creativity by 65%\n• Multi-agent coordination improved through shared memory access\n• Adaptive memory organization reduces search time by 45%\n• Heterogeneous input handling enables richer multi-agent systems\n• Content quality improves through cross-modal validation and enhancement'
-  },
-  {
-    id: 'memory-consolidation-processes',
-    name: 'Memory Consolidation Processes',
-    abbr: 'MCP',
-    icon: '🧠',
-    color: 'from-indigo-500 to-purple-600',
-    category: 'memory-management',
-    description: 'Systematic processes for transforming short-term experiences into persistent long-term memory structures for multi-agent agentic AI systems',
-    features: [
-      'Experience-to-knowledge transformation',
-      'Pattern extraction algorithms',
-      'Redundancy elimination',
-      'Multi-agent consolidation coordination'
-    ],
-    useCases: ['learning-systems', 'experience-integration', 'multi-agent-learning'],
-    complexity: 'high',
-    example: 'Customer service agents learning from daily interactions through systematic consolidation of experiences into actionable knowledge patterns.'
-  },
+  // {
+  //   id: 'memory-consolidation-processes',
+  //   name: 'Memory Consolidation Processes',
+  //   abbr: 'MCP',
+  //   icon: '🧠',
+  //   color: 'from-indigo-500 to-purple-600',
+  //   category: 'memory-management',
+  //   description: 'Systematic processes for transforming short-term experiences into persistent long-term memory structures for multi-agent agentic AI systems',
+  //   features: [
+  //     'Experience-to-knowledge transformation',
+  //     'Pattern extraction algorithms',
+  //     'Redundancy elimination',
+  //     'Multi-agent consolidation coordination'
+  //   ],
+  //   useCases: ['learning-systems', 'experience-integration', 'multi-agent-learning'],
+  //   complexity: 'high',
+  //   example: 'Customer service agents learning from daily interactions through systematic consolidation of experiences into actionable knowledge patterns.'
+  // },
   {
     id: 'distributed-memory-architectures',
     name: 'Distributed Memory Architectures', 
