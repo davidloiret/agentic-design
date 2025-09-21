@@ -61,10 +61,11 @@ export default function MainLayout({
     const routeToTab: { [key: string]: string } = {
       '/patterns': 'patterns',
       '/recommendations': 'recommendations',
-      '/learning-hub': 'learning-hub', 
+      '/learning-hub': 'learning-hub',
       '/ai-red-teaming': 'ai-red-teaming',
       '/fine-tuning': 'fine-tuning',
       '/ai-inference': 'ai-inference',
+      '/ai-driven-dev': 'ai-driven-dev',
       '/prompt-hub': 'prompt-hub',
       '/project-hub': 'project-hub',
       '/news-hub': 'news-hub',

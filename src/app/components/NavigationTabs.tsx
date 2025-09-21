@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { BookOpen, Lightbulb, Share2, FlaskConical, Brain, Boxes, Newspaper, FolderOpen, Cpu, Settings, ChevronDown, Menu, X, GraduationCap, Shield, FileText, FlaskRound, Target, Wand2 } from 'lucide-react';
+import { BookOpen, Lightbulb, Share2, FlaskConical, Brain, Boxes, Newspaper, FolderOpen, Cpu, Settings, ChevronDown, Menu, X, GraduationCap, Shield, FileText, FlaskRound, Target, Wand2, Code2 } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -92,7 +92,7 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
 
   const getTabClasses = (tabId: string, isActive: boolean) => {
     const baseClasses = 'relative group transition-all duration-200 font-medium';
-    
+
     if (!isActive) {
       return `${baseClasses} text-gray-400 hover:text-gray-200 hover:bg-gray-800/50`;
     }
@@ -103,6 +103,7 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
       'learning-hub': 'text-rose-400',
       'fine-tuning': 'text-violet-400',
       'ai-inference': 'text-indigo-400',
+      'ai-driven-dev': 'text-teal-400',
       'prompt-hub': 'text-orange-400',
       'project-hub': 'text-yellow-400',
       'news-hub': 'text-emerald-400',
@@ -121,6 +122,7 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
       'learning-hub': 'bg-rose-400',
       'fine-tuning': 'bg-violet-400',
       'ai-inference': 'bg-indigo-400',
+      'ai-driven-dev': 'bg-teal-400',
       'prompt-hub': 'bg-orange-400',
       'project-hub': 'bg-yellow-400',
       'news-hub': 'bg-emerald-400',
@@ -139,6 +141,7 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
         { id: 'patterns', label: 'Patterns', icon: BookOpen, description: 'Browse AI design patterns', route: '/patterns' },
         { id: 'fine-tuning', label: 'Fine Tuning', icon: Settings, description: 'Model optimization', route: '/fine-tuning' },
         { id: 'ai-inference', label: 'AI Inference', icon: Cpu, description: 'Inference strategies', route: '/ai-inference' },
+        { id: 'ai-driven-dev', label: 'AI Driven Dev', icon: Code2, description: 'Code with AI', route: '/ai-driven-dev' },
       ]
     },
     {

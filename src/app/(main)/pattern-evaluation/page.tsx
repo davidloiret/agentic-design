@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { PatternEvaluationTab } from '../../components/PatternEvaluationTab';
 import { EvalLabAuthPrompt } from '../../components/EvalLabAuthPrompt';
 import { Construction, AlertTriangle, Zap, X } from 'lucide-react';
+import { UnderConstructionOverlay } from '../../components/UnderConstructionOverlay';
 
 export default function PatternEvaluationPage() {
   const { user, loading } = useAuth();
@@ -42,18 +43,25 @@ export default function PatternEvaluationPage() {
   // Show authentication prompt page if user is not authenticated
   if (!user) {
     return (
-      <EvalLabAuthPrompt
-        feature="Pattern Evaluation Lab"
-        description="Compare and evaluate AI agent design patterns side-by-side with rigorous testing methodology"
-      />
+      <>
+        <UnderConstructionOverlay />
+        <div className="filter blur-sm pointer-events-none">
+          <EvalLabAuthPrompt
+            feature="Pattern Evaluation Lab"
+            description="Compare and evaluate AI agent design patterns side-by-side with rigorous testing methodology"
+          />
+        </div>
+      </>
     );
   }
 
   return (
     <>
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
-        <PatternEvaluationTab />
-      </div>
+      <UnderConstructionOverlay />
+      <div className="filter blur-sm pointer-events-none">
+        <div className="container mx-auto px-4 py-8 max-w-7xl">
+          <PatternEvaluationTab />
+        </div>
 
       {/* Disclaimer Overlay */}
       {showDisclaimer && (
@@ -137,6 +145,7 @@ export default function PatternEvaluationPage() {
           </div>
         </div>
       )}
+      </div>
     </>
   );
 }

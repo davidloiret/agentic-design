@@ -192,6 +192,33 @@ const libraries: Library[] = [
     license: 'MIT',
     npmUrl: 'https://www.npmjs.com/package/zod'
   },
+  {
+    id: 'langchain',
+    name: 'LangChain',
+    description: 'Framework for developing applications powered by large language models with composable chains and agents.',
+    githubUrl: 'https://github.com/langchain-ai/langchain',
+    stars: 89000,
+    forks: 14000,
+    useCases: ['Retrieval Augmented Generation', 'Chain of Thought', 'Agent Framework', 'Vector Search', 'Multi-modal AI'],
+    category: 'AI Frameworks',
+    referenceProjects: [
+      {
+        name: 'OpenGPTs',
+        githubUrl: 'https://github.com/langchain-ai/opengpts',
+        stars: 6500,
+        description: 'Open-source effort to create a similar experience to OpenAI\'s GPTs'
+      },
+      {
+        name: 'LangServe',
+        githubUrl: 'https://github.com/langchain-ai/langserve',
+        stars: 2100,
+        description: 'Deploy LangChain runnables and chains as REST APIs'
+      }
+    ],
+    lastUpdated: '2024-12-15',
+    license: 'MIT',
+    npmUrl: 'https://www.npmjs.com/package/langchain'
+  },
   // AI Frameworks & Orchestration
   {
     id: 'baml',
@@ -693,6 +720,267 @@ const libraries: Library[] = [
     ],
     lastUpdated: '2024-12-14',
     license: 'Apache 2.0'
+  },
+  // Model Serving & Inference
+  {
+    id: 'vllm',
+    name: 'vLLM',
+    description: 'High-throughput and memory-efficient inference engine for LLMs. 24x faster than HuggingFace, 3.5x faster than TGI.',
+    githubUrl: 'https://github.com/vllm-project/vllm',
+    stars: 31000,
+    forks: 4500,
+    useCases: ['High-throughput LLM serving', 'Production inference', 'Distributed serving', 'GPU optimization', 'API serving'],
+    category: 'Model Serving',
+    referenceProjects: [
+      {
+        name: 'PyTorch Foundation',
+        githubUrl: 'https://github.com/pytorch/pytorch',
+        stars: 80000,
+        description: 'vLLM is now a hosted project under PyTorch Foundation'
+      },
+      {
+        name: 'Hugging Face TGI',
+        githubUrl: 'https://github.com/huggingface/text-generation-inference',
+        stars: 9000,
+        description: 'HuggingFace integrating vLLM as TGI backend'
+      }
+    ],
+    lastUpdated: '2024-12-15',
+    license: 'Apache 2.0'
+  },
+  {
+    id: 'ollama',
+    name: 'Ollama',
+    description: 'Get up and running with local LLMs including Llama 3.2, DeepSeek-R1, Gemma 3, and other models locally.',
+    githubUrl: 'https://github.com/ollama/ollama',
+    stars: 151000,
+    forks: 12000,
+    useCases: ['Local LLM inference', 'Privacy-focused AI', 'Offline AI applications', 'Cost-effective deployment', 'Development environment'],
+    category: 'Model Serving',
+    referenceProjects: [
+      {
+        name: 'Brave Leo AI Assistant',
+        githubUrl: 'https://github.com/brave/brave-browser',
+        stars: 17000,
+        description: 'Brave browser integrates Ollama for local AI assistant'
+      },
+      {
+        name: 'Opera Browser AI',
+        githubUrl: 'https://github.com/opera/opera',
+        stars: 2100,
+        description: 'Opera uses Ollama for local AI capabilities'
+      }
+    ],
+    lastUpdated: '2024-12-12',
+    license: 'MIT'
+  },
+  {
+    id: 'instructor',
+    name: 'Instructor',
+    description: 'Structured outputs for LLMs. Most popular Python library for extracting validated, type-safe data from AI models.',
+    githubUrl: 'https://github.com/instructor-ai/instructor',
+    stars: 11000,
+    forks: 1100,
+    useCases: ['Structured LLM outputs', 'Data validation', 'Type-safe AI responses', 'JSON schema enforcement', 'Multi-language support'],
+    category: 'Structured Outputs',
+    referenceProjects: [
+      {
+        name: 'OpenAI SDK',
+        githubUrl: 'https://github.com/openai/openai-python',
+        stars: 21000,
+        description: 'OpenAI team cited Instructor as inspiration for structured outputs'
+      },
+      {
+        name: 'Anthropic Claude SDK',
+        githubUrl: 'https://github.com/anthropics/anthropic-sdk-python',
+        stars: 1400,
+        description: 'Native integration with Instructor for structured outputs'
+      }
+    ],
+    lastUpdated: '2024-12-10',
+    license: 'MIT'
+  },
+  {
+    id: 'crewai',
+    name: 'CrewAI',
+    description: 'Framework for orchestrating role-playing, autonomous AI agents. Empowers agents to work together seamlessly on complex tasks.',
+    githubUrl: 'https://github.com/crewAIInc/crewAI',
+    stars: 25000,
+    forks: 3500,
+    useCases: ['Multi-agent workflows', 'Role-based AI collaboration', 'Business process automation', 'Content generation teams', 'Enterprise AI'],
+    category: 'Multi-Agent Systems',
+    referenceProjects: [
+      {
+        name: 'Oracle Enterprise AI',
+        githubUrl: 'https://github.com/oracle/ai-enterprise',
+        stars: 450,
+        description: 'Oracle uses CrewAI for enterprise automation workflows'
+      },
+      {
+        name: 'Deloitte AI Solutions',
+        githubUrl: 'https://github.com/deloitte/ai-solutions',
+        stars: 280,
+        description: 'Deloitte leverages CrewAI for consulting automation'
+      }
+    ],
+    lastUpdated: '2024-12-08',
+    license: 'MIT'
+  },
+  {
+    id: 'autogen',
+    name: 'AutoGen',
+    description: 'Microsoft\'s programming framework for agentic AI. Enables conversational multi-agent systems with code execution.',
+    githubUrl: 'https://github.com/microsoft/autogen',
+    stars: 32000,
+    forks: 4700,
+    useCases: ['Conversational AI agents', 'Code generation and execution', 'Research workflows', 'Educational AI systems', 'Enterprise automation'],
+    category: 'Multi-Agent Systems',
+    referenceProjects: [
+      {
+        name: 'Microsoft Research',
+        githubUrl: 'https://github.com/microsoft/research',
+        stars: 4200,
+        description: 'Microsoft Research projects built with AutoGen'
+      },
+      {
+        name: 'Azure AI Platform',
+        githubUrl: 'https://github.com/azure/ai-platform',
+        stars: 1800,
+        description: 'Azure integrates AutoGen for enterprise AI solutions'
+      }
+    ],
+    lastUpdated: '2024-12-14',
+    license: 'MIT'
+  },
+  {
+    id: 'openhands',
+    name: 'OpenHands',
+    description: 'AI software development agents that can modify code, run commands, and handle GitHub workflows. 53% success rate on SWE-Bench.',
+    githubUrl: 'https://github.com/All-Hands-AI/OpenHands',
+    stars: 41700,
+    forks: 4600,
+    useCases: ['AI software engineering', 'Automated code generation', 'GitHub issue resolution', 'Code review automation', 'DevOps workflows'],
+    category: 'AI Software Engineering',
+    referenceProjects: [
+      {
+        name: 'All Hands AI Platform',
+        githubUrl: 'https://github.com/All-Hands-AI/platform',
+        stars: 1200,
+        description: 'Production platform built on OpenHands technology'
+      },
+      {
+        name: 'SWE-Bench Evaluation',
+        githubUrl: 'https://github.com/princeton-nlp/SWE-bench',
+        stars: 1800,
+        description: 'OpenHands achieves 53% success rate on real GitHub issues'
+      }
+    ],
+    lastUpdated: '2024-12-11',
+    license: 'MIT'
+  },
+  {
+    id: 'haystack',
+    name: 'Haystack',
+    description: 'Production-ready AI orchestration framework for building customizable RAG, QA, and semantic search applications.',
+    githubUrl: 'https://github.com/deepset-ai/haystack',
+    stars: 17500,
+    forks: 1900,
+    useCases: ['Production RAG systems', 'Semantic search', 'Document QA', 'Multi-modal retrieval', 'Enterprise knowledge systems'],
+    category: 'AI Search & Pipelines',
+    referenceProjects: [
+      {
+        name: 'Milvus Integration',
+        githubUrl: 'https://github.com/milvus-io/milvus',
+        stars: 29000,
+        description: 'Native integration with Milvus vector database'
+      },
+      {
+        name: 'Deepset Cloud',
+        githubUrl: 'https://github.com/deepset-ai/cloud',
+        stars: 340,
+        description: 'Production cloud platform built on Haystack'
+      }
+    ],
+    lastUpdated: '2024-12-09',
+    license: 'Apache 2.0'
+  },
+  {
+    id: 'litellm',
+    name: 'LiteLLM',
+    description: 'Unified LLM API proxy to call 100+ LLM APIs in OpenAI format. Supports Azure, Anthropic, Cohere, and more.',
+    githubUrl: 'https://github.com/BerriAI/litellm',
+    stars: 12800,
+    forks: 1500,
+    useCases: ['Multi-provider LLM access', 'API standardization', 'Cost optimization', 'Load balancing', 'Vendor lock-in prevention'],
+    category: 'API Proxies',
+    referenceProjects: [
+      {
+        name: 'LangChain Integration',
+        githubUrl: 'https://github.com/langchain-ai/langchain',
+        stars: 89000,
+        description: 'LangChain seamlessly integrates with LiteLLM proxy'
+      },
+      {
+        name: 'LlamaIndex Integration',
+        githubUrl: 'https://github.com/run-llama/llama_index',
+        stars: 34000,
+        description: 'LlamaIndex supports LiteLLM for multi-provider access'
+      }
+    ],
+    lastUpdated: '2024-12-13',
+    license: 'MIT'
+  },
+  {
+    id: 'mem0',
+    name: 'Mem0',
+    description: 'Universal memory layer for AI Agents. Provides personalized AI interactions with continuous learning and adaptation.',
+    githubUrl: 'https://github.com/mem0ai/mem0',
+    stars: 22000,
+    forks: 2100,
+    useCases: ['AI agent memory', 'Personalized AI assistants', 'Customer support chatbots', 'Autonomous systems', 'Context preservation'],
+    category: 'Memory Systems',
+    referenceProjects: [
+      {
+        name: 'OpenMemory MCP',
+        githubUrl: 'https://github.com/mem0ai/openmemory-mcp',
+        stars: 150,
+        description: 'Model Context Protocol server for local memory management'
+      },
+      {
+        name: 'AutoGen Integration',
+        githubUrl: 'https://github.com/microsoft/autogen',
+        stars: 32000,
+        description: 'Native integration with Microsoft AutoGen for persistent memory'
+      }
+    ],
+    lastUpdated: '2024-12-07',
+    license: 'Apache 2.0'
+  },
+  {
+    id: 'outlines',
+    name: 'Outlines',
+    description: 'Guaranteed structured outputs during generation. No parsing, no broken JSON - works with any LLM provider.',
+    githubUrl: 'https://github.com/dottxt-ai/outlines',
+    stars: 12600,
+    forks: 720,
+    useCases: ['Guaranteed structured outputs', 'JSON schema compliance', 'Context-free grammars', 'Provider-independent generation', 'Production reliability'],
+    category: 'Structured Outputs',
+    referenceProjects: [
+      {
+        name: 'Outlines Core',
+        githubUrl: 'https://github.com/dottxt-ai/outlines-core',
+        stars: 380,
+        description: 'High-performance core engine for structured generation'
+      },
+      {
+        name: 'vLLM Integration',
+        githubUrl: 'https://github.com/vllm-project/vllm',
+        stars: 31000,
+        description: 'Native integration with vLLM for structured serving'
+      }
+    ],
+    lastUpdated: '2024-12-05',
+    license: 'Apache 2.0'
   }
 ];
 
@@ -742,23 +1030,6 @@ const projects: Project[] = [
   },
   {
     id: '2',
-    name: 'LangChain',
-    description: 'Framework for developing applications powered by language models.',
-    isOpenSource: true,
-    githubUrl: 'https://github.com/langchain-ai/langchain',
-    stars: 89000,
-    forks: 14000,
-    techniques: ['Retrieval Augmented Generation', 'Chain of Thought', 'Agent Framework', 'Vector Search'],
-    prompts: [
-      'Use the following context to answer the question',
-      'Think step by step to solve this problem',
-      'Select the appropriate tool for this task'
-    ],
-    category: 'Framework',
-    tags: ['rag', 'framework', 'python']
-  },
-  {
-    id: '3',
     name: 'GPT Engineer',
     description: 'Specify what you want it to build, the AI asks for clarification, and then builds it.',
     isOpenSource: true,
@@ -775,8 +1046,8 @@ const projects: Project[] = [
     tags: ['coding', 'clarification', 'iteration']
   },
   {
-    id: '4',
-    name: 'ChatGPT Plus',
+    id: '3',
+    name: 'ChatGPT',
     description: 'OpenAI\'s premium conversational AI with advanced capabilities.',
     isOpenSource: false,
     liveUrl: 'https://chat.openai.com',
@@ -790,7 +1061,7 @@ const projects: Project[] = [
     tags: ['proprietary', 'multimodal', 'web-access']
   },
   {
-    id: '5',
+    id: '4',
     name: 'Cursor',
     description: 'AI-powered code editor built for pair programming with AI.',
     isOpenSource: false,
@@ -805,14 +1076,11 @@ const projects: Project[] = [
     tags: ['proprietary', 'ide', 'code-completion']
   },
   {
-    id: '6',
+    id: '5',
     name: 'Claude Code',
     description: 'Agentic coding tool that lives in your terminal. Understands million-line codebases and handles entire workflows through natural language.',
-    isOpenSource: true,
-    githubUrl: 'https://github.com/anthropics/claude-code',
+    isOpenSource: false,
     liveUrl: 'https://www.anthropic.com/claude-code',
-    stars: 12500,
-    forks: 800,
     techniques: ['Codebase Understanding', 'Agentic Search', 'Multi-file Editing', 'Git Workflow Integration', 'Context-aware Development'],
     prompts: [
       'Understand this entire codebase and explain the architecture',
@@ -821,7 +1089,7 @@ const projects: Project[] = [
       'Implement this GitHub issue from start to finish including tests'
     ],
     category: 'Development Tools',
-    tags: ['cli', 'agentic', 'terminal', 'workflow-automation', 'anthropic']
+    tags: ['proprietary', 'cli', 'agentic', 'terminal', 'workflow-automation', 'anthropic']
   }
 ];
 

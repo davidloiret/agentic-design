@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import PromptOptimizerStepper from '@/components/PromptOptimizerStepper';
 import { EvalLabAuthPrompt } from '../../components/EvalLabAuthPrompt';
 import { Wand2, AlertTriangle, Zap, X } from 'lucide-react';
+import { UnderConstructionOverlay } from '../../components/UnderConstructionOverlay';
 
 export default function PromptOptimizerPage() {
   const { user, loading } = useAuth();
@@ -47,16 +48,23 @@ export default function PromptOptimizerPage() {
   // Show authentication prompt page if user is not authenticated
   if (!user) {
     return (
-      <EvalLabAuthPrompt
-        feature="Prompt Optimizer"
-        description="Optimize your AI prompts using DSPy and advanced optimization techniques to improve performance, accuracy, and consistency"
-      />
+      <>
+        <UnderConstructionOverlay />
+        <div className="filter blur-sm pointer-events-none">
+          <EvalLabAuthPrompt
+            feature="Prompt Optimizer"
+            description="Optimize your AI prompts using DSPy and advanced optimization techniques to improve performance, accuracy, and consistency"
+          />
+        </div>
+      </>
     );
   }
 
   return (
     <>
-      <PromptOptimizerStepper />
+      <UnderConstructionOverlay />
+      <div className="filter blur-sm pointer-events-none">
+        <PromptOptimizerStepper />
 
       {/* Disclaimer Overlay */}
       {showDisclaimer && (
@@ -140,6 +148,7 @@ export default function PromptOptimizerPage() {
           </div>
         </div>
       )}
+      </div>
     </>
   );
 }
