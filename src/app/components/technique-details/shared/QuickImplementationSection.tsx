@@ -21,16 +21,16 @@ const QuickImplementationSection: React.FC<QuickImplementationSectionProps> = ({
       <div className="space-y-2">
         {steps.map((step) => (
           <div key={step.num} className="flex items-center gap-3">
-            <span className="font-mono bg-blue-100 dark:bg-blue-900 px-2 py-1 rounded text-sm">
+            <span className="font-mono bg-blue-900 text-blue-200 px-2 py-1 rounded text-sm">
               {step.num}
             </span>
-            <span className="font-medium">{step.action}:</span>
-            <span className="text-gray-600 dark:text-gray-400">{step.detail}</span>
+            <span className="font-medium text-gray-200">{step.action}:</span>
+            <span className="text-gray-400">{step.detail}</span>
           </div>
         ))}
       </div>
       {example && (
-        <div className="mt-3 p-3 bg-gray-100 dark:bg-gray-800 rounded font-mono text-sm">
+        <div className="mt-3 p-3 bg-gray-800 rounded font-mono text-sm text-gray-300">
           Example: {example}
         </div>
       )}

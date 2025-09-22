@@ -2,6 +2,7 @@
 
 import React from 'react';
 import ReferencesSection from './shared/ReferencesSection';
+import RLHFDemo from '../../../components/demos/RLHFDemo';
 import {
   QuickOverviewSection,
   QuickImplementationSection,
@@ -179,6 +180,8 @@ export const ReinforcementLearningFromHumanFeedbackDetails: React.FC<Reinforceme
       <KeyMetricsSection metrics={keyMetrics} />
 
       <TopUseCasesSection useCases={topUseCases} />
+
+      <RLHFDemo />
 
       <ReferencesSection categories={references} />
     </>

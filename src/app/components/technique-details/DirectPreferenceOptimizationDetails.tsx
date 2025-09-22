@@ -2,6 +2,7 @@
 
 import React from 'react';
 import ReferencesSection from './shared/ReferencesSection';
+import DPODemo from '../../../components/demos/DPODemo';
 import {
   QuickOverviewSection,
   QuickImplementationSection,
@@ -197,6 +198,8 @@ export const DirectPreferenceOptimizationDetails: React.FC<DirectPreferenceOptim
       <KeyMetricsSection metrics={keyMetrics} />
 
       <TopUseCasesSection useCases={topUseCases} />
+
+      <DPODemo />
 
       <ReferencesSection categories={references} />
     </>
