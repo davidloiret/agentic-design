@@ -277,7 +277,7 @@ const ParametricMemoryDemo: React.FC = () => {
 
               setQueries(prev => [...prev, {
                 ...query,
-                status: 'complete',
+                status: 'complete' as QueryStatus,
                 response: generateResponse(query.text),
                 confidence: avgConfidence,
                 latency,

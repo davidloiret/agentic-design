@@ -249,7 +249,7 @@ export default function SequentialPipelineDemo() {
       d.id === stageData.id ? { ...stageData } : d
     ));
 
-    addLog('success', `${stage.name} completed in ${stageData.endTime - stageData.startTime}ms`);
+    addLog('success', `${stage.name} completed in ${stageData.endTime - (stageData.startTime || 0)}ms`);
 
     return outputData;
   }, [speed, addLog]);

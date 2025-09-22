@@ -62,7 +62,7 @@ export default function SemanticMemoryNetworksDemo() {
   const [crossAgentConsistency, setCrossAgentConsistency] = useState(95);
   const [avgPathLength, setAvgPathLength] = useState(0);
   const [graphDensity, setGraphDensity] = useState(0);
-  const intervalRef = useRef<NodeJS.Timeout>();
+  const intervalRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   // Initialize knowledge graph

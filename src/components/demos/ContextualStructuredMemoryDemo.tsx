@@ -322,7 +322,7 @@ export default function ContextualStructuredMemoryDemo() {
   });
   const [logs, setLogs] = useState<Array<{ timestamp: string; type: string; message: string }>>([]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number | undefined>(undefined);
 
   const addLog = useCallback((type: string, message: string) => {
     setLogs(prev => [...prev.slice(-9), {
@@ -615,7 +615,7 @@ export default function ContextualStructuredMemoryDemo() {
     await new Promise(resolve => setTimeout(resolve, 2000 / speed));
 
     // Find inference patterns
-    const inferences = [];
+    const inferences: string[] = [];
 
     // Transitive relations
     relations.forEach(r1 => {

@@ -202,7 +202,7 @@ export const ContextualUnstructuredMemoryDemo: React.FC = () => {
 
   // Generate embeddings simulation
   const generateEmbeddings = useCallback((content: any, modality: string): number[] => {
-    const embeddings = [];
+    const embeddings: number[] = [];
     const dimensions = 384; // Simulated embedding dimensions
 
     // Create pseudo-embeddings based on content and modality
@@ -239,7 +239,7 @@ export const ContextualUnstructuredMemoryDemo: React.FC = () => {
     const threshold = 0.7; // Similarity threshold
 
     allChunks.forEach(other => {
-      if (other.id !== chunk.id && other.embeddings) {
+      if (other.id !== chunk.id && other.embeddings && chunk.embeddings) {
         const similarity = cosineSimilarity(chunk.embeddings, other.embeddings);
         if (similarity > threshold) {
           associations.push(other.id);

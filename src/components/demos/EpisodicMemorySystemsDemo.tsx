@@ -58,7 +58,7 @@ export default function EpisodicMemorySystemsDemo() {
   const [retrievalAccuracy, setRetrievalAccuracy] = useState(95);
   const [patternRecognition, setPatternRecognition] = useState(0);
   const [memoryUtilization, setMemoryUtilization] = useState(0);
-  const intervalRef = useRef<NodeJS.Timeout>();
+  const intervalRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   const scenarios = [
     {

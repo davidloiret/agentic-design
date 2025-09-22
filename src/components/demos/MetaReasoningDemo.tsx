@@ -445,7 +445,7 @@ export default function MetaReasoningDemo() {
   }, [selectedProblemIndex, analyzeProblem, selectStrategy, executeStrategy, monitorAndAdapt, monitoring, adaptations.length, addLog]);
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: NodeJS.Timeout | undefined;
 
     if (isRunning && currentPhase === 'idle') {
       runMetaReasoning();

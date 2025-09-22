@@ -196,7 +196,7 @@ export default function MemoryReadWriteOperationsDemo() {
   const [sortBy, setSortBy] = useState<'recency' | 'relevance' | 'importance'>('recency');
   const [filterType, setFilterType] = useState<string>('all');
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number | undefined>(undefined);
 
   const calculateMemoryScore = useCallback((memory: MemoryEntry): number => {
     const weights = {

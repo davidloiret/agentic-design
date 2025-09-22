@@ -494,13 +494,13 @@ export default function TaskManagementOrchestrationDemo() {
     const steps = 5;
     for (let i = 1; i <= steps; i++) {
       // Longer wait time to see progress
-      await new Promise(resolve => setTimeout(resolve, (task.estimatedDuration * 300) / speed));
+      await new Promise(resolve => setTimeout(resolve, (task?.estimatedDuration ?? 1000) * 300 / speed));
       const progress = (i / steps) * 100;
       updateTaskStatus(taskId, 'running', progress);
 
       // Log progress updates
       if (i % 2 === 0 || i === steps) {
-        addLog('progress', `📊 ${task.name}: ${progress.toFixed(0)}% complete`);
+        addLog('progress', `📊 ${task?.name ?? 'Task'}: ${progress.toFixed(0)}% complete`);
       }
 
       // Get fresh task reference to check retries

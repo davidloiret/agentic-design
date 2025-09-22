@@ -161,7 +161,7 @@ export default function ConcurrentOrchestrationDemo() {
 
   const generatePerspective = (agent: Agent, task: Task): Perspective => {
     const baseTime = task.complexity === 'high' ? 3000 : task.complexity === 'medium' ? 2000 : 1000;
-    const insights = [];
+    const insights: string[] = [];
 
     switch (agent.id) {
       case 'analyst':

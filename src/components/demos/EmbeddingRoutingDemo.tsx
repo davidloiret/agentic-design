@@ -114,7 +114,7 @@ const SAMPLE_QUERIES = [
   {
     id: 'debug-code',
     text: 'Debug this Python function that calculates fibonacci numbers recursively',
-    embedding: { dimensions: [0.85, 0.25, 0.15, 0.75, 0.35, 0.85, 0.25, 0.65], magnitude: 1.9, dominant_features: ['debug', 'python', 'recursive', 'function'] },
+    embedding: { id: 'debug-code-emb', dimensions: [0.85, 0.25, 0.15, 0.75, 0.35, 0.85, 0.25, 0.65], magnitude: 1.9, dominant_features: ['debug', 'python', 'recursive', 'function'] },
     semantic_type: 'technical' as const,
     keywords: ['debug', 'Python', 'fibonacci', 'recursive'],
     expected_agent: 'technical'
@@ -122,7 +122,7 @@ const SAMPLE_QUERIES = [
   {
     id: 'logo-design',
     text: 'Create a modern logo design for my eco-friendly startup',
-    embedding: { dimensions: [0.25, 0.85, 0.75, 0.35, 0.85, 0.25, 0.75, 0.45], magnitude: 1.9, dominant_features: ['design', 'creative', 'visual', 'branding'] },
+    embedding: { id: 'logo-design-emb', dimensions: [0.25, 0.85, 0.75, 0.35, 0.85, 0.25, 0.75, 0.45], magnitude: 1.9, dominant_features: ['design', 'creative', 'visual', 'branding'] },
     semantic_type: 'creative' as const,
     keywords: ['logo', 'design', 'startup', 'eco-friendly'],
     expected_agent: 'creative'
@@ -130,7 +130,7 @@ const SAMPLE_QUERIES = [
   {
     id: 'sales-analysis',
     text: 'Analyze quarterly sales trends and identify growth opportunities',
-    embedding: { dimensions: [0.65, 0.35, 0.25, 0.85, 0.75, 0.55, 0.35, 0.85], magnitude: 1.8, dominant_features: ['sales', 'trends', 'analysis', 'business'] },
+    embedding: { id: 'sales-analysis-emb', dimensions: [0.65, 0.35, 0.25, 0.85, 0.75, 0.55, 0.35, 0.85], magnitude: 1.8, dominant_features: ['sales', 'trends', 'analysis', 'business'] },
     semantic_type: 'analytical' as const,
     keywords: ['analyze', 'sales', 'trends', 'growth'],
     expected_agent: 'analytical'
@@ -138,7 +138,7 @@ const SAMPLE_QUERIES = [
   {
     id: 'recipe-help',
     text: 'What\'s a good recipe for chocolate chip cookies?',
-    embedding: { dimensions: [0.45, 0.55, 0.45, 0.55, 0.45, 0.55, 0.45, 0.55], magnitude: 1.3, dominant_features: ['recipe', 'cooking', 'help', 'general'] },
+    embedding: { id: 'recipe-help-emb', dimensions: [0.45, 0.55, 0.45, 0.55, 0.45, 0.55, 0.45, 0.55], magnitude: 1.3, dominant_features: ['recipe', 'cooking', 'help', 'general'] },
     semantic_type: 'conversational' as const,
     keywords: ['recipe', 'cookies', 'cooking'],
     expected_agent: 'general'
@@ -146,7 +146,7 @@ const SAMPLE_QUERIES = [
   {
     id: 'ml-architecture',
     text: 'Design a neural network architecture for image classification with attention mechanisms',
-    embedding: { dimensions: [0.92, 0.18, 0.12, 0.88, 0.28, 0.92, 0.18, 0.78], magnitude: 2.2, dominant_features: ['neural', 'architecture', 'ML', 'technical'] },
+    embedding: { id: 'ml-architecture-emb', dimensions: [0.92, 0.18, 0.12, 0.88, 0.28, 0.92, 0.18, 0.78], magnitude: 2.2, dominant_features: ['neural', 'architecture', 'ML', 'technical'] },
     semantic_type: 'technical' as const,
     keywords: ['neural network', 'architecture', 'attention', 'classification'],
     expected_agent: 'technical'

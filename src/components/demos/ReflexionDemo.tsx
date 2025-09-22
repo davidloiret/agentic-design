@@ -352,7 +352,7 @@ export const ReflexionDemo: React.FC = () => {
       allEpisodes.push(episode);
       setEpisodes([...allEpisodes]);
 
-      setExecutionLog(prev => [...prev, `✅ Action completed: ${episode.approach}`]);
+      setExecutionLog(prev => [...prev, `✅ Action completed: ${episode.context.approach}`]);
       setExecutionLog(prev => [...prev, `  → Score: ${episode.score.toFixed(1)}/100`]);
       setExecutionLog(prev => [...prev, `  → Result: ${episode.result}`]);
 
