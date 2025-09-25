@@ -202,7 +202,7 @@ export default function RMCTSDemo() {
   };
 
   // Optimized tree layout with force-directed positioning
-  const layoutTree = useCallback((node: TreeNode, x: number, y: number, spread: number, force: number = 1): void => {
+  const layoutTree = useCallback((node: TreeNode, x: number, y: number, spread: number, force: number = 1, maxDepth: number = 10): void => {
     const damping = 0.85;
     node.targetPosition = { x, y };
 
@@ -214,16 +214,19 @@ export default function RMCTSDemo() {
 
     if (node.children.length === 0) return;
 
-    const childSpread = spread / (1 + node.depth * 0.1); // Dynamic spread reduction
+    const childSpread = spread / (1 + node.depth * 0.15); // Dynamic spread reduction
     const angleStep = Math.PI / (node.children.length + 1);
-    const radius = 80 - node.depth * 5;
+    // Adaptive radius based on max tree depth to prevent cropping
+    const baseRadius = maxDepth > 6 ? 65 : 80;
+    const radius = Math.max(40, baseRadius - node.depth * 3);
 
     node.children.forEach((child, index) => {
       const angle = -Math.PI/2 + angleStep * (index + 1);
       const childX = x + Math.cos(angle) * radius * force;
-      const childY = y + Math.sin(angle) * Math.abs(radius);
+      const verticalSpacing = Math.max(60, radius * 0.9); // Ensure minimum vertical spacing
+      const childY = y + verticalSpacing;
 
-      layoutTree(child, childX, childY, childSpread, force * damping);
+      layoutTree(child, childX, childY, childSpread, force * damping, maxDepth);
     });
   }, []);
 
@@ -270,8 +273,32 @@ export default function RMCTSDemo() {
     const ctx = canvas.getContext('2d', { alpha: false });
     if (!ctx) return;
 
+    // Calculate required canvas dimensions based on tree structure
+    const calculateTreeBounds = (node: TreeNode): { maxDepth: number, maxWidth: number, nodeCount: number } => {
+      let maxDepth = node.depth;
+      let nodeCount = 1;
+      const widthAtDepth: number[] = new Array(20).fill(0);
+
+      const traverse = (n: TreeNode) => {
+        widthAtDepth[n.depth] = (widthAtDepth[n.depth] || 0) + 1;
+        maxDepth = Math.max(maxDepth, n.depth);
+        nodeCount++;
+        n.children.forEach(traverse);
+      };
+
+      tree.children.forEach(traverse);
+      const maxWidth = Math.max(...widthAtDepth, 1);
+
+      return { maxDepth, maxWidth, nodeCount };
+    };
+
+    const bounds = calculateTreeBounds(tree);
     const width = 380;
-    const height = 450;
+    // Dynamic height based on tree depth with minimum and maximum bounds
+    const minHeight = 450;
+    const maxHeight = 800;
+    const dynamicHeight = Math.min(maxHeight, Math.max(minHeight, 100 + bounds.maxDepth * 90));
+    const height = dynamicHeight;
     const dpr = window.devicePixelRatio || 1;
 
     // Only resize if necessary (performance optimization)
@@ -287,8 +314,17 @@ export default function RMCTSDemo() {
     ctx.fillStyle = COLORS.bgCanvas;
     ctx.fillRect(0, 0, width, height);
 
-    // Apply layout
-    layoutTree(tree, width / 2, 40, width / 3);
+    // Calculate max depth for adaptive layout
+    const getMaxDepth = (node: TreeNode): number => {
+      if (node.children.length === 0) return node.depth;
+      return Math.max(...node.children.map(getMaxDepth));
+    };
+    const maxTreeDepth = getMaxDepth(tree);
+
+    // Apply layout with adaptive parameters
+    const startY = Math.min(50, height * 0.08);
+    const spreadFactor = Math.min(width / 3, width / (bounds.maxWidth * 0.5));
+    layoutTree(tree, width / 2, startY, spreadFactor, 1, maxTreeDepth);
 
     // Calculate delta time for smooth animations
     const currentTime = performance.now();
@@ -354,7 +390,9 @@ export default function RMCTSDemo() {
 
     // Draw node with enhanced visuals
     const drawNode = (node: TreeNode) => {
-      const radius = Math.max(12, 25 - node.depth * 2);
+      // Adaptive radius based on tree bounds
+      const baseRadius = bounds.maxDepth > 6 ? 20 : 25;
+      const radius = Math.max(10, baseRadius - node.depth * 1.5);
 
       // Glow effect for selected nodes
       if (node.selected || path.includes(node.id)) {
@@ -1069,10 +1107,10 @@ export default function RMCTSDemo() {
             <GitBranch className="w-5 h-5 text-blue-400" />
             Standard MCTS
           </h3>
-          <div className="bg-slate-800/50 rounded-lg p-2 mb-4" style={{ minHeight: '450px' }}>
+          <div className="bg-slate-800/50 rounded-lg p-2 mb-4 overflow-auto" style={{ maxHeight: '600px' }}>
             <canvas
               ref={standardCanvasRef}
-              style={{ display: 'block', width: '380px', height: '450px' }}
+              style={{ display: 'block', width: '380px' }}
             />
           </div>
           <div className="grid grid-cols-2 gap-2 text-sm">
@@ -1117,10 +1155,10 @@ export default function RMCTSDemo() {
             <Sparkles className="w-5 h-5 text-purple-400" />
             R-MCTS with Reflection
           </h3>
-          <div className="bg-slate-800/50 rounded-lg p-2 mb-4" style={{ minHeight: '450px' }}>
+          <div className="bg-slate-800/50 rounded-lg p-2 mb-4 overflow-auto" style={{ maxHeight: '600px' }}>
             <canvas
               ref={reflectiveCanvasRef}
-              style={{ display: 'block', width: '380px', height: '450px' }}
+              style={{ display: 'block', width: '380px' }}
             />
           </div>
           <div className="grid grid-cols-2 gap-2 text-sm">
