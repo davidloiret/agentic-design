@@ -169,6 +169,40 @@ import ContextualStructuredMemoryDemo from '../../components/demos/ContextualStr
 import ContextualUnstructuredMemoryDemo from '../../components/demos/ContextualUnstructuredMemoryDemo';
 import DistributedMemoryArchitecturesDemo from '../../components/demos/DistributedMemoryArchitecturesDemo';
 import RLHFDemo from '../../components/demos/RLHFDemo';
+import DPODemo from '../../components/demos/DPODemo';
+import ICLDemo from '../../components/demos/ICLDemo';
+import MLSDemo from '../../components/demos/MLSDemo';
+import CLDemo from '../../components/demos/CLDemo';
+import SISDemo from '../../components/demos/SISDemo';
+import CAIDemo from '../../components/demos/CAIDemo';
+import RLAIFDemo from '../../components/demos/RLAIFDemo';
+import TTSDemo from '../../components/demos/TTSDemo';
+import ORPODemo from '../../components/demos/ORPODemo';
+import SimPODemo from '../../components/demos/SimPODemo';
+import SLADemo from '../../components/demos/SLADemo';
+import ULADemo from '../../components/demos/ULADemo';
+import OLADemo from '../../components/demos/OLADemo';
+import LCRDemo from '../../components/demos/LCRDemo';
+import ACPDemo from '../../components/demos/ACPDemo';
+import PAFDemo from '../../components/demos/PAFDemo';
+import ACFDemo from '../../components/demos/ACFDemo';
+import NRAGDemo from '../../components/demos/NRAGDemo';
+import ARAGDemo from '../../components/demos/ARAGDemo';
+import MRAGDemo from '../../components/demos/MRAGDemo';
+import SRAGDemo from '../../components/demos/SRAGDemo';
+import CRAGDemo from '../../components/demos/CRAGDemo';
+import GRAGDemo from '../../components/demos/GRAGDemo';
+import MMRAGDemo from '../../components/demos/MMRAGDemo';
+import AgRAGDemo from '../../components/demos/AgRAGDemo';
+import CoTDemo from '../../components/demos/CoTDemo';
+import ToTDemo from '../../components/demos/ToTDemo';
+import GoTDemo from '../../components/demos/GoTDemo';
+import ReActDemo from '../../components/demos/ReActDemo';
+import FoTDemo from '../../components/demos/FoTDemo';
+import MCMDemo from '../../components/demos/MCMDemo';
+import TTCDemo from '../../components/demos/TTCDemo';
+import RMCTSDemo from '../../components/demos/RMCTSDemo';
+import AllDemosShowcase from '../../components/demos/AllDemosShowcase';
 import { patternExamples, type PatternId, type LanguageType } from '../pattern-examples';
 import { patternScenarios } from '../../data/patterns';
 import DomainReasoningDetails from './technique-details/DomainReasoningDetails';
@@ -1441,11 +1475,19 @@ export const TechniqueDetails = ({
                           ? 'Interactive reflexion learning with self-reflection and episodic memory'
                           : selectedTechnique.id === 'reinforcement-learning-from-human-feedback'
                           ? 'Interactive RLHF training pipeline with human preference collection and policy optimization'
+                          : selectedTechnique.id === 'direct-preference-optimization'
+                          ? 'Interactive DPO training simulation with preference pair optimization and policy updates'
+                          : selectedTechnique.id === 'in-context-learning'
+                          ? 'Interactive ICL demonstration with zero-shot, one-shot, and few-shot learning examples'
+                          : selectedTechnique.id === 'meta-learning'
+                          ? 'Interactive meta-learning visualization with MAML, task adaptation, and transfer learning'
+                          : selectedTechnique.id === 'continual-learning'
+                          ? 'Interactive continual learning demo with sequential task training and catastrophic forgetting prevention'
                           : 'Hands-on demonstration of the technique'
                         }
                       </span>
                       <span className="text-xs text-gray-500">
-                        {selectedTechnique.id === 'feedback-chaining' || selectedTechnique.id === 'hierarchical-chaining' || selectedTechnique.id === 'iterative-refinement' || selectedTechnique.id === 'parallel-synthesis' || selectedTechnique.id === 'dynamic-routing' || selectedTechnique.id === 'dynamic-context-assembly' || selectedTechnique.id === 'message-queuing' || selectedTechnique.id === 'latent-memory-networks' || selectedTechnique.id === 'adaptive-context-depth' || selectedTechnique.id === 'latent-knowledge-retrieval' || selectedTechnique.id === 'context-compression-advanced' || selectedTechnique.id === 'multimodal-context-integration' || selectedTechnique.id === 'sliding-window' || selectedTechnique.id === 'hierarchical-memory' || selectedTechnique.id === 'attention-mechanisms' || selectedTechnique.id === 'memory-consolidation' || selectedTechnique.id === 'working-memory-patterns' || selectedTechnique.id === 'contextual-unstructured-memory' || selectedTechnique.id === 'reinforcement-learning-from-human-feedback' || selectedTechnique.id === 'context-compression' || selectedTechnique.id === 'content-based-routing' || selectedTechnique.id === 'capability-routing' || selectedTechnique.id === 'load-balancing' || selectedTechnique.id === 'geographic-routing' || selectedTechnique.id === 'map-reduce' || selectedTechnique.id === 'scatter-gather' || selectedTechnique.id === 'fork-join' || selectedTechnique.id === 'async-await' || selectedTechnique.id === 'self-critique' || selectedTechnique.id === 'producer-critic' || selectedTechnique.id === 'producer-critic-pattern' || selectedTechnique.id === 'llm-as-judge' || selectedTechnique.id === 'reflexion-pattern' || selectedTechnique.id === 'meta-reasoning' || selectedTechnique.id === 'hierarchical-task-network-planning' || selectedTechnique.id === 'task-management-orchestration' || selectedTechnique.id === 'a2a-protocol' || selectedTechnique.id === 'supervisor-worker-pattern' || selectedTechnique.id === 'shared-scratchpad-collaboration' || selectedTechnique.id === 'sequential-pipeline-agents' || selectedTechnique.id === 'concurrent-orchestration' || selectedTechnique.id === 'handoff-orchestration' || selectedTechnique.id === 'peer-collaboration' || selectedTechnique.id === 'function-calling' || selectedTechnique.id === 'code-execution' || selectedTechnique.id === 'hierarchical-planning' || selectedTechnique.id === 'goal-decomposition' || selectedTechnique.id === 'constraint-satisfaction' || selectedTechnique.id === 'scenario-planning' || selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining' || selectedTechnique.id === 'conditional-chaining' || selectedTechnique.id === 'embedding-based-routing' || selectedTechnique.id === 'rule-based-routing' || selectedTechnique.id === 'machine-learning-model-based-routing' ? 'Interactive demo available' : 'Demo coming soon'}
+                        {selectedTechnique.id === 'feedback-chaining' || selectedTechnique.id === 'hierarchical-chaining' || selectedTechnique.id === 'iterative-refinement' || selectedTechnique.id === 'parallel-synthesis' || selectedTechnique.id === 'dynamic-routing' || selectedTechnique.id === 'dynamic-context-assembly' || selectedTechnique.id === 'message-queuing' || selectedTechnique.id === 'latent-memory-networks' || selectedTechnique.id === 'adaptive-context-depth' || selectedTechnique.id === 'latent-knowledge-retrieval' || selectedTechnique.id === 'context-compression-advanced' || selectedTechnique.id === 'multimodal-context-integration' || selectedTechnique.id === 'sliding-window' || selectedTechnique.id === 'hierarchical-memory' || selectedTechnique.id === 'attention-mechanisms' || selectedTechnique.id === 'memory-consolidation' || selectedTechnique.id === 'working-memory-patterns' || selectedTechnique.id === 'contextual-unstructured-memory' || selectedTechnique.id === 'reinforcement-learning-from-human-feedback' || selectedTechnique.id === 'direct-preference-optimization' || selectedTechnique.id === 'in-context-learning' || selectedTechnique.id === 'meta-learning' || selectedTechnique.id === 'continual-learning' || selectedTechnique.id === 'context-compression' || selectedTechnique.id === 'content-based-routing' || selectedTechnique.id === 'capability-routing' || selectedTechnique.id === 'load-balancing' || selectedTechnique.id === 'geographic-routing' || selectedTechnique.id === 'map-reduce' || selectedTechnique.id === 'scatter-gather' || selectedTechnique.id === 'fork-join' || selectedTechnique.id === 'async-await' || selectedTechnique.id === 'self-critique' || selectedTechnique.id === 'producer-critic' || selectedTechnique.id === 'producer-critic-pattern' || selectedTechnique.id === 'llm-as-judge' || selectedTechnique.id === 'reflexion-pattern' || selectedTechnique.id === 'meta-reasoning' || selectedTechnique.id === 'hierarchical-task-network-planning' || selectedTechnique.id === 'task-management-orchestration' || selectedTechnique.id === 'a2a-protocol' || selectedTechnique.id === 'supervisor-worker-pattern' || selectedTechnique.id === 'shared-scratchpad-collaboration' || selectedTechnique.id === 'sequential-pipeline-agents' || selectedTechnique.id === 'concurrent-orchestration' || selectedTechnique.id === 'handoff-orchestration' || selectedTechnique.id === 'peer-collaboration' || selectedTechnique.id === 'function-calling' || selectedTechnique.id === 'code-execution' || selectedTechnique.id === 'hierarchical-planning' || selectedTechnique.id === 'goal-decomposition' || selectedTechnique.id === 'constraint-satisfaction' || selectedTechnique.id === 'scenario-planning' || selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining' || selectedTechnique.id === 'conditional-chaining' || selectedTechnique.id === 'embedding-based-routing' || selectedTechnique.id === 'rule-based-routing' || selectedTechnique.id === 'machine-learning-model-based-routing' ? 'Interactive demo available' : 'Demo coming soon'}
                       </span>
                     </div>
                   </div>
@@ -1487,6 +1529,74 @@ export const TechniqueDetails = ({
                     <ContextualUnstructuredMemoryDemo />
                   ) : selectedTechnique.id === 'reinforcement-learning-from-human-feedback' ? (
                     <RLHFDemo />
+                  ) : selectedTechnique.id === 'direct-preference-optimization' ? (
+                    <DPODemo />
+                  ) : selectedTechnique.id === 'in-context-learning' ? (
+                    <ICLDemo />
+                  ) : selectedTechnique.id === 'meta-learning' ? (
+                    <MLSDemo />
+                  ) : selectedTechnique.id === 'continual-learning' ? (
+                    <CLDemo />
+                  ) : selectedTechnique.id === 'self-improving-systems' ? (
+                    <SISDemo />
+                  ) : selectedTechnique.id === 'constitutional-ai' ? (
+                    <CAIDemo />
+                  ) : selectedTechnique.id === 'reinforcement-learning-from-ai-feedback' ? (
+                    <RLAIFDemo />
+                  ) : selectedTechnique.id === 'test-time-scaling' ? (
+                    <TTSDemo />
+                  ) : selectedTechnique.id === 'odds-ratio-preference-optimization' ? (
+                    <ORPODemo />
+                  ) : selectedTechnique.id === 'simple-preference-optimization' ? (
+                    <SimPODemo />
+                  ) : selectedTechnique.id === 'supervised-learning-adaptation' ? (
+                    <SLADemo />
+                  ) : selectedTechnique.id === 'unsupervised-learning-adaptation' ? (
+                    <ULADemo />
+                  ) : selectedTechnique.id === 'online-learning-adaptation' ? (
+                    <OLADemo />
+                  ) : selectedTechnique.id === 'llm-checkpoint-recovery' ? (
+                    <LCRDemo />
+                  ) : selectedTechnique.id === 'agent-context-preservation' ? (
+                    <ACPDemo />
+                  ) : selectedTechnique.id === 'predictive-agent-fault-tolerance' ? (
+                    <PAFDemo />
+                  ) : selectedTechnique.id === 'agent-communication-fault-tolerance' ? (
+                    <ACFDemo />
+                  ) : selectedTechnique.id === 'naive-rag' ? (
+                    <NRAGDemo />
+                  ) : selectedTechnique.id === 'advanced-rag' ? (
+                    <ARAGDemo />
+                  ) : selectedTechnique.id === 'modular-rag' ? (
+                    <MRAGDemo />
+                  ) : selectedTechnique.id === 'self-rag' ? (
+                    <SRAGDemo />
+                  ) : selectedTechnique.id === 'corrective-rag' ? (
+                    <CRAGDemo />
+                  ) : selectedTechnique.id === 'graph-rag' ? (
+                    <GRAGDemo />
+                  ) : selectedTechnique.id === 'multimodal-rag' ? (
+                    <MMRAGDemo />
+                  ) : selectedTechnique.id === 'agentic-rag-systems' ? (
+                    <AgRAGDemo />
+                  ) : selectedTechnique.id === 'cot' ? (
+                    <CoTDemo />
+                  ) : selectedTechnique.id === 'tot' ? (
+                    <ToTDemo />
+                  ) : selectedTechnique.id === 'got' ? (
+                    <GoTDemo />
+                  ) : selectedTechnique.id === 'react' ? (
+                    <ReActDemo />
+                  ) : selectedTechnique.id === 'fot' ? (
+                    <FoTDemo />
+                  ) : selectedTechnique.id === 'metacognitive-monitoring' ? (
+                    <MCMDemo />
+                  ) : selectedTechnique.id === 'test-time-compute-scaling' ? (
+                    <TTCDemo />
+                  ) : selectedTechnique.id === 'test-time-compute' ? (
+                    <TTCDemo />
+                  ) : selectedTechnique.id === 'reflective-mcts' ? (
+                    <RMCTSDemo />
                   ) : selectedTechnique.id === 'distributed-memory-architectures' ? (
                     <DistributedMemoryArchitecturesDemo />
                   ) : selectedTechnique.id === 'context-compression' ? (
