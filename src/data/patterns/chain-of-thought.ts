@@ -3,192 +3,197 @@ import { nodeStyle, edgeStyle } from './styles';
 
 export const chainOfThoughtPattern: PatternScenario = {
   id: 'cot',
-  title: 'Chain of Thought (CoT) Reasoning',
-  description: `A fundamental AI reasoning technique that breaks complex problems into explicit, step-by-step reasoning processes, enabling transparent and verifiable problem-solving through sequential decomposition and intermediate verification.
+  title: 'Chain of Thought (CoT) Prompting',
+  description: `A simple yet powerful prompting technique that dramatically improves reasoning by adding "Let's think step by step" or similar phrases to prompts, triggering systematic reasoning in language models.
 
-Chain of Thought (CoT) reasoning represents a paradigm shift in how AI systems approach complex problems. Rather than jumping directly to conclusions, CoT enables models to work through problems step-by-step, making their reasoning process explicit and verifiable.
+Chain of Thought (CoT) is fundamentally a **prompting strategy**, not a complex system. By simply adding phrases like "Let's think step by step" to your prompt, you can trigger the model to break down problems systematically instead of jumping to conclusions.
 
-**Core Principles:**
-• **Sequential Decomposition**: Breaking complex problems into manageable sub-steps
-• **Transparent Reasoning**: Making each step of the thinking process visible
-• **Intermediate Verification**: Validating conclusions at each stage
-• **Cumulative Problem Solving**: Building final solutions from verified intermediate steps
+**How It Works:**
+• **Standard Prompt**: Direct question → Often incorrect answer
+• **CoT Prompt**: Question + "Let's think step by step" → Step-by-step reasoning → Correct answer
 
-**Why CoT Matters:**
-This approach mirrors human System 2 thinking (deliberate, analytical) and addresses critical limitations of traditional AI systems, including the "leap to conclusion" problem, lack of transparency, and difficulty with multi-step reasoning tasks.
+**Key Insight:**
+The same model, with the same capabilities, performs dramatically better just by adding a magic phrase. No special training, no complex architecture - just better prompting.
 
-**Key Applications:**
-- Mathematical problem solving and complex calculations
-- Logical reasoning and multi-step inference
-- Educational tutoring and explanation systems  
-- High-stakes decision making requiring transparency
-- Scientific reasoning and hypothesis testing
-- Code analysis and debugging processes`,
+**Common CoT Phrases:**
+- "Let's think step by step"
+- "Let's break this down step by step"
+- "Let's work through this systematically"
+- "First, let me understand the problem. Then I'll solve it step by step."
+
+**Applications:**
+- Mathematical problems
+- Logic puzzles
+- Multi-step reasoning
+- Complex analysis
+- Any task requiring systematic thinking`,
 
   initialNodes: [
     {
       id: '1',
       type: 'default',
-      position: { x: 100, y: 50 },
-      data: { 
-        label: 'Complex Problem\n"Calculate the compound interest on $5,000\ninvested at 6% annually for 3 years,\nthen determine monthly payments\nfor a 5-year loan of that amount at 4%"' 
+      position: { x: 250, y: 200 },
+      data: {
+        label: 'Problem:\n"If 5 machines make 5 widgets\nin 5 minutes, how long for\n100 machines to make 100 widgets?"'
       },
-      style: { ...nodeStyle, minWidth: 280, backgroundColor: '#ef4444', color: 'white' }
+      style: { ...nodeStyle, minWidth: 260, backgroundColor: '#6366f1', color: 'white' }
     },
     {
       id: '2',
       type: 'default',
-      position: { x: 100, y: 200 },
-      data: { label: 'Problem Analysis\n& Decomposition' },
-      style: { ...nodeStyle, backgroundColor: '#3b82f6', color: 'white' }
+      position: { x: 100, y: 50 },
+      data: { label: 'Standard Prompt:\nJust the question' },
+      style: { ...nodeStyle, backgroundColor: '#ef4444', color: 'white' }
     },
     {
       id: '3',
       type: 'default',
-      position: { x: 50, y: 350 },
-      data: { label: 'Step 1: Compound Interest\nA = P(1 + r)^t\nA = 5000(1 + 0.06)^3' },
-      style: { ...nodeStyle, minWidth: 200, backgroundColor: '#8b5cf6', color: 'white' }
+      position: { x: 400, y: 50 },
+      data: { label: 'CoT Prompt:\nQuestion +\n"Let\'s think step by step"' },
+      style: { ...nodeStyle, minWidth: 180, backgroundColor: '#10b981', color: 'white' }
     },
     {
       id: '4',
       type: 'default',
-      position: { x: 300, y: 350 },
-      data: { label: 'Step 2: Calculate Final Amount\nA = 5000 × 1.191016\nA = $5,955.08' },
-      style: { ...nodeStyle, minWidth: 200, backgroundColor: '#8b5cf6', color: 'white' }
+      position: { x: 100, y: 350 },
+      data: { label: 'LLM (Direct Response)' },
+      style: { ...nodeStyle, backgroundColor: '#64748b', color: 'white' }
     },
     {
       id: '5',
       type: 'default',
-      position: { x: 50, y: 500 },
-      data: { label: 'Step 3: Loan Payment Formula\nPMT = P[r(1+r)^n]/[(1+r)^n-1]\nr = 0.04/12, n = 60 months' },
-      style: { ...nodeStyle, minWidth: 220, backgroundColor: '#10b981', color: 'white' }
+      position: { x: 400, y: 350 },
+      data: { label: 'Same LLM\n(Step-by-Step Mode)' },
+      style: { ...nodeStyle, backgroundColor: '#8b5cf6', color: 'white' }
     },
     {
       id: '6',
       type: 'default',
-      position: { x: 300, y: 500 },
-      data: { label: 'Step 4: Calculate Payment\nPMT = 5955.08 × 0.0184\nPMT = $109.57/month' },
-      style: { ...nodeStyle, minWidth: 200, backgroundColor: '#10b981', color: 'white' }
+      position: { x: 100, y: 500 },
+      data: { label: '❌ Wrong Answer:\n"100 minutes"' },
+      style: { ...nodeStyle, backgroundColor: '#dc2626', color: 'white' }
     },
     {
       id: '7',
       type: 'default',
-      position: { x: 175, y: 650 },
-      data: { label: 'Final Solution\nCompound Interest: $5,955.08\nMonthly Payment: $109.57\n\n✓ Verified through step-by-step calculation' },
-      style: { ...nodeStyle, minWidth: 250, backgroundColor: '#059669', color: 'white' }
+      position: { x: 400, y: 500 },
+      data: { label: '✓ Correct Answer:\n"5 minutes"' },
+      style: { ...nodeStyle, backgroundColor: '#059669', color: 'white' }
+    },
+    {
+      id: '8',
+      type: 'default',
+      position: { x: 550, y: 425 },
+      data: { label: 'Shows reasoning:\n"Each machine makes\n1 widget in 5 minutes.\n100 machines make\n100 widgets in 5 min."' },
+      style: { ...nodeStyle, minWidth: 180, backgroundColor: '#0891b2', color: 'white', fontSize: '11px' }
     }
   ],
   
   initialEdges: [
     {
-      id: 'e1-2',
-      source: '1',
-      target: '2',
-      style: edgeStyle,
-      label: 'Analyze'
-    },
-    {
-      id: 'e2-3',
+      id: 'e2-1',
       source: '2',
-      target: '3',
-      style: edgeStyle,
-      label: 'Decompose'
+      target: '1',
+      style: { ...edgeStyle, stroke: '#ef4444' },
+      label: 'Standard'
     },
     {
-      id: 'e2-4',
-      source: '2',
-      target: '4',
-      style: edgeStyle
-    },
-    {
-      id: 'e3-5',
+      id: 'e3-1',
       source: '3',
+      target: '1',
+      style: { ...edgeStyle, stroke: '#10b981' },
+      label: 'With CoT'
+    },
+    {
+      id: 'e1-4',
+      source: '1',
+      target: '4',
+      style: { ...edgeStyle, stroke: '#ef4444' }
+    },
+    {
+      id: 'e1-5',
+      source: '1',
       target: '5',
-      style: edgeStyle,
-      label: 'Sequential'
+      style: { ...edgeStyle, stroke: '#10b981' }
     },
     {
       id: 'e4-6',
       source: '4',
       target: '6',
-      style: edgeStyle,
-      label: 'Process'
+      style: { ...edgeStyle, stroke: '#ef4444' },
+      label: 'Quick answer'
     },
     {
       id: 'e5-7',
       source: '5',
       target: '7',
-      style: edgeStyle,
-      label: 'Synthesize'
+      style: { ...edgeStyle, stroke: '#10b981' },
+      label: 'Reasoned'
     },
     {
-      id: 'e6-7',
-      source: '6',
-      target: '7',
-      style: edgeStyle
+      id: 'e5-8',
+      source: '5',
+      target: '8',
+      style: { ...edgeStyle, stroke: '#10b981', strokeDasharray: '5,5' },
+      label: 'Shows work'
     }
   ],
   
   steps: [
-          {
+      {
         id: 'step1',
         title: 'Problem Presentation',
-        description: 'AI receives a complex, multi-part financial problem requiring sequential calculations and different mathematical concepts. This problem demonstrates CoT\'s strength with multi-step problems that require different formulas and intermediate results to reach the final solution.',
-        input: 'Calculate compound interest on $5,000 at 6% for 3 years, then determine monthly payments for a 5-year loan of that amount at 4%',
+        description: 'A classic reasoning problem that trips up many LLMs when asked directly. This tests the model\'s ability to avoid linear thinking traps.',
+        input: 'If 5 machines make 5 widgets in 5 minutes, how long would it take 100 machines to make 100 widgets?',
         activeNodes: ['1'],
         activeEdges: []
       },
       {
         id: 'step2',
-        title: 'Problem Analysis & Decomposition',
-        description: 'The AI recognizes this requires breaking down into distinct, sequential sub-problems rather than attempting a direct solution. CoT shines here by explicitly identifying the logical dependencies: the loan amount depends on the compound interest calculation result.',
-        input: 'Multi-part problem requiring: 1) Compound interest calculation, 2) Loan payment calculation using result from step 1',
+        title: 'Standard Approach (No CoT)',
+        description: 'Without Chain-of-Thought prompting, the model often jumps to a conclusion using faulty linear reasoning: "5 machines → 5 widgets, so 100 machines → 100 widgets must take 100 minutes."',
+        input: 'Direct question without any prompting strategy',
         activeNodes: ['1', '2'],
-        activeEdges: ['e1-2']
+        activeEdges: ['e2-1']
       },
       {
         id: 'step3',
-        title: 'Step 1: Apply Compound Interest Formula',
-        description: 'Calculate the future value using the compound interest formula A = P(1 + r)^t with clearly stated variables. Each mathematical step is explicit, showing formula application and intermediate calculations for verification.',
-        input: 'Principal (P) = $5,000, Rate (r) = 6% = 0.06, Time (t) = 3 years',
-        output: 'A = 5000(1 + 0.06)^3 = 5000 × 1.191016',
-        activeNodes: ['3'],
-        activeEdges: ['e2-3']
+        title: 'Standard LLM Response',
+        description: 'The model gives a quick, intuitive but wrong answer. It fails to work through the rate calculation properly.',
+        output: '100 minutes (incorrect linear scaling)',
+        activeNodes: ['1', '4', '6'],
+        activeEdges: ['e1-4', 'e4-6']
       },
       {
         id: 'step4',
-        title: 'Step 2: Complete Interest Calculation',
-        description: 'Execute the calculation to determine the final amount after compound interest. The intermediate result is clearly stated and will be used as input for the next phase of the problem.',
-        input: 'A = 5000 × 1.191016',
-        output: 'Final Amount = $5,955.08',
-        activeNodes: ['4'],
-        activeEdges: ['e2-4']
+        title: 'CoT Approach - Add Magic Phrase',
+        description: 'Now we ask the exact same question but add "Let\'s think step by step" at the end. This simple addition triggers a completely different reasoning process in the same model.',
+        input: 'Same question + "Let\'s think step by step"',
+        activeNodes: ['1', '3'],
+        activeEdges: ['e3-1']
       },
       {
         id: 'step5',
-        title: 'Step 3: Set Up Loan Payment Formula',
-        description: 'Apply the monthly payment formula using the compound interest result as the loan principal. The reasoning shows how results from previous steps feed into subsequent calculations, demonstrating problem interdependency.',
-        input: 'Loan Amount = $5,955.08, Annual Rate = 4%, Term = 5 years (60 months)',
-        output: 'PMT = P[r(1+r)^n]/[(1+r)^n-1] where r = 0.04/12 = 0.003333, n = 60',
-        activeNodes: ['5'],
-        activeEdges: ['e3-5']
+        title: 'CoT Triggers Systematic Reasoning',
+        description: 'With the magic phrase, the same LLM now breaks down the problem systematically instead of jumping to conclusions.',
+        activeNodes: ['1', '5'],
+        activeEdges: ['e1-5']
       },
       {
         id: 'step6',
-        title: 'Step 4: Calculate Monthly Payment',
-        description: 'Execute the loan payment calculation with the derived values. The final calculation step shows precise mathematical execution with clearly traceable logic.',
-        input: 'PMT = 5955.08 × [0.003333(1.003333)^60]/[(1.003333)^60-1]',
-        output: 'PMT = 5955.08 × 0.0184 = $109.57 per month',
-        activeNodes: ['6'],
-        activeEdges: ['e4-6']
+        title: 'Step-by-Step Reasoning Process',
+        description: 'The model now shows its work: "Let\'s think step by step. If 5 machines make 5 widgets in 5 minutes, then each machine makes 1 widget in 5 minutes. So the rate is 1 widget per machine per 5 minutes. Therefore, 100 machines would make 100 widgets in... 5 minutes!"',
+        output: 'Detailed reasoning showing rate calculation',
+        activeNodes: ['5', '8'],
+        activeEdges: ['e5-8']
       },
       {
         id: 'step7',
-        title: 'Solution Synthesis & Verification',
-        description: 'Combine results from both calculation phases and verify the logical consistency of the complete solution. CoT enables verification by showing all work, allowing checking of both individual steps and overall logical flow. The solution includes context about what the numbers mean.',
-        output: 'Complete Solution:\n• Compound Interest Result: $5,955.08 (original $5,000 grew by $955.08)\n• Monthly Loan Payment: $109.57 for 60 months\n• Total loan payments: $6,574.20\n• Verification: Payment calculations based on compound interest result ✓',
-        activeNodes: ['7'],
-        activeEdges: ['e5-7', 'e6-7']
+        title: 'Correct Answer Through CoT',
+        description: 'By simply adding "Let\'s think step by step", we get the correct answer. The same model, same weights, same everything - just better prompting. This is the power of Chain-of-Thought: dramatic improvement from a simple prompt modification.',
+        output: '✓ 5 minutes (correct answer with clear reasoning)',
+        activeNodes: ['5', '7', '8'],
+        activeEdges: ['e5-7', 'e5-8']
       }
   ]
 };

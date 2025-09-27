@@ -197,6 +197,15 @@ import AgRAGDemo from '../../components/demos/AgRAGDemo';
 import CoTDemo from '../../components/demos/CoTDemo';
 import ToTDemo from '../../components/demos/ToTDemo';
 import GoTDemo from '../../components/demos/GoTDemo';
+import LtMDemo from '../../components/demos/LtMDemo';
+import ARDemo from '../../components/demos/ARDemo';
+import CRDemo from '../../components/demos/CRDemo';
+import ABRDemo from '../../components/demos/ABRDemo';
+import SBPDemo from '../../components/demos/SBPDemo';
+import BoTDemo from '../../components/demos/BoTDemo';
+import SoTDemo from '../../components/demos/SoTDemo';
+import LDPDemo from '../../components/demos/LDPDemo';
+import CGPDemo from '../../components/demos/CGPDemo';
 import ReActDemo from '../../components/demos/ReActDemo';
 import FoTDemo from '../../components/demos/FoTDemo';
 import MCMDemo from '../../components/demos/MCMDemo';
@@ -1483,11 +1492,29 @@ export const TechniqueDetails = ({
                           ? 'Interactive meta-learning visualization with MAML, task adaptation, and transfer learning'
                           : selectedTechnique.id === 'continual-learning'
                           ? 'Interactive continual learning demo with sequential task training and catastrophic forgetting prevention'
+                          : selectedTechnique.id === 'least-to-most'
+                          ? 'Interactive progressive problem decomposition from simple to complex components with step-by-step building'
+                          : selectedTechnique.id === 'analogical-reasoning'
+                          ? 'Interactive analogical reasoning with cross-domain pattern discovery, concept mapping, and solution transfer'
+                          : selectedTechnique.id === 'causal-reasoning'
+                          ? 'Interactive causal analysis with mechanism exploration, confound checking, counterfactual reasoning, and intervention testing'
+                          : selectedTechnique.id === 'abductive-reasoning'
+                          ? 'Interactive inference to best explanation with hypothesis generation, evidence evaluation, and plausibility ranking'
+                          : selectedTechnique.id === 'step-back-prompting'
+                          ? 'Interactive abstraction to higher-level principles with step-back questions, principle-based approaches, and transferable knowledge'
+                          : selectedTechnique.id === 'buffer-of-thoughts'
+                          ? 'Interactive dynamic buffer of reusable thought patterns with analogical matching, pattern application, and accelerated problem-solving through reuse'
+                          : selectedTechnique.id === 'skeleton-of-thoughts'
+                          ? 'Interactive structured reasoning framework with skeleton creation, parallel expansion, integration, and reusable templates'
+                          : selectedTechnique.id === 'layered-defense-pattern'
+                          ? 'Interactive multi-layered security architecture demonstrating Swiss Cheese Model with independent defense layers and continuous improvement'
+                          : selectedTechnique.id === 'contextual-guardrailing-pattern'
+                          ? 'Interactive dynamic rule enforcement demonstrating context-aware decisions with risk-based constraints and adaptive security controls'
                           : 'Hands-on demonstration of the technique'
                         }
                       </span>
                       <span className="text-xs text-gray-500">
-                        {selectedTechnique.id === 'feedback-chaining' || selectedTechnique.id === 'hierarchical-chaining' || selectedTechnique.id === 'iterative-refinement' || selectedTechnique.id === 'parallel-synthesis' || selectedTechnique.id === 'dynamic-routing' || selectedTechnique.id === 'dynamic-context-assembly' || selectedTechnique.id === 'message-queuing' || selectedTechnique.id === 'latent-memory-networks' || selectedTechnique.id === 'adaptive-context-depth' || selectedTechnique.id === 'latent-knowledge-retrieval' || selectedTechnique.id === 'context-compression-advanced' || selectedTechnique.id === 'multimodal-context-integration' || selectedTechnique.id === 'sliding-window' || selectedTechnique.id === 'hierarchical-memory' || selectedTechnique.id === 'attention-mechanisms' || selectedTechnique.id === 'memory-consolidation' || selectedTechnique.id === 'working-memory-patterns' || selectedTechnique.id === 'contextual-unstructured-memory' || selectedTechnique.id === 'reinforcement-learning-from-human-feedback' || selectedTechnique.id === 'direct-preference-optimization' || selectedTechnique.id === 'in-context-learning' || selectedTechnique.id === 'meta-learning' || selectedTechnique.id === 'continual-learning' || selectedTechnique.id === 'context-compression' || selectedTechnique.id === 'content-based-routing' || selectedTechnique.id === 'capability-routing' || selectedTechnique.id === 'load-balancing' || selectedTechnique.id === 'geographic-routing' || selectedTechnique.id === 'map-reduce' || selectedTechnique.id === 'scatter-gather' || selectedTechnique.id === 'fork-join' || selectedTechnique.id === 'async-await' || selectedTechnique.id === 'self-critique' || selectedTechnique.id === 'producer-critic' || selectedTechnique.id === 'producer-critic-pattern' || selectedTechnique.id === 'llm-as-judge' || selectedTechnique.id === 'reflexion-pattern' || selectedTechnique.id === 'meta-reasoning' || selectedTechnique.id === 'hierarchical-task-network-planning' || selectedTechnique.id === 'task-management-orchestration' || selectedTechnique.id === 'a2a-protocol' || selectedTechnique.id === 'supervisor-worker-pattern' || selectedTechnique.id === 'shared-scratchpad-collaboration' || selectedTechnique.id === 'sequential-pipeline-agents' || selectedTechnique.id === 'concurrent-orchestration' || selectedTechnique.id === 'handoff-orchestration' || selectedTechnique.id === 'peer-collaboration' || selectedTechnique.id === 'function-calling' || selectedTechnique.id === 'code-execution' || selectedTechnique.id === 'hierarchical-planning' || selectedTechnique.id === 'goal-decomposition' || selectedTechnique.id === 'constraint-satisfaction' || selectedTechnique.id === 'scenario-planning' || selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining' || selectedTechnique.id === 'conditional-chaining' || selectedTechnique.id === 'embedding-based-routing' || selectedTechnique.id === 'rule-based-routing' || selectedTechnique.id === 'machine-learning-model-based-routing' ? 'Interactive demo available' : 'Demo coming soon'}
+                        {selectedTechnique.id === 'feedback-chaining' || selectedTechnique.id === 'hierarchical-chaining' || selectedTechnique.id === 'iterative-refinement' || selectedTechnique.id === 'parallel-synthesis' || selectedTechnique.id === 'dynamic-routing' || selectedTechnique.id === 'dynamic-context-assembly' || selectedTechnique.id === 'message-queuing' || selectedTechnique.id === 'latent-memory-networks' || selectedTechnique.id === 'adaptive-context-depth' || selectedTechnique.id === 'latent-knowledge-retrieval' || selectedTechnique.id === 'context-compression-advanced' || selectedTechnique.id === 'multimodal-context-integration' || selectedTechnique.id === 'sliding-window' || selectedTechnique.id === 'hierarchical-memory' || selectedTechnique.id === 'attention-mechanisms' || selectedTechnique.id === 'memory-consolidation' || selectedTechnique.id === 'working-memory-patterns' || selectedTechnique.id === 'contextual-unstructured-memory' || selectedTechnique.id === 'reinforcement-learning-from-human-feedback' || selectedTechnique.id === 'direct-preference-optimization' || selectedTechnique.id === 'in-context-learning' || selectedTechnique.id === 'meta-learning' || selectedTechnique.id === 'continual-learning' || selectedTechnique.id === 'least-to-most' || selectedTechnique.id === 'analogical-reasoning' || selectedTechnique.id === 'causal-reasoning' || selectedTechnique.id === 'abductive-reasoning' || selectedTechnique.id === 'step-back-prompting' || selectedTechnique.id === 'buffer-of-thoughts' || selectedTechnique.id === 'skeleton-of-thoughts' || selectedTechnique.id === 'layered-defense-pattern' || selectedTechnique.id === 'contextual-guardrailing-pattern' || selectedTechnique.id === 'context-compression' || selectedTechnique.id === 'content-based-routing' || selectedTechnique.id === 'capability-routing' || selectedTechnique.id === 'load-balancing' || selectedTechnique.id === 'geographic-routing' || selectedTechnique.id === 'map-reduce' || selectedTechnique.id === 'scatter-gather' || selectedTechnique.id === 'fork-join' || selectedTechnique.id === 'async-await' || selectedTechnique.id === 'self-critique' || selectedTechnique.id === 'producer-critic' || selectedTechnique.id === 'producer-critic-pattern' || selectedTechnique.id === 'llm-as-judge' || selectedTechnique.id === 'reflexion-pattern' || selectedTechnique.id === 'meta-reasoning' || selectedTechnique.id === 'hierarchical-task-network-planning' || selectedTechnique.id === 'task-management-orchestration' || selectedTechnique.id === 'a2a-protocol' || selectedTechnique.id === 'supervisor-worker-pattern' || selectedTechnique.id === 'shared-scratchpad-collaboration' || selectedTechnique.id === 'sequential-pipeline-agents' || selectedTechnique.id === 'concurrent-orchestration' || selectedTechnique.id === 'handoff-orchestration' || selectedTechnique.id === 'peer-collaboration' || selectedTechnique.id === 'function-calling' || selectedTechnique.id === 'code-execution' || selectedTechnique.id === 'hierarchical-planning' || selectedTechnique.id === 'goal-decomposition' || selectedTechnique.id === 'constraint-satisfaction' || selectedTechnique.id === 'scenario-planning' || selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining' || selectedTechnique.id === 'conditional-chaining' || selectedTechnique.id === 'embedding-based-routing' || selectedTechnique.id === 'rule-based-routing' || selectedTechnique.id === 'machine-learning-model-based-routing' ? 'Interactive demo available' : 'Demo coming soon'}
                       </span>
                     </div>
                   </div>
@@ -1583,6 +1610,24 @@ export const TechniqueDetails = ({
                     <CoTDemo />
                   ) : selectedTechnique.id === 'tot' ? (
                     <ToTDemo />
+                  ) : selectedTechnique.id === 'least-to-most' ? (
+                    <LtMDemo />
+                  ) : selectedTechnique.id === 'analogical-reasoning' ? (
+                    <ARDemo />
+                  ) : selectedTechnique.id === 'causal-reasoning' ? (
+                    <CRDemo />
+                  ) : selectedTechnique.id === 'abductive-reasoning' ? (
+                    <ABRDemo />
+                  ) : selectedTechnique.id === 'step-back-prompting' ? (
+                    <SBPDemo />
+                  ) : selectedTechnique.id === 'buffer-of-thoughts' ? (
+                    <BoTDemo />
+                  ) : selectedTechnique.id === 'skeleton-of-thoughts' ? (
+                    <SoTDemo />
+                  ) : selectedTechnique.id === 'layered-defense-pattern' ? (
+                    <LDPDemo />
+                  ) : selectedTechnique.id === 'contextual-guardrailing-pattern' ? (
+                    <CGPDemo />
                   ) : selectedTechnique.id === 'got' ? (
                     <GoTDemo />
                   ) : selectedTechnique.id === 'react' ? (

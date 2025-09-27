@@ -293,7 +293,13 @@ export default function RMCTSDemo() {
     };
 
     const bounds = calculateTreeBounds(tree);
-    const width = 380;
+
+    // Get actual container width from canvas parent
+    const container = canvas.parentElement;
+    const containerRect = container?.getBoundingClientRect();
+    const containerWidth = containerRect ? containerRect.width - 16 : 500; // Subtract padding
+    const width = Math.max(380, containerWidth); // Use container width with minimum
+
     // Dynamic height based on tree depth with minimum and maximum bounds
     const minHeight = 450;
     const maxHeight = 800;
@@ -302,7 +308,7 @@ export default function RMCTSDemo() {
     const dpr = window.devicePixelRatio || 1;
 
     // Only resize if necessary (performance optimization)
-    if (canvas.width !== width * dpr) {
+    if (canvas.width !== width * dpr || canvas.height !== height * dpr) {
       canvas.width = width * dpr;
       canvas.height = height * dpr;
       canvas.style.width = `${width}px`;
@@ -323,7 +329,8 @@ export default function RMCTSDemo() {
 
     // Apply layout with adaptive parameters
     const startY = Math.min(50, height * 0.08);
-    const spreadFactor = Math.min(width / 3, width / (bounds.maxWidth * 0.5));
+    // Adjust spread factor based on actual canvas width
+    const spreadFactor = Math.min(width / 2.5, width / Math.max(3, bounds.maxWidth * 0.8));
     layoutTree(tree, width / 2, startY, spreadFactor, 1, maxTreeDepth);
 
     // Calculate delta time for smooth animations
@@ -899,7 +906,7 @@ export default function RMCTSDemo() {
     }
   }, [autoRun, isRunning, runIteration]);
 
-  // Animation loop
+  // Animation loop with resize observer
   useEffect(() => {
     const animate = () => {
       if (standardCanvasRef.current && reflectiveCanvasRef.current) {
@@ -911,10 +918,26 @@ export default function RMCTSDemo() {
 
     animate();
 
+    // Add resize observer to handle container size changes
+    const resizeObserver = new ResizeObserver(() => {
+      if (standardCanvasRef.current && reflectiveCanvasRef.current) {
+        drawTree(standardCanvasRef.current, standardTree, selectedPath.standard, false, visualMode);
+        drawTree(reflectiveCanvasRef.current, reflectiveTree, selectedPath.reflective, true, visualMode);
+      }
+    });
+
+    if (standardCanvasRef.current?.parentElement) {
+      resizeObserver.observe(standardCanvasRef.current.parentElement);
+    }
+    if (reflectiveCanvasRef.current?.parentElement) {
+      resizeObserver.observe(reflectiveCanvasRef.current.parentElement);
+    }
+
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
+      resizeObserver.disconnect();
     };
   }, [standardTree, reflectiveTree, selectedPath, visualMode, drawTree]);
 
@@ -1110,7 +1133,7 @@ export default function RMCTSDemo() {
           <div className="bg-slate-800/50 rounded-lg p-2 mb-4 overflow-auto" style={{ maxHeight: '600px' }}>
             <canvas
               ref={standardCanvasRef}
-              style={{ display: 'block', width: '380px' }}
+              style={{ display: 'block', width: '100%' }}
             />
           </div>
           <div className="grid grid-cols-2 gap-2 text-sm">
@@ -1158,7 +1181,7 @@ export default function RMCTSDemo() {
           <div className="bg-slate-800/50 rounded-lg p-2 mb-4 overflow-auto" style={{ maxHeight: '600px' }}>
             <canvas
               ref={reflectiveCanvasRef}
-              style={{ display: 'block', width: '380px' }}
+              style={{ display: 'block', width: '100%' }}
             />
           </div>
           <div className="grid grid-cols-2 gap-2 text-sm">

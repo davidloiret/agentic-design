@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gauge Debug</title>
+    <style>
+        body {
+            background: #1e293b;
+            color: white;
+            font-family: monospace;
+            padding: 20px;
+        }
+        canvas {
+            border: 1px solid #475569;
+            background: #0f172a;
+            margin: 10px;
+        }
+        .debug {
+            background: #334155;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gauge Needle Debug</h1>
+    <canvas id="gauge"></canvas>
+    <div class="debug" id="debug">Debug info will appear here</div>
+    <div>
+        <button onclick="updateGauge(0)">0%</button>
+        <button onclick="updateGauge(0.25)">25%</button>
+        <button onclick="updateGauge(0.5)">50%</button>
+        <button onclick="updateGauge(0.75)">75%</button>
+        <button onclick="updateGauge(1.0)">100%</button>
+    </div>
+
+    <script>
+        function drawGauge(confidence = 0.5) {
+            const canvas = document.getElementById('gauge');
+            const ctx = canvas.getContext('2d');
+            const debug = document.getElementById('debug');
+
+            const width = 300;
+            const height = 220;
+            const centerX = width / 2;
+            const centerY = height - 50;
+            const radius = 80;
+
+            canvas.width = width;
+            canvas.height = height;
+            canvas.style.width = `${width}px`;
+            canvas.style.height = `${height}px`;
+
+            // Clear canvas
+            ctx.clearRect(0, 0, width, height);
+
+            // Draw gauge arc background
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, Math.PI, 2 * Math.PI);
+            ctx.strokeStyle = '#334155';
+            ctx.lineWidth = 20;
+            ctx.stroke();
+
+            // Calculate angle for needle
+            const angle = Math.PI + (confidence * Math.PI);
+
+            // Debug info
+            const angleDegrees = (angle * 180 / Math.PI).toFixed(1);
+            const cosValue = Math.cos(angle).toFixed(3);
+            const sinValue = Math.sin(angle).toFixed(3);
+
+            debug.innerHTML = `
+                <strong>Confidence:</strong> ${(confidence * 100).toFixed(0)}%<br>
+                <strong>Angle (radians):</strong> ${angle.toFixed(3)} (${angleDegrees}°)<br>
+                <strong>cos(angle):</strong> ${cosValue}<br>
+                <strong>sin(angle):</strong> ${sinValue}<br>
+                <strong>Expected direction:</strong> ${
+                    confidence === 0 ? 'LEFT' :
+                    confidence === 0.5 ? 'UP' :
+                    confidence === 1 ? 'RIGHT' : 'Between'
+                }
+            `;
+
+            // Confidence arc
+            const gradient = ctx.createLinearGradient(centerX - radius, 0, centerX + radius, 0);
+            gradient.addColorStop(0, '#ef4444');
+            gradient.addColorStop(0.5, '#f59e0b');
+            gradient.addColorStop(1, '#10b981');
+
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, Math.PI, angle);
+            ctx.strokeStyle = gradient;
+            ctx.lineWidth = 20;
+            ctx.stroke();
+
+            // Draw needle using direct calculation
+            const needleLength = radius - 25;
+            const needleEndX = centerX + Math.cos(angle) * needleLength;
+            const needleEndY = centerY + Math.sin(angle) * needleLength;
+
+            // Draw guide line to show where needle SHOULD point
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(needleEndX, needleEndY);
+            ctx.strokeStyle = 'rgba(255, 255, 0, 0.3)';
+            ctx.lineWidth = 8;
+            ctx.stroke();
+
+            // Main needle
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(needleEndX, needleEndY);
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            // Center dot
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 5, 0, 2 * Math.PI);
+            ctx.fillStyle = '#ffffff';
+            ctx.fill();
+
+            // Labels
+            ctx.font = '12px sans-serif';
+            ctx.fillStyle = '#94a3b8';
+            ctx.textAlign = 'center';
+            ctx.fillText('0%', centerX - radius - 15, centerY + 5);
+            ctx.fillText('50%', centerX, centerY - radius - 25);
+            ctx.fillText('100%', centerX + radius + 15, centerY + 5);
+
+            // Confidence percentage
+            ctx.font = 'bold 24px sans-serif';
+            ctx.fillStyle = '#ffffff';
+            ctx.fillText(`${Math.round(confidence * 100)}%`, centerX, centerY - 15);
+        }
+
+        function updateGauge(value) {
+            drawGauge(value);
+        }
+
+        // Initial draw
+        drawGauge(0.5);
+    </script>
+</body>
+</html>

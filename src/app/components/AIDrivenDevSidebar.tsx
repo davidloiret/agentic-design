@@ -68,17 +68,29 @@ export const AIDrivenDevSidebar = ({
       title: 'Methodologies',
       icon: BookOpen,
       items: [
+        { id: 'vibe-coding', label: 'Vibe Coding', route: '/ai-driven-dev/vibe-coding', icon: Sparkles, badge: 'New' },
         { id: 'spec-driven', label: 'Spec-Driven Development', route: '/ai-driven-dev/spec-driven', icon: FileText, badge: 'Hot' },
+        { id: 'test-driven-ai', label: 'Test-Driven AI Dev', route: '/ai-driven-dev/test-driven-ai', icon: TestTube },
         { id: 'ddd', label: 'Domain-Driven Design', route: '/ai-driven-dev/ddd', icon: Layers },
         { id: 'hexagonal', label: 'Hexagonal Architecture', route: '/ai-driven-dev/hexagonal', icon: Hexagon },
-        { id: 'test-driven-ai', label: 'Test-Driven AI Dev', route: '/ai-driven-dev/test-driven-ai', icon: TestTube },
-        { id: 'ai-pair-programming', label: 'AI Pair Programming', route: '/ai-driven-dev/ai-pair-programming', icon: Users }
+        { id: 'ai-pair-programming', label: 'AI Pair Programming', route: '/ai-driven-dev/ai-pair-programming', icon: Users },
+        { id: 'prompt-libraries', label: 'Prompt Libraries', route: '/ai-driven-dev/prompt-libraries', icon: Code2, badge: 'Hot' }
+      ]
+    },
+    {
+      id: 'workflows',
+      title: 'Production Workflows',
+      icon: Workflow,
+      items: [
+        { id: 'spec-to-deploy', label: 'Spec → Deploy Pipeline', route: '/ai-driven-dev/spec-to-deploy', icon: Rocket, badge: 'New' },
+        { id: 'harper-reed-workflow', label: 'Harper Reed Method', route: '/ai-driven-dev/harper-reed-workflow', icon: GitBranch },
+        { id: '70-percent-problem', label: 'The 70% Problem', route: '/ai-driven-dev/70-percent-problem', icon: Target }
       ]
     },
     {
       id: 'examples',
       title: 'Real Examples',
-      icon: Target,
+      icon: Box,
       items: [
         { id: 'fullstack-app', label: 'Building Full-Stack App', route: '/ai-driven-dev/fullstack-app', icon: Box },
         { id: 'refactoring', label: 'Refactoring Legacy Code', route: '/ai-driven-dev/refactoring-legacy' },

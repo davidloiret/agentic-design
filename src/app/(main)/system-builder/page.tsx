@@ -3,6 +3,7 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { SystemBuilder } from '@/app/components/SystemBuilder';
 import { SystemBuilderAuthPrompt } from '@/app/components/SystemBuilderAuthPrompt';
+import { UnderConstructionOverlay } from '@/app/components/UnderConstructionOverlay';
 import { techniques } from '@/app/techniques';
 
 const categories = [
@@ -50,12 +51,15 @@ export default function SystemBuilderPage() {
   }));
 
   return (
-    <div className="min-h-screen bg-gray-950">
-      <SystemBuilder 
-        techniques={allTechniques}
-        categories={categories}
-        useCases={useCases}
-      />
+    <div className="min-h-screen bg-gray-950 relative">
+      <UnderConstructionOverlay />
+      <div className="filter blur-sm pointer-events-none">
+        <SystemBuilder
+          techniques={allTechniques}
+          categories={categories}
+          useCases={useCases}
+        />
+      </div>
     </div>
   );
 }

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Canvas Gauge Test</title>
+    <style>
+        body {
+            background: #1e293b;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            text-align: center;
+        }
+        canvas {
+            border: 1px solid #475569;
+            background: #0f172a;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Confidence Monitor Gauge Test</h1>
+        <canvas id="gauge"></canvas>
+        <div>
+            <button onclick="updateGauge(0.2)">20%</button>
+            <button onclick="updateGauge(0.5)">50%</button>
+            <button onclick="updateGauge(0.8)">80%</button>
+            <button onclick="updateGauge(1.0)">100%</button>
+        </div>
+    </div>
+
+    <script>
+        function drawGauge(confidence = 0.5) {
+            const canvas = document.getElementById('gauge');
+            const ctx = canvas.getContext('2d');
+
+            const width = 300;
+            const height = 220;
+
+            // Set canvas size with DPI scaling
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = width * dpr;
+            canvas.height = height * dpr;
+            canvas.style.width = `${width}px`;
+            canvas.style.height = `${height}px`;
+            ctx.scale(dpr, dpr);
+
+            // Clear canvas
+            ctx.clearRect(0, 0, width, height);
+
+            // Draw gauge arc
+            const centerX = width / 2;
+            const centerY = height - 50;
+            const radius = 80;
+
+            // Background arc
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, Math.PI, 2 * Math.PI);
+            ctx.strokeStyle = '#334155';
+            ctx.lineWidth = 20;
+            ctx.stroke();
+
+            // Confidence arc
+            const angle = Math.PI + (confidence * Math.PI);
+
+            const gradient = ctx.createLinearGradient(centerX - radius, 0, centerX + radius, 0);
+            gradient.addColorStop(0, '#ef4444');
+            gradient.addColorStop(0.5, '#f59e0b');
+            gradient.addColorStop(1, '#10b981');
+
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, Math.PI, angle);
+            ctx.strokeStyle = gradient;
+            ctx.lineWidth = 20;
+            ctx.stroke();
+
+            // Draw needle using direct calculation (no rotation transform)
+            const needleLength = radius - 25;
+
+            // Calculate needle end point using trigonometry
+            const needleEndX = centerX + Math.cos(angle) * needleLength;
+            const needleEndY = centerY + Math.sin(angle) * needleLength;
+
+            // Needle shadow
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(needleEndX, needleEndY);
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.3)';
+            ctx.lineWidth = 4;
+            ctx.stroke();
+
+            // Main needle
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(needleEndX, needleEndY);
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Arrow tip
+            ctx.save();
+            ctx.translate(needleEndX, needleEndY);
+            ctx.rotate(angle);
+
+            ctx.beginPath();
+            ctx.moveTo(5, -3);
+            ctx.lineTo(5, 3);
+            ctx.lineTo(0, 0);
+            ctx.closePath();
+            ctx.fillStyle = '#ffffff';
+            ctx.fill();
+
+            ctx.restore();
+
+            // Center dot
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 5, 0, 2 * Math.PI);
+            ctx.fillStyle = '#ffffff';
+            ctx.fill();
+
+            // Labels
+            ctx.font = '12px sans-serif';
+            ctx.fillStyle = '#94a3b8';
+            ctx.textAlign = 'center';
+            ctx.fillText('0%', centerX - radius - 10, centerY + 5);
+            ctx.fillText('50%', centerX, centerY - radius - 25);
+            ctx.fillText('100%', centerX + radius + 10, centerY + 5);
+
+            // Confidence percentage
+            ctx.font = 'bold 24px sans-serif';
+            ctx.fillStyle = '#ffffff';
+            ctx.fillText(`${Math.round(confidence * 100)}%`, centerX, centerY - 20);
+
+            // Status text - positioned at bottom of canvas
+            ctx.font = '13px sans-serif';
+            ctx.textAlign = 'center';
+            let status = 'Well Calibrated';
+            let color = '#10b981';
+            if (confidence < 0.4) {
+                status = 'Underconfident';
+                color = '#f59e0b';
+            } else if (confidence > 0.85) {
+                status = 'Overconfident';
+                color = '#ef4444';
+            }
+            ctx.fillStyle = color;
+            ctx.fillText(status, centerX, height - 10);
+        }
+
+        function updateGauge(value) {
+            drawGauge(value);
+        }
+
+        // Initial draw
+        drawGauge(0.5);
+    </script>
+</body>
+</html>
