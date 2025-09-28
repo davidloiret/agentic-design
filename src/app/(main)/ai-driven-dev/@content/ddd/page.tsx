@@ -1,14 +1,12 @@
 "use client"
 
 import React from 'react';
-import { Layers, Package, Shield, Users, GitBranch, Database, ArrowRight, Code2, BookOpen } from 'lucide-react';
-import { UnderConstructionOverlay } from '../../../../components/UnderConstructionOverlay';
+import { Layers, Package, Shield, Users, GitBranch, Database, ArrowRight, Code2, BookOpen, Sparkles } from 'lucide-react';
 
 export default function DDDPage() {
   return (
-    <div className="min-h-screen bg-gray-950 relative">
-      <UnderConstructionOverlay />
-      <div className="px-8 py-12 filter blur-sm pointer-events-none">
+    <div className="min-h-screen bg-gray-950">
+      <div className="px-8 py-12">
         {/* Header */}
         <div className="mb-12">
           <div className="flex items-center gap-4 mb-6">
@@ -258,6 +256,66 @@ class Order {
                   <p className="text-white font-medium">Iterate with Domain Experts</p>
                   <p className="text-sm text-gray-400">Use AI to bridge technical and business communication</p>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* AI-Native DDD Approach */}
+        <div className="bg-gradient-to-br from-cyan-500/10 to-teal-500/10 border border-cyan-500/30 rounded-xl p-8 mb-12">
+          <div className="flex items-center gap-3 mb-6">
+            <Sparkles className="w-6 h-6 text-cyan-400" />
+            <h2 className="text-2xl font-semibold text-white">AI-Native DDD: The New Paradigm</h2>
+          </div>
+
+          <p className="text-gray-300 mb-6">
+            AI systems are no longer just tools—they're first-class participants in your domain model.
+          </p>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="bg-gray-900/50 border border-gray-700 rounded-lg p-6">
+              <h3 className="text-lg font-medium text-white mb-4">Ubiquitous Language Evolution</h3>
+              <div className="space-y-3 text-sm text-gray-300">
+                <div className="flex items-start gap-2">
+                  <ArrowRight className="w-4 h-4 text-cyan-400 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <p className="font-medium text-white">Traditional:</p>
+                    <p className="text-gray-400">Shared language between business and tech teams</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-2">
+                  <ArrowRight className="w-4 h-4 text-teal-400 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <p className="font-medium text-white">AI-Enhanced:</p>
+                    <p className="text-gray-400">Shared language that includes AI systems as participants with their own understanding</p>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-4 bg-cyan-500/10 border border-cyan-500/30 rounded p-3">
+                <p className="text-xs text-cyan-200">
+                  Example: "Customer Lifecycle Stage" understood by business, developers, AND ML models
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-gray-900/50 border border-gray-700 rounded-lg p-6">
+              <h3 className="text-lg font-medium text-white mb-4">Bounded Contexts with AI Integration</h3>
+              <div className="text-sm text-gray-300">
+                <p className="mb-3">AI components must respect domain boundaries:</p>
+                <div className="bg-gray-950 rounded p-3 mb-3">
+                  <code className="text-xs text-cyan-400">
+{`Domain: Product Recommendation
+├── Entities: Customer, Product
+├── AI Component: RecommendationEngine
+└── Shared Language:
+    • "Affinity Score" (business + AI)
+    • "Context Vector" (AI embedding)
+    • "Recommendation Confidence"`}
+                  </code>
+                </div>
+                <p className="text-gray-400 text-xs">
+                  Both humans and AI use same terminology and business rules within the bounded context
+                </p>
               </div>
             </div>
           </div>

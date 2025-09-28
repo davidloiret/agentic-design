@@ -206,11 +206,31 @@ import BoTDemo from '../../components/demos/BoTDemo';
 import SoTDemo from '../../components/demos/SoTDemo';
 import LDPDemo from '../../components/demos/LDPDemo';
 import CGPDemo from '../../components/demos/CGPDemo';
+import GAPDemo from '../../components/demos/GAPDemo';
+import IAPDemo from '../../components/demos/IAPDemo';
+import MPPDemo from '../../components/demos/MPPDemo';
+import TMPDemo from '../../components/demos/TMPDemo';
+import PCMDemo from '../../components/demos/PCMDemo';
+import AAPDemo from '../../components/demos/AAPDemo';
+import MASDemo from '../../components/demos/MASDemo';
+import SPPDemo from '../../components/demos/SPPDemo';
+import DPPDemo from '../../components/demos/DPPDemo';
+import ZTAADemo from '../../components/demos/ZTAADemo';
+import SMPCDemo from '../../components/demos/SMPCDemo';
+import CAPDemo from '../../components/demos/CAPDemo';
+import TDRDemo from '../../components/demos/TDRDemo';
+import IAMDemo from '../../components/demos/IAMDemo';
+import DAPDemo from '../../components/demos/DAPDemo';
+import CCPDemo from '../../components/demos/CCPDemo';
+import HSCMDemo from '../../components/demos/HSCMDemo';
+import LDADPDemo from '../../components/demos/LDADPDemo';
+import AILuminateDemo from '../../components/demos/AILuminateDemo';
 import ReActDemo from '../../components/demos/ReActDemo';
 import FoTDemo from '../../components/demos/FoTDemo';
 import MCMDemo from '../../components/demos/MCMDemo';
 import TTCDemo from '../../components/demos/TTCDemo';
 import RMCTSDemo from '../../components/demos/RMCTSDemo';
+import AgentBenchDemo from '../../components/demos/AgentBenchDemo';
 import AllDemosShowcase from '../../components/demos/AllDemosShowcase';
 import { patternExamples, type PatternId, type LanguageType } from '../pattern-examples';
 import { patternScenarios } from '../../data/patterns';
@@ -1510,11 +1530,51 @@ export const TechniqueDetails = ({
                           ? 'Interactive multi-layered security architecture demonstrating Swiss Cheese Model with independent defense layers and continuous improvement'
                           : selectedTechnique.id === 'contextual-guardrailing-pattern'
                           ? 'Interactive dynamic rule enforcement demonstrating context-aware decisions with risk-based constraints and adaptive security controls'
+                          : selectedTechnique.id === 'guard-agent-pattern'
+                          ? 'Interactive dedicated guard agent demonstration with input analysis, supervised execution, output filtering, and continuous monitoring'
+                          : selectedTechnique.id === 'intrinsic-alignment-pattern'
+                          ? 'Interactive tamper-proof internal monitoring demonstration with hidden objective detection, deceptive alignment prevention, and pre-impact intervention'
+                          : selectedTechnique.id === 'memory-poisoning-prevention'
+                          ? 'Interactive memory validation demonstration with cryptographic signing, quarantine system, integrity verification, and automated recovery'
+                          : selectedTechnique.id === 'tool-misuse-prevention'
+                          ? 'Interactive tool validation demonstration with intent analysis, risk assessment, permission checking, and execution blocking'
+                          : selectedTechnique.id === 'privilege-compromise-mitigation'
+                          ? 'Interactive access control demonstration with privilege verification, role validation, escalation detection, and continuous monitoring'
+                          : selectedTechnique.id === 'agrail-adaptive-pattern'
+                          ? 'Interactive lifelong learning demonstration with threat detection, violation analysis, rule generation, and continuous refinement'
+                          : selectedTechnique.id === 'maestro-multi-agent-security'
+                          ? 'Interactive multi-agent security demonstration with threat modeling, trust verification, anomaly detection, and coordinated defense'
+                          : selectedTechnique.id === 'system-prompt-protection'
+                          ? 'Interactive prompt protection demonstration with extraction detection, prompt isolation, integrity validation, and response filtering'
+                          : selectedTechnique.id === 'differential-privacy-patterns'
+                          ? 'Interactive privacy-preserving demonstration with epsilon-delta budgets, Laplace noise injection, and mathematical privacy guarantees'
+                          : selectedTechnique.id === 'zero-trust-agent-architecture'
+                          ? 'Interactive zero-trust demonstration with identity verification, authorization checks, request validation, and continuous monitoring'
+                          : selectedTechnique.id === 'secure-multi-party-computation'
+                          ? 'Interactive privacy-preserving collaboration with secret sharing, encrypted computation, and result reconstruction'
+                          : selectedTechnique.id === 'compliance-automation-patterns'
+                          ? 'Interactive regulatory compliance demonstration with automated policy checking, audit trail generation, and enforcement'
+                          : selectedTechnique.id === 'threat-detection-response'
+                          ? 'Interactive threat detection demonstration with real-time monitoring, anomaly detection, automated response, and incident logging'
+                          : selectedTechnique.id === 'identity-access-management'
+                          ? 'Interactive IAM demonstration with multi-factor authentication, role-based authorization, identity validation, and audit logging'
+                          : selectedTechnique.id === 'data-anonymization-patterns'
+                          ? 'Interactive data anonymization with K-anonymity, L-diversity, T-closeness, and synthetic data generation'
+                          : selectedTechnique.id === 'confidential-computing-patterns'
+                          ? 'Interactive confidential computing demonstration with secure enclave initialization, memory encryption, remote attestation, and protected processing'
+                          : selectedTechnique.id === 'hybrid-secret-cache-management'
+                          ? 'Interactive multi-tier storage demonstration with data classification, tier placement, cache operations, and synchronization'
+                          : selectedTechnique.id === 'local-distant-agent-data-protection'
+                          ? 'Interactive local-distant agent architecture with privacy-preserving data processing, anonymization techniques, and federated aggregation'
+                          : selectedTechnique.id === 'mlcommons-ai-safety'
+                          ? 'Interactive safety benchmark evaluation with 12 hazard categories, automated testing, and standardized grading system'
+                          : selectedTechnique.id === 'agentbench'
+                          ? 'Interactive LLM agent evaluation across 8 environments with multi-turn testing and comprehensive capability assessment'
                           : 'Hands-on demonstration of the technique'
                         }
                       </span>
                       <span className="text-xs text-gray-500">
-                        {selectedTechnique.id === 'feedback-chaining' || selectedTechnique.id === 'hierarchical-chaining' || selectedTechnique.id === 'iterative-refinement' || selectedTechnique.id === 'parallel-synthesis' || selectedTechnique.id === 'dynamic-routing' || selectedTechnique.id === 'dynamic-context-assembly' || selectedTechnique.id === 'message-queuing' || selectedTechnique.id === 'latent-memory-networks' || selectedTechnique.id === 'adaptive-context-depth' || selectedTechnique.id === 'latent-knowledge-retrieval' || selectedTechnique.id === 'context-compression-advanced' || selectedTechnique.id === 'multimodal-context-integration' || selectedTechnique.id === 'sliding-window' || selectedTechnique.id === 'hierarchical-memory' || selectedTechnique.id === 'attention-mechanisms' || selectedTechnique.id === 'memory-consolidation' || selectedTechnique.id === 'working-memory-patterns' || selectedTechnique.id === 'contextual-unstructured-memory' || selectedTechnique.id === 'reinforcement-learning-from-human-feedback' || selectedTechnique.id === 'direct-preference-optimization' || selectedTechnique.id === 'in-context-learning' || selectedTechnique.id === 'meta-learning' || selectedTechnique.id === 'continual-learning' || selectedTechnique.id === 'least-to-most' || selectedTechnique.id === 'analogical-reasoning' || selectedTechnique.id === 'causal-reasoning' || selectedTechnique.id === 'abductive-reasoning' || selectedTechnique.id === 'step-back-prompting' || selectedTechnique.id === 'buffer-of-thoughts' || selectedTechnique.id === 'skeleton-of-thoughts' || selectedTechnique.id === 'layered-defense-pattern' || selectedTechnique.id === 'contextual-guardrailing-pattern' || selectedTechnique.id === 'context-compression' || selectedTechnique.id === 'content-based-routing' || selectedTechnique.id === 'capability-routing' || selectedTechnique.id === 'load-balancing' || selectedTechnique.id === 'geographic-routing' || selectedTechnique.id === 'map-reduce' || selectedTechnique.id === 'scatter-gather' || selectedTechnique.id === 'fork-join' || selectedTechnique.id === 'async-await' || selectedTechnique.id === 'self-critique' || selectedTechnique.id === 'producer-critic' || selectedTechnique.id === 'producer-critic-pattern' || selectedTechnique.id === 'llm-as-judge' || selectedTechnique.id === 'reflexion-pattern' || selectedTechnique.id === 'meta-reasoning' || selectedTechnique.id === 'hierarchical-task-network-planning' || selectedTechnique.id === 'task-management-orchestration' || selectedTechnique.id === 'a2a-protocol' || selectedTechnique.id === 'supervisor-worker-pattern' || selectedTechnique.id === 'shared-scratchpad-collaboration' || selectedTechnique.id === 'sequential-pipeline-agents' || selectedTechnique.id === 'concurrent-orchestration' || selectedTechnique.id === 'handoff-orchestration' || selectedTechnique.id === 'peer-collaboration' || selectedTechnique.id === 'function-calling' || selectedTechnique.id === 'code-execution' || selectedTechnique.id === 'hierarchical-planning' || selectedTechnique.id === 'goal-decomposition' || selectedTechnique.id === 'constraint-satisfaction' || selectedTechnique.id === 'scenario-planning' || selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining' || selectedTechnique.id === 'conditional-chaining' || selectedTechnique.id === 'embedding-based-routing' || selectedTechnique.id === 'rule-based-routing' || selectedTechnique.id === 'machine-learning-model-based-routing' ? 'Interactive demo available' : 'Demo coming soon'}
+                        {selectedTechnique.id === 'feedback-chaining' || selectedTechnique.id === 'hierarchical-chaining' || selectedTechnique.id === 'iterative-refinement' || selectedTechnique.id === 'parallel-synthesis' || selectedTechnique.id === 'dynamic-routing' || selectedTechnique.id === 'dynamic-context-assembly' || selectedTechnique.id === 'message-queuing' || selectedTechnique.id === 'latent-memory-networks' || selectedTechnique.id === 'adaptive-context-depth' || selectedTechnique.id === 'latent-knowledge-retrieval' || selectedTechnique.id === 'context-compression-advanced' || selectedTechnique.id === 'multimodal-context-integration' || selectedTechnique.id === 'sliding-window' || selectedTechnique.id === 'hierarchical-memory' || selectedTechnique.id === 'attention-mechanisms' || selectedTechnique.id === 'memory-consolidation' || selectedTechnique.id === 'working-memory-patterns' || selectedTechnique.id === 'contextual-unstructured-memory' || selectedTechnique.id === 'reinforcement-learning-from-human-feedback' || selectedTechnique.id === 'direct-preference-optimization' || selectedTechnique.id === 'in-context-learning' || selectedTechnique.id === 'meta-learning' || selectedTechnique.id === 'continual-learning' || selectedTechnique.id === 'least-to-most' || selectedTechnique.id === 'analogical-reasoning' || selectedTechnique.id === 'causal-reasoning' || selectedTechnique.id === 'abductive-reasoning' || selectedTechnique.id === 'step-back-prompting' || selectedTechnique.id === 'buffer-of-thoughts' || selectedTechnique.id === 'skeleton-of-thoughts' || selectedTechnique.id === 'layered-defense-pattern' || selectedTechnique.id === 'contextual-guardrailing-pattern' || selectedTechnique.id === 'guard-agent-pattern' || selectedTechnique.id === 'intrinsic-alignment-pattern' || selectedTechnique.id === 'memory-poisoning-prevention' || selectedTechnique.id === 'tool-misuse-prevention' || selectedTechnique.id === 'privilege-compromise-mitigation' || selectedTechnique.id === 'agrail-adaptive-pattern' || selectedTechnique.id === 'maestro-multi-agent-security' || selectedTechnique.id === 'system-prompt-protection' || selectedTechnique.id === 'differential-privacy-patterns' || selectedTechnique.id === 'zero-trust-agent-architecture' || selectedTechnique.id === 'secure-multi-party-computation' || selectedTechnique.id === 'compliance-automation-patterns' || selectedTechnique.id === 'threat-detection-response' || selectedTechnique.id === 'identity-access-management' || selectedTechnique.id === 'data-anonymization-patterns' || selectedTechnique.id === 'confidential-computing-patterns' || selectedTechnique.id === 'hybrid-secret-cache-management' || selectedTechnique.id === 'local-distant-agent-data-protection' || selectedTechnique.id === 'mlcommons-ai-safety' || selectedTechnique.id === 'agentbench' || selectedTechnique.id === 'context-compression' || selectedTechnique.id === 'content-based-routing' || selectedTechnique.id === 'capability-routing' || selectedTechnique.id === 'load-balancing' || selectedTechnique.id === 'geographic-routing' || selectedTechnique.id === 'map-reduce' || selectedTechnique.id === 'scatter-gather' || selectedTechnique.id === 'fork-join' || selectedTechnique.id === 'async-await' || selectedTechnique.id === 'self-critique' || selectedTechnique.id === 'producer-critic' || selectedTechnique.id === 'producer-critic-pattern' || selectedTechnique.id === 'llm-as-judge' || selectedTechnique.id === 'reflexion-pattern' || selectedTechnique.id === 'meta-reasoning' || selectedTechnique.id === 'hierarchical-task-network-planning' || selectedTechnique.id === 'task-management-orchestration' || selectedTechnique.id === 'a2a-protocol' || selectedTechnique.id === 'supervisor-worker-pattern' || selectedTechnique.id === 'shared-scratchpad-collaboration' || selectedTechnique.id === 'sequential-pipeline-agents' || selectedTechnique.id === 'concurrent-orchestration' || selectedTechnique.id === 'handoff-orchestration' || selectedTechnique.id === 'peer-collaboration' || selectedTechnique.id === 'function-calling' || selectedTechnique.id === 'code-execution' || selectedTechnique.id === 'hierarchical-planning' || selectedTechnique.id === 'goal-decomposition' || selectedTechnique.id === 'constraint-satisfaction' || selectedTechnique.id === 'scenario-planning' || selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining' || selectedTechnique.id === 'conditional-chaining' || selectedTechnique.id === 'embedding-based-routing' || selectedTechnique.id === 'rule-based-routing' || selectedTechnique.id === 'machine-learning-model-based-routing' ? 'Interactive demo available' : 'Demo coming soon'}
                       </span>
                     </div>
                   </div>
@@ -1628,6 +1688,46 @@ export const TechniqueDetails = ({
                     <LDPDemo />
                   ) : selectedTechnique.id === 'contextual-guardrailing-pattern' ? (
                     <CGPDemo />
+                  ) : selectedTechnique.id === 'guard-agent-pattern' ? (
+                    <GAPDemo />
+                  ) : selectedTechnique.id === 'intrinsic-alignment-pattern' ? (
+                    <IAPDemo />
+                  ) : selectedTechnique.id === 'memory-poisoning-prevention' ? (
+                    <MPPDemo />
+                  ) : selectedTechnique.id === 'tool-misuse-prevention' ? (
+                    <TMPDemo />
+                  ) : selectedTechnique.id === 'privilege-compromise-mitigation' ? (
+                    <PCMDemo />
+                  ) : selectedTechnique.id === 'agrail-adaptive-pattern' ? (
+                    <AAPDemo />
+                  ) : selectedTechnique.id === 'maestro-multi-agent-security' ? (
+                    <MASDemo />
+                  ) : selectedTechnique.id === 'system-prompt-protection' ? (
+                    <SPPDemo />
+                  ) : selectedTechnique.id === 'differential-privacy-patterns' ? (
+                    <DPPDemo />
+                  ) : selectedTechnique.id === 'zero-trust-agent-architecture' ? (
+                    <ZTAADemo />
+                  ) : selectedTechnique.id === 'secure-multi-party-computation' ? (
+                    <SMPCDemo />
+                  ) : selectedTechnique.id === 'compliance-automation-patterns' ? (
+                    <CAPDemo />
+                  ) : selectedTechnique.id === 'threat-detection-response' ? (
+                    <TDRDemo />
+                  ) : selectedTechnique.id === 'identity-access-management' ? (
+                    <IAMDemo />
+                  ) : selectedTechnique.id === 'data-anonymization-patterns' ? (
+                    <DAPDemo />
+                  ) : selectedTechnique.id === 'confidential-computing-patterns' ? (
+                    <CCPDemo />
+                  ) : selectedTechnique.id === 'hybrid-secret-cache-management' ? (
+                    <HSCMDemo />
+                  ) : selectedTechnique.id === 'local-distant-agent-data-protection' ? (
+                    <LDADPDemo />
+                  ) : selectedTechnique.id === 'mlcommons-ai-safety' ? (
+                    <AILuminateDemo />
+                  ) : selectedTechnique.id === 'agentbench' ? (
+                    <AgentBenchDemo />
                   ) : selectedTechnique.id === 'got' ? (
                     <GoTDemo />
                   ) : selectedTechnique.id === 'react' ? (

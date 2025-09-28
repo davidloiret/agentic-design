@@ -2,15 +2,12 @@
 
 import React from 'react';
 import { Code2, Sparkles, GitBranch, FileText, Zap, Users, BookOpen, Target } from 'lucide-react';
-import { UnderConstructionOverlay } from '../../../components/UnderConstructionOverlay';
 
 export default function AIDrivenDevOverviewPage() {
   return (
-    <div className="min-h-screen bg-gray-950 relative">
-      <UnderConstructionOverlay />
-
-      {/* Blurred Content */}
-      <div className="px-8 py-12 filter blur-sm pointer-events-none">
+    <div className="min-h-screen bg-gray-950">
+      {/* Content */}
+      <div className="px-8 py-12">
         {/* Hero Section */}
         <div className="mb-12">
           <div className="flex items-center gap-4 mb-6">

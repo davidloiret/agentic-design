@@ -10,7 +10,7 @@ export default function AIDrivenDevLayout({
   children: React.ReactNode;
   content: React.ReactNode;
 }) {
-  const [expandedSections, setExpandedSections] = useState<string[]>(['getting-started', 'methodologies', 'tools', 'examples']);
+  const [expandedSections, setExpandedSections] = useState<string[]>(['getting-started', 'methodologies', 'workflows', 'tools-platforms', 'examples']);
 
   return (
     <div className="flex relative">

@@ -2,13 +2,11 @@
 
 import React from 'react';
 import { Hexagon, Layers, ArrowRightLeft, Shield, Database, Terminal, Globe, Package, Code2 } from 'lucide-react';
-import { UnderConstructionOverlay } from '../../../../components/UnderConstructionOverlay';
 
 export default function HexagonalArchitecturePage() {
   return (
-    <div className="min-h-screen bg-gray-950 relative">
-      <UnderConstructionOverlay />
-      <div className="px-8 py-12 filter blur-sm pointer-events-none">
+    <div className="min-h-screen bg-gray-950">
+      <div className="px-8 py-12">
         {/* Header */}
         <div className="mb-12">
           <div className="flex items-center gap-4 mb-6">
