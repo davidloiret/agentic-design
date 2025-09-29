@@ -234,14 +234,20 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
   };
 
   const getChapterProgress = (chapterId: string, journeyId: string) => {
-    const progress = journeyProgress[journeyId];
-    if (!progress) return 0;
-
     const chapter = selectedJourney?.chapters.find(c => c.id === chapterId);
     if (!chapter) return 0;
 
+    // Use backend progress data directly
+    // Also check for legacy progress records without journeyId/chapterId
     const completedLessons = chapter.lessons.filter(l =>
-      progress.completedLessons.includes(l.id)
+      progress.some(p => 
+        p.isCompleted && p.lessonId === l.id && (
+          // New records with journey/chapter tracking
+          (p.journeyId === journeyId && p.chapterId === chapterId) ||
+          // Legacy records - just check lesson ID
+          !p.journeyId
+        )
+      )
     ).length;
 
     return (completedLessons / chapter.lessons.length) * 100;
@@ -650,8 +656,18 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
   const renderJourneyDetail = () => {
     if (!selectedJourney) return null;
 
-    const progress = journeyProgress[selectedJourney.id];
-    const completedChapters = progress?.completedChapters.length || 0;
+    // Calculate completed chapters from backend progress
+    const completedChapters = selectedJourney.chapters.filter(chapter => {
+      // A chapter is complete when all its lessons are completed
+      return chapter.lessons.every(lesson =>
+        progress.some(p =>
+          p.journeyId === selectedJourney.id &&
+          p.chapterId === chapter.id &&
+          p.lessonId === lesson.id &&
+          p.isCompleted
+        )
+      );
+    }).length;
 
     return (
       <div className="max-w-6xl mx-auto">
@@ -704,7 +720,7 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
             // Dev mode: unlock all chapters for testing
             const isUnlocked = process.env.NEXT_PUBLIC_DEV_XP_BOOST === 'true' ||
                                !chapter.unlockAfter ||
-                               progress?.completedChapters.includes(chapter.unlockAfter);
+                               journeyProgress[selectedJourney.id]?.completedChapters.includes(chapter.unlockAfter);
             const chapterProgress = getChapterProgress(chapter.id, selectedJourney.id);
             const isComplete = chapterProgress === 100;
 
@@ -811,8 +827,18 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
   const renderChapterView = () => {
     if (!selectedChapter || !selectedJourney) return null;
 
-    const progress = journeyProgress[selectedJourney.id];
-    const completedLessons = progress?.completedLessons || [];
+    // Use backend progress data directly to ensure persistence across page reloads
+    // Also check for legacy progress records without journeyId/chapterId
+    const completedLessons = progress
+      .filter(p => 
+        p.isCompleted && (
+          // New records with journey/chapter tracking
+          (p.journeyId === selectedJourney.id && p.chapterId === selectedChapter.id) ||
+          // Legacy records - match by lesson ID if it's in this chapter
+          (!p.journeyId && selectedChapter.lessons.some(l => l.id === p.lessonId))
+        )
+      )
+      .map(p => p.lessonId);
 
     return (
       <div className="max-w-5xl mx-auto">
