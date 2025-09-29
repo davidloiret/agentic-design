@@ -46,8 +46,25 @@ import { BrainMascot } from '@/components/BrainMascot';
 import { learningContent } from '../data/learning-content';
 import { theoryLessons } from '../data/knowledge-representation';
 import { promptingTheoryLessons } from '../data/master-prompting';
+import {
+  introductionToRedTeamingLesson,
+  promptInjectionJailbreakingLesson,
+  adversarialTestingPatternsLesson,
+  securityEvaluationFrameworksLesson,
+  defenseMechanismsLesson
+} from '../data/ai-red-teaming';
 import { allJourneys, Journey, Chapter, Lesson, achievements as journeyAchievements } from '../data/learning-journeys';
 import { motion, AnimatePresence } from 'framer-motion';
+import { QuizQuestion } from '../data/types';
+
+// Red Teaming Theory Lessons mapping
+const redTeamingTheoryLessons: { [key: string]: any } = {
+  'introduction-to-red-teaming': introductionToRedTeamingLesson,
+  'prompt-injection-jailbreaking': promptInjectionJailbreakingLesson,
+  'adversarial-testing-patterns': adversarialTestingPatternsLesson,
+  'security-evaluation-frameworks': securityEvaluationFrameworksLesson,
+  'defense-mechanisms': defenseMechanismsLesson
+};
 
 interface LearningHubJourneyProps {
   techniques?: any[];
@@ -898,56 +915,101 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
     );
   };
 
-  const getQuizContent = (challengeId: string) => {
+  const getQuizContent = (challengeId: string): QuizQuestion[] => {
+    let content;
     switch (challengeId) {
       case 'reasoning-quiz':
-        return learningContent.quizzes.reasoningTechniques;
+        content = learningContent.quizzes.reasoningTechniques;
+        break;
       case 'chaining-quiz':
-        return learningContent.quizzes.promptChaining;
+        content = learningContent.quizzes.promptChaining;
+        break;
       case 'routing-quiz':
-        return learningContent.quizzes.routingTechniques;
+        content = learningContent.quizzes.routingTechniques;
+        break;
       case 'tool-use-quiz':
-        return learningContent.quizzes.toolUse;
+        content = learningContent.quizzes.toolUse;
+        break;
       case 'orchestration-quiz':
-        return learningContent.quizzes.workflowOrchestration;
+        content = learningContent.quizzes.workflowOrchestration;
+        break;
       case 'planning-quiz':
-        return learningContent.quizzes.planningExecution;
+        content = learningContent.quizzes.planningExecution;
+        break;
       case 'agent-fundamentals-quiz':
-        return learningContent.quizzes.agentFundamentals;
+        content = learningContent.quizzes.agentFundamentals;
+        break;
       case 'agent-architectures-quiz':
-        return learningContent.quizzes.agentArchitectures;
+        content = learningContent.quizzes.agentArchitectures;
+        break;
       case 'set-theory-fundamentals-quiz':
-        return learningContent.quizzes.setTheoryFundamentals;
+        content = learningContent.quizzes.setTheoryFundamentals;
+        break;
       case 'graph-theory-quiz':
-        return learningContent.quizzes.graphTheory;
+        content = learningContent.quizzes.graphTheory;
+        break;
       case 'logic-fundamentals-quiz':
-        return learningContent.quizzes.logicFundamentals;
+        content = learningContent.quizzes.logicFundamentals;
+        break;
       case 'linear-algebra-quiz':
-        return learningContent.quizzes.linearAlgebra;
+        content = learningContent.quizzes.linearAlgebra;
+        break;
       case 'conditional-probability-quiz':
-        return learningContent.quizzes.conditionalProbability;
+        content = learningContent.quizzes.conditionalProbability;
+        break;
       case 'probability-statistics-quiz':
-        return learningContent.quizzes.conditionalProbability;
+        content = learningContent.quizzes.conditionalProbability;
+        break;
       case 'ontologies-quiz':
-        return learningContent.quizzes.ontologies;
+        content = learningContent.quizzes.ontologies;
+        break;
       case 'knowledge-graphs-quiz':
-        return learningContent.quizzes.knowledgeGraphs;
+        content = learningContent.quizzes.knowledgeGraphs;
+        break;
       case 'neural-symbolic-quiz':
-        return learningContent.quizzes.neuralSymbolic;
+        content = learningContent.quizzes.neuralSymbolic;
+        break;
       // Master Prompting Quizzes
       case 'basic-prompting-quiz':
-        return learningContent.quizzes.basicPrompting;
+        content = learningContent.quizzes.basicPrompting;
+        break;
       case 'prompt-patterns-quiz':
-        return learningContent.quizzes.promptPatterns;
+        content = learningContent.quizzes.promptPatterns;
+        break;
       case 'advanced-prompting-quiz':
-        return learningContent.quizzes.advancedPrompting;
+        content = learningContent.quizzes.advancedPrompting;
+        break;
       case 'optimization-testing-quiz':
-        return learningContent.quizzes.optimizationTesting;
+        content = learningContent.quizzes.optimizationTesting;
+        break;
       case 'practical-application-quiz':
-        return learningContent.quizzes.practicalApplication;
+        content = learningContent.quizzes.practicalApplication;
+        break;
+      // AI Red Teaming Quizzes
+      case 'red-team-fundamentals-quiz':
+        content = learningContent.quizzes.redTeamFundamentals;
+        break;
+      case 'prompt-injection-quiz':
+        content = learningContent.quizzes.promptInjection;
+        break;
+      case 'adversarial-testing-quiz':
+        content = learningContent.quizzes.adversarialTesting;
+        break;
+      case 'security-frameworks-quiz':
+        content = learningContent.quizzes.securityFrameworks;
+        break;
+      case 'defense-mechanisms-quiz':
+        content = learningContent.quizzes.defenseMechanisms;
+        break;
+      case 'advanced-red-teaming-quiz':
+        content = learningContent.quizzes.advancedRedTeaming;
+        break;
       default:
         return [];
     }
+
+    // Handle both Quiz objects (with questions property) and QuizQuestion[] arrays
+    return Array.isArray(content) ? content : content.questions;
   };
 
   const getFlashcardContent = (challengeId: string) => {
@@ -1009,6 +1071,11 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
         return learningContent.flashcards.advancedTechniques;
       case 'common-pitfalls-flashcards':
         return learningContent.flashcards.commonPitfalls;
+      // AI Red Teaming Flashcards
+      case 'red-team-flashcards':
+        return learningContent.flashcards.redTeamFundamentals;
+      case 'red-team-operations-flashcards':
+        return learningContent.flashcards.redTeamOperations;
       default:
         return [];
     }
@@ -1026,7 +1093,12 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
       'build-prompt-chain': 'build-prompt-chain-challenge',
       'implement-self-consistency': 'implement-self-consistency-challenge',
       'implement-prompt-testing': 'implement-prompt-testing-challenge',
-      'build-prompt-library': 'build-prompt-library-challenge'
+      'build-prompt-library': 'build-prompt-library-challenge',
+      // AI Red Teaming Code Challenges
+      'prompt-injection-detector': 'prompt-injection-challenge',
+      'adversarial-example-generator': 'adversarial-generator-challenge',
+      'security-evaluation-framework': 'security-evaluation-challenge',
+      'defensive-ai-system': 'defensive-system-challenge'
     };
     
     const actualChallengeId = challengeMapping[challengeId] || challengeId;
@@ -1118,7 +1190,7 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
     }
 
     if (selectedLesson.type === 'theory') {
-      const theoryLesson = theoryLessons[selectedLesson.id] || promptingTheoryLessons[selectedLesson.id];
+      const theoryLesson = theoryLessons[selectedLesson.id] || promptingTheoryLessons[selectedLesson.id] || redTeamingTheoryLessons[selectedLesson.id];
       if (theoryLesson) {
         return breadcrumbsWrapper(
           <TheoryLessonComponent
@@ -1135,6 +1207,82 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
           />
         );
       }
+    }
+
+    // Handle case-study lessons
+    if (selectedLesson.type === 'case-study') {
+      // For now, create a placeholder case study content
+      // In the future, this could be replaced with dedicated case study content
+      const caseStudyContent = {
+        id: selectedLesson.id,
+        title: selectedLesson.title,
+        description: selectedLesson.description,
+        learningObjectives: [
+          'Apply theoretical knowledge to practical scenarios',
+          'Develop end-to-end solutions for complex problems',
+          'Demonstrate mastery of journey concepts',
+          'Build portfolio-worthy projects'
+        ],
+        sections: [
+          {
+            id: 'case-study-overview',
+            title: 'Case Study Overview',
+            content: `In this comprehensive case study, you'll work through a realistic scenario that requires applying multiple concepts and techniques from your learning journey. This hands-on project will test your understanding and ability to implement solutions in practice.`,
+            examples: []
+          },
+          {
+            id: 'project-requirements',
+            title: 'Project Requirements',
+            content: `• Analyze the given scenario and identify key challenges
+• Design a solution using the patterns and techniques you've learned
+• Implement your solution with proper documentation
+• Test and validate your approach
+• Present your findings and recommendations`,
+            examples: []
+          },
+          {
+            id: 'assessment-criteria',
+            title: 'Assessment Criteria',
+            content: `Your work will be evaluated based on:
+• Correctness and completeness of the solution
+• Application of learned concepts and best practices
+• Code quality and documentation
+• Innovation and creative problem-solving
+• Performance and optimization considerations`,
+            examples: []
+          }
+        ],
+        summary: [
+          'This capstone project brings together all the concepts you\'ve learned in this journey.',
+          'You\'ll analyze real-world scenarios and apply your knowledge to solve complex problems.'
+        ],
+        nextSteps: [
+          'Complete the case study project',
+          'Review and refine your solution',
+          'Share your work with the community'
+        ],
+        checkYourUnderstanding: [
+          {
+            question: 'What are the key concepts you applied in this case study?',
+            answer: 'Review the patterns and techniques you used throughout the project.'
+          }
+        ]
+      };
+
+      return breadcrumbsWrapper(
+        <TheoryLessonComponent
+          lesson={caseStudyContent}
+          xpReward={selectedLesson.xpReward}
+          onComplete={(score, xpEarned) => {
+            if (isQuickPractice) {
+              exitAction();
+            } else {
+              handleLessonComplete(selectedLesson.id, score, xpEarned);
+            }
+          }}
+          onExit={exitAction}
+        />
+      );
     }
 
     // Default content for other lesson types

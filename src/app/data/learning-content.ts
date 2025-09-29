@@ -1686,6 +1686,22 @@ import {
   allPromptingCodeChallenges
 } from './master-prompting';
 
+import {
+  redTeamFundamentalsFlashcards,
+  redTeamOperationsFlashcards,
+  redTeamFundamentalsQuiz,
+  promptInjectionQuiz,
+  adversarialTestingQuiz,
+  securityFrameworksQuiz,
+  defenseMechanismsQuiz,
+  advancedRedTeamingQuiz,
+  promptInjectionChallenge,
+  adversarialGeneratorChallenge,
+  securityEvaluationChallenge,
+  defensiveSystemChallenge,
+  allRedTeamingCodeChallenges
+} from './ai-red-teaming';
+
 // ================================
 // KNOWLEDGE REPRESENTATION CONTENT
 // ================================
@@ -1731,6 +1747,12 @@ export const learningContent = {
     advancedPrompting: advancedPromptingQuiz,
     optimizationTesting: optimizationTestingQuiz,
     practicalApplication: practicalApplicationQuiz,
+    redTeamFundamentals: redTeamFundamentalsQuiz,
+    promptInjection: promptInjectionQuiz,
+    adversarialTesting: adversarialTestingQuiz,
+    securityFrameworks: securityFrameworksQuiz,
+    defenseMechanisms: defenseMechanismsQuiz,
+    advancedRedTeaming: advancedRedTeamingQuiz,
     all: allQuizQuestions
   },
   flashcards: {
@@ -1760,8 +1782,10 @@ export const learningContent = {
     chainOfThought: chainOfThoughtFlashcards,
     advancedTechniques: advancedTechniquesFlashcards,
     commonPitfalls: commonPitfallsFlashcards,
+    redTeamFundamentals: redTeamFundamentalsFlashcards,
+    redTeamOperations: redTeamOperationsFlashcards,
     all: allFlashcards
   },
-  codeChallenges: [...advancedCodeChallenges, ...knowledgeRepresentationCodeChallenges, ...allPromptingCodeChallenges],
+  codeChallenges: [...advancedCodeChallenges, ...knowledgeRepresentationCodeChallenges, ...allPromptingCodeChallenges, ...allRedTeamingCodeChallenges],
   patternSelectionChallenges: advancedPatternSelectionChallenges
 }; 

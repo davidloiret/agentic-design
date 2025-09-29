@@ -7,8 +7,11 @@ interface QuizQuestion {
   options: string[];
   correctAnswer: number;
   explanation: string;
-  difficulty: 'easy' | 'medium' | 'hard';
-  topic: string;
+  difficulty: 'easy' | 'medium' | 'hard' | 'beginner' | 'intermediate' | 'advanced';
+  topic?: string;
+  category?: string;
+  tags?: string[];
+  conceptsCovered?: string[];
 }
 
 interface QuizComponentProps {

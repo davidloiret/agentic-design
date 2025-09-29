@@ -23,9 +23,10 @@ interface CodeChallenge {
   id: string;
   title: string;
   description: string;
-  difficulty: 'easy' | 'medium' | 'hard';
-  topic: string;
-  template: string;
+  difficulty: 'easy' | 'medium' | 'hard' | 'beginner' | 'intermediate' | 'advanced';
+  topic?: string;
+  template?: string;
+  starterCode?: string;
   solution: string;
   tests: {
     input: any;

@@ -6,11 +6,15 @@ interface Flashcard {
   id: string;
   front: string;
   back: string;
-  difficulty: 'easy' | 'medium' | 'hard';
-  topic: string;
+  difficulty: 'beginner' | 'intermediate' | 'advanced' | 'easy' | 'medium' | 'hard';
+  category?: string;
+  topic?: string;
+  xpReward?: number;
+  tags?: string[];
+  relatedConcepts?: string[];
   lastReviewed?: Date;
-  reviewCount: number;
-  correctCount: number;
+  reviewCount?: number;
+  correctCount?: number;
 }
 
 interface FlashcardComponentProps {
