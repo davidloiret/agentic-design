@@ -5,7 +5,7 @@ import { CodeChallenge } from '../learning-content';
 // ===========================================
 
 export const implementFewShotChallenge: CodeChallenge = {
-  id: 'implement-few-shot',
+  id: 'implement-few-shot-challenge',
   title: 'Implement Few-Shot Prompting System',
   description: `Build a few-shot prompting system that can learn patterns from examples and apply them to new inputs.
 
@@ -302,7 +302,7 @@ This challenge teaches you how to:
 // ===========================================
 
 export const implementCoTPromptChallenge: CodeChallenge = {
-  id: 'implement-cot-prompt',
+  id: 'implement-cot-prompt-challenge',
   title: 'Build Chain of Thought Reasoning System',
   description: `Implement a Chain of Thought (CoT) prompting system that guides AI through step-by-step reasoning.
 
@@ -604,7 +604,7 @@ Learn how to:
 // ===========================================
 
 export const buildPromptChainChallenge: CodeChallenge = {
-  id: 'build-prompt-chain',
+  id: 'build-prompt-chain-challenge',
   title: 'Build Advanced Prompt Chaining System',
   description: `Create a sophisticated prompt chaining system that orchestrates multiple prompts for complex tasks.
 
@@ -1069,7 +1069,7 @@ class PromptChainOrchestrator:
 // ===========================================
 
 export const implementSelfConsistencyChallenge: CodeChallenge = {
-  id: 'implement-self-consistency',
+  id: 'implement-self-consistency-challenge',
   title: 'Implement Self-Consistency Verification',
   description: `Build a self-consistency system that improves prompt reliability through multiple sampling and voting.
 
@@ -1437,7 +1437,7 @@ class SelfConsistencySystem:
 // ===========================================
 
 export const implementPromptTestingChallenge: CodeChallenge = {
-  id: 'implement-prompt-testing',
+  id: 'implement-prompt-testing-challenge',
   title: 'Build Prompt A/B Testing Framework',
   description: `Create a comprehensive A/B testing framework for prompt optimization.
 
@@ -1841,7 +1841,7 @@ class PromptABTestingFramework:
 // ===========================================
 
 export const buildPromptLibraryChallenge: CodeChallenge = {
-  id: 'build-prompt-library',
+  id: 'build-prompt-library-challenge',
   title: 'Build Reusable Prompt Template Library',
   description: `Create a production-ready prompt template library with versioning and optimization.
 
