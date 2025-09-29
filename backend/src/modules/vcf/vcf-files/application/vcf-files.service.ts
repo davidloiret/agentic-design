@@ -18,7 +18,7 @@ interface UploadOptions {
   expiresAt?: Date;
 }
 
-interface FileUploadResult {
+export interface FileUploadResult {
   fileId: string;
   filename: string;
   size: number;

@@ -26,6 +26,14 @@ export class VcfSubscriptionsRepository {
     return this.repository.findOne({ user: { id: userId } }, { populate: ['user'] });
   }
 
+  async findByStripeId(stripeSubscriptionId: string): Promise<VcfSubscriptionEntity | null> {
+    return this.repository.findOne({ stripeSubscriptionId }, { populate: ['user'] });
+  }
+
+  async findByStripeCustomerId(stripeCustomerId: string): Promise<VcfSubscriptionEntity | null> {
+    return this.repository.findOne({ stripeCustomerId }, { populate: ['user'] });
+  }
+
   async findActiveSubscriptions(): Promise<VcfSubscriptionEntity[]> {
     return this.repository.find({ status: VcfSubscriptionStatus.ACTIVE }, { populate: ['user'] });
   }

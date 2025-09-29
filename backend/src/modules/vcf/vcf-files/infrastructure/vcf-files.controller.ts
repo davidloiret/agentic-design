@@ -18,7 +18,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '../../../auth/infrastructure/guard/auth.guard';
-import { VcfFilesService } from '../application/vcf-files.service';
+import { VcfFilesService, FileUploadResult } from '../application/vcf-files.service';
 import { VcfFileAccessLevel } from '../domain/vcf-file.entity';
 import { Express } from 'express';
 
@@ -41,7 +41,7 @@ export class VcfFilesController {
       tags?: string[];
       accessLevel?: VcfFileAccessLevel;
     },
-  ) {
+  ): Promise<FileUploadResult> {
     return this.filesService.uploadFile(req.user, file, {
       entityType: body.entityType,
       entityId: body.entityId,
@@ -103,7 +103,7 @@ export class VcfFilesController {
       'Content-Length': file.size,
     });
 
-    return new StreamableFile(stream);
+    return new StreamableFile(stream as any);
   }
 
   @Delete(':id')

@@ -43,7 +43,7 @@ export enum VcfPaymentEventStatus {
 }
 
 @Entity({ tableName: 'vcf_payment_events' })
-@Index({ properties: ['stripeEventId'], unique: true })
+@Index({ properties: ['stripeEventId'], options: { unique: true } })
 @Index({ properties: ['type', 'status'] })
 @Index({ properties: ['user', 'createdAt'] })
 export class VcfPaymentEventEntity extends BaseEntity {

@@ -29,17 +29,23 @@ export class VcfPaymentsService {
   ) {
     const stripeSecretKey = this.configService.get('STRIPE_SECRET_KEY');
     if (!stripeSecretKey) {
-      this.logger.error('Stripe secret key not configured');
+      this.logger.warn('Stripe secret key not configured - payment functionality disabled');
+      this.stripe = null;
+    } else {
+      this.stripe = new Stripe(stripeSecretKey, {
+        apiVersion: '2025-08-27.basil' as any,
+      });
     }
-
-    this.stripe = new Stripe(stripeSecretKey, {
-      apiVersion: '2025-08-27.basil' as any,
-    });
 
     this.webhookSecret = this.configService.get('STRIPE_WEBHOOK_SECRET', '');
   }
 
   async handleWebhook(body: string, signature: string): Promise<void> {
+    if (!this.stripe) {
+      this.logger.warn('Stripe not configured - webhook ignored');
+      return;
+    }
+
     let event: Stripe.Event;
 
     try {
@@ -165,15 +171,19 @@ export class VcfPaymentsService {
 
     const tier = this.mapStripePriceToTier(subscription.items.data[0].price.id);
 
-    const vcfSubscription = await this.subscriptionsService.createSubscription(user, {
+    const vcfSubscription = await this.subscriptionsService.createSubscription(
+      user,
       tier,
-      stripeSubscriptionId: subscription.id,
-      stripeCustomerId: subscription.customer as string,
-      status: VcfSubscriptionStatus.ACTIVE,
-      startDate: new Date(subscription.current_period_start * 1000),
-      endDate: new Date(subscription.current_period_end * 1000),
-      cancelAtPeriodEnd: subscription.cancel_at_period_end,
-    });
+      subscription.customer as string
+    );
+
+    // Update subscription with Stripe details
+    vcfSubscription.stripeSubscriptionId = subscription.id;
+    vcfSubscription.status = VcfSubscriptionStatus.ACTIVE;
+    vcfSubscription.startDate = new Date((subscription as any).current_period_start * 1000);
+    vcfSubscription.endDate = new Date((subscription as any).current_period_end * 1000);
+    vcfSubscription.cancelAtPeriodEnd = subscription.cancel_at_period_end;
+    // Note: The repository.update method will be called internally
 
     paymentEvent.user = user;
     paymentEvent.subscription = vcfSubscription;
@@ -204,7 +214,7 @@ export class VcfPaymentsService {
 
     vcfSubscription.tier = newTier;
     vcfSubscription.status = this.mapStripeStatusToVcf(subscription.status);
-    vcfSubscription.endDate = new Date(subscription.current_period_end * 1000);
+    vcfSubscription.endDate = new Date((subscription as any).current_period_end * 1000);
     vcfSubscription.cancelAtPeriodEnd = subscription.cancel_at_period_end;
 
     await this.subscriptionsService.updateSubscription(vcfSubscription);
@@ -251,9 +261,9 @@ export class VcfPaymentsService {
     paymentEvent: VcfPaymentEventEntity,
     invoice: Stripe.Invoice
   ): Promise<void> {
-    if (!invoice.subscription) return;
+    if (!(invoice as any).subscription) return;
 
-    const vcfSubscription = await this.subscriptionsService.findByStripeId(invoice.subscription as string);
+    const vcfSubscription = await this.subscriptionsService.findByStripeId((invoice as any).subscription as string);
     if (!vcfSubscription) return;
 
     vcfSubscription.lastPaymentDate = new Date();
@@ -279,9 +289,9 @@ export class VcfPaymentsService {
     paymentEvent: VcfPaymentEventEntity,
     invoice: Stripe.Invoice
   ): Promise<void> {
-    if (!invoice.subscription) return;
+    if (!(invoice as any).subscription) return;
 
-    const vcfSubscription = await this.subscriptionsService.findByStripeId(invoice.subscription as string);
+    const vcfSubscription = await this.subscriptionsService.findByStripeId((invoice as any).subscription as string);
     if (!vcfSubscription) return;
 
     vcfSubscription.paymentFailedCount = (vcfSubscription.paymentFailedCount || 0) + 1;

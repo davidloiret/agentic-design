@@ -48,6 +48,21 @@ export class VcfSubscriptionEntity extends BaseEntity {
   @Property()
   cancelledAt?: Date;
 
+  @Property()
+  startDate?: Date;
+
+  @Property()
+  endDate?: Date;
+
+  @Property()
+  cancelAtPeriodEnd?: boolean;
+
+  @Property()
+  lastPaymentDate?: Date;
+
+  @Property()
+  lastPaymentAmount?: number;
+
   @Property({ type: 'json' })
   features: {
     questionsPerMonth?: number;

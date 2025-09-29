@@ -162,4 +162,17 @@ export class VcfSubscriptionsService {
   async resetMonthlyUsage(): Promise<void> {
     await this.subscriptionsRepository.resetAllMonthlyUsage();
   }
+
+  async updateSubscription(subscription: VcfSubscriptionEntity): Promise<void> {
+    await this.subscriptionsRepository.update(subscription);
+  }
+
+  async findByStripeId(stripeSubscriptionId: string): Promise<VcfSubscriptionEntity | null> {
+    return this.subscriptionsRepository.findByStripeId(stripeSubscriptionId);
+  }
+
+  async getUserByStripeCustomerId(stripeCustomerId: string): Promise<User | null> {
+    const subscription = await this.subscriptionsRepository.findByStripeCustomerId(stripeCustomerId);
+    return subscription?.user || null;
+  }
 }
