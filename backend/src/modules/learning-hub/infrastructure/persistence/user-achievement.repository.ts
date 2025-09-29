@@ -49,7 +49,10 @@ export class UserAchievementRepository implements IUserAchievementRepository {
   }
 
   async update(achievement: UserAchievement): Promise<UserAchievement> {
-    await this.repository.getEntityManager().flush();
+    // Merge the entity to ensure it's managed by the current entity manager
+    const em = this.repository.getEntityManager();
+    em.persist(achievement);
+    await em.flush();
     return achievement;
   }
 

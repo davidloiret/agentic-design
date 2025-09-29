@@ -37,7 +37,10 @@ export class UserProgressRepository implements IUserProgressRepository {
   }
 
   async update(progress: UserProgress): Promise<UserProgress> {
-    await this.repository.getEntityManager().flush();
+    // Merge the entity to ensure it's managed by the current entity manager
+    const em = this.repository.getEntityManager();
+    em.persist(progress);
+    await em.flush();
     return progress;
   }
 

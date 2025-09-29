@@ -23,7 +23,10 @@ export class UserXpRepository implements IUserXpRepository {
   }
 
   async update(userXp: UserXp): Promise<UserXp> {
-    await this.repository.getEntityManager().flush();
+    // Merge the entity to ensure it's managed by the current entity manager
+    const em = this.repository.getEntityManager();
+    em.persist(userXp);
+    await em.flush();
     return userXp;
   }
 

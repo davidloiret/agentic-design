@@ -23,7 +23,10 @@ export class UserStreakRepository implements IUserStreakRepository {
   }
 
   async update(streak: UserStreak): Promise<UserStreak> {
-    await this.repository.getEntityManager().flush();
+    // Merge the entity to ensure it's managed by the current entity manager
+    const em = this.repository.getEntityManager();
+    em.persist(streak);
+    await em.flush();
     return streak;
   }
 
