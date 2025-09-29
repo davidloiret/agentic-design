@@ -1,6 +1,8 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { 
   Trophy, 
   Star, 
@@ -252,31 +254,33 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
     if (breadcrumbs.length === 1) return null;
 
     return (
-      <nav className="mb-6 flex items-center space-x-2 text-sm">
-        {breadcrumbs.map((crumb, index) => (
-          <React.Fragment key={index}>
-            {index > 0 && (
-              <ChevronRight className="w-4 h-4 text-gray-500" />
-            )}
-            {crumb.onClick ? (
-              <button
-                onClick={crumb.onClick}
-                className={`transition-colors ${
-                  crumb.isActive
-                    ? 'text-white font-medium'
-                    : 'text-gray-400 hover:text-white'
-                }`}
-              >
-                {crumb.label}
-              </button>
-            ) : (
-              <span className="text-white font-medium">
-                {crumb.label}
-              </span>
-            )}
-          </React.Fragment>
-        ))}
-      </nav>
+      <div className="bg-gray-800/30 backdrop-blur-sm border-b border-gray-700/50 -mx-6 mb-6">
+        <nav className="max-w-7xl mx-auto px-6 py-3 flex items-center space-x-2 text-sm">
+          {breadcrumbs.map((crumb, index) => (
+            <React.Fragment key={index}>
+              {index > 0 && (
+                <ChevronRight className="w-4 h-4 text-gray-500" />
+              )}
+              {crumb.onClick ? (
+                <button
+                  onClick={crumb.onClick}
+                  className={`transition-colors ${
+                    crumb.isActive
+                      ? 'text-white font-medium'
+                      : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  {crumb.label}
+                </button>
+              ) : (
+                <span className="text-white font-medium">
+                  {crumb.label}
+                </span>
+              )}
+            </React.Fragment>
+          ))}
+        </nav>
+      </div>
     );
   };
 
@@ -445,7 +449,9 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
                   </div>
 
                   <h3 className="text-2xl font-bold text-white mb-3">{journey.title}</h3>
-                  <p className="text-gray-300 mb-6">{journey.description}</p>
+                  <div className="text-gray-300 mb-6 prose prose-sm prose-invert max-w-none">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{journey.description}</ReactMarkdown>
+                  </div>
 
                   {/* Stats */}
                   <div className="space-y-3">
@@ -590,7 +596,9 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-white mb-2">{selectedJourney.title}</h1>
-                <p className="text-gray-300 text-lg mb-4">{selectedJourney.description}</p>
+                <div className="text-gray-300 text-lg mb-4 prose prose-lg prose-invert max-w-none">
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{selectedJourney.description}</ReactMarkdown>
+                </div>
                 <div className="flex items-center space-x-6 text-sm">
                   <div className="flex items-center space-x-2">
                     <BookOpen className="w-4 h-4 text-gray-400" />
@@ -663,7 +671,9 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
                       
                       <div className="flex-1">
                         <h3 className="text-xl font-bold text-white mb-2">{chapter.title}</h3>
-                        <p className="text-gray-300 mb-4">{chapter.description}</p>
+                        <div className="text-gray-300 mb-4 prose prose-sm prose-invert max-w-none">
+                          <ReactMarkdown remarkPlugins={[remarkGfm]}>{chapter.description}</ReactMarkdown>
+                        </div>
                         
                         <div className="flex items-center space-x-6 text-sm">
                           <div className="flex items-center space-x-2">
@@ -746,7 +756,9 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
             </div>
             <div>
               <h1 className="text-3xl font-bold text-white mb-2">{selectedChapter.title}</h1>
-              <p className="text-gray-300">{selectedChapter.description}</p>
+              <div className="text-gray-300 prose prose-base prose-invert max-w-none">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{selectedChapter.description}</ReactMarkdown>
+              </div>
             </div>
           </div>
           
@@ -835,7 +847,9 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
                       
                       <div className="flex-1">
                         <h3 className="text-lg font-medium text-white mb-1">{lesson.title}</h3>
-                        <p className="text-gray-400 text-sm mb-3">{lesson.description}</p>
+                        <div className="text-gray-400 text-sm mb-3 prose prose-sm prose-invert max-w-none">
+                          <ReactMarkdown remarkPlugins={[remarkGfm]}>{lesson.description}</ReactMarkdown>
+                        </div>
                         
                         <div className="flex items-center space-x-4">
                           <span className={`text-xs px-2 py-1 rounded-full ${getDifficultyColor(lesson.difficulty)}`}>
@@ -1128,7 +1142,9 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
       <div className="max-w-4xl mx-auto">
         <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-700">
           <h2 className="text-2xl font-bold text-white mb-4">{selectedLesson.title}</h2>
-          <p className="text-gray-300 mb-6">{selectedLesson.description}</p>
+          <div className="text-gray-300 mb-6 prose prose-base prose-invert max-w-none">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{selectedLesson.description}</ReactMarkdown>
+          </div>
           
           <div className="bg-gray-900/50 rounded-xl p-6 mb-6">
             <p className="text-gray-400 text-center">
@@ -1823,7 +1839,9 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
                       </div>
                       
                       <h4 className="font-semibold text-white mb-2">{achievement.title}</h4>
-                      <p className="text-gray-400 text-sm mb-4">{achievement.description}</p>
+                      <div className="text-gray-400 text-sm mb-4 prose prose-sm prose-invert max-w-none">
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{achievement.description}</ReactMarkdown>
+                      </div>
                       
                       <div className="space-y-2">
                         <div className="flex justify-between text-xs">
