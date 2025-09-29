@@ -1561,12 +1561,75 @@ export const allQuizQuestions: QuizQuestion[] = [
 ];
 
 // Import AI Agent learning content
-import { 
+import {
   agentComponentsFlashcards,
   agentArchitecturesFlashcards,
   agentFundamentalsQuiz,
   agentArchitecturesQuiz
 } from './ai-agent-learning-content';
+
+// Import Knowledge Representation content
+import {
+  setNotationFlashcards,
+  setOperationsFlashcards,
+  graphTypesFlashcards,
+  graphTerminologyFlashcards,
+  propositionalLogicFlashcards,
+  relationsPropertiesFlashcards,
+  vectorsFlashcards,
+  probabilityBasicsFlashcards,
+  distributionsFlashcards,
+  ontologiesFlashcards,
+  knowledgeGraphsFlashcards,
+  neuralSymbolicFlashcards,
+  setTheoryQuiz,
+  graphTheoryQuiz,
+  logicQuiz,
+  linearAlgebraQuiz,
+  probabilityQuiz,
+  ontologiesQuiz,
+  knowledgeGraphsQuiz,
+  neuralSymbolicQuiz,
+  knowledgeRepresentationCodeChallenges
+} from './knowledge-representation';
+
+// Import Master Prompting content
+import {
+  promptComponentsFlashcards,
+  zeroShotPromptingFlashcards,
+  fewShotPromptingFlashcards,
+  chainOfThoughtFlashcards,
+  advancedTechniquesFlashcards,
+  commonPitfallsFlashcards,
+  basicPromptingQuiz,
+  promptPatternsQuiz,
+  advancedPromptingQuiz,
+  optimizationTestingQuiz,
+  practicalApplicationQuiz,
+  allPromptingCodeChallenges
+} from './master-prompting';
+
+// ================================
+// KNOWLEDGE REPRESENTATION CONTENT
+// ================================
+
+// Re-export for backward compatibility
+export {
+  setNotationFlashcards,
+  setOperationsFlashcards,
+  graphTypesFlashcards,
+  graphTerminologyFlashcards,
+  propositionalLogicFlashcards,
+  relationsPropertiesFlashcards,
+  vectorsFlashcards,
+  probabilityBasicsFlashcards,
+  distributionsFlashcards,
+  setTheoryQuiz,
+  graphTheoryQuiz,
+  logicQuiz,
+  linearAlgebraQuiz,
+  probabilityQuiz
+};
 
 export const learningContent = {
   quizzes: {
@@ -1578,6 +1641,19 @@ export const learningContent = {
     planningExecution: planningExecutionQuiz,
     agentFundamentals: agentFundamentalsQuiz,
     agentArchitectures: agentArchitecturesQuiz,
+    setTheoryFundamentals: setTheoryQuiz,
+    graphTheory: graphTheoryQuiz,
+    logicFundamentals: logicQuiz,
+    linearAlgebra: linearAlgebraQuiz,
+    conditionalProbability: probabilityQuiz,
+    ontologies: ontologiesQuiz,
+    knowledgeGraphs: knowledgeGraphsQuiz,
+    neuralSymbolic: neuralSymbolicQuiz,
+    basicPrompting: basicPromptingQuiz,
+    promptPatterns: promptPatternsQuiz,
+    advancedPrompting: advancedPromptingQuiz,
+    optimizationTesting: optimizationTestingQuiz,
+    practicalApplication: practicalApplicationQuiz,
     all: allQuizQuestions
   },
   flashcards: {
@@ -1589,8 +1665,26 @@ export const learningContent = {
     planningExecution: planningExecutionFlashcards,
     agentComponents: agentComponentsFlashcards,
     agentArchitectures: agentArchitecturesFlashcards,
+    setNotation: setNotationFlashcards,
+    setOperations: setOperationsFlashcards,
+    graphTypes: graphTypesFlashcards,
+    graphTerminology: graphTerminologyFlashcards,
+    propositionalLogic: propositionalLogicFlashcards,
+    relationsProperties: relationsPropertiesFlashcards,
+    vectors: vectorsFlashcards,
+    probabilityBasics: probabilityBasicsFlashcards,
+    distributions: distributionsFlashcards,
+    ontologies: ontologiesFlashcards,
+    knowledgeGraphs: knowledgeGraphsFlashcards,
+    neuralSymbolic: neuralSymbolicFlashcards,
+    promptComponents: promptComponentsFlashcards,
+    zeroShotPrompting: zeroShotPromptingFlashcards,
+    fewShotPrompting: fewShotPromptingFlashcards,
+    chainOfThought: chainOfThoughtFlashcards,
+    advancedTechniques: advancedTechniquesFlashcards,
+    commonPitfalls: commonPitfallsFlashcards,
     all: allFlashcards
   },
-  codeChallenges: advancedCodeChallenges,
+  codeChallenges: [...advancedCodeChallenges, ...knowledgeRepresentationCodeChallenges, ...allPromptingCodeChallenges],
   patternSelectionChallenges: advancedPatternSelectionChallenges
 }; 

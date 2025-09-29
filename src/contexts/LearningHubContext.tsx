@@ -94,7 +94,22 @@ export function LearningHubProvider({ children }: { children: React.ReactNode })
       
       setProgress(data.progress || []);
       setAchievements(data.achievements || []);
-      setXp(data.xp);
+
+      // Apply XP boost in dev mode for testing
+      if (process.env.NEXT_PUBLIC_DEV_XP_BOOST === 'true' && data.xp) {
+        const boostedXp: UserXp = {
+          ...data.xp,
+          totalXp: Math.max(data.xp.totalXp, 10000), // Grant 10,000 XP minimum
+          level: Math.max(data.xp.level, 15), // Grant level 15 minimum
+          currentLevelXp: data.xp.currentLevelXp,
+          nextLevelXp: data.xp.nextLevelXp
+        };
+        console.log('[LearningHub] DEV MODE: XP boosted for testing', boostedXp);
+        setXp(boostedXp);
+      } else {
+        setXp(data.xp);
+      }
+
       setStreak(data.streak);
     } catch (err) {
       console.error('[LearningHub] Error fetching data:', err);

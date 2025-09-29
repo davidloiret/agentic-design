@@ -231,6 +231,58 @@ import MCMDemo from '../../components/demos/MCMDemo';
 import TTCDemo from '../../components/demos/TTCDemo';
 import RMCTSDemo from '../../components/demos/RMCTSDemo';
 import AgentBenchDemo from '../../components/demos/AgentBenchDemo';
+import TheAgentCompanyDemo from '../../components/demos/TheAgentCompanyDemo';
+import MLRBenchDemo from '../../components/demos/MLRBenchDemo';
+import TwelveFactorAgentDemo from '../../components/demos/TwelveFactorAgentDemo';
+import HelmAgentEvalDemo from '../../components/demos/HelmAgentEvalDemo';
+import HulaFrameworkDemo from '../../components/demos/HulaFrameworkDemo';
+import CybersecEval3Demo from '../../components/demos/CybersecEval3Demo';
+import MetrReBenchDemo from '../../components/demos/MetrReBenchDemo';
+import SweBenchSuiteDemo from '../../components/demos/SweBenchSuiteDemo';
+import GaiaBenchmarkDemo from '../../components/demos/GaiaBenchmarkDemo';
+import MmauBenchmarkDemo from '../../components/demos/MmauBenchmarkDemo';
+import WebArenaSuiteDemo from '../../components/demos/WebArenaSuiteDemo';
+import EuAiActFrameworkDemo from '../../components/demos/EuAiActFrameworkDemo';
+import AISIEvaluationFrameworkDemo from '../../components/demos/AISIEvaluationFrameworkDemo';
+import MapsBenchmarkDemo from '../../components/demos/MapsBenchmarkDemo';
+import ConstitutionalAiEvaluationDemo from '../../components/demos/ConstitutionalAiEvaluationDemo';
+import ContextProcessingPipelinesDemo from '../../components/demos/ContextProcessingPipelinesDemo';
+import ContextLifecycleManagementDemo from '../../components/demos/ContextLifecycleManagementDemo';
+import HierarchicalContextArchitectureDemo from '../../components/demos/HierarchicalContextArchitectureDemo';
+import ContextStateMachinesDemo from '../../components/demos/ContextStateMachinesDemo';
+import ContextStreamingProtocolsDemo from '../../components/demos/ContextStreamingProtocolsDemo';
+import ContextWritePatternsDemo from '../../components/demos/ContextWritePatternsDemo';
+import ContextSelectPatternsDemo from '../../components/demos/ContextSelectPatternsDemo';
+import ContextCompressPatternsDemo from '../../components/demos/ContextCompressPatternsDemo';
+import ContextIsolatePatternsDemo from '../../components/demos/ContextIsolatePatternsDemo';
+import SlidingWindowManagementDemo from '../../components/demos/SlidingWindowManagementDemo';
+import SemanticContextCompressionDemo from '../../components/demos/SemanticContextCompressionDemo';
+import InfiniAttentionArchitectureDemo from '../../components/demos/InfiniAttentionArchitectureDemo';
+import MemoryBlockArchitectureDemo from '../../components/demos/MemoryBlockArchitectureDemo';
+import KVCacheOptimizationDemo from '../../components/demos/KVCacheOptimizationDemo';
+import ContextEngineeringFrameworksDemo from '../../components/demos/ContextEngineeringFrameworksDemo';
+import ContextFailurePreventionDemo from '../../components/demos/ContextFailurePreventionDemo';
+import HumanInTheLoopDemo from '../../components/demos/HumanInTheLoopDemo';
+import HumanOnTheLoopDemo from '../../components/demos/HumanOnTheLoopDemo';
+import ProgressiveDisclosurePatternsDemo from '../../components/demos/ProgressiveDisclosurePatternsDemo';
+import ConfidenceVisualizationPatternsDemo from '../../components/demos/ConfidenceVisualizationPatternsDemo';
+import MixedInitiativeInterfacePatternsDemo from '../../components/demos/MixedInitiativeInterfacePatternsDemo';
+import AgentStatusActivityPatternsDemo from '../../components/demos/AgentStatusActivityPatternsDemo';
+import ConversationalInterfacePatternsDemo from '../../components/demos/ConversationalInterfacePatternsDemo';
+import AgentCollaborationUxDemo from '../../components/demos/AgentCollaborationUxDemo';
+import TrustTransparencyPatternsDemo from '../../components/demos/TrustTransparencyPatternsDemo';
+import AdaptiveInterfacePatternsDemo from '../../components/demos/AdaptiveInterfacePatternsDemo';
+import ContextWindowManagementPatternsDemo from '../../components/demos/ContextWindowManagementPatternsDemo';
+import MonitoringControlPatternsDemo from '../../components/demos/MonitoringControlPatternsDemo';
+import ErrorHandlingRecoveryPatternsDemo from '../../components/demos/ErrorHandlingRecoveryPatternsDemo';
+import OnboardingEducationPatternsDemo from '../../components/demos/OnboardingEducationPatternsDemo';
+import PrivacySecurityUxDemo from '../../components/demos/PrivacySecurityUxDemo';
+import AccessibilityAgentDesignDemo from '../../components/demos/AccessibilityAgentDesignDemo';
+import AmbientAgentPatternsDemo from '../../components/demos/AmbientAgentPatternsDemo';
+import ChatInterfacePatternsDemo from '../../components/demos/ChatInterfacePatternsDemo';
+import CrossPlatformAgentUxDemo from '../../components/demos/CrossPlatformAgentUxDemo';
+import VisualReasoningPatternsDemo from '../../components/demos/VisualReasoningPatternsDemo';
+import MultimodalInteractionPatternsDemo from '../../components/demos/MultimodalInteractionPatternsDemo';
 import AllDemosShowcase from '../../components/demos/AllDemosShowcase';
 import { patternExamples, type PatternId, type LanguageType } from '../pattern-examples';
 import { patternScenarios } from '../../data/patterns';
@@ -1570,11 +1622,115 @@ export const TechniqueDetails = ({
                           ? 'Interactive safety benchmark evaluation with 12 hazard categories, automated testing, and standardized grading system'
                           : selectedTechnique.id === 'agentbench'
                           ? 'Interactive LLM agent evaluation across 8 environments with multi-turn testing and comprehensive capability assessment'
+                          : selectedTechnique.id === 'theagentcompany'
+                          ? 'Interactive professional task evaluation across 6 job roles with workplace tools and checkpoint-based scoring'
+                          : selectedTechnique.id === 'mlr-bench'
+                          ? 'Interactive ML research pipeline evaluation across 4 stages with automated MLR-Judge scoring and experimental reliability analysis'
+                          : selectedTechnique.id === 'twelve-factor-agent'
+                          ? 'Interactive 12-factor compliance assessment comparing traditional vs production-ready agent architectures'
+                          : selectedTechnique.id === 'helm-agent-eval'
+                          ? 'Interactive holistic evaluation across 7 metrics (accuracy, calibration, robustness, fairness, bias, toxicity, efficiency) with multimodal and tool use assessment'
+                          : selectedTechnique.id === 'hula-framework'
+                          ? 'Interactive human-in-the-loop development workflow with AI Planner, AI Coder, and Human Agent collaborating through planning, coding, and validation stages'
+                          : selectedTechnique.id === 'cyberseceval3'
+                          ? 'Interactive cybersecurity evaluation across 5 security domains, 4 multi-agent risks, and Llama Guard 3 deployment for risk mitigation'
+                          : selectedTechnique.id === 'metr-re-bench'
+                          ? 'Interactive ML research engineering evaluation comparing frontier agents vs 71 human experts across 5 capabilities at multiple time budgets (2h, 8h, 32h)'
+                          : selectedTechnique.id === 'swe-bench-suite'
+                          ? 'Interactive software engineering evaluation with 4 benchmark variants (Verified, Original, Live, Multimodal) testing coding agents on real GitHub issues from 12+ repositories'
+                          : selectedTechnique.id === 'gaia-benchmark'
+                          ? 'Interactive GAIA evaluation across 3 difficulty levels testing reasoning, multi-modality, web browsing, and tool-use proficiency against human baseline (92%)'
+                          : selectedTechnique.id === 'mmau-benchmark'
+                          ? 'Interactive MMAU evaluation across 5 domains (Tool-use, DAG QA, Data Science, Programming, Mathematics) with 20 tasks assessing 5 core capabilities'
+                          : selectedTechnique.id === 'webarena-suite'
+                          ? 'Interactive WebArena suite evaluation across 3 environments: WebArena (web tasks), VisualWebArena (visual understanding), WorkArena (enterprise workflows)'
+                          : selectedTechnique.id === 'eu-ai-act-framework'
+                          ? 'Interactive EU AI Act compliance assessment with risk classification, high-risk compliance checks, and GPAI model evaluation for regulatory approval'
+                          : selectedTechnique.id === 'aisi-evaluation-framework'
+                          ? 'Interactive AISI evaluation with three-tier progressive testing (Automated → Manual → Expert red-teaming) for frontier AI safety assessment'
+                          : selectedTechnique.id === 'maps-benchmark'
+                          ? 'Interactive MAPS evaluation across 11 languages testing GAIA, SWE-bench, MATH, and ASB tasks with language parity analysis'
+                          : selectedTechnique.id === 'constitutional-ai-evaluation'
+                          ? 'Interactive Constitutional AI evaluation with 5 principles, classifier training, and red team jailbreak testing (95.6% blocking rate)'
+                          : selectedTechnique.id === 'context-processing-pipelines'
+                          ? 'Interactive pipeline demonstration with 5 stages (Ingestion → Validation → Transform → Integration → Output) processing 8 multi-modal contexts'
+                          : selectedTechnique.id === 'context-lifecycle-management'
+                          ? 'Interactive lifecycle management with 5 stages (Versioning → Audit Trail → Governance → Retention → Recovery) and enterprise compliance tracking'
+                          : selectedTechnique.id === 'hierarchical-context-architecture'
+                          ? 'Interactive 5-level hierarchy tree (Global → Department → Project → Agent → Task) with inheritance, scope isolation, and override capabilities'
+                          : selectedTechnique.id === 'context-state-machines'
+                          ? 'Interactive finite state machine with 8 states, guard conditions, error recovery, and transition validation'
+                          : selectedTechnique.id === 'context-streaming-protocols'
+                          ? 'Interactive streaming demo with 4 streams, circular buffering, flow control with backpressure, and real-time synchronization'
+                          : selectedTechnique.id === 'context-write-patterns'
+                          ? 'Interactive externalization demo with scratchpads, hierarchical file system, overflow handling, and session persistence'
+                          : selectedTechnique.id === 'context-select-patterns'
+                          ? 'Interactive RAG demo with semantic search, relevance ranking, dynamic assembly, and token budget optimization'
+                          : selectedTechnique.id === 'context-compress-patterns'
+                          ? 'Interactive compression demo with semantic analysis, progressive compression, redundancy detection, and quality validation'
+                          : selectedTechnique.id === 'context-isolate-patterns'
+                          ? 'Interactive multi-agent demo with 5 specialized agents, context isolation, selective sharing, and conflict resolution'
+                          : selectedTechnique.id === 'sliding-window-management'
+                          ? 'Interactive window demo with 10 conversation messages, exponential decay recency weighting, and relevance-based retention'
+                          : selectedTechnique.id === 'semantic-context-compression'
+                          ? 'Interactive AI-driven compression with information lattice learning, hierarchical abstraction, and cross-modal fusion'
+                          : selectedTechnique.id === 'infini-attention-architecture'
+                          ? 'Interactive demo of Google\'s infinite context processing with bounded O(1) memory, dual attention, and streaming architecture'
+                          : selectedTechnique.id === 'memory-block-architecture'
+                          ? 'Interactive memory block demo with 5 functional blocks, hierarchical relationships, LRU caching, and version control'
+                          : selectedTechnique.id === 'kv-cache-optimization'
+                          ? 'Interactive KV cache demo with INT4/INT8 quantization, 4-node distribution, memory pooling, and 75% memory reduction'
+                          : selectedTechnique.id === 'context-engineering-frameworks'
+                          ? 'Interactive framework demo with XML-like structuring, 6 modular components, validation pipeline, and failure recovery'
+                          : selectedTechnique.id === 'context-failure-prevention'
+                          ? 'Interactive security demo with threat detection, 4 attack types, automatic recovery, and 100% detection rate'
+                          : selectedTechnique.id === 'human-in-the-loop'
+                          ? 'Interactive HITL demo with 6 decisions, confidence thresholds, 3 domain experts, and feedback learning'
+                          : selectedTechnique.id === 'human-on-the-loop'
+                          ? 'Interactive HOTL demo with autonomous trading, real-time monitoring, anomaly detection, and human intervention'
+                          : selectedTechnique.id === 'progressive-disclosure-patterns'
+                          ? 'Interactive disclosure demo with 4 information layers, 13 expandable sections, and cognitive load management'
+                          : selectedTechnique.id === 'confidence-visualization-patterns'
+                          ? 'Interactive confidence demo with 4 use cases, 3 visualization types, uncertainty ranges, and calibration metrics'
+                          : selectedTechnique.id === 'mixed-initiative-interface-patterns'
+                          ? 'Interactive mixed-initiative demo with 5 workflow steps, 3 control handoffs, and seamless human-AI collaboration'
+                          : selectedTechnique.id === 'agent-status-activity-patterns'
+                          ? 'Interactive status demo with 3 agent tasks, 15 activity stages, real-time progress tracking, and activity logs'
+                          : selectedTechnique.id === 'conversational-interface-patterns'
+                          ? 'Interactive conversational demo with 8-turn dialogue, multimodal interaction, intent recognition, and rich media responses'
+                          : selectedTechnique.id === 'agent-collaboration-ux'
+                          ? 'Interactive multi-agent coordination with 6 specialized agents, seamless handoffs, and transparent orchestration'
+                          : selectedTechnique.id === 'trust-transparency-patterns'
+                          ? 'Interactive explainable AI demo with decision transparency, source attribution, and progressive disclosure'
+                          : selectedTechnique.id === 'adaptive-interface-patterns'
+                          ? 'Interactive adaptive UI demo with context detection, personalization, and dynamic interface adjustments'
+                          : selectedTechnique.id === 'context-window-management-patterns'
+                          ? 'Interactive token management demo with real-time tracking, compression strategies, and optimization controls'
+                          : selectedTechnique.id === 'monitoring-control-patterns'
+                          ? 'Interactive mission control demo with 6 agents, real-time monitoring, alerts, and intervention capabilities'
+                          : selectedTechnique.id === 'error-handling-recovery-patterns'
+                          ? 'Interactive error handling demo with classification, recovery strategies, and context preservation'
+                          : selectedTechnique.id === 'onboarding-education-patterns'
+                          ? 'Interactive onboarding demo with progressive capability revelation and trust building'
+                          : selectedTechnique.id === 'privacy-security-ux'
+                          ? 'Interactive privacy controls demo with granular consent management and transparent data handling'
+                          : selectedTechnique.id === 'accessibility-agent-design'
+                          ? 'Interactive accessibility demo with WCAG compliance, assistive technology, and multimodal interfaces'
+                          : selectedTechnique.id === 'ambient-agent-patterns'
+                          ? 'Interactive ambient agent demo with continuous signal monitoring and selective human interaction'
+                          : selectedTechnique.id === 'chat-interface-patterns'
+                          ? 'Interactive chat demo with message threading, rich content, and collaborative features'
+                          : selectedTechnique.id === 'cross-platform-agent-ux'
+                          ? 'Interactive cross-platform demo with device synchronization and seamless context transfer'
+                          : selectedTechnique.id === 'visual-reasoning-patterns'
+                          ? 'Interactive reasoning visualization with decision trees, confidence metrics, and cognitive transparency'
+                          : selectedTechnique.id === 'multimodal-interaction-patterns'
+                          ? 'Interactive multimodal demo with voice, visual, gesture, and text integration'
                           : 'Hands-on demonstration of the technique'
                         }
                       </span>
                       <span className="text-xs text-gray-500">
-                        {selectedTechnique.id === 'feedback-chaining' || selectedTechnique.id === 'hierarchical-chaining' || selectedTechnique.id === 'iterative-refinement' || selectedTechnique.id === 'parallel-synthesis' || selectedTechnique.id === 'dynamic-routing' || selectedTechnique.id === 'dynamic-context-assembly' || selectedTechnique.id === 'message-queuing' || selectedTechnique.id === 'latent-memory-networks' || selectedTechnique.id === 'adaptive-context-depth' || selectedTechnique.id === 'latent-knowledge-retrieval' || selectedTechnique.id === 'context-compression-advanced' || selectedTechnique.id === 'multimodal-context-integration' || selectedTechnique.id === 'sliding-window' || selectedTechnique.id === 'hierarchical-memory' || selectedTechnique.id === 'attention-mechanisms' || selectedTechnique.id === 'memory-consolidation' || selectedTechnique.id === 'working-memory-patterns' || selectedTechnique.id === 'contextual-unstructured-memory' || selectedTechnique.id === 'reinforcement-learning-from-human-feedback' || selectedTechnique.id === 'direct-preference-optimization' || selectedTechnique.id === 'in-context-learning' || selectedTechnique.id === 'meta-learning' || selectedTechnique.id === 'continual-learning' || selectedTechnique.id === 'least-to-most' || selectedTechnique.id === 'analogical-reasoning' || selectedTechnique.id === 'causal-reasoning' || selectedTechnique.id === 'abductive-reasoning' || selectedTechnique.id === 'step-back-prompting' || selectedTechnique.id === 'buffer-of-thoughts' || selectedTechnique.id === 'skeleton-of-thoughts' || selectedTechnique.id === 'layered-defense-pattern' || selectedTechnique.id === 'contextual-guardrailing-pattern' || selectedTechnique.id === 'guard-agent-pattern' || selectedTechnique.id === 'intrinsic-alignment-pattern' || selectedTechnique.id === 'memory-poisoning-prevention' || selectedTechnique.id === 'tool-misuse-prevention' || selectedTechnique.id === 'privilege-compromise-mitigation' || selectedTechnique.id === 'agrail-adaptive-pattern' || selectedTechnique.id === 'maestro-multi-agent-security' || selectedTechnique.id === 'system-prompt-protection' || selectedTechnique.id === 'differential-privacy-patterns' || selectedTechnique.id === 'zero-trust-agent-architecture' || selectedTechnique.id === 'secure-multi-party-computation' || selectedTechnique.id === 'compliance-automation-patterns' || selectedTechnique.id === 'threat-detection-response' || selectedTechnique.id === 'identity-access-management' || selectedTechnique.id === 'data-anonymization-patterns' || selectedTechnique.id === 'confidential-computing-patterns' || selectedTechnique.id === 'hybrid-secret-cache-management' || selectedTechnique.id === 'local-distant-agent-data-protection' || selectedTechnique.id === 'mlcommons-ai-safety' || selectedTechnique.id === 'agentbench' || selectedTechnique.id === 'context-compression' || selectedTechnique.id === 'content-based-routing' || selectedTechnique.id === 'capability-routing' || selectedTechnique.id === 'load-balancing' || selectedTechnique.id === 'geographic-routing' || selectedTechnique.id === 'map-reduce' || selectedTechnique.id === 'scatter-gather' || selectedTechnique.id === 'fork-join' || selectedTechnique.id === 'async-await' || selectedTechnique.id === 'self-critique' || selectedTechnique.id === 'producer-critic' || selectedTechnique.id === 'producer-critic-pattern' || selectedTechnique.id === 'llm-as-judge' || selectedTechnique.id === 'reflexion-pattern' || selectedTechnique.id === 'meta-reasoning' || selectedTechnique.id === 'hierarchical-task-network-planning' || selectedTechnique.id === 'task-management-orchestration' || selectedTechnique.id === 'a2a-protocol' || selectedTechnique.id === 'supervisor-worker-pattern' || selectedTechnique.id === 'shared-scratchpad-collaboration' || selectedTechnique.id === 'sequential-pipeline-agents' || selectedTechnique.id === 'concurrent-orchestration' || selectedTechnique.id === 'handoff-orchestration' || selectedTechnique.id === 'peer-collaboration' || selectedTechnique.id === 'function-calling' || selectedTechnique.id === 'code-execution' || selectedTechnique.id === 'hierarchical-planning' || selectedTechnique.id === 'goal-decomposition' || selectedTechnique.id === 'constraint-satisfaction' || selectedTechnique.id === 'scenario-planning' || selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining' || selectedTechnique.id === 'conditional-chaining' || selectedTechnique.id === 'embedding-based-routing' || selectedTechnique.id === 'rule-based-routing' || selectedTechnique.id === 'machine-learning-model-based-routing' ? 'Interactive demo available' : 'Demo coming soon'}
+                        {selectedTechnique.id === 'feedback-chaining' || selectedTechnique.id === 'hierarchical-chaining' || selectedTechnique.id === 'iterative-refinement' || selectedTechnique.id === 'parallel-synthesis' || selectedTechnique.id === 'dynamic-routing' || selectedTechnique.id === 'dynamic-context-assembly' || selectedTechnique.id === 'message-queuing' || selectedTechnique.id === 'latent-memory-networks' || selectedTechnique.id === 'adaptive-context-depth' || selectedTechnique.id === 'latent-knowledge-retrieval' || selectedTechnique.id === 'context-compression-advanced' || selectedTechnique.id === 'multimodal-context-integration' || selectedTechnique.id === 'sliding-window' || selectedTechnique.id === 'hierarchical-memory' || selectedTechnique.id === 'attention-mechanisms' || selectedTechnique.id === 'memory-consolidation' || selectedTechnique.id === 'working-memory-patterns' || selectedTechnique.id === 'contextual-unstructured-memory' || selectedTechnique.id === 'reinforcement-learning-from-human-feedback' || selectedTechnique.id === 'direct-preference-optimization' || selectedTechnique.id === 'in-context-learning' || selectedTechnique.id === 'meta-learning' || selectedTechnique.id === 'continual-learning' || selectedTechnique.id === 'least-to-most' || selectedTechnique.id === 'analogical-reasoning' || selectedTechnique.id === 'causal-reasoning' || selectedTechnique.id === 'abductive-reasoning' || selectedTechnique.id === 'step-back-prompting' || selectedTechnique.id === 'buffer-of-thoughts' || selectedTechnique.id === 'skeleton-of-thoughts' || selectedTechnique.id === 'layered-defense-pattern' || selectedTechnique.id === 'contextual-guardrailing-pattern' || selectedTechnique.id === 'guard-agent-pattern' || selectedTechnique.id === 'intrinsic-alignment-pattern' || selectedTechnique.id === 'memory-poisoning-prevention' || selectedTechnique.id === 'tool-misuse-prevention' || selectedTechnique.id === 'privilege-compromise-mitigation' || selectedTechnique.id === 'agrail-adaptive-pattern' || selectedTechnique.id === 'maestro-multi-agent-security' || selectedTechnique.id === 'system-prompt-protection' || selectedTechnique.id === 'differential-privacy-patterns' || selectedTechnique.id === 'zero-trust-agent-architecture' || selectedTechnique.id === 'secure-multi-party-computation' || selectedTechnique.id === 'compliance-automation-patterns' || selectedTechnique.id === 'threat-detection-response' || selectedTechnique.id === 'identity-access-management' || selectedTechnique.id === 'data-anonymization-patterns' || selectedTechnique.id === 'confidential-computing-patterns' || selectedTechnique.id === 'hybrid-secret-cache-management' || selectedTechnique.id === 'local-distant-agent-data-protection' || selectedTechnique.id === 'mlcommons-ai-safety' || selectedTechnique.id === 'agentbench' || selectedTechnique.id === 'theagentcompany' || selectedTechnique.id === 'mlr-bench' || selectedTechnique.id === 'twelve-factor-agent' || selectedTechnique.id === 'helm-agent-eval' || selectedTechnique.id === 'hula-framework' || selectedTechnique.id === 'cyberseceval3' || selectedTechnique.id === 'metr-re-bench' || selectedTechnique.id === 'swe-bench-suite' || selectedTechnique.id === 'gaia-benchmark' || selectedTechnique.id === 'mmau-benchmark' || selectedTechnique.id === 'webarena-suite' || selectedTechnique.id === 'eu-ai-act-framework' || selectedTechnique.id === 'aisi-evaluation-framework' || selectedTechnique.id === 'maps-benchmark' || selectedTechnique.id === 'constitutional-ai-evaluation' || selectedTechnique.id === 'context-processing-pipelines' || selectedTechnique.id === 'context-lifecycle-management' || selectedTechnique.id === 'hierarchical-context-architecture' || selectedTechnique.id === 'context-state-machines' || selectedTechnique.id === 'context-streaming-protocols' || selectedTechnique.id === 'context-write-patterns' || selectedTechnique.id === 'context-select-patterns' || selectedTechnique.id === 'context-compress-patterns' || selectedTechnique.id === 'context-isolate-patterns' || selectedTechnique.id === 'sliding-window-management' || selectedTechnique.id === 'semantic-context-compression' || selectedTechnique.id === 'infini-attention-architecture' || selectedTechnique.id === 'memory-block-architecture' || selectedTechnique.id === 'kv-cache-optimization' || selectedTechnique.id === 'context-engineering-frameworks' || selectedTechnique.id === 'context-failure-prevention' || selectedTechnique.id === 'human-in-the-loop' || selectedTechnique.id === 'human-on-the-loop' || selectedTechnique.id === 'progressive-disclosure-patterns' || selectedTechnique.id === 'confidence-visualization-patterns' || selectedTechnique.id === 'mixed-initiative-interface-patterns' || selectedTechnique.id === 'agent-status-activity-patterns' || selectedTechnique.id === 'conversational-interface-patterns' || selectedTechnique.id === 'agent-collaboration-ux' || selectedTechnique.id === 'trust-transparency-patterns' || selectedTechnique.id === 'adaptive-interface-patterns' || selectedTechnique.id === 'context-window-management-patterns' || selectedTechnique.id === 'monitoring-control-patterns' || selectedTechnique.id === 'error-handling-recovery-patterns' || selectedTechnique.id === 'onboarding-education-patterns' || selectedTechnique.id === 'privacy-security-ux' || selectedTechnique.id === 'accessibility-agent-design' || selectedTechnique.id === 'ambient-agent-patterns' || selectedTechnique.id === 'chat-interface-patterns' || selectedTechnique.id === 'cross-platform-agent-ux' || selectedTechnique.id === 'visual-reasoning-patterns' || selectedTechnique.id === 'multimodal-interaction-patterns' || selectedTechnique.id === 'context-compression' || selectedTechnique.id === 'content-based-routing' || selectedTechnique.id === 'capability-routing' || selectedTechnique.id === 'load-balancing' || selectedTechnique.id === 'geographic-routing' || selectedTechnique.id === 'map-reduce' || selectedTechnique.id === 'scatter-gather' || selectedTechnique.id === 'fork-join' || selectedTechnique.id === 'async-await' || selectedTechnique.id === 'self-critique' || selectedTechnique.id === 'producer-critic' || selectedTechnique.id === 'producer-critic-pattern' || selectedTechnique.id === 'llm-as-judge' || selectedTechnique.id === 'reflexion-pattern' || selectedTechnique.id === 'meta-reasoning' || selectedTechnique.id === 'hierarchical-task-network-planning' || selectedTechnique.id === 'task-management-orchestration' || selectedTechnique.id === 'a2a-protocol' || selectedTechnique.id === 'supervisor-worker-pattern' || selectedTechnique.id === 'shared-scratchpad-collaboration' || selectedTechnique.id === 'sequential-pipeline-agents' || selectedTechnique.id === 'concurrent-orchestration' || selectedTechnique.id === 'handoff-orchestration' || selectedTechnique.id === 'peer-collaboration' || selectedTechnique.id === 'function-calling' || selectedTechnique.id === 'code-execution' || selectedTechnique.id === 'hierarchical-planning' || selectedTechnique.id === 'goal-decomposition' || selectedTechnique.id === 'constraint-satisfaction' || selectedTechnique.id === 'scenario-planning' || selectedTechnique.id === 'sequential-chaining' || selectedTechnique.id === 'parallel-chaining' || selectedTechnique.id === 'conditional-chaining' || selectedTechnique.id === 'embedding-based-routing' || selectedTechnique.id === 'rule-based-routing' || selectedTechnique.id === 'machine-learning-model-based-routing' ? 'Interactive demo available' : 'Demo coming soon'}
                       </span>
                     </div>
                   </div>
@@ -1728,6 +1884,110 @@ export const TechniqueDetails = ({
                     <AILuminateDemo />
                   ) : selectedTechnique.id === 'agentbench' ? (
                     <AgentBenchDemo />
+                  ) : selectedTechnique.id === 'theagentcompany' ? (
+                    <TheAgentCompanyDemo />
+                  ) : selectedTechnique.id === 'mlr-bench' ? (
+                    <MLRBenchDemo />
+                  ) : selectedTechnique.id === 'twelve-factor-agent' ? (
+                    <TwelveFactorAgentDemo />
+                  ) : selectedTechnique.id === 'helm-agent-eval' ? (
+                    <HelmAgentEvalDemo />
+                  ) : selectedTechnique.id === 'hula-framework' ? (
+                    <HulaFrameworkDemo />
+                  ) : selectedTechnique.id === 'cyberseceval3' ? (
+                    <CybersecEval3Demo />
+                  ) : selectedTechnique.id === 'metr-re-bench' ? (
+                    <MetrReBenchDemo />
+                  ) : selectedTechnique.id === 'swe-bench-suite' ? (
+                    <SweBenchSuiteDemo />
+                  ) : selectedTechnique.id === 'gaia-benchmark' ? (
+                    <GaiaBenchmarkDemo />
+                  ) : selectedTechnique.id === 'mmau-benchmark' ? (
+                    <MmauBenchmarkDemo />
+                  ) : selectedTechnique.id === 'webarena-suite' ? (
+                    <WebArenaSuiteDemo />
+                  ) : selectedTechnique.id === 'eu-ai-act-framework' ? (
+                    <EuAiActFrameworkDemo />
+                  ) : selectedTechnique.id === 'aisi-evaluation-framework' ? (
+                    <AISIEvaluationFrameworkDemo />
+                  ) : selectedTechnique.id === 'maps-benchmark' ? (
+                    <MapsBenchmarkDemo />
+                  ) : selectedTechnique.id === 'constitutional-ai-evaluation' ? (
+                    <ConstitutionalAiEvaluationDemo />
+                  ) : selectedTechnique.id === 'context-processing-pipelines' ? (
+                    <ContextProcessingPipelinesDemo />
+                  ) : selectedTechnique.id === 'context-lifecycle-management' ? (
+                    <ContextLifecycleManagementDemo />
+                  ) : selectedTechnique.id === 'hierarchical-context-architecture' ? (
+                    <HierarchicalContextArchitectureDemo />
+                  ) : selectedTechnique.id === 'context-state-machines' ? (
+                    <ContextStateMachinesDemo />
+                  ) : selectedTechnique.id === 'context-streaming-protocols' ? (
+                    <ContextStreamingProtocolsDemo />
+                  ) : selectedTechnique.id === 'context-write-patterns' ? (
+                    <ContextWritePatternsDemo />
+                  ) : selectedTechnique.id === 'context-select-patterns' ? (
+                    <ContextSelectPatternsDemo />
+                  ) : selectedTechnique.id === 'context-compress-patterns' ? (
+                    <ContextCompressPatternsDemo />
+                  ) : selectedTechnique.id === 'context-isolate-patterns' ? (
+                    <ContextIsolatePatternsDemo />
+                  ) : selectedTechnique.id === 'sliding-window-management' ? (
+                    <SlidingWindowManagementDemo />
+                  ) : selectedTechnique.id === 'semantic-context-compression' ? (
+                    <SemanticContextCompressionDemo />
+                  ) : selectedTechnique.id === 'infini-attention-architecture' ? (
+                    <InfiniAttentionArchitectureDemo />
+                  ) : selectedTechnique.id === 'memory-block-architecture' ? (
+                    <MemoryBlockArchitectureDemo />
+                  ) : selectedTechnique.id === 'kv-cache-optimization' ? (
+                    <KVCacheOptimizationDemo />
+                  ) : selectedTechnique.id === 'context-engineering-frameworks' ? (
+                    <ContextEngineeringFrameworksDemo />
+                  ) : selectedTechnique.id === 'context-failure-prevention' ? (
+                    <ContextFailurePreventionDemo />
+                  ) : selectedTechnique.id === 'human-in-the-loop' ? (
+                    <HumanInTheLoopDemo />
+                  ) : selectedTechnique.id === 'human-on-the-loop' ? (
+                    <HumanOnTheLoopDemo />
+                  ) : selectedTechnique.id === 'progressive-disclosure-patterns' ? (
+                    <ProgressiveDisclosurePatternsDemo />
+                  ) : selectedTechnique.id === 'confidence-visualization-patterns' ? (
+                    <ConfidenceVisualizationPatternsDemo />
+                  ) : selectedTechnique.id === 'mixed-initiative-interface-patterns' ? (
+                    <MixedInitiativeInterfacePatternsDemo />
+                  ) : selectedTechnique.id === 'agent-status-activity-patterns' ? (
+                    <AgentStatusActivityPatternsDemo />
+                  ) : selectedTechnique.id === 'conversational-interface-patterns' ? (
+                    <ConversationalInterfacePatternsDemo />
+                  ) : selectedTechnique.id === 'agent-collaboration-ux' ? (
+                    <AgentCollaborationUxDemo />
+                  ) : selectedTechnique.id === 'trust-transparency-patterns' ? (
+                    <TrustTransparencyPatternsDemo />
+                  ) : selectedTechnique.id === 'adaptive-interface-patterns' ? (
+                    <AdaptiveInterfacePatternsDemo />
+                  ) : selectedTechnique.id === 'context-window-management-patterns' ? (
+                    <ContextWindowManagementPatternsDemo />
+                  ) : selectedTechnique.id === 'monitoring-control-patterns' ? (
+                    <MonitoringControlPatternsDemo />
+                  ) : selectedTechnique.id === 'error-handling-recovery-patterns' ? (
+                    <ErrorHandlingRecoveryPatternsDemo />
+                  ) : selectedTechnique.id === 'onboarding-education-patterns' ? (
+                    <OnboardingEducationPatternsDemo />
+                  ) : selectedTechnique.id === 'privacy-security-ux' ? (
+                    <PrivacySecurityUxDemo />
+                  ) : selectedTechnique.id === 'accessibility-agent-design' ? (
+                    <AccessibilityAgentDesignDemo />
+                  ) : selectedTechnique.id === 'ambient-agent-patterns' ? (
+                    <AmbientAgentPatternsDemo />
+                  ) : selectedTechnique.id === 'chat-interface-patterns' ? (
+                    <ChatInterfacePatternsDemo />
+                  ) : selectedTechnique.id === 'cross-platform-agent-ux' ? (
+                    <CrossPlatformAgentUxDemo />
+                  ) : selectedTechnique.id === 'visual-reasoning-patterns' ? (
+                    <VisualReasoningPatternsDemo />
+                  ) : selectedTechnique.id === 'multimodal-interaction-patterns' ? (
+                    <MultimodalInteractionPatternsDemo />
                   ) : selectedTechnique.id === 'got' ? (
                     <GoTDemo />
                   ) : selectedTechnique.id === 'react' ? (

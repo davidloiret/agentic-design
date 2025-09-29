@@ -39,8 +39,11 @@ import { useLearningHub } from '@/contexts/LearningHubContext';
 import { QuizComponent } from './learning/QuizComponent';
 import { FlashcardComponent } from './learning/FlashcardComponent';
 import { CodeChallengeComponent } from './learning/CodeChallengeComponent';
+import { TheoryLessonComponent } from './learning/TheoryLessonComponent';
 import { BrainMascot } from '@/components/BrainMascot';
 import { learningContent } from '../data/learning-content';
+import { theoryLessons } from '../data/knowledge-representation';
+import { promptingTheoryLessons } from '../data/master-prompting';
 import { allJourneys, Journey, Chapter, Lesson, achievements as journeyAchievements } from '../data/learning-journeys';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -139,39 +142,142 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
     const colors: { [key: string]: string } = {
       blue: 'from-blue-500 to-blue-600',
       purple: 'from-purple-500 to-purple-600',
-      red: 'from-red-500 to-red-600'
+      red: 'from-red-500 to-red-600',
+      green: 'from-green-500 to-green-600'
     };
     return colors[color] || 'from-gray-500 to-gray-600';
   };
 
   const isJourneyUnlocked = (journey: Journey) => {
+    // Dev mode: unlock all journeys for testing
+    if (process.env.NEXT_PUBLIC_DEV_XP_BOOST === 'true') return true;
+
     if (!journey.unlockRequirements) return true;
-    
+
     const { level: requiredLevel, completedJourneys } = journey.unlockRequirements;
-    
+
     if (requiredLevel && level < requiredLevel) return false;
     if (completedJourneys) {
-      return completedJourneys.every(jId => 
-        journeyProgress[jId]?.completedChapters.length === 
+      return completedJourneys.every(jId =>
+        journeyProgress[jId]?.completedChapters.length ===
         allJourneys.find(j => j.id === jId)?.chapters.length
       );
     }
-    
+
     return true;
   };
 
   const getChapterProgress = (chapterId: string, journeyId: string) => {
     const progress = journeyProgress[journeyId];
     if (!progress) return 0;
-    
+
     const chapter = selectedJourney?.chapters.find(c => c.id === chapterId);
     if (!chapter) return 0;
-    
-    const completedLessons = chapter.lessons.filter(l => 
+
+    const completedLessons = chapter.lessons.filter(l =>
       progress.completedLessons.includes(l.id)
     ).length;
-    
+
     return (completedLessons / chapter.lessons.length) * 100;
+  };
+
+  // Breadcrumb navigation component
+  const renderBreadcrumbs = () => {
+    const breadcrumbs: { label: string; onClick: (() => void) | null; isActive: boolean }[] = [];
+
+    // Always start with Learning Hub
+    breadcrumbs.push({
+      label: 'Learning Hub',
+      onClick: () => {
+        setSelectedJourney(null);
+        setSelectedChapter(null);
+        setSelectedLesson(null);
+        setActiveView('dashboard');
+      },
+      isActive: activeView === 'dashboard'
+    });
+
+    // Add journey if selected
+    if (selectedJourney && (activeView === 'journey-detail' || activeView === 'chapter' || activeView === 'lesson')) {
+      breadcrumbs.push({
+        label: selectedJourney.title,
+        onClick: () => {
+          setSelectedChapter(null);
+          setSelectedLesson(null);
+          setActiveView('journey-detail');
+        },
+        isActive: activeView === 'journey-detail'
+      });
+    }
+
+    // Add chapter if selected
+    if (selectedChapter && (activeView === 'chapter' || activeView === 'lesson')) {
+      breadcrumbs.push({
+        label: selectedChapter.title,
+        onClick: () => {
+          setSelectedLesson(null);
+          setActiveView('chapter');
+        },
+        isActive: activeView === 'chapter'
+      });
+    }
+
+    // Add lesson if selected
+    if (selectedLesson && activeView === 'lesson') {
+      breadcrumbs.push({
+        label: selectedLesson.title,
+        onClick: null, // Current page, not clickable
+        isActive: true
+      });
+    }
+
+    // Add achievements/certification if on those views
+    if (activeView === 'achievements') {
+      breadcrumbs.push({
+        label: 'Achievements',
+        onClick: null,
+        isActive: true
+      });
+    }
+
+    if (activeView === 'certification') {
+      breadcrumbs.push({
+        label: 'Certification',
+        onClick: null,
+        isActive: true
+      });
+    }
+
+    // Only render if there are 2+ breadcrumbs (not just dashboard)
+    if (breadcrumbs.length === 1) return null;
+
+    return (
+      <nav className="mb-6 flex items-center space-x-2 text-sm">
+        {breadcrumbs.map((crumb, index) => (
+          <React.Fragment key={index}>
+            {index > 0 && (
+              <ChevronRight className="w-4 h-4 text-gray-500" />
+            )}
+            {crumb.onClick ? (
+              <button
+                onClick={crumb.onClick}
+                className={`transition-colors ${
+                  crumb.isActive
+                    ? 'text-white font-medium'
+                    : 'text-gray-400 hover:text-white'
+                }`}
+              >
+                {crumb.label}
+              </button>
+            ) : (
+              <span className="text-white font-medium">
+                {crumb.label}
+              </span>
+            )}
+          </React.Fragment>
+        ))}
+      </nav>
+    );
   };
 
   const handleLessonComplete = async (lessonId: string, score: number, xpEarned: number) => {
@@ -284,7 +390,7 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
         </motion.div>
 
         {/* Journey Cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {allJourneys.map((journey, index) => {
             const unlocked = isJourneyUnlocked(journey);
             const progress = journeyProgress[journey.id];
@@ -305,9 +411,13 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
                     : 'border-gray-700 opacity-75'
                 }`}
                 onClick={() => {
+                  console.log('Journey clicked:', journey.id, 'unlocked:', unlocked);
                   if (unlocked) {
                     setSelectedJourney(journey);
                     setActiveView('journey-detail');
+                    console.log('Journey detail view set for:', journey.title);
+                  } else {
+                    console.log('Journey is locked:', journey.id);
                   }
                 }}
               >
@@ -468,17 +578,8 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
 
     return (
       <div className="max-w-6xl mx-auto">
-        {/* Back Button */}
-        <button
-          onClick={() => {
-            setSelectedJourney(null);
-            setActiveView('journeys');
-          }}
-          className="text-rose-400 hover:text-rose-300 transition-colors mb-6 flex items-center space-x-2"
-        >
-          <ArrowRight className="w-4 h-4 rotate-180" />
-          <span>Back to Journeys</span>
-        </button>
+        {/* Breadcrumb Navigation */}
+        {renderBreadcrumbs()}
 
         {/* Journey Header */}
         <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-700 mb-8">
@@ -521,7 +622,10 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
         {/* Chapter List */}
         <div className="space-y-4">
           {selectedJourney.chapters.map((chapter, index) => {
-            const isUnlocked = !chapter.unlockAfter || progress?.completedChapters.includes(chapter.unlockAfter);
+            // Dev mode: unlock all chapters for testing
+            const isUnlocked = process.env.NEXT_PUBLIC_DEV_XP_BOOST === 'true' ||
+                               !chapter.unlockAfter ||
+                               progress?.completedChapters.includes(chapter.unlockAfter);
             const chapterProgress = getChapterProgress(chapter.id, selectedJourney.id);
             const isComplete = chapterProgress === 100;
 
@@ -631,17 +735,8 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
 
     return (
       <div className="max-w-5xl mx-auto">
-        {/* Back Button */}
-        <button
-          onClick={() => {
-            setSelectedChapter(null);
-            setActiveView('journey-detail');
-          }}
-          className="text-rose-400 hover:text-rose-300 transition-colors mb-6 flex items-center space-x-2"
-        >
-          <ArrowRight className="w-4 h-4 rotate-180" />
-          <span>Back to {selectedJourney.title}</span>
-        </button>
+        {/* Breadcrumb Navigation */}
+        {renderBreadcrumbs()}
 
         {/* Chapter Header */}
         <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-700 mb-8">
@@ -675,7 +770,10 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
         <div className="space-y-4">
           {selectedChapter.lessons.map((lesson, index) => {
             const isCompleted = completedLessons.includes(lesson.id);
-            const isLocked = index > 0 && !completedLessons.includes(selectedChapter.lessons[index - 1].id);
+            // Dev mode: unlock all lessons for testing
+            const isLocked = process.env.NEXT_PUBLIC_DEV_XP_BOOST === 'true'
+              ? false
+              : index > 0 && !completedLessons.includes(selectedChapter.lessons[index - 1].id);
             
             const getDifficultyColor = (difficulty: string) => {
               switch (difficulty) {
@@ -804,6 +902,35 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
         return learningContent.quizzes.agentFundamentals;
       case 'agent-architectures-quiz':
         return learningContent.quizzes.agentArchitectures;
+      case 'set-theory-fundamentals-quiz':
+        return learningContent.quizzes.setTheoryFundamentals;
+      case 'graph-theory-quiz':
+        return learningContent.quizzes.graphTheory;
+      case 'logic-fundamentals-quiz':
+        return learningContent.quizzes.logicFundamentals;
+      case 'linear-algebra-quiz':
+        return learningContent.quizzes.linearAlgebra;
+      case 'conditional-probability-quiz':
+        return learningContent.quizzes.conditionalProbability;
+      case 'probability-statistics-quiz':
+        return learningContent.quizzes.conditionalProbability;
+      case 'ontologies-quiz':
+        return learningContent.quizzes.ontologies;
+      case 'knowledge-graphs-quiz':
+        return learningContent.quizzes.knowledgeGraphs;
+      case 'neural-symbolic-quiz':
+        return learningContent.quizzes.neuralSymbolic;
+      // Master Prompting Quizzes
+      case 'basic-prompting-quiz':
+        return learningContent.quizzes.basicPrompting;
+      case 'prompt-patterns-quiz':
+        return learningContent.quizzes.promptPatterns;
+      case 'advanced-prompting-quiz':
+        return learningContent.quizzes.advancedPrompting;
+      case 'optimization-testing-quiz':
+        return learningContent.quizzes.optimizationTesting;
+      case 'practical-application-quiz':
+        return learningContent.quizzes.practicalApplication;
       default:
         return [];
     }
@@ -827,6 +954,47 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
         return learningContent.flashcards.agentComponents;
       case 'agent-architectures-flashcards':
         return learningContent.flashcards.agentArchitectures;
+      case 'set-notation-flashcards':
+        return learningContent.flashcards.setNotation;
+      case 'set-operations-flashcards':
+        return learningContent.flashcards.setOperations;
+      case 'graph-types-flashcards':
+        return learningContent.flashcards.graphTypes;
+      case 'graph-terminology-flashcards':
+        return learningContent.flashcards.graphTerminology;
+      case 'propositional-logic-flashcards':
+        return learningContent.flashcards.propositionalLogic;
+      case 'relations-properties-flashcards':
+        return learningContent.flashcards.relationsProperties;
+      case 'vectors-flashcards':
+        return learningContent.flashcards.vectors;
+      case 'probability-basics-flashcards':
+        return learningContent.flashcards.probabilityBasics;
+      case 'distributions-flashcards':
+        return learningContent.flashcards.distributions;
+      case 'ontologies-flashcards':
+        return learningContent.flashcards.ontologies;
+      case 'knowledge-graphs-flashcards':
+        return learningContent.flashcards.knowledgeGraphs;
+      case 'neural-symbolic-flashcards':
+        return learningContent.flashcards.neuralSymbolic;
+      // Master Prompting Flashcards
+      case 'prompt-components-flashcards':
+        return learningContent.flashcards.promptComponents;
+      case 'zero-shot-prompting-flashcards':
+        return learningContent.flashcards.zeroShotPrompting;
+      case 'few-shot-prompting-flashcards':
+        return learningContent.flashcards.fewShotPrompting;
+      case 'chain-of-thought-flashcards':
+        return learningContent.flashcards.chainOfThought;
+      case 'prompt-chaining-flashcards':
+        return learningContent.flashcards.promptChaining;
+      case 'prompt-metrics-flashcards':
+        return learningContent.flashcards.promptMetrics;
+      case 'advanced-techniques-flashcards':
+        return learningContent.flashcards.advancedTechniques;
+      case 'common-pitfalls-flashcards':
+        return learningContent.flashcards.commonPitfalls;
       default:
         return [];
     }
@@ -837,7 +1005,14 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
     const challengeMapping: { [key: string]: string } = {
       'implement-tot': 'implement-tot-reasoning',
       'build-react-agent': 'implement-react-agent',
-      'build-dynamic-router': 'implement-dynamic-routing'
+      'build-dynamic-router': 'implement-dynamic-routing',
+      // Master Prompting Code Challenges
+      'implement-few-shot': 'implement-few-shot-challenge',
+      'implement-cot-prompt': 'implement-cot-prompt-challenge',
+      'build-prompt-chain': 'build-prompt-chain-challenge',
+      'implement-self-consistency': 'implement-self-consistency-challenge',
+      'implement-prompt-testing': 'implement-prompt-testing-challenge',
+      'build-prompt-library': 'build-prompt-library-challenge'
     };
     
     const actualChallengeId = challengeMapping[challengeId] || challengeId;
@@ -854,11 +1029,19 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
       setActiveView(isQuickPractice ? 'dashboard' : 'chapter');
     };
 
+    // Render breadcrumbs for non-quick practice lessons
+    const breadcrumbsWrapper = (content: React.ReactNode) => (
+      <div>
+        {!isQuickPractice && renderBreadcrumbs()}
+        {content}
+      </div>
+    );
+
     // Map lesson types to existing components
     if (selectedLesson.type === 'quiz' && selectedLesson.challenges) {
       const quizId = selectedLesson.challenges[0];
       const quizContent = getQuizContent(quizId);
-      return (
+      return breadcrumbsWrapper(
         <QuizComponent
           questions={quizContent}
           title={selectedLesson.title}
@@ -881,7 +1064,7 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
     if (selectedLesson.type === 'flashcard' && selectedLesson.challenges) {
       const flashcardId = selectedLesson.challenges[0];
       const flashcardContent = getFlashcardContent(flashcardId);
-      return (
+      return breadcrumbsWrapper(
         <FlashcardComponent
           flashcards={flashcardContent}
           title={selectedLesson.title}
@@ -903,9 +1086,29 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
       const challengeId = selectedLesson.challenges[0];
       const challenge = getCodeChallengeContent(challengeId);
       if (challenge) {
-        return (
+        return breadcrumbsWrapper(
           <CodeChallengeComponent
             challenge={challenge}
+            xpReward={selectedLesson.xpReward}
+            onComplete={(score, xpEarned) => {
+              if (isQuickPractice) {
+                exitAction();
+              } else {
+                handleLessonComplete(selectedLesson.id, score, xpEarned);
+              }
+            }}
+            onExit={exitAction}
+          />
+        );
+      }
+    }
+
+    if (selectedLesson.type === 'theory') {
+      const theoryLesson = theoryLessons[selectedLesson.id] || promptingTheoryLessons[selectedLesson.id];
+      if (theoryLesson) {
+        return breadcrumbsWrapper(
+          <TheoryLessonComponent
+            lesson={theoryLesson}
             xpReward={selectedLesson.xpReward}
             onComplete={(score, xpEarned) => {
               if (isQuickPractice) {
@@ -1203,7 +1406,7 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
               <h3 className="text-lg font-semibold text-white">Progress</h3>
               <Trophy className="w-5 h-5 text-green-400" />
             </div>
-            <div className="text-3xl font-bold text-green-400 mb-2">{completedJourneys}/3</div>
+            <div className="text-3xl font-bold text-green-400 mb-2">{completedJourneys}/{allJourneys.length}</div>
             <p className="text-sm text-gray-400">Journeys complete</p>
           </motion.div>
         </div>
@@ -1219,7 +1422,14 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
                 : 0;
 
               return (
-                <div key={journey.id} className="flex items-center space-x-4">
+                <div
+                  key={journey.id}
+                  className="flex items-center space-x-4 cursor-pointer hover:bg-gray-700/30 p-3 rounded-lg transition-colors"
+                  onClick={() => {
+                    setSelectedJourney(journey);
+                    setActiveView('journey-detail');
+                  }}
+                >
                   <div className={`p-2 rounded-lg bg-gradient-to-br ${getJourneyColor(journey.color)}`}>
                     {getJourneyIcon(journey)}
                   </div>
@@ -1236,6 +1446,7 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
                       />
                     </div>
                   </div>
+                  <ChevronRight className="w-5 h-5 text-gray-400" />
                 </div>
               );
             })}
@@ -1572,14 +1783,8 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
 
     return (
       <div className="max-w-7xl mx-auto">
-        {/* Back Button */}
-        <button
-          onClick={() => setActiveView('dashboard')}
-          className="text-rose-400 hover:text-rose-300 transition-colors mb-6 flex items-center space-x-2"
-        >
-          <ArrowRight className="w-4 h-4 rotate-180" />
-          <span>Back to Dashboard</span>
-        </button>
+        {/* Breadcrumb Navigation */}
+        {renderBreadcrumbs()}
 
         {/* Header */}
         <div className="text-center mb-8">
@@ -1664,14 +1869,8 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
 
     return (
       <div className="max-w-4xl mx-auto">
-        {/* Back Button */}
-        <button
-          onClick={() => setActiveView('dashboard')}
-          className="text-rose-400 hover:text-rose-300 transition-colors mb-6 flex items-center space-x-2"
-        >
-          <ArrowRight className="w-4 h-4 rotate-180" />
-          <span>Back to Dashboard</span>
-        </button>
+        {/* Breadcrumb Navigation */}
+        {renderBreadcrumbs()}
 
         {/* Header */}
         <div className="text-center mb-8">
@@ -1687,8 +1886,8 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
           <div className="space-y-4">
             <div className="flex items-center justify-between p-4 bg-gray-900/50 rounded-lg">
               <span className="text-gray-300">Complete All Journeys</span>
-              <span className={`font-medium ${completedJourneys.length === 3 ? 'text-green-400' : 'text-yellow-400'}`}>
-                {completedJourneys.length}/3
+              <span className={`font-medium ${completedJourneys.length === allJourneys.length ? 'text-green-400' : 'text-yellow-400'}`}>
+                {completedJourneys.length}/{allJourneys.length}
               </span>
             </div>
             <div className="flex items-center justify-between p-4 bg-gray-900/50 rounded-lg">
@@ -1748,7 +1947,7 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
         </div>
 
         {/* Certification Ready */}
-        {completedJourneys.length === 3 && level >= 7 && (
+        {completedJourneys.length === allJourneys.length && level >= 7 && (
           <div className="mt-8 bg-gradient-to-r from-rose-500/20 to-purple-500/20 rounded-xl p-8 border border-rose-500/50 text-center">
             <Sparkles className="w-12 h-12 text-rose-400 mx-auto mb-4" />
             <h3 className="text-2xl font-bold text-white mb-2">Congratulations!</h3>

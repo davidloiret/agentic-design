@@ -78,14 +78,14 @@ export const promptingJourney: Journey = {
   description: 'Learn the art and science of crafting effective prompts, from basics to advanced techniques',
   icon: 'MessageSquare',
   color: 'blue',
-  totalXpReward: 2500,
+  totalXpReward: 1260,
   chapters: [
     {
       id: 'prompting-fundamentals',
       title: 'Prompting Fundamentals',
       description: 'Master the basics of prompt engineering',
       order: 1,
-      xpReward: 300,
+      xpReward: 150,
       estimatedTime: 45,
       lessons: [
         {
@@ -124,7 +124,7 @@ export const promptingJourney: Journey = {
       title: 'Essential Prompt Patterns',
       description: 'Learn proven patterns for consistent results',
       order: 2,
-      xpReward: 400,
+      xpReward: 280,
       estimatedTime: 60,
       unlockAfter: 'prompting-fundamentals',
       lessons: [
@@ -164,7 +164,7 @@ export const promptingJourney: Journey = {
       title: 'Advanced Prompting Techniques',
       description: 'Master sophisticated prompting strategies',
       order: 3,
-      xpReward: 500,
+      xpReward: 350,
       estimatedTime: 90,
       unlockAfter: 'prompt-patterns',
       lessons: [
@@ -205,7 +205,7 @@ export const promptingJourney: Journey = {
       title: 'Prompt Optimization & Testing',
       description: 'Learn to measure and improve prompt performance',
       order: 4,
-      xpReward: 600,
+      xpReward: 480,
       estimatedTime: 120,
       unlockAfter: 'advanced-prompting',
       badge: {
@@ -782,8 +782,626 @@ export const progressionRules = {
   }
 };
 
+// Journey 4: Master Knowledge Representation
+export const knowledgeRepresentationJourney: Journey = {
+  id: 'master-knowledge-representation',
+  title: 'Master Knowledge Representation',
+  description: 'Build foundational understanding of how to structure and represent knowledge in AI systems',
+  icon: 'Brain',
+  color: 'green',
+  totalXpReward: 5520,
+  chapters: [
+    {
+      id: 'set-theory-basics',
+      title: 'Set Theory Basics',
+      description: 'Master the fundamentals of sets and set operations',
+      order: 1,
+      xpReward: 620,
+      estimatedTime: 185,
+      lessons: [
+        {
+          id: 'what-are-sets',
+          title: 'Introduction to Sets',
+          description: 'Understand what sets are and their core properties',
+          type: 'theory',
+          difficulty: 'beginner',
+          xpReward: 50,
+          estimatedTime: 15,
+        },
+        {
+          id: 'set-notation-flashcards',
+          title: 'Set Notation & Terminology',
+          description: 'Learn standard set notation and terminology',
+          type: 'flashcard',
+          difficulty: 'beginner',
+          xpReward: 60,
+          estimatedTime: 20,
+          challenges: ['set-notation-flashcards']
+        },
+        {
+          id: 'set-operations',
+          title: 'Set Operations',
+          description: 'Master union, intersection, difference, and complement',
+          type: 'flashcard',
+          difficulty: 'beginner',
+          xpReward: 70,
+          estimatedTime: 25,
+          challenges: ['set-operations-flashcards']
+        },
+        {
+          id: 'set-theory-quiz',
+          title: 'Set Theory Fundamentals Quiz',
+          description: 'Test your understanding of basic set theory',
+          type: 'quiz',
+          difficulty: 'beginner',
+          xpReward: 80,
+          estimatedTime: 30,
+          challenges: ['set-theory-fundamentals-quiz']
+        },
+        {
+          id: 'subsets-powersets-theory',
+          title: 'Subsets and Power Sets: Theory',
+          description: 'Understand subset relationships and the power set concept',
+          type: 'theory',
+          difficulty: 'intermediate',
+          xpReward: 90,
+          estimatedTime: 35,
+        },
+        {
+          id: 'subsets-powersets',
+          title: 'Subsets and Power Sets: Implementation',
+          description: 'Implement power set generation and subset operations',
+          type: 'code',
+          difficulty: 'intermediate',
+          xpReward: 100,
+          estimatedTime: 40,
+          challenges: ['implement-powerset']
+        },
+        {
+          id: 'cartesian-products-theory',
+          title: 'Cartesian Products: Theory',
+          description: 'Understand how sets combine to form ordered pairs and products',
+          type: 'theory',
+          difficulty: 'intermediate',
+          xpReward: 70,
+          estimatedTime: 20,
+        },
+        {
+          id: 'cartesian-products',
+          title: 'Cartesian Products: Implementation',
+          description: 'Implement Cartesian product operations in code',
+          type: 'code',
+          difficulty: 'intermediate',
+          xpReward: 100,
+          estimatedTime: 45,
+          challenges: ['cartesian-product-challenge']
+        }
+      ]
+    },
+    {
+      id: 'graph-theory-fundamentals',
+      title: 'Graph Theory Fundamentals',
+      description: 'Learn how graphs represent relationships and structures',
+      order: 2,
+      xpReward: 580,
+      estimatedTime: 190,
+      unlockAfter: 'set-theory-basics',
+      lessons: [
+        {
+          id: 'what-are-graphs',
+          title: 'Introduction to Graphs',
+          description: 'Understand vertices, edges, and basic graph concepts',
+          type: 'theory',
+          difficulty: 'beginner',
+          xpReward: 60,
+          estimatedTime: 20,
+        },
+        {
+          id: 'graph-types',
+          title: 'Types of Graphs',
+          description: 'Learn directed, undirected, weighted, and special graphs',
+          type: 'flashcard',
+          difficulty: 'beginner',
+          xpReward: 70,
+          estimatedTime: 25,
+          challenges: ['graph-types-flashcards']
+        },
+        {
+          id: 'graph-terminology',
+          title: 'Graph Terminology',
+          description: 'Master degree, paths, cycles, and connectivity',
+          type: 'flashcard',
+          difficulty: 'intermediate',
+          xpReward: 80,
+          estimatedTime: 30,
+          challenges: ['graph-terminology-flashcards']
+        },
+        {
+          id: 'graph-representations',
+          title: 'Graph Representations',
+          description: 'Implement adjacency matrix and adjacency list',
+          type: 'code',
+          difficulty: 'intermediate',
+          xpReward: 120,
+          estimatedTime: 50,
+          challenges: ['implement-graph-representations']
+        },
+        {
+          id: 'graph-algorithms-basics',
+          title: 'Basic Graph Algorithms',
+          description: 'Learn traversal and shortest path algorithms',
+          type: 'code',
+          difficulty: 'advanced',
+          xpReward: 150,
+          estimatedTime: 60,
+          challenges: ['graph-traversal-challenge']
+        },
+        {
+          id: 'graph-theory-quiz',
+          title: 'Graph Theory Mastery Quiz',
+          description: 'Test your complete graph theory knowledge',
+          type: 'quiz',
+          difficulty: 'intermediate',
+          xpReward: 100,
+          estimatedTime: 35,
+          challenges: ['graph-theory-quiz']
+        }
+      ]
+    },
+    {
+      id: 'logic-and-relations',
+      title: 'Logic and Relations',
+      description: 'Master logical reasoning and relational structures',
+      order: 3,
+      xpReward: 720,
+      estimatedTime: 180,
+      unlockAfter: 'graph-theory-fundamentals',
+      lessons: [
+        {
+          id: 'propositional-logic',
+          title: 'Propositional Logic Basics',
+          description: 'Learn logical operators and truth tables',
+          type: 'flashcard',
+          difficulty: 'beginner',
+          xpReward: 70,
+          estimatedTime: 25,
+          challenges: ['propositional-logic-flashcards']
+        },
+        {
+          id: 'first-order-logic',
+          title: 'First-Order Logic & Predicates',
+          description: 'Master quantifiers, predicates, and formal reasoning',
+          type: 'theory',
+          difficulty: 'intermediate',
+          xpReward: 90,
+          estimatedTime: 35,
+        },
+        {
+          id: 'logic-quiz',
+          title: 'Logic Fundamentals Quiz',
+          description: 'Test your understanding of logical reasoning',
+          type: 'quiz',
+          difficulty: 'intermediate',
+          xpReward: 100,
+          estimatedTime: 30,
+          challenges: ['logic-fundamentals-quiz']
+        },
+        {
+          id: 'relations-basics',
+          title: 'Relations and Their Properties',
+          description: 'Learn reflexive, symmetric, and transitive relations',
+          type: 'flashcard',
+          difficulty: 'intermediate',
+          xpReward: 80,
+          estimatedTime: 30,
+          challenges: ['relations-properties-flashcards']
+        },
+        {
+          id: 'relations-theory',
+          title: 'Relations: Modeling Connections and Structure',
+          description: 'Master binary relations, equivalence classes, and partial orders',
+          type: 'theory',
+          difficulty: 'intermediate',
+          xpReward: 100,
+          estimatedTime: 40,
+        },
+        {
+          id: 'equivalence-relations',
+          title: 'Equivalence Relations',
+          description: 'Implement equivalence classes and Union-Find algorithm',
+          type: 'code',
+          difficulty: 'advanced',
+          xpReward: 130,
+          estimatedTime: 50,
+          challenges: ['equivalence-relations-challenge']
+        },
+        {
+          id: 'logic-programming',
+          title: 'Logic-Based Knowledge Systems',
+          description: 'Build a rule-based reasoning system with forward/backward chaining',
+          type: 'code',
+          difficulty: 'advanced',
+          xpReward: 150,
+          estimatedTime: 60,
+          challenges: ['build-logic-system']
+        }
+      ]
+    },
+    {
+      id: 'linear-algebra-foundations',
+      title: 'Linear Algebra Foundations',
+      description: 'Master vectors and matrices - the mathematical foundation of all modern AI',
+      order: 4,
+      xpReward: 680,
+      estimatedTime: 210,
+      unlockAfter: 'logic-and-relations',
+      lessons: [
+        {
+          id: 'vector-spaces-theory',
+          title: 'Vectors and Vector Spaces: The Foundation of AI',
+          description: 'Master vectors - the data structure that powers every neural network, embedding, and machine learning algorithm',
+          type: 'theory',
+          difficulty: 'intermediate',
+          xpReward: 100,
+          estimatedTime: 40,
+        },
+        {
+          id: 'vectors-flashcards',
+          title: 'Vector Operations & Concepts',
+          description: 'Master vector terminology: dot products, norms, orthogonality, and vector spaces',
+          type: 'flashcard',
+          difficulty: 'intermediate',
+          xpReward: 70,
+          estimatedTime: 25,
+          challenges: ['vectors-flashcards']
+        },
+        {
+          id: 'vector-operations-challenge',
+          title: 'Implement Core Vector Operations',
+          description: 'Build the essential vector operations from scratch: dot product, norms, distances, cosine similarity',
+          type: 'code',
+          difficulty: 'intermediate',
+          xpReward: 130,
+          estimatedTime: 50,
+          challenges: ['vector-operations-challenge']
+        },
+        {
+          id: 'matrix-operations-theory',
+          title: 'Matrices and Transformations: Neural Networks Revealed',
+          description: 'Understand how matrix multiplication powers every layer of every neural network, and why linear algebra is the language of AI',
+          type: 'theory',
+          difficulty: 'intermediate',
+          xpReward: 110,
+          estimatedTime: 45,
+        },
+        {
+          id: 'matrix-neural-network-challenge',
+          title: 'Build a Neural Network Layer with Matrices',
+          description: 'Implement matrix operations and build a complete neural network layer with forward and backward passes',
+          type: 'code',
+          difficulty: 'advanced',
+          xpReward: 170,
+          estimatedTime: 70,
+          challenges: ['matrix-neural-network-challenge']
+        },
+        {
+          id: 'linear-algebra-mastery-quiz',
+          title: 'Linear Algebra Mastery Quiz',
+          description: 'Test your understanding of vectors, matrices, and their role in AI',
+          type: 'quiz',
+          difficulty: 'intermediate',
+          xpReward: 100,
+          estimatedTime: 35,
+          challenges: ['linear-algebra-quiz']
+        }
+      ]
+    },
+    {
+      id: 'probability-statistics-fundamentals',
+      title: 'Probability and Statistics',
+      description: 'Master probability, statistics, and uncertainty reasoning - the foundation of modern ML',
+      order: 5,
+      xpReward: 750,
+      estimatedTime: 210,
+      unlockAfter: 'linear-algebra-foundations',
+      badge: {
+        id: 'knowledge-architect',
+        name: 'Knowledge Architect',
+        description: 'Master of knowledge representation foundations',
+        icon: 'Award',
+        rarity: 'legendary'
+      },
+      lessons: [
+        {
+          id: 'probability-basics',
+          title: 'Probability Fundamentals',
+          description: 'Learn probability theory and basic concepts',
+          type: 'flashcard',
+          difficulty: 'beginner',
+          xpReward: 70,
+          estimatedTime: 25,
+          challenges: ['probability-basics-flashcards']
+        },
+        {
+          id: 'probability-distributions-theory',
+          title: 'Probability Distributions: The Mathematics of Uncertainty in AI',
+          description: 'Master distributions (Bernoulli, Categorical, Gaussian) and how they power all ML models',
+          type: 'theory',
+          difficulty: 'intermediate',
+          xpReward: 120,
+          estimatedTime: 50,
+        },
+        {
+          id: 'distributions-flashcards',
+          title: 'Probability Distributions Concepts',
+          description: 'Master distribution terminology: uniform, normal, Bernoulli, and continuous vs discrete distributions',
+          type: 'flashcard',
+          difficulty: 'intermediate',
+          xpReward: 80,
+          estimatedTime: 30,
+          challenges: ['distributions-flashcards']
+        },
+        {
+          id: 'conditional-probability-quiz',
+          title: 'Conditional Probability and Bayes Theorem Quiz',
+          description: 'Test your understanding of conditional probability and Bayesian reasoning',
+          type: 'quiz',
+          difficulty: 'intermediate',
+          xpReward: 90,
+          estimatedTime: 30,
+          challenges: ['conditional-probability-quiz']
+        },
+        {
+          id: 'statistical-inference-theory',
+          title: 'Statistical Inference and Machine Learning',
+          description: 'Master hypothesis testing, confidence intervals, bias-variance tradeoff, and Bayesian inference',
+          type: 'theory',
+          difficulty: 'advanced',
+          xpReward: 120,
+          estimatedTime: 50,
+        },
+        {
+          id: 'bayesian-networks-challenge',
+          title: 'Build a Bayesian Network',
+          description: 'Implement probabilistic graphical model for reasoning under uncertainty',
+          type: 'code',
+          difficulty: 'advanced',
+          xpReward: 170,
+          estimatedTime: 70,
+          challenges: ['bayesian-network-challenge']
+        },
+        {
+          id: 'probability-mastery-quiz',
+          title: 'Probability and Statistics Mastery Quiz',
+          description: 'Test your complete understanding of probabilistic reasoning and statistical inference',
+          type: 'quiz',
+          difficulty: 'advanced',
+          xpReward: 100,
+          estimatedTime: 35,
+          challenges: ['probability-statistics-quiz']
+        }
+      ]
+    },
+    {
+      id: 'ontologies-semantic-web',
+      title: 'Ontologies & Semantic Web',
+      description: 'Master ontologies, RDF, OWL, and the Semantic Web - formal knowledge representation at scale',
+      order: 6,
+      xpReward: 680,
+      estimatedTime: 190,
+      unlockAfter: 'probability-statistics-fundamentals',
+      lessons: [
+        {
+          id: 'ontologies-introduction',
+          title: 'Introduction to Ontologies, RDF, and OWL',
+          description: 'Understand how ontologies enable machines to understand meaning through formal semantics',
+          type: 'theory',
+          difficulty: 'intermediate',
+          xpReward: 90,
+          estimatedTime: 45,
+        },
+        {
+          id: 'ontology-engineering',
+          title: 'Ontology Engineering: Building Production Knowledge Systems',
+          description: 'Learn the lifecycle, best practices, and patterns for building production-quality ontologies',
+          type: 'theory',
+          difficulty: 'intermediate',
+          xpReward: 100,
+          estimatedTime: 40,
+        },
+        {
+          id: 'ontologies-flashcards',
+          title: 'Ontologies & Semantic Web Concepts',
+          description: 'Master RDF, RDFS, OWL, and triple store terminology',
+          type: 'flashcard',
+          difficulty: 'intermediate',
+          xpReward: 70,
+          estimatedTime: 25,
+          challenges: ['ontologies-flashcards']
+        },
+        {
+          id: 'ontologies-quiz',
+          title: 'Ontologies & Semantic Web Mastery Quiz',
+          description: 'Test your understanding of ontologies, RDF, OWL, and reasoning',
+          type: 'quiz',
+          difficulty: 'intermediate',
+          xpReward: 100,
+          estimatedTime: 30,
+          challenges: ['ontologies-quiz']
+        },
+        {
+          id: 'rdf-triple-store-challenge',
+          title: 'Build an RDF Triple Store',
+          description: 'Implement an RDF triple store with SPARQL-like queries and RDFS reasoning',
+          type: 'code',
+          difficulty: 'advanced',
+          xpReward: 150,
+          estimatedTime: 60,
+          challenges: ['rdf-triple-store-challenge']
+        },
+        {
+          id: 'ontology-reasoning-challenge',
+          title: 'Build an Ontology-Based Reasoning System',
+          description: 'Implement OWL reasoning with consistency checking and automatic classification',
+          type: 'code',
+          difficulty: 'advanced',
+          xpReward: 170,
+          estimatedTime: 70,
+          challenges: ['ontology-reasoning-challenge']
+        }
+      ]
+    },
+    {
+      id: 'knowledge-graphs',
+      title: 'Knowledge Graphs',
+      description: 'Master knowledge graphs and embeddings - the foundation of modern enterprise AI',
+      order: 7,
+      xpReward: 710,
+      estimatedTime: 195,
+      unlockAfter: 'ontologies-semantic-web',
+      lessons: [
+        {
+          id: 'knowledge-graphs-introduction',
+          title: 'Knowledge Graphs: Representing the World at Scale',
+          description: 'Understand how knowledge graphs power Google, Amazon, and modern AI systems',
+          type: 'theory',
+          difficulty: 'intermediate',
+          xpReward: 100,
+          estimatedTime: 40,
+        },
+        {
+          id: 'knowledge-graph-embeddings',
+          title: 'Knowledge Graph Embeddings: Machine Learning Meets Symbolic Knowledge',
+          description: 'Master TransE, DistMult, ComplEx, and RotatE for link prediction and reasoning',
+          type: 'theory',
+          difficulty: 'advanced',
+          xpReward: 120,
+          estimatedTime: 50,
+        },
+        {
+          id: 'knowledge-graphs-flashcards',
+          title: 'Knowledge Graph Concepts',
+          description: 'Master KG construction, embeddings, and link prediction terminology',
+          type: 'flashcard',
+          difficulty: 'intermediate',
+          xpReward: 70,
+          estimatedTime: 25,
+          challenges: ['knowledge-graphs-flashcards']
+        },
+        {
+          id: 'knowledge-graphs-quiz',
+          title: 'Knowledge Graphs Mastery Quiz',
+          description: 'Test your understanding of KGs, embeddings, and production systems',
+          type: 'quiz',
+          difficulty: 'advanced',
+          xpReward: 100,
+          estimatedTime: 30,
+          challenges: ['knowledge-graphs-quiz']
+        },
+        {
+          id: 'build-knowledge-graph-challenge',
+          title: 'Build a Knowledge Graph from Scratch',
+          description: 'Implement entity management, relationship storage, and multi-hop path finding',
+          type: 'code',
+          difficulty: 'advanced',
+          xpReward: 150,
+          estimatedTime: 60,
+          challenges: ['build-knowledge-graph-challenge']
+        },
+        {
+          id: 'transe-implementation-challenge',
+          title: 'Implement TransE for Link Prediction',
+          description: 'Build TransE embeddings in PyTorch with training loop and evaluation metrics',
+          type: 'code',
+          difficulty: 'advanced',
+          xpReward: 170,
+          estimatedTime: 70,
+          challenges: ['transe-implementation-challenge']
+        }
+      ]
+    },
+    {
+      id: 'neural-symbolic-ai',
+      title: 'Neural-Symbolic AI',
+      description: 'Master the frontier of AI: combining neural learning with symbolic reasoning',
+      order: 8,
+      xpReward: 780,
+      estimatedTime: 210,
+      unlockAfter: 'knowledge-graphs',
+      badge: {
+        id: 'neuro-symbolic-master',
+        name: 'Neuro-Symbolic AI Master',
+        description: 'Mastered the complete spectrum of knowledge representation from symbolic logic to neural-symbolic hybrid systems',
+        icon: 'Award',
+        rarity: 'legendary'
+      },
+      lessons: [
+        {
+          id: 'neuro-symbolic-overview',
+          title: 'Neural-Symbolic AI: Combining Learning with Reasoning',
+          description: 'Understand RAG, knowledge distillation, and hybrid systems that power modern AI',
+          type: 'theory',
+          difficulty: 'advanced',
+          xpReward: 120,
+          estimatedTime: 45,
+        },
+        {
+          id: 'graph-neural-networks',
+          title: 'Graph Neural Networks: Deep Learning on Knowledge Graphs',
+          description: 'Master GNNs, message passing, and production systems from Pinterest to Google Maps',
+          type: 'theory',
+          difficulty: 'advanced',
+          xpReward: 130,
+          estimatedTime: 50,
+        },
+        {
+          id: 'neural-symbolic-flashcards',
+          title: 'Neural-Symbolic AI & GNN Concepts',
+          description: 'Master RAG, GNN, message passing, and hybrid AI terminology',
+          type: 'flashcard',
+          difficulty: 'advanced',
+          xpReward: 70,
+          estimatedTime: 25,
+          challenges: ['neural-symbolic-flashcards']
+        },
+        {
+          id: 'neural-symbolic-quiz',
+          title: 'Neural-Symbolic AI Mastery Quiz',
+          description: 'Test your understanding of RAG, GNNs, and neuro-symbolic systems',
+          type: 'quiz',
+          difficulty: 'advanced',
+          xpReward: 100,
+          estimatedTime: 30,
+          challenges: ['neural-symbolic-quiz']
+        },
+        {
+          id: 'build-gnn-challenge',
+          title: 'Build a Graph Neural Network from Scratch',
+          description: 'Implement GCN layers, message passing, and semi-supervised node classification',
+          type: 'code',
+          difficulty: 'advanced',
+          xpReward: 180,
+          estimatedTime: 75,
+          challenges: ['build-gnn-challenge']
+        },
+        {
+          id: 'rag-with-kg-challenge',
+          title: 'Build a RAG System with Knowledge Graph Retrieval',
+          description: 'Implement production RAG pipeline with KG backend, multi-hop retrieval, and citations',
+          type: 'code',
+          difficulty: 'advanced',
+          xpReward: 180,
+          estimatedTime: 75,
+          challenges: ['rag-with-kg-challenge']
+        }
+      ]
+    }
+  ]
+};
+
 export const allJourneys = [
   promptingJourney,
   agenticPatternsJourney,
-  redTeamingJourney
+  redTeamingJourney,
+  knowledgeRepresentationJourney
 ];
