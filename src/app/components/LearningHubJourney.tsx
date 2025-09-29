@@ -135,12 +135,59 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
   const [unlockedAchievements, setUnlockedAchievements] = useState<string[]>([]);
 
   // Journey-specific progress tracking
-  const [journeyProgress, setJourneyProgress] = useState<{ [journeyId: string]: { 
+  const [journeyProgress, setJourneyProgress] = useState<{ [journeyId: string]: {
     completedChapters: string[],
     completedLessons: string[],
     totalXp: number,
     currentChapter?: string
   } }>({});
+
+  // Initialize journey progress from backend data
+  useEffect(() => {
+    if (progress && progress.length > 0) {
+      const newJourneyProgress: typeof journeyProgress = {};
+
+      // Group progress by journey
+      progress.forEach(p => {
+        if (p.journeyId) {
+          if (!newJourneyProgress[p.journeyId]) {
+            newJourneyProgress[p.journeyId] = {
+              completedChapters: [],
+              completedLessons: [],
+              totalXp: 0
+            };
+          }
+
+          // Add completed lesson if it's completed
+          if (p.isCompleted && p.lessonId && !newJourneyProgress[p.journeyId].completedLessons.includes(p.lessonId)) {
+            newJourneyProgress[p.journeyId].completedLessons.push(p.lessonId);
+          }
+
+          // Check if chapter is complete
+          if (p.chapterId && p.isCompleted) {
+            const journey = allJourneys.find(j => j.id === p.journeyId);
+            const chapter = journey?.chapters.find(c => c.id === p.chapterId);
+            if (chapter) {
+              const allLessonsComplete = chapter.lessons.every(l =>
+                progress.some(prog =>
+                  prog.journeyId === p.journeyId &&
+                  prog.chapterId === p.chapterId &&
+                  prog.lessonId === l.id &&
+                  prog.isCompleted
+                )
+              );
+
+              if (allLessonsComplete && !newJourneyProgress[p.journeyId].completedChapters.includes(p.chapterId)) {
+                newJourneyProgress[p.journeyId].completedChapters.push(p.chapterId);
+              }
+            }
+          }
+        }
+      });
+
+      setJourneyProgress(newJourneyProgress);
+    }
+  }, [progress]);
 
   const getCurrentLevel = () => {
     return LEVELS.reduce((prev, current) => 
