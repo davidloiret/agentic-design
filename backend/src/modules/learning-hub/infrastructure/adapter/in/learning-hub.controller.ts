@@ -54,6 +54,10 @@ export class LearningHubController {
         dto.progressPercentage,
         dto.timeSpent,
         dto.xpEarned,
+        dto.journeyId,
+        dto.chapterId,
+        dto.score,
+        dto.isCompleted,
       );
 
       return {

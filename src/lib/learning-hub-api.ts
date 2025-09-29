@@ -94,9 +94,13 @@ export const learningHubApi = {
     const backendData = {
       courseId: data.courseId,
       lessonId: data.lessonId,
+      journeyId: data.journeyId,  // Include journeyId for tracking
+      chapterId: data.chapterId,  // Include chapterId for chapter completion tracking
       progressPercentage: data.isCompleted ? 100 : 50, // Default to 50% if not completed
       timeSpent: undefined, // Not currently tracked
       xpEarned: data.xpEarned || undefined, // Only send if provided
+      score: data.score || undefined, // Include score if provided
+      isCompleted: data.isCompleted || false, // Include completion status
     };
 
     const response = await api.post('/api/v1/learning-hub/progress', backendData);

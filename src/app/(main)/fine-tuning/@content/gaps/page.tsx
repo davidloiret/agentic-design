@@ -1,4 +1,11 @@
+import { Metadata } from 'next';
+import { generateFineTuningMetadata } from '@/app/lib/metadata';
+import { getFineTuningPageById } from '@/app/fine-tuning-pages';
 import { AlertTriangle, Brain, Construction, Shield, Target, Lightbulb } from 'lucide-react';
+
+const pageData = getFineTuningPageById('gaps')!;
+
+export const metadata: Metadata = generateFineTuningMetadata(pageData);
 
 export default function FineTuningGapsPage() {
   return (

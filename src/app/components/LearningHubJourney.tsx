@@ -351,7 +351,7 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
   const handleLessonComplete = async (lessonId: string, score: number, xpEarned: number) => {
     if (!selectedJourney || !selectedChapter) return;
 
-    // Update local progress
+    // Update local progress optimistically
     const newProgress = { ...journeyProgress };
     if (!newProgress[selectedJourney.id]) {
       newProgress[selectedJourney.id] = {
@@ -360,7 +360,7 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
         totalXp: 0
       };
     }
-    
+
     if (!newProgress[selectedJourney.id].completedLessons.includes(lessonId)) {
       newProgress[selectedJourney.id].completedLessons.push(lessonId);
       newProgress[selectedJourney.id].totalXp += xpEarned;
@@ -368,10 +368,10 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
 
     // Check if chapter is complete
     const chapterLessons = selectedChapter.lessons.map(l => l.id);
-    const chapterComplete = chapterLessons.every(id => 
+    const chapterComplete = chapterLessons.every(id =>
       newProgress[selectedJourney.id].completedLessons.includes(id)
     );
-    
+
     if (chapterComplete && !newProgress[selectedJourney.id].completedChapters.includes(selectedChapter.id)) {
       newProgress[selectedJourney.id].completedChapters.push(selectedChapter.id);
       setShowCelebration(true);
@@ -383,18 +383,25 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
     // Update backend
     try {
       await updateProgress({
-        xpEarned: 10, // Standard XP for lesson completion
+        xpEarned: xpEarned || 10, // Use actual XP earned or default to 10
         userId: '', // Will be filled by context
         courseId: selectedJourney.id,
         journeyId: selectedJourney.id,
         chapterId: selectedChapter.id,
         lessonId: lessonId,
         isCompleted: true,
-        score: 100,
+        score: score || 100,
         completedAt: new Date().toISOString(),
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       });
+
+      // Wait a moment for the backend refresh to complete
+      // This ensures the progress data is synced
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Trigger a manual refresh to ensure data is in sync
+      await refreshData();
     } catch (error) {
       console.error('Failed to update progress:', error);
     }

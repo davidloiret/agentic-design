@@ -49,20 +49,21 @@ app.prepare().then(() => {
       const { pathname, query } = parsedUrl;
 
       // Handle backend API proxy
-      if (pathname.startsWith('/api/backend/')) {
+      if (pathname.startsWith('/api/backend/') || pathname.startsWith('/api/v1/')) {
         console.log('Proxying request:', {
           method: req.method,
           path: pathname,
           contentLength: req.headers['content-length'],
           contentType: req.headers['content-type'],
         });
-        
+
         // Create proxy middleware with large body size limit
         const proxy = createProxyMiddleware({
           target: backendUrl,
           changeOrigin: true,
           pathRewrite: {
             '^/api/backend': '', // Remove /api/backend prefix
+            '^/api/v1': '/api/v1', // Keep /api/v1 as is
           },
           // Configure request size limits
           onProxyReq: (proxyReq, req, res) => {

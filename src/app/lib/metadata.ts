@@ -1,5 +1,9 @@
 import { Metadata } from 'next';
 import { Category } from '../categories';
+import { AIDrivenDevPage } from '../ai-driven-dev-pages';
+import { AIInferencePage } from '../ai-inference-pages';
+import { FineTuningPage } from '../fine-tuning-pages';
+import { PromptHubPage } from '../prompt-hub-pages';
 
 const SITE_NAME = 'Agentic Design';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://agentic-design.ai';
@@ -403,5 +407,279 @@ export function generateDefaultMetadata(config: Metadata = {}): Metadata {
       title: config.title ?? defaults.twitter?.title,
       description: config.description ?? defaults.twitter?.description,
     },
+  };
+}
+
+export function generateAIDrivenDevMetadata(page: AIDrivenDevPage): Metadata {
+  const title = `${page.title} - ${SITE_NAME}`;
+  const url = `${SITE_URL}/ai-driven-dev/${page.id}`;
+  const description = page.description;
+
+  const defaultKeywords = [
+    'AI-driven development',
+    'AI coding',
+    'software development',
+    'AI tools',
+    'developer tools',
+    'AI assistance',
+  ];
+
+  const keywords = page.keywords
+    ? [...defaultKeywords, ...page.keywords]
+    : defaultKeywords;
+
+  return {
+    title,
+    description,
+    keywords,
+    authors: [{ name: 'Agentic Design Team' }],
+    creator: 'Agentic Design',
+    publisher: 'Agentic Design',
+    openGraph: {
+      type: 'article',
+      title,
+      description,
+      url,
+      siteName: SITE_NAME,
+      images: [
+        {
+          url: `${SITE_URL}/api/og/ai-driven-dev?id=${page.id}`,
+          width: 1200,
+          height: 630,
+          alt: `${page.title} - ${SITE_NAME}`,
+        }
+      ],
+      locale: 'en_US',
+      section: page.category,
+      tags: keywords,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [`${SITE_URL}/api/og/ai-driven-dev?id=${page.id}`],
+      creator: '@agentic_design',
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
+    alternates: {
+      canonical: url,
+    },
+    category: 'AI Development',
+    classification: 'AI/Software Development',
+  };
+}
+
+export function generateAIInferenceMetadata(page: AIInferencePage): Metadata {
+  const title = `${page.title} - ${SITE_NAME}`;
+  const url = `${SITE_URL}/ai-inference/${page.id}`;
+  const description = page.description;
+
+  const defaultKeywords = [
+    'AI inference',
+    'model deployment',
+    'production AI',
+    'LLM inference',
+    'AI optimization',
+  ];
+
+  const keywords = page.keywords
+    ? [...defaultKeywords, ...page.keywords]
+    : defaultKeywords;
+
+  return {
+    title,
+    description,
+    keywords,
+    authors: [{ name: 'Agentic Design Team' }],
+    creator: 'Agentic Design',
+    publisher: 'Agentic Design',
+    openGraph: {
+      type: 'article',
+      title,
+      description,
+      url,
+      siteName: SITE_NAME,
+      images: [
+        {
+          url: `${SITE_URL}/api/og/ai-inference?id=${page.id}`,
+          width: 1200,
+          height: 630,
+          alt: `${page.title} - ${SITE_NAME}`,
+        }
+      ],
+      locale: 'en_US',
+      section: 'AI Inference',
+      tags: keywords,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [`${SITE_URL}/api/og/ai-inference?id=${page.id}`],
+      creator: '@agentic_design',
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
+    alternates: {
+      canonical: url,
+    },
+    category: 'AI Inference',
+    classification: 'AI/Machine Learning',
+  };
+}
+
+export function generateFineTuningMetadata(page: FineTuningPage): Metadata {
+  const title = `${page.title} - ${SITE_NAME}`;
+  const url = `${SITE_URL}/fine-tuning/${page.id}`;
+  const description = page.description;
+
+  const defaultKeywords = [
+    'fine-tuning',
+    'model training',
+    'AI customization',
+    'LoRA',
+    'transfer learning',
+  ];
+
+  const keywords = page.keywords
+    ? [...defaultKeywords, ...page.keywords]
+    : defaultKeywords;
+
+  return {
+    title,
+    description,
+    keywords,
+    authors: [{ name: 'Agentic Design Team' }],
+    creator: 'Agentic Design',
+    publisher: 'Agentic Design',
+    openGraph: {
+      type: 'article',
+      title,
+      description,
+      url,
+      siteName: SITE_NAME,
+      images: [
+        {
+          url: `${SITE_URL}/api/og/fine-tuning?id=${page.id}`,
+          width: 1200,
+          height: 630,
+          alt: `${page.title} - ${SITE_NAME}`,
+        }
+      ],
+      locale: 'en_US',
+      section: 'Fine-Tuning',
+      tags: keywords,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [`${SITE_URL}/api/og/fine-tuning?id=${page.id}`],
+      creator: '@agentic_design',
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
+    alternates: {
+      canonical: url,
+    },
+    category: 'Fine-Tuning',
+    classification: 'AI/Machine Learning',
+  };
+}
+
+export function generatePromptHubMetadata(page: PromptHubPage): Metadata {
+  const title = `${page.title} - ${SITE_NAME}`;
+  const url = `${SITE_URL}/prompt-hub/${page.id}`;
+  const description = page.description;
+
+  const defaultKeywords = [
+    'system prompt',
+    'AI prompts',
+    'leaked prompts',
+    'prompt engineering',
+    'AI instructions',
+  ];
+
+  const keywords = page.keywords
+    ? [...defaultKeywords, ...page.keywords]
+    : defaultKeywords;
+
+  return {
+    title,
+    description,
+    keywords,
+    authors: [{ name: 'Agentic Design Team' }],
+    creator: 'Agentic Design',
+    publisher: 'Agentic Design',
+    openGraph: {
+      type: 'article',
+      title,
+      description,
+      url,
+      siteName: SITE_NAME,
+      images: [
+        {
+          url: `${SITE_URL}/api/og/prompt-hub?provider=${page.provider}&model=${page.model}`,
+          width: 1200,
+          height: 630,
+          alt: `${page.title} - ${SITE_NAME}`,
+        }
+      ],
+      locale: 'en_US',
+      section: 'Prompt Hub',
+      tags: keywords,
+      publishedTime: page.date,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [`${SITE_URL}/api/og/prompt-hub?provider=${page.provider}&model=${page.model}`],
+      creator: '@agentic_design',
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
+    alternates: {
+      canonical: url,
+    },
+    category: 'Prompt Engineering',
+    classification: 'AI/Prompt Engineering',
   };
 }

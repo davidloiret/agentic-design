@@ -1,3 +1,12 @@
+import { Metadata } from 'next';
+import { generateAIInferenceMetadata } from '@/app/lib/metadata';
+import { getAIInferencePageById } from '@/app/ai-inference-pages';
+
+
+const pageData = getAIInferencePageById('overview')!;
+
+export const metadata: Metadata = generateAIInferenceMetadata(pageData);
+
 export default function OverviewPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">

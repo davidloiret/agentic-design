@@ -1,4 +1,11 @@
+import { Metadata } from 'next';
+import { generateFineTuningMetadata } from '@/app/lib/metadata';
+import { getFineTuningPageById } from '@/app/fine-tuning-pages';
 import { Star, Zap, Brain, CheckCircle, AlertTriangle } from 'lucide-react';
+
+const pageData = getFineTuningPageById('frameworks')!;
+
+export const metadata: Metadata = generateFineTuningMetadata(pageData);
 
 export default function FrameworksPage() {
   return (

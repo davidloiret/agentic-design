@@ -1,4 +1,4 @@
-import { IsString, IsNumber, Min, Max, IsOptional } from 'class-validator';
+import { IsString, IsNumber, Min, Max, IsOptional, IsBoolean } from 'class-validator';
 
 export class UpdateProgressDto {
   @IsString()
@@ -6,6 +6,14 @@ export class UpdateProgressDto {
 
   @IsString()
   lessonId: string;
+
+  @IsOptional()
+  @IsString()
+  journeyId?: string;
+
+  @IsOptional()
+  @IsString()
+  chapterId?: string;
 
   @IsNumber()
   @Min(0)
@@ -21,4 +29,14 @@ export class UpdateProgressDto {
   @IsNumber()
   @Min(0)
   xpEarned?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  @Max(100)
+  score?: number;
+
+  @IsOptional()
+  @IsBoolean()
+  isCompleted?: boolean;
 }

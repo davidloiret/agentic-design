@@ -1,4 +1,11 @@
+import { Metadata } from 'next';
+import { generateFineTuningMetadata } from '@/app/lib/metadata';
+import { getFineTuningPageById } from '@/app/fine-tuning-pages';
 import { Layers, Target, MemoryStick } from 'lucide-react';
+
+const pageData = getFineTuningPageById('techniques')!;
+
+export const metadata: Metadata = generateFineTuningMetadata(pageData);
 
 export default function TechniquesPage() {
   return (

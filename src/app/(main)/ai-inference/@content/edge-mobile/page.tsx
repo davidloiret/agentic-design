@@ -1,4 +1,11 @@
+import { Metadata } from 'next';
+import { generateAIInferenceMetadata } from '@/app/lib/metadata';
+import { getAIInferencePageById } from '@/app/ai-inference-pages';
 import { InferenceTab } from '../../../../components/InferenceTab';
+
+const pageData = getAIInferencePageById('edge-mobile')!;
+
+export const metadata: Metadata = generateAIInferenceMetadata(pageData);
 
 export default function EdgeMobilePage() {
   return (

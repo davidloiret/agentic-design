@@ -5,7 +5,8 @@ import { useRouter, usePathname } from 'next/navigation';
 import {
   ChevronDown, ChevronRight, Sparkles, BookOpen, Code2, Wrench,
   FileText, Rocket, GitBranch, Cpu, Package, Users, Target,
-  Layers, Hexagon, Box, TestTube, Workflow, Terminal
+  Layers, Hexagon, Box, TestTube, Workflow, Terminal, Smartphone,
+  RefreshCw, Bug, Shield, DollarSign, Brain, Activity, Scale
 } from 'lucide-react';
 
 interface SidebarSection {
@@ -40,7 +41,8 @@ export const AIDrivenDevSidebar = ({
       icon: Sparkles,
       items: [
         { id: 'overview', label: 'Overview', route: '/ai-driven-dev' },
-        { id: 'tool-directory', label: 'AI Tools Directory', route: '/ai-driven-dev/tools', icon: Wrench, badge: '40+' },
+        { id: 'tool-directory', label: 'AI Tools Directory', route: '/ai-driven-dev/tools', icon: Wrench, badge: '45+' },
+        { id: 'choosing-tools', label: 'Choosing Tools', route: '/ai-driven-dev/choosing-tools', icon: Target },
         { id: 'decision-guide', label: 'Decision Guide', route: '/ai-driven-dev/decision-guide', icon: Target },
         { id: 'environment-setup', label: 'Environment Setup', route: '/ai-driven-dev/environment-setup', icon: Terminal },
         { id: 'first-project', label: 'First AI Project', route: '/ai-driven-dev/first-project', icon: Rocket }
@@ -51,16 +53,16 @@ export const AIDrivenDevSidebar = ({
       title: 'Tools & Platforms',
       icon: Code2,
       items: [
-        { id: 'comparison-matrix', label: 'Comparison Matrix', route: '/ai-driven-dev/comparison', badge: 'New' },
-        { id: 'ide-assistants', label: 'IDE Assistants (4)', route: '/ai-driven-dev/ide-assistants' },
-        { id: 'terminal-agents', label: 'Terminal Agents (6)', route: '/ai-driven-dev/terminal-agents' },
-        { id: 'vscode-extensions', label: 'VS Code Extensions (4)', route: '/ai-driven-dev/vscode-extensions' },
-        { id: 'web-platforms', label: 'Web Platforms (5)', route: '/ai-driven-dev/web-platforms' },
-        { id: 'autocomplete', label: 'Autocomplete Tools (4)', route: '/ai-driven-dev/autocomplete' },
-        { id: 'code-review', label: 'Code Review (4)', route: '/ai-driven-dev/code-review' },
-        { id: 'testing-quality', label: 'Testing & Quality (3)', route: '/ai-driven-dev/testing-quality' },
-        { id: 'autonomous', label: 'Autonomous Agents (4)', route: '/ai-driven-dev/autonomous' },
-        { id: 'no-code', label: 'No-Code Builders (4)', route: '/ai-driven-dev/no-code' }
+        { id: 'comparison-matrix', label: 'Comparison Matrix', route: '/ai-driven-dev/comparison' },
+        { id: 'ide-assistants', label: 'IDE Assistants', route: '/ai-driven-dev/ide-assistants' },
+        { id: 'terminal-agents', label: 'Terminal Agents', route: '/ai-driven-dev/terminal-agents' },
+        { id: 'vscode-extensions', label: 'VS Code Extensions', route: '/ai-driven-dev/vscode-extensions' },
+        { id: 'web-platforms', label: 'Web Platforms', route: '/ai-driven-dev/web-platforms' },
+        { id: 'autocomplete-tools', label: 'Autocomplete Tools', route: '/ai-driven-dev/autocomplete-tools' },
+        { id: 'code-review', label: 'Code Review', route: '/ai-driven-dev/code-review' },
+        { id: 'testing-quality', label: 'Testing & Quality', route: '/ai-driven-dev/testing-quality' },
+        { id: 'autonomous-agents', label: 'Autonomous Agents', route: '/ai-driven-dev/autonomous-agents' },
+        { id: 'no-code-builders', label: 'No-Code Builders', route: '/ai-driven-dev/no-code-builders' }
       ]
     },
     {
@@ -68,11 +70,12 @@ export const AIDrivenDevSidebar = ({
       title: 'Methodologies',
       icon: BookOpen,
       items: [
-        { id: 'vibe-coding', label: 'Vibe Coding', route: '/ai-driven-dev/vibe-coding', icon: Sparkles, badge: 'New' },
+        { id: 'vibe-coding', label: 'Vibe Coding', route: '/ai-driven-dev/vibe-coding', icon: Sparkles },
         { id: 'spec-driven', label: 'Spec-Driven Development', route: '/ai-driven-dev/spec-driven', icon: FileText, badge: 'Hot' },
         { id: 'test-driven-ai', label: 'Test-Driven AI Dev', route: '/ai-driven-dev/test-driven-ai', icon: TestTube },
-        { id: 'ddd', label: 'Domain-Driven Design', route: '/ai-driven-dev/ddd', icon: Layers },
-        { id: 'hexagonal', label: 'Hexagonal Architecture', route: '/ai-driven-dev/hexagonal', icon: Hexagon },
+        { id: 'tdd-workflows', label: 'TDD Workflows', route: '/ai-driven-dev/tdd-workflows', icon: TestTube },
+        { id: 'ddd-with-ai', label: 'Domain-Driven Design', route: '/ai-driven-dev/ddd-with-ai', icon: Layers },
+        { id: 'hexagonal-architecture', label: 'Hexagonal Architecture', route: '/ai-driven-dev/hexagonal-architecture', icon: Hexagon },
         { id: 'ai-pair-programming', label: 'AI Pair Programming', route: '/ai-driven-dev/ai-pair-programming', icon: Users },
         { id: 'prompt-libraries', label: 'Prompt Libraries', route: '/ai-driven-dev/prompt-libraries', icon: Code2, badge: 'Hot' }
       ]
@@ -82,9 +85,25 @@ export const AIDrivenDevSidebar = ({
       title: 'Production Workflows',
       icon: Workflow,
       items: [
-        { id: 'spec-to-deploy', label: 'Spec → Deploy Pipeline', route: '/ai-driven-dev/spec-to-deploy', icon: Rocket, badge: 'New' },
+        { id: 'spec-to-deploy', label: 'Spec → Deploy Pipeline', route: '/ai-driven-dev/spec-to-deploy', icon: Rocket },
         { id: 'harper-reed-workflow', label: 'Harper Reed Method', route: '/ai-driven-dev/harper-reed-workflow', icon: GitBranch },
         { id: '70-percent-problem', label: 'The 70% Problem', route: '/ai-driven-dev/70-percent-problem', icon: Target }
+      ]
+    },
+    {
+      id: 'advanced',
+      title: 'Advanced Topics',
+      icon: Shield,
+      items: [
+        { id: 'security-best-practices', label: 'Security Best Practices', route: '/ai-driven-dev/security-best-practices', icon: Shield, badge: 'New' },
+        { id: 'cost-management', label: 'Cost Management', route: '/ai-driven-dev/cost-management', icon: DollarSign, badge: 'New' },
+        { id: 'team-workflows', label: 'Team Workflows', route: '/ai-driven-dev/team-workflows', icon: Users, badge: 'New' },
+        { id: 'prompt-engineering', label: 'Prompt Engineering', route: '/ai-driven-dev/prompt-engineering', icon: Brain },
+        { id: 'cicd-integration', label: 'CI/CD Integration', route: '/ai-driven-dev/cicd-integration', icon: GitBranch, badge: 'New' },
+        { id: 'monitoring-observability', label: 'Monitoring & Observability', route: '/ai-driven-dev/monitoring-observability', icon: Activity, badge: 'New' },
+        { id: 'licensing-legal', label: 'Licensing & Legal', route: '/ai-driven-dev/licensing-legal', icon: Scale, badge: 'New' },
+        { id: 'troubleshooting', label: 'Troubleshooting Guide', route: '/ai-driven-dev/troubleshooting', icon: Wrench, badge: 'New' },
+        { id: 'debugging', label: 'Debugging with AI', route: '/ai-driven-dev/debugging', icon: Bug }
       ]
     },
     {
@@ -92,10 +111,13 @@ export const AIDrivenDevSidebar = ({
       title: 'Real Examples',
       icon: Box,
       items: [
-        { id: 'fullstack-app', label: 'Building Full-Stack App', route: '/ai-driven-dev/fullstack-app', icon: Box },
-        { id: 'refactoring', label: 'Refactoring Legacy Code', route: '/ai-driven-dev/refactoring-legacy' },
-        { id: 'debugging', label: 'Debugging with AI', route: '/ai-driven-dev/debugging' },
-        { id: 'api-development', label: 'API Development', route: '/ai-driven-dev/api-development' },
+        { id: 'fullstack-app', label: 'Full-Stack App', route: '/ai-driven-dev/fullstack-app', icon: Box },
+        { id: 'saas-from-scratch', label: 'SaaS from Scratch', route: '/ai-driven-dev/saas-from-scratch', icon: Rocket },
+        { id: 'mobile-app-mvp', label: 'Mobile App MVP', route: '/ai-driven-dev/mobile-app-mvp', icon: Smartphone },
+        { id: 'api-wrapper-library', label: 'API Wrapper Library', route: '/ai-driven-dev/api-wrapper-library', icon: Package },
+        { id: 'legacy-modernization', label: 'Legacy Modernization', route: '/ai-driven-dev/legacy-modernization', icon: RefreshCw },
+        { id: 'open-source-contribution', label: 'Open Source Contribution', route: '/ai-driven-dev/open-source-contribution', icon: GitBranch },
+        { id: 'bug-hunting-production', label: 'Bug Hunting', route: '/ai-driven-dev/bug-hunting-production', icon: Bug },
         { id: 'microservices', label: 'Microservices', route: '/ai-driven-dev/microservices', icon: Workflow },
         { id: 'performance', label: 'Performance Optimization', route: '/ai-driven-dev/performance', icon: Cpu }
       ]
@@ -220,7 +242,7 @@ export const AIDrivenDevSidebar = ({
             </div>
             <div className="flex items-center justify-between">
               <span>Tools covered</span>
-              <span className="text-gray-400">6</span>
+              <span className="text-gray-400">45</span>
             </div>
           </div>
         </div>

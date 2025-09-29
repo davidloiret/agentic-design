@@ -1,4 +1,11 @@
+import { Metadata } from 'next';
+import { generateFineTuningMetadata } from '@/app/lib/metadata';
+import { getFineTuningPageById } from '@/app/fine-tuning-pages';
 import { BookOpen, Settings, Database, Zap, Shield, TrendingUp, AlertCircle, CheckCircle, GraduationCap } from 'lucide-react';
+
+const pageData = getFineTuningPageById('cheatsheet')!;
+
+export const metadata: Metadata = generateFineTuningMetadata(pageData);
 
 export default function CheatsheetPage() {
   return (

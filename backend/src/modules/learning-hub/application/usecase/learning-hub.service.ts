@@ -31,9 +31,14 @@ export class LearningHubService {
     progressPercentage: number,
     timeSpent?: number,
     xpEarned?: number,
+    journeyId?: string,
+    chapterId?: string,
+    score?: number,
+    isCompleted?: boolean,
   ): Promise<UserProgress> {
     console.log('[LearningHubService] updateProgress called:', {
-      userId, courseId, lessonId, progressPercentage, timeSpent, xpEarned
+      userId, courseId, lessonId, progressPercentage, timeSpent, xpEarned,
+      journeyId, chapterId, score, isCompleted
     });
 
     const user = await this.userRepository.findById(userId);
@@ -44,10 +49,26 @@ export class LearningHubService {
     let progress = await this.progressRepository.findByUserAndLesson(user.id, lessonId);
 
     if (!progress) {
-      progress = new UserProgress(user, courseId, lessonId, progressPercentage, timeSpent);
+      progress = new UserProgress(
+        user,
+        courseId,
+        lessonId,
+        progressPercentage,
+        timeSpent,
+        journeyId,
+        chapterId,
+        score
+      );
       await this.progressRepository.save(progress);
     } else {
       progress.updateProgress(progressPercentage, timeSpent);
+      // Update additional fields if provided
+      if (journeyId !== undefined) progress.journeyId = journeyId;
+      if (chapterId !== undefined) progress.chapterId = chapterId;
+      if (score !== undefined) progress.score = score;
+      if (isCompleted !== undefined && isCompleted) {
+        progress.markCompleted();
+      }
       await this.progressRepository.update(progress);
     }
 

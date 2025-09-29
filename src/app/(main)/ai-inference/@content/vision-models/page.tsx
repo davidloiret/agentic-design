@@ -1,4 +1,11 @@
+import { Metadata } from 'next';
+import { generateAIInferenceMetadata } from '@/app/lib/metadata';
+import { getAIInferencePageById } from '@/app/ai-inference-pages';
 import { InferenceTab } from '../../../../components/InferenceTab';
+
+const pageData = getAIInferencePageById('vision-models')!;
+
+export const metadata: Metadata = generateAIInferenceMetadata(pageData);
 
 export default function VisionModelsPage() {
   return (

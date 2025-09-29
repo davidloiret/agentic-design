@@ -1,6 +1,10 @@
 import { MetadataRoute } from 'next'
 import { categories } from './categories'
 import { techniques } from './techniques'
+import { aiDrivenDevPages } from './ai-driven-dev-pages'
+import { aiInferencePages } from './ai-inference-pages'
+import { fineTuningPages } from './fine-tuning-pages'
+import { promptHubPages } from './prompt-hub-pages'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://agentic-design.ai'
@@ -103,6 +107,36 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly' as const,
       priority: 0.4,
     },
+    {
+      url: `${baseUrl}/ai-driven-dev`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/recommendations`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/prompt-optimizer`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/system-builder`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/workshops`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+    },
   ]
 
   // Category pages
@@ -123,9 +157,45 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }))
 
+  // AI-Driven Dev pages
+  const aiDrivenDevPageEntries = aiDrivenDevPages.map(page => ({
+    url: `${baseUrl}/ai-driven-dev/${page.id}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: page.priority || 0.7,
+  }))
+
+  // AI-Inference pages
+  const aiInferencePageEntries = aiInferencePages.map(page => ({
+    url: `${baseUrl}/ai-inference/${page.id}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: page.priority || 0.7,
+  }))
+
+  // Fine-Tuning pages
+  const fineTuningPageEntries = fineTuningPages.map(page => ({
+    url: `${baseUrl}/fine-tuning/${page.id}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: page.priority || 0.7,
+  }))
+
+  // Prompt-Hub pages
+  const promptHubPageEntries = promptHubPages.map(page => ({
+    url: `${baseUrl}/prompt-hub/${page.id}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: page.priority || 0.8,
+  }))
+
   return [
     ...staticPages,
     ...categoryPages,
     ...techniquePages,
+    ...aiDrivenDevPageEntries,
+    ...aiInferencePageEntries,
+    ...fineTuningPageEntries,
+    ...promptHubPageEntries,
   ]
 }

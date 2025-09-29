@@ -1,3 +1,12 @@
+import { Metadata } from 'next';
+import { generateFineTuningMetadata } from '@/app/lib/metadata';
+import { getFineTuningPageById } from '@/app/fine-tuning-pages';
+
+
+const pageData = getFineTuningPageById('cloud')!;
+
+export const metadata: Metadata = generateFineTuningMetadata(pageData);
+
 export default function CloudPage() {
   return (
     <div className="space-y-6">
