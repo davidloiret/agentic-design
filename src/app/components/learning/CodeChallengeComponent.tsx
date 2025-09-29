@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import Editor from '@monaco-editor/react';
-import { 
-  Play, 
-  CheckCircle, 
-  XCircle, 
-  Lightbulb, 
-  Code, 
-  Target, 
-  Star, 
-  ArrowRight, 
-  RotateCcw, 
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import {
+  Play,
+  CheckCircle,
+  XCircle,
+  Lightbulb,
+  Code,
+  Target,
+  Star,
+  RotateCcw,
   Trophy,
   Eye,
   EyeOff,
   Terminal,
   Zap,
-  Settings,
   ChevronDown
 } from 'lucide-react';
 
@@ -358,7 +358,19 @@ export const CodeChallengeComponent: React.FC<CodeChallengeComponentProps> = ({
               <Code className="w-8 h-8 text-blue-400 mx-auto" />
             </div>
             <h1 className="text-3xl font-bold text-white mb-2">{challenge.title}</h1>
-            <p className="text-gray-400 text-lg mb-4">{challenge.description}</p>
+            <div className="text-gray-400 text-lg mb-4 markdown-content">
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  p: ({children}) => <p className="text-gray-400 text-lg">{children}</p>,
+                  strong: ({children}) => <strong className="text-white font-semibold">{children}</strong>,
+                  em: ({children}) => <em className="text-blue-300">{children}</em>,
+                  code: ({children}) => <code className="bg-gray-900 px-2 py-1 rounded text-cyan-300 text-sm font-mono">{children}</code>,
+                }}
+              >
+                {challenge.description}
+              </ReactMarkdown>
+            </div>
             
             <div className="flex items-center justify-center space-x-4 mb-6">
               <span className={`px-3 py-1 rounded-full text-sm ${getDifficultyColor(challenge.difficulty)}`}>
@@ -488,7 +500,29 @@ export const CodeChallengeComponent: React.FC<CodeChallengeComponentProps> = ({
           {/* Challenge Description */}
           <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
             <h3 className="text-lg font-semibold text-white mb-4">Challenge Description</h3>
-            <p className="text-gray-300 text-sm leading-relaxed">{challenge.description}</p>
+            <div className="markdown-content">
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  h1: ({children}) => <h1 className="text-2xl font-bold text-white mb-4 mt-6">{children}</h1>,
+                  h2: ({children}) => <h2 className="text-xl font-bold text-white mb-3 mt-4">{children}</h2>,
+                  h3: ({children}) => <h3 className="text-lg font-semibold text-white mb-2 mt-3">{children}</h3>,
+                  p: ({children}) => <p className="text-gray-300 text-sm leading-relaxed mb-3">{children}</p>,
+                  ul: ({children}) => <ul className="list-disc list-inside space-y-1 mb-3 text-gray-300 text-sm ml-2">{children}</ul>,
+                  ol: ({children}) => <ol className="list-decimal list-inside space-y-1 mb-3 text-gray-300 text-sm ml-2">{children}</ol>,
+                  li: ({children}) => <li className="text-gray-300 text-sm">{children}</li>,
+                  strong: ({children}) => <strong className="text-white font-semibold">{children}</strong>,
+                  em: ({children}) => <em className="text-blue-300">{children}</em>,
+                  code: ({children}) => <code className="bg-gray-900 px-2 py-1 rounded text-cyan-300 text-xs font-mono">{children}</code>,
+                  pre: ({children}) => <pre className="bg-gray-900 rounded-lg p-3 overflow-x-auto mb-3 text-xs">{children}</pre>,
+                  blockquote: ({children}) => (
+                    <blockquote className="border-l-4 border-blue-500 pl-3 text-gray-400 italic mb-3 text-sm">{children}</blockquote>
+                  ),
+                }}
+              >
+                {challenge.description}
+              </ReactMarkdown>
+            </div>
           </div>
 
           {/* Test Results */}

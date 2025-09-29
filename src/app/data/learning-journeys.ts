@@ -172,11 +172,10 @@ export const promptingJourney: Journey = {
           id: 'role-prompting',
           title: 'Role-Based Prompting',
           description: 'Assign personas and expertise for better outputs',
-          type: 'pattern-select',
+          type: 'theory',
           difficulty: 'intermediate',
           xpReward: 80,
           estimatedTime: 25,
-          challenges: ['role-prompting-scenarios']
         },
         {
           id: 'prompt-chaining',

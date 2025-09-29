@@ -1096,7 +1096,7 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
       );
     }
 
-    if (selectedLesson.type === 'code' && selectedLesson.challenges) {
+    if ((selectedLesson.type === 'code' || selectedLesson.type === 'sandbox') && selectedLesson.challenges) {
       const challengeId = selectedLesson.challenges[0];
       const challenge = getCodeChallengeContent(challengeId);
       if (challenge) {
