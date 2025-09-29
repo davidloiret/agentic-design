@@ -990,7 +990,7 @@ export const LearningHubJourney: React.FC<LearningHubJourneyProps> = ({ techniqu
       case 'prompt-chaining-flashcards':
         return learningContent.flashcards.promptChaining;
       case 'prompt-metrics-flashcards':
-        return learningContent.flashcards.promptMetrics;
+        return []; // TODO: Add prompt metrics flashcards when available
       case 'advanced-techniques-flashcards':
         return learningContent.flashcards.advancedTechniques;
       case 'common-pitfalls-flashcards':

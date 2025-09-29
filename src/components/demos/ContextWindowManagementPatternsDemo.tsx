@@ -273,11 +273,12 @@ export default function ContextWindowManagementPatternsDemo() {
 
   const expandMessage = (messageId: string) => {
     setMessages(prev => prev.map(msg => {
-      if (msg.id === messageId && msg.compressed && msg.originalTokens) {
+      if (msg.id === messageId && msg.compressed && msg.originalTokens !== undefined) {
+        const tokenDiff = msg.originalTokens - msg.tokens;
         setContextWindow(prev => ({
           ...prev,
-          currentTokens: prev.currentTokens + (msg.originalTokens - msg.tokens),
-          compressionSavings: Math.max(0, prev.compressionSavings - (msg.originalTokens - msg.tokens))
+          currentTokens: prev.currentTokens + tokenDiff,
+          compressionSavings: Math.max(0, prev.compressionSavings - tokenDiff)
         }));
 
         return {

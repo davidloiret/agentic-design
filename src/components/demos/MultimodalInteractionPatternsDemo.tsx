@@ -3,9 +3,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Mic, MicOff, Camera, CameraOff, Type, Hand, Volume2,
-  Monitor, Smartphone, Headphones, Sun, Moon, Users,
-  Home, Car, Building, Heart, Brain, Eye, Ear,
-  MessageSquare, Image as ImageIcon, Gesture, Sparkles,
+  Monitor, Smartphone, Headphones, Sun, Moon, Users, User,
+  Home, Car, Building, Heart, Brain, Eye, Ear, Target,
+  MessageSquare, Image as ImageIcon, Sparkles,
   Activity, Settings, ChevronRight, Check, X
 } from 'lucide-react';
 

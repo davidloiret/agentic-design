@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { User, Bot, Edit, Check, ArrowRight, RefreshCw, Sparkles } from 'lucide-react';
+import { User, Bot, Edit, Check, CheckCircle, ArrowRight, RefreshCw, Sparkles } from 'lucide-react';
 
 type InitiativeHolder = 'human' | 'ai' | 'collaborative';
 type WorkflowStage = 'draft' | 'review' | 'modify' | 'adapt' | 'finalize' | 'complete';

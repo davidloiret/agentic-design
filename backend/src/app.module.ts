@@ -14,6 +14,15 @@ import { UserKnowledgeBaseModule } from './modules/user-knowledge-base/user-know
 import { CodeExecutionModule } from './modules/code-execution/code-execution.module';
 import { WorkshopModule } from './modules/workshop/workshop.module';
 import { SecretsModule } from './modules/secrets/secrets.module';
+import { VcfSubscriptionsModule } from './modules/vcf/vcf-subscriptions/vcf-subscriptions.module';
+import { VcfHotlineModule } from './modules/vcf/vcf-hotline/vcf-hotline.module';
+import { VcfExpertsModule } from './modules/vcf/vcf-experts/vcf-experts.module';
+import { VcfHelpRequestsModule } from './modules/vcf/vcf-help-requests/vcf-help-requests.module';
+import { VcfOfficeHoursModule } from './modules/vcf/vcf-office-hours/vcf-office-hours.module';
+import { VcfPanicButtonModule } from './modules/vcf/vcf-panic-button/vcf-panic-button.module';
+import { VcfNotificationsModule } from './modules/vcf/vcf-notifications/vcf-notifications.module';
+import { VcfFilesModule } from './modules/vcf/vcf-files/vcf-files.module';
+import { VcfPaymentsModule } from './modules/vcf/vcf-payments/vcf-payments.module';
 import mikroOrmConfig from './mikro-orm.config';
 
 @Module({
@@ -33,6 +42,16 @@ import mikroOrmConfig from './mikro-orm.config';
     CodeExecutionModule,
     WorkshopModule,
     SecretsModule,
+    // VCF (VibeCodeFix) Modules
+    VcfSubscriptionsModule,
+    VcfHotlineModule,
+    VcfExpertsModule,
+    VcfHelpRequestsModule,
+    VcfOfficeHoursModule,
+    VcfPanicButtonModule,
+    VcfNotificationsModule,
+    VcfFilesModule,
+    VcfPaymentsModule,
   ],
   controllers: [AppController, HealthController],
 })

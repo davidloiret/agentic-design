@@ -16,4 +16,9 @@ export class UpdateProgressDto {
   @IsNumber()
   @Min(0)
   timeSpent?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  xpEarned?: number;
 }

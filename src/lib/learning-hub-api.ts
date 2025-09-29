@@ -90,7 +90,16 @@ export const learningHubApi = {
     data: UserProgress;
     message: string;
   }> {
-    const response = await api.post('/api/v1/learning-hub/progress', data);
+    // Transform the data to match backend expectations
+    const backendData = {
+      courseId: data.courseId,
+      lessonId: data.lessonId,
+      progressPercentage: data.isCompleted ? 100 : 50, // Default to 50% if not completed
+      timeSpent: undefined, // Not currently tracked
+      xpEarned: data.xpEarned || undefined, // Only send if provided
+    };
+
+    const response = await api.post('/api/v1/learning-hub/progress', backendData);
     return await response.json();
   },
 

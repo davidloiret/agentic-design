@@ -11,6 +11,79 @@ export interface QuizQuestion {
   topic: string;
 }
 
+export interface Quiz {
+  id: string;
+  title: string;
+  description: string;
+  questions: QuizQuestion[];
+}
+
+export interface TheoryLesson {
+  id: string;
+  title: string;
+  description: string;
+  estimatedTime: number;
+  difficulty: 'beginner' | 'intermediate' | 'advanced' | 'expert';
+  xpReward: number;
+  content: {
+    introduction: string;
+    sections: Array<{
+      title: string;
+      content: string;
+      examples?: Array<{
+        code: string;
+        language?: string;
+        explanation?: string;
+      }>;
+      codeExamples?: Array<{
+        code: string;
+        language?: string;
+        explanation?: string;
+      }>;
+      visualizations?: Array<{
+        type: string;
+        data?: any;
+        config?: any;
+      }>;
+    }>;
+    keyTakeaways?: string[];
+    practiceQuestions?: Array<{
+      question: string;
+      hint: string;
+      answer: string;
+      difficulty?: 'easy' | 'medium' | 'hard' | 'intermediate' | 'advanced';
+    }>;
+    practicalExample?: {
+      title: string;
+      scenario: string;
+      challenge: string;
+      approach?: string;
+      implementation?: string;
+      metrics?: any;
+    };
+    quiz?: Array<{
+      question: string;
+      options: string[];
+      correct?: number;
+      correctAnswer?: number;
+      explanation?: string;
+    }>;
+    exercises?: Array<{
+      title: string;
+      difficulty?: string;
+      description: string;
+      hints?: string[];
+    }>;
+    resources?: Array<{
+      type: string;
+      title: string;
+      url?: string;
+      description?: string;
+    }>;
+    references?: string[];
+  };
+}
+
 export interface Flashcard {
   id: string;
   front: string;
@@ -36,6 +109,10 @@ export interface CodeChallenge {
     description: string;
   }[];
   hints: string[];
+  estimatedTime?: number;
+  tags?: string[];
+  objectives?: string[];
+  validationCriteria?: string[];
 }
 
 export interface PatternSelectionChallenge {

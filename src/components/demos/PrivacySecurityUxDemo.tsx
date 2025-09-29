@@ -272,10 +272,10 @@ const PrivacySecurityUxDemo = () => {
     setEvents(prev => [{
       id: `event-${Date.now()}`,
       timestamp: Date.now(),
-      type: 'consent',
+      type: 'consent' as const,
       description: `Updated consent for ${dataTypes.find(dt => dt.id === dataId)?.name}`,
       actor: 'User',
-      status: 'success'
+      status: 'success' as const
     }, ...prev].slice(0, 10));
   };
 

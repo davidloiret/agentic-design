@@ -485,144 +485,227 @@ export const agenticPatternsJourney: Journey = {
 export const redTeamingJourney: Journey = {
   id: 'master-red-teaming',
   title: 'Master AI Red Teaming',
-  description: 'Learn to evaluate, test, and improve AI system safety and robustness',
+  description: 'Learn to evaluate, test, and improve AI system safety and robustness through adversarial testing',
   icon: 'Shield',
   color: 'red',
-  totalXpReward: 4000,
+  totalXpReward: 4500,
   unlockRequirements: {
     level: 5,
     completedJourneys: ['master-prompting']
   },
   chapters: [
     {
-      id: 'red-team-basics',
+      id: 'red-team-fundamentals',
       title: 'Red Teaming Fundamentals',
-      description: 'Understand the principles of AI safety testing',
+      description: 'Master the adversarial mindset and core red teaming concepts',
       order: 1,
-      xpReward: 400,
-      estimatedTime: 75,
+      xpReward: 500,
+      estimatedTime: 90,
       lessons: [
         {
-          id: 'what-is-red-teaming',
+          id: 'introduction-to-red-teaming',
           title: 'Introduction to AI Red Teaming',
-          description: 'Learn the goals and methods of red teaming',
+          description: 'Learn the adversarial mindset and red team methodologies',
           type: 'theory',
-          difficulty: 'intermediate',
-          xpReward: 80,
-          estimatedTime: 20,
-        },
-        {
-          id: 'threat-modeling',
-          title: 'AI Threat Modeling',
-          description: 'Identify potential vulnerabilities and attack vectors',
-          type: 'pattern-select',
-          difficulty: 'intermediate',
-          xpReward: 100,
-          estimatedTime: 30,
-          challenges: ['threat-modeling-exercise']
-        },
-        {
-          id: 'basic-probing',
-          title: 'Basic Prompt Injection',
-          description: 'Learn fundamental testing techniques',
-          type: 'sandbox',
           difficulty: 'intermediate',
           xpReward: 120,
           estimatedTime: 40,
-          challenges: ['basic-injection-sandbox']
+          content: 'introduction-to-red-teaming'
+        },
+        {
+          id: 'red-team-fundamentals-quiz',
+          title: 'Red Team Fundamentals Quiz',
+          description: 'Test your knowledge of red teaming basics',
+          type: 'quiz',
+          difficulty: 'intermediate',
+          xpReward: 50,
+          estimatedTime: 10,
+          content: 'red-team-fundamentals'
+        },
+        {
+          id: 'red-team-flashcards',
+          title: 'Core Concepts Review',
+          description: 'Review key red teaming concepts',
+          type: 'flashcard',
+          difficulty: 'beginner',
+          xpReward: 30,
+          estimatedTime: 15,
+          content: 'redTeamFundamentalsFlashcards'
         }
       ]
     },
     {
-      id: 'adversarial-prompting',
-      title: 'Adversarial Prompting Techniques',
-      description: 'Master advanced techniques for finding vulnerabilities',
+      id: 'prompt-attacks',
+      title: 'Prompt Injection & Jailbreaking',
+      description: 'Master prompt-based attack techniques and defenses',
       order: 2,
-      xpReward: 600,
+      xpReward: 700,
       estimatedTime: 120,
-      unlockAfter: 'red-team-basics',
+      unlockAfter: 'red-team-fundamentals',
       lessons: [
         {
-          id: 'jailbreaking',
-          title: 'Jailbreaking Techniques',
-          description: 'Learn methods to bypass safety measures',
-          type: 'case-study',
-          difficulty: 'advanced',
-          xpReward: 150,
-          estimatedTime: 40,
-          challenges: ['jailbreak-case-studies']
-        },
-        {
-          id: 'indirect-injection',
-          title: 'Indirect Prompt Injection',
-          description: 'Exploit third-party content vulnerabilities',
-          type: 'code',
+          id: 'prompt-injection-jailbreaking',
+          title: 'Prompt Injection & Jailbreaking',
+          description: 'Deep dive into breaking AI guardrails',
+          type: 'theory',
           difficulty: 'advanced',
           xpReward: 180,
-          estimatedTime: 50,
-          challenges: ['implement-indirect-injection']
+          estimatedTime: 45,
+          content: 'prompt-injection-jailbreaking'
         },
         {
-          id: 'multi-turn-attacks',
-          title: 'Multi-Turn Attack Strategies',
-          description: 'Develop sophisticated conversation-based attacks',
-          type: 'sandbox',
-          difficulty: 'expert',
+          id: 'prompt-injection-detector',
+          title: 'Build Injection Detector',
+          description: 'Create a system to detect prompt injections',
+          type: 'code',
+          difficulty: 'intermediate',
           xpReward: 200,
-          estimatedTime: 60,
-          challenges: ['multi-turn-sandbox']
+          estimatedTime: 45,
+          content: 'prompt-injection-detector'
+        },
+        {
+          id: 'prompt-injection-quiz',
+          title: 'Injection & Jailbreaking Quiz',
+          description: 'Test your understanding of prompt attacks',
+          type: 'quiz',
+          difficulty: 'advanced',
+          xpReward: 60,
+          estimatedTime: 12,
+          content: 'prompt-injection-jailbreaking'
         }
       ]
     },
     {
-      id: 'defensive-techniques',
-      title: 'Building Robust Defenses',
-      description: 'Learn to protect AI systems from attacks',
+      id: 'adversarial-testing',
+      title: 'Adversarial Testing Patterns',
+      description: 'Learn systematic approaches to breaking AI systems',
       order: 3,
-      xpReward: 700,
+      xpReward: 800,
       estimatedTime: 150,
-      unlockAfter: 'adversarial-prompting',
+      unlockAfter: 'prompt-attacks',
       lessons: [
         {
-          id: 'input-validation',
-          title: 'Advanced Input Validation',
-          description: 'Build robust input filtering systems',
+          id: 'adversarial-testing-patterns',
+          title: 'Adversarial Testing Patterns',
+          description: 'Systematic approaches to finding weaknesses',
+          type: 'theory',
+          difficulty: 'advanced',
+          xpReward: 200,
+          estimatedTime: 50,
+          content: 'adversarial-testing-patterns'
+        },
+        {
+          id: 'adversarial-example-generator',
+          title: 'Implement FGSM and PGD',
+          description: 'Build adversarial example generators',
           type: 'code',
+          difficulty: 'advanced',
+          xpReward: 300,
+          estimatedTime: 60,
+          content: 'adversarial-example-generator'
+        },
+        {
+          id: 'adversarial-testing-quiz',
+          title: 'Adversarial Testing Quiz',
+          description: 'Evaluate your knowledge of attack patterns',
+          type: 'quiz',
+          difficulty: 'advanced',
+          xpReward: 70,
+          estimatedTime: 15,
+          content: 'adversarial-testing'
+        }
+      ]
+    },
+    {
+      id: 'security-frameworks',
+      title: 'Security Evaluation Frameworks',
+      description: 'Master systematic security assessment methodologies',
+      order: 4,
+      xpReward: 750,
+      estimatedTime: 135,
+      unlockAfter: 'adversarial-testing',
+      lessons: [
+        {
+          id: 'security-evaluation-frameworks',
+          title: 'Security Evaluation Frameworks',
+          description: 'MITRE ATLAS, NIST AI RMF, and custom frameworks',
+          type: 'theory',
+          difficulty: 'advanced',
+          xpReward: 180,
+          estimatedTime: 45,
+          content: 'security-evaluation-frameworks'
+        },
+        {
+          id: 'security-evaluation-framework',
+          title: 'Build Security Framework',
+          description: 'Create comprehensive security evaluation system',
+          type: 'code',
+          difficulty: 'expert',
+          xpReward: 400,
+          estimatedTime: 90,
+          content: 'security-evaluation-framework'
+        },
+        {
+          id: 'security-frameworks-quiz',
+          title: 'Frameworks & Standards Quiz',
+          description: 'Test understanding of security frameworks',
+          type: 'quiz',
+          difficulty: 'intermediate',
+          xpReward: 55,
+          estimatedTime: 10,
+          content: 'security-frameworks'
+        }
+      ]
+    },
+    {
+      id: 'defense-mechanisms',
+      title: 'AI Defense Mechanisms',
+      description: 'Build robust defenses against adversarial attacks',
+      order: 5,
+      xpReward: 850,
+      estimatedTime: 160,
+      unlockAfter: 'security-frameworks',
+      lessons: [
+        {
+          id: 'defense-mechanisms',
+          title: 'AI Defense Mechanisms',
+          description: 'Learn defensive strategies and techniques',
+          type: 'theory',
           difficulty: 'advanced',
           xpReward: 160,
-          estimatedTime: 45,
-          challenges: ['build-input-validator']
+          estimatedTime: 40,
+          content: 'defense-mechanisms'
         },
         {
-          id: 'output-monitoring',
-          title: 'Output Monitoring & Filtering',
-          description: 'Detect and prevent harmful outputs',
+          id: 'defensive-ai-system',
+          title: 'Build Defensive System',
+          description: 'Implement multi-layered defense system',
           type: 'code',
-          difficulty: 'advanced',
-          xpReward: 180,
-          estimatedTime: 50,
-          challenges: ['implement-output-monitor']
+          difficulty: 'expert',
+          xpReward: 350,
+          estimatedTime: 75,
+          content: 'defensive-ai-system'
         },
         {
-          id: 'defense-in-depth',
-          title: 'Defense in Depth Strategies',
-          description: 'Layer multiple security measures',
-          type: 'case-study',
-          difficulty: 'expert',
-          xpReward: 220,
-          estimatedTime: 70,
-          challenges: ['defense-architecture-case']
+          id: 'defense-mechanisms-quiz',
+          title: 'Defense Mechanisms Quiz',
+          description: 'Test knowledge of defensive strategies',
+          type: 'quiz',
+          difficulty: 'advanced',
+          xpReward: 65,
+          estimatedTime: 12,
+          content: 'defense-mechanisms'
         }
       ]
     },
     {
-      id: 'automated-testing',
-      title: 'Automated Red Team Systems',
-      description: 'Build systems that automatically test AI safety',
-      order: 4,
+      id: 'advanced-operations',
+      title: 'Advanced Red Team Operations',
+      description: 'Master advanced red teaming techniques and automation',
+      order: 6,
       xpReward: 900,
-      estimatedTime: 200,
-      unlockAfter: 'defensive-techniques',
+      estimatedTime: 180,
+      unlockAfter: 'defense-mechanisms',
       badge: {
         id: 'ai-guardian',
         name: 'AI Guardian',
@@ -633,34 +716,34 @@ export const redTeamingJourney: Journey = {
       },
       lessons: [
         {
-          id: 'fuzzing-systems',
-          title: 'AI Fuzzing Frameworks',
-          description: 'Build automated vulnerability discovery',
-          type: 'code',
+          id: 'advanced-red-teaming-quiz',
+          title: 'Advanced Red Team Operations Quiz',
+          description: 'Challenge yourself with expert-level concepts',
+          type: 'quiz',
           difficulty: 'expert',
-          xpReward: 250,
-          estimatedTime: 70,
-          challenges: ['build-ai-fuzzer']
+          xpReward: 80,
+          estimatedTime: 15,
+          content: 'advanced-red-teaming'
         },
         {
-          id: 'benchmark-creation',
-          title: 'Safety Benchmark Design',
-          description: 'Create comprehensive evaluation suites',
-          type: 'code',
-          difficulty: 'expert',
-          xpReward: 220,
-          estimatedTime: 60,
-          challenges: ['design-safety-benchmark']
+          id: 'red-team-operations-flashcards',
+          title: 'Operations & Automation Review',
+          description: 'Master advanced red team operations concepts',
+          type: 'flashcard',
+          difficulty: 'advanced',
+          xpReward: 50,
+          estimatedTime: 20,
+          content: 'redTeamOperationsFlashcards'
         },
         {
-          id: 'red-team-automation',
-          title: 'Full Red Team Automation',
-          description: 'Build end-to-end testing pipelines',
-          type: 'sandbox',
+          id: 'capstone-project',
+          title: 'Red Team Capstone Project',
+          description: 'Complete comprehensive security assessment',
+          type: 'case-study',
           difficulty: 'expert',
-          xpReward: 300,
-          estimatedTime: 90,
-          challenges: ['automated-red-team-system']
+          xpReward: 500,
+          estimatedTime: 120,
+          content: 'capstone-project'
         }
       ]
     }

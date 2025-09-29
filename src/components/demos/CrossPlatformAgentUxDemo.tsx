@@ -125,7 +125,7 @@ const CrossPlatformAgentUxDemo = () => {
         setSyncStatus('synced');
         setSyncEvents(prev => [...prev, {
           id: `sync-${Date.now()}`,
-          type: 'state',
+          type: 'state' as const,
           fromDevice: devices.find(d => d.type === activeDevice)?.deviceId || '',
           toDevice: 'cloud',
           timestamp: Date.now(),
@@ -216,7 +216,7 @@ const CrossPlatformAgentUxDemo = () => {
       // Add context transfer event
       setSyncEvents(prev => [...prev, {
         id: `handoff-${Date.now()}`,
-        type: 'context',
+        type: 'context' as const,
         fromDevice: devices.find(d => d.type === activeDevice)?.deviceId || '',
         toDevice: devices.find(d => d.type === newDevice)?.deviceId || '',
         timestamp: Date.now(),

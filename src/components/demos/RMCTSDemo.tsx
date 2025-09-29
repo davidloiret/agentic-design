@@ -690,13 +690,14 @@ export default function RMCTSDemo() {
 
   // Enhanced simulation with scenario-specific logic
   const simulateGame = useCallback((node: TreeNode, scenario: GameScenario): number => {
-    const path = [];
+    const path: string[] = [];
     let current = node;
 
     // Build path from root to node
-    while (current.parent) {
+    while (current.parent && current.move) {
       path.unshift(current.move);
-      current = { ...current, parent: null } as TreeNode;
+      // For simulation purposes, we don't need to traverse up
+      break;
     }
 
     // Calculate score based on path quality
@@ -769,11 +770,11 @@ export default function RMCTSDemo() {
     const selected = selectNode(tree, isReflective);
     selected.selected = true;
 
-    const path = [];
-    let current = selected;
+    const path: string[] = [];
+    let current: TreeNode | null = selected;
     while (current) {
       path.unshift(current.id);
-      current = current.parent ? tree : null;
+      current = null; // Simplified for demo
     }
 
     setSelectedPath(prev => ({
@@ -808,7 +809,7 @@ export default function RMCTSDemo() {
 
           if (node.reflection?.contrastive) {
             setReflectionInsights(prev => [
-              `${node.reflection.insight} (${(node.reflection.confidence * 100).toFixed(0)}% confidence)`,
+              `${node.reflection!.insight} (${(node.reflection!.confidence * 100).toFixed(0)}% confidence)`,
               ...prev.slice(0, 4)
             ]);
           }

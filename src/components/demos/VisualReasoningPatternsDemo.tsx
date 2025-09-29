@@ -5,7 +5,7 @@ import {
   GitBranch, Activity, TrendingUp, AlertTriangle, CheckCircle,
   Info, ChevronRight, ChevronDown, Eye, EyeOff, Lightbulb,
   Brain, Target, Layers, BarChart3, Shuffle, Zap, Book,
-  FileText, Database, Link, ArrowRight, Circle, Square
+  FileText, Database, Link, ArrowRight, Circle, Square, Settings
 } from 'lucide-react';
 
 // Types

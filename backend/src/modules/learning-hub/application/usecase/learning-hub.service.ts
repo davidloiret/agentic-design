@@ -30,9 +30,10 @@ export class LearningHubService {
     lessonId: string,
     progressPercentage: number,
     timeSpent?: number,
+    xpEarned?: number,
   ): Promise<UserProgress> {
     console.log('[LearningHubService] updateProgress called:', {
-      userId, courseId, lessonId, progressPercentage, timeSpent
+      userId, courseId, lessonId, progressPercentage, timeSpent, xpEarned
     });
 
     const user = await this.userRepository.findById(userId);
@@ -52,7 +53,7 @@ export class LearningHubService {
 
     await this.updateUserStreak(user.id);
 
-    await this.checkAndAwardAchievements(user.id, courseId, lessonId, progress);
+    await this.checkAndAwardAchievements(user.id, courseId, lessonId, progress, xpEarned);
 
     return progress;
   }
@@ -199,13 +200,14 @@ export class LearningHubService {
     courseId: string,
     lessonId: string,
     progress: UserProgress,
+    xpEarned?: number,
   ): Promise<void> {
     console.log('[LearningHubService] Checking achievements for user:', userId);
-    
+
     const userProgress = await this.progressRepository.findByUser(userId);
     const completedLessons = userProgress.filter(p => p.isCompleted);
     console.log('[LearningHubService] Completed lessons count:', completedLessons.length);
-    
+
     // First lesson achievement
     if (completedLessons.length === 1) {
       await this.achievementService.checkAndUnlockAchievement(userId, AchievementType.FIRST_LESSON);
@@ -213,7 +215,9 @@ export class LearningHubService {
 
     // Award XP for lesson completion
     if (progress.isCompleted) {
-      await this.awardXp(userId, 25, XpSource.LESSON_COMPLETION, lessonId, 'Lesson completed');
+      // Use provided XP or default to 25
+      const xpAmount = xpEarned ?? 25;
+      await this.awardXp(userId, xpAmount, XpSource.LESSON_COMPLETION, lessonId, 'Lesson completed');
       
       // Check time-based achievements
       await this.achievementService.checkTimeBasedAchievements(userId, new Date());

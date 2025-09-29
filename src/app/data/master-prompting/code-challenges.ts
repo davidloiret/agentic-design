@@ -1857,7 +1857,7 @@ Master:
 - Performance tracking
 - Version control`,
 
-  difficulty: 'expert',
+  difficulty: 'hard',
   topic: 'Prompt Templates',
 
   template: `class PromptTemplateLibrary:
