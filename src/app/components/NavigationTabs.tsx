@@ -246,6 +246,51 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
             </div>
           </div>
 
+          {/* Tablet Tabs - Compact Labels */}
+          <div className="hidden md:block lg:hidden">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center flex-wrap gap-1" role="tablist" aria-label="Main navigation">
+                {allTabs.map((tab) => {
+                  const Icon = tab.icon;
+                  const isActive = activeTab === tab.id;
+                  // Shortened labels for tablet view
+                  const shortLabel = tab.label
+                    .replace('AI Driven Dev', 'AI Driven')
+                    .replace('Fine Tuning', 'Fine Tune')
+                    .replace('AI Inference', 'Inference')
+                    .replace('Eval Lab', 'Eval')
+                    .replace('Prompt Optimizer', 'Optimizer')
+                    .replace('AI Red Teaming', 'Red Team')
+                    .replace('Prompt Hub', 'Prompts')
+                    .replace('Project Hub', 'Projects')
+                    .replace('News Hub', 'News');
+
+                  return (
+                    <button
+                      key={tab.id}
+                      id={`nav-tab-${tab.id}`}
+                      onClick={() => handleTabClick(tab.id, tab.route)}
+                      onKeyDown={(e) => handleKeyDown(e, tab.id, tab.route)}
+                      className={`cursor-pointer px-3 py-3 rounded-lg transition-all duration-200 whitespace-nowrap ${getTabClasses(tab.id, isActive)}`}
+                      role="tab"
+                      aria-selected={isActive}
+                      aria-controls={`${tab.id}-panel`}
+                      title={tab.description}
+                    >
+                      <Icon className={`w-4 h-4 inline mr-1.5 transition-transform duration-200 ${
+                        isActive ? 'scale-110' : 'group-hover:scale-105'
+                      }`} />
+                      <span className="text-sm font-medium">{shortLabel}</span>
+                      {isActive && (
+                        <div className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 w-8 h-0.5 rounded-full ${getActiveIndicatorColor(tab.id)} transition-all duration-200`} />
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
           {/* Mobile Header */}
           <div className="lg:hidden flex items-center justify-between py-3">
             <div className="flex items-center space-x-3">
