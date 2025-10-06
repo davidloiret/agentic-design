@@ -1,7 +1,7 @@
 "use client"
 
 import React from 'react';
-import { BookOpen, Zap, Target, TrendingUp, RefreshCw, Brain } from 'lucide-react';
+import { BookOpen, Zap, Target, TrendingUp, RefreshCw, Brain, AlertCircle } from 'lucide-react';
 
 export default function PromptEngineeringContent() {
   return (
@@ -14,9 +14,22 @@ export default function PromptEngineeringContent() {
             <h1 className="text-4xl font-bold">Prompt Engineering Fundamentals</h1>
           </div>
           <p className="text-xl text-gray-300 leading-relaxed">
-            Master the art of communicating with AI coding assistants. Learn proven techniques 
+            Master the art of communicating with AI coding assistants. Learn proven techniques
             to get better, more accurate code from AI tools.
           </p>
+        </div>
+
+        {/* Core Principle */}
+        <div className="bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-blue-500/30 rounded-lg p-6 mb-12">
+          <div className="flex items-start gap-3">
+            <AlertCircle className="w-6 h-6 text-blue-400 mt-0.5" />
+            <div>
+              <h2 className="text-xl font-semibold text-white mb-2">Foundational Rule: Information Richness Matters</h2>
+              <p className="text-gray-300">
+                The precision of AI-generated code correlates directly with input specificity. Supply comprehensive background—relevant source files, technical documentation, explicit error traces, and well-defined objectives. Thorough prompts yield superior outcomes.
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Anatomy of a Good Prompt */}
@@ -223,6 +236,99 @@ Then provide the corrected code."`}</pre>
               <p className="text-xs text-gray-500 mt-2">
                 Source: "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models" (2023)
               </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Task Breakdown */}
+        <section className="mb-12">
+          <div className="flex items-center gap-2 mb-6">
+            <Target className="w-6 h-6 text-pink-400" />
+            <h2 className="text-2xl font-bold">Break Down Complex Tasks</h2>
+          </div>
+
+          <div className="bg-gradient-to-r from-pink-500/10 to-rose-500/10 border border-pink-500/30 rounded-lg p-6">
+            <p className="text-gray-300 mb-4">
+              Complex tasks should be broken down into smaller, manageable steps. This improves accuracy and makes debugging easier.
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4">
+                <p className="text-sm text-red-400 font-semibold mb-2">❌ Too Complex:</p>
+                <div className="bg-gray-900/50 rounded p-3 font-mono text-xs text-gray-300">
+                  "Build a complete authentication system with JWT, password reset, email verification, and OAuth"
+                </div>
+              </div>
+
+              <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4">
+                <p className="text-sm text-green-400 font-semibold mb-2">✓ Well Broken Down:</p>
+                <div className="bg-gray-900/50 rounded p-3 font-mono text-xs text-gray-300">
+                  {`1. Create user model & database schema
+2. Implement JWT token generation
+3. Add login/logout endpoints
+4. Add password reset flow
+5. Implement email verification
+6. Add OAuth providers`}
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-4 bg-pink-500/10 border border-pink-500/30 rounded p-3">
+              <p className="text-xs text-pink-200">
+                <strong>Pro Tip:</strong> Each step should have clear success criteria and be independently testable.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Anti-Patterns */}
+        <section className="mb-12">
+          <div className="flex items-center gap-2 mb-6">
+            <Target className="w-6 h-6 text-red-400" />
+            <h2 className="text-2xl font-bold">Common Prompt Anti-Patterns</h2>
+          </div>
+
+          <div className="bg-gradient-to-r from-red-500/10 to-orange-500/10 border border-red-500/30 rounded-lg p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div className="bg-gray-900/50 rounded p-4 border border-red-500/30">
+                  <h3 className="font-semibold text-red-400 mb-2">❌ Vague Requests</h3>
+                  <p className="text-xs text-gray-400 mb-2">Bad: "Make this better"</p>
+                  <p className="text-xs text-green-400">Good: "Reduce time complexity from O(n²) to O(n log n)"</p>
+                </div>
+
+                <div className="bg-gray-900/50 rounded p-4 border border-red-500/30">
+                  <h3 className="font-semibold text-red-400 mb-2">❌ Overloaded Prompts</h3>
+                  <p className="text-xs text-gray-400 mb-2">Bad: Asking for 10 features at once</p>
+                  <p className="text-xs text-green-400">Good: One feature per prompt, iterate</p>
+                </div>
+
+                <div className="bg-gray-900/50 rounded p-4 border border-red-500/30">
+                  <h3 className="font-semibold text-red-400 mb-2">❌ No Examples</h3>
+                  <p className="text-xs text-gray-400 mb-2">Bad: "Use our coding style"</p>
+                  <p className="text-xs text-green-400">Good: Show 2-3 examples of your style</p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="bg-gray-900/50 rounded p-4 border border-red-500/30">
+                  <h3 className="font-semibold text-red-400 mb-2">❌ Missing Context</h3>
+                  <p className="text-xs text-gray-400 mb-2">Bad: "Fix this bug" (no code shown)</p>
+                  <p className="text-xs text-green-400">Good: Include relevant code + error</p>
+                </div>
+
+                <div className="bg-gray-900/50 rounded p-4 border border-red-500/30">
+                  <h3 className="font-semibold text-red-400 mb-2">❌ No Success Criteria</h3>
+                  <p className="text-xs text-gray-400 mb-2">Bad: &quot;Optimize this&quot;</p>
+                  <p className="text-xs text-green-400">Good: &quot;Reduce load time to &lt; 2s&quot;</p>
+                </div>
+
+                <div className="bg-gray-900/50 rounded p-4 border border-red-500/30">
+                  <h3 className="font-semibold text-red-400 mb-2">❌ Not Iterating</h3>
+                  <p className="text-xs text-gray-400 mb-2">Bad: Expect perfection first try</p>
+                  <p className="text-xs text-green-400">Good: Refine through dialogue</p>
+                </div>
+              </div>
             </div>
           </div>
         </section>

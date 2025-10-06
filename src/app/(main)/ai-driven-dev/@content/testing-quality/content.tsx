@@ -16,6 +16,18 @@ export default function TestingQualityContent() {
             <p className="text-gray-400 mt-2">Test generation, coverage, and TDD workflows</p>
           </div>
         </div>
+
+        <div className="bg-gradient-to-r from-red-500/10 to-orange-500/10 border border-red-500/30 rounded-lg p-6 mt-6">
+          <div className="flex items-start gap-3">
+            <AlertCircle className="w-6 h-6 text-red-400 mt-0.5" />
+            <div>
+              <h2 className="text-xl font-semibold text-white mb-2">Essential Discipline: Validate Continuously and Comprehensively</h2>
+              <p className="text-gray-300">
+                In AI-assisted workflows, meticulous testing becomes non-negotiable. Establish verification protocols that examine security vulnerabilities, performance characteristics, and code integrity after each iteration. Shipping untested AI outputs invites production failures.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div className="bg-gradient-to-r from-red-500/10 to-orange-500/10 border border-red-500/30 rounded-xl p-8 mb-12">

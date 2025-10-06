@@ -81,6 +81,59 @@ export default function TerminalAgentsContent() {
         </div>
       </div>
 
+      {/* Gemini CLI */}
+      <div className="bg-gray-800/30 border border-gray-700/50 rounded-xl p-8 mb-8">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h2 className="text-2xl font-semibold text-white">Gemini CLI</h2>
+            <p className="text-sm text-gray-400">by Google • 1M token context</p>
+          </div>
+          <div className="text-right">
+            <p className="text-2xl font-bold text-white">Free tier</p>
+          </div>
+        </div>
+        <p className="text-gray-300 mb-4">
+          Google's command-line AI assistant with massive 1M token context window. Excellent for analyzing entire codebases, long documentation, and complex multi-file operations.
+        </p>
+        <div className="bg-orange-500/10 border border-orange-500/30 rounded p-4">
+          <p className="text-sm text-orange-200">
+            <strong>Best for:</strong> Massive codebases, documentation analysis, multi-file context understanding
+          </p>
+        </div>
+      </div>
+
+      {/* Amp Code */}
+      <div className="bg-gray-800/30 border border-gray-700/50 rounded-xl p-8 mb-8">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h2 className="text-2xl font-semibold text-white">Amp Code</h2>
+            <p className="text-sm text-gray-400">Agentic coding tool • Multi-agent</p>
+          </div>
+          <div className="text-right">
+            <p className="text-2xl font-bold text-white">Beta</p>
+          </div>
+        </div>
+        <p className="text-gray-300 mb-4">
+          Terminal-based agentic coding tool with multi-agent orchestration. Features specialized agents for planning, coding, testing, and review working in parallel.
+        </p>
+        <div className="bg-cyan-500/10 border border-cyan-500/30 rounded p-4 mb-4">
+          <p className="text-sm text-cyan-200 mb-2">
+            <strong>Multi-Agent Workflow:</strong>
+          </p>
+          <ul className="text-xs text-cyan-200 space-y-1">
+            <li>• Planning Agent: Breaks down tasks and creates implementation strategy</li>
+            <li>• Coding Agent: Writes implementation following plans</li>
+            <li>• Testing Agent: Generates and runs comprehensive tests</li>
+            <li>• Review Agent: Validates security, performance, and quality</li>
+          </ul>
+        </div>
+        <div className="bg-purple-500/10 border border-purple-500/30 rounded p-4">
+          <p className="text-sm text-purple-200">
+            <strong>Best for:</strong> Complex features requiring planning, parallel task execution, quality-focused development
+          </p>
+        </div>
+      </div>
+
       {/* SWE-agent */}
       <div className="bg-gray-800/30 border border-gray-700/50 rounded-xl p-8 mb-8">
         <div className="flex items-center justify-between mb-6">

@@ -33,6 +33,18 @@ export default function VibeCodingContent() {
             </div>
           </div>
         </div>
+
+        <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4 mt-4">
+          <div className="flex items-start gap-3">
+            <Sparkles className="w-5 h-5 text-blue-400 mt-0.5" />
+            <div>
+              <p className="text-sm text-blue-200 font-medium">Part of the AI Development Spectrum</p>
+              <p className="text-xs text-blue-300/80 mt-1">
+                Vibe coding is one end of a spectrum. The other end is structured, spec-driven development with comprehensive planning, testing, and verification.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* What It Is */}
@@ -376,6 +388,43 @@ export default function VibeCodingContent() {
         </div>
       </div>
 
+      {/* The Spectrum */}
+      <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-xl p-8 mb-12">
+        <h2 className="text-2xl font-semibold text-white mb-6">The AI Development Spectrum</h2>
+        <p className="text-gray-300 mb-6">
+          Vibe coding sits at one end of a spectrum. Understanding where your project falls helps you choose the right approach.
+        </p>
+        <div className="relative">
+          <div className="flex justify-between items-start gap-6">
+            <div className="flex-1 bg-gradient-to-br from-pink-500/20 to-purple-500/20 border border-pink-500/30 rounded-lg p-6">
+              <h3 className="text-xl font-bold text-pink-400 mb-3">Vibe Coding</h3>
+              <ul className="text-sm text-gray-300 space-y-2">
+                <li>• Rapid prototyping</li>
+                <li>• Minimal planning</li>
+                <li>• Accept without review</li>
+                <li>• Experimental projects</li>
+                <li>• Speed over precision</li>
+              </ul>
+            </div>
+            <div className="flex-1 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 border border-blue-500/30 rounded-lg p-6">
+              <h3 className="text-xl font-bold text-blue-400 mb-3">Structured Development</h3>
+              <ul className="text-sm text-gray-300 space-y-2">
+                <li>• Comprehensive planning (SPEC.md)</li>
+                <li>• Detailed requirements</li>
+                <li>• Test ruthlessly after every change</li>
+                <li>• Production-ready code</li>
+                <li>• Quality over speed</li>
+              </ul>
+            </div>
+          </div>
+          <div className="mt-6 bg-cyan-500/10 border border-cyan-500/30 rounded p-4">
+            <p className="text-sm text-cyan-200">
+              <strong>Key Principle:</strong> "Context is critical" - AI output quality directly depends on the context provided. Structured approaches excel because they provide comprehensive context through specs, requirements, and clear success criteria.
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Resources */}
       <div className="bg-gradient-to-r from-pink-500/10 to-purple-500/10 border border-pink-500/20 rounded-xl p-8">
         <h2 className="text-2xl font-semibold text-white mb-6">Learn More</h2>
@@ -408,6 +457,20 @@ export default function VibeCodingContent() {
                 <h3 className="font-medium text-white mb-1">Vibe Coding Video Explanation</h3>
                 <p className="text-sm text-gray-400 mb-2">Deep dive into the methodology and when to use it</p>
                 <span className="text-xs text-purple-400">youtube.com</span>
+              </div>
+            </div>
+          </a>
+
+          <a
+            href="/ai-driven-dev/spec-driven"
+            className="block bg-gray-900/50 border border-gray-700 hover:border-cyan-500/50 rounded-lg p-4 transition-all"
+          >
+            <div className="flex items-start gap-3">
+              <BookOpen className="w-5 h-5 text-cyan-400 mt-0.5" />
+              <div>
+                <h3 className="font-medium text-white mb-1">Spec-Driven Development</h3>
+                <p className="text-sm text-gray-400 mb-2">Learn the structured approach for production software</p>
+                <span className="text-xs text-cyan-400">View structured methodology →</span>
               </div>
             </div>
           </a>

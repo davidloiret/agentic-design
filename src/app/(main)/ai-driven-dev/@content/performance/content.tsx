@@ -257,6 +257,78 @@ Generate the React Query setup and custom hooks"`}</pre>
         </div>
       </div>
 
+      {/* AI Performance Optimization Strategies */}
+      <div className="bg-gray-800/30 backdrop-blur-sm border border-gray-700/50 rounded-xl p-8 mb-12">
+        <h2 className="text-2xl font-semibold text-white mb-6">AI-Powered Performance Analysis Techniques</h2>
+        <p className="text-gray-300 mb-6">
+          AI can analyze profiling data, execution plans, and metrics to identify optimization opportunities humans might miss.
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-gray-900/50 border border-gray-700 rounded-lg p-6">
+            <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+              <Target className="w-5 h-5 text-blue-400" />
+              Database Query Optimization
+            </h3>
+            <ul className="text-sm text-gray-300 space-y-2">
+              <li>• Analyzing execution plans for slow queries</li>
+              <li>• Suggesting optimal indexes based on query patterns</li>
+              <li>• Identifying N+1 query problems</li>
+              <li>• Recommending connection pooling strategies</li>
+              <li>• Optimizing JOIN operations and subqueries</li>
+            </ul>
+          </div>
+
+          <div className="bg-gray-900/50 border border-gray-700 rounded-lg p-6">
+            <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+              <Cpu className="w-5 h-5 text-purple-400" />
+              Memory Usage Analysis
+            </h3>
+            <ul className="text-sm text-gray-300 space-y-2">
+              <li>• Detecting memory leaks in closures</li>
+              <li>• Identifying unnecessary object allocations</li>
+              <li>• Optimizing data structures for memory efficiency</li>
+              <li>• Suggesting caching opportunities</li>
+              <li>• Analyzing heap snapshots for bloat</li>
+            </ul>
+          </div>
+
+          <div className="bg-gray-900/50 border border-gray-700 rounded-lg p-6">
+            <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+              <Zap className="w-5 h-5 text-orange-400" />
+              Runtime Performance
+            </h3>
+            <ul className="text-sm text-gray-300 space-y-2">
+              <li>• Profiling hot code paths</li>
+              <li>• Identifying algorithmic inefficiencies (O(n²) → O(n))</li>
+              <li>• Suggesting Web Workers for heavy computation</li>
+              <li>• Optimizing render performance</li>
+              <li>• Detecting layout thrashing</li>
+            </ul>
+          </div>
+
+          <div className="bg-gray-900/50 border border-gray-700 rounded-lg p-6">
+            <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+              <TrendingUp className="w-5 h-5 text-green-400" />
+              Network Optimization
+            </h3>
+            <ul className="text-sm text-gray-300 space-y-2">
+              <li>• Analyzing waterfall charts for sequential loading</li>
+              <li>• Suggesting resource hints (preload, prefetch)</li>
+              <li>• Optimizing API payload sizes</li>
+              <li>• Implementing request batching/deduplication</li>
+              <li>• Recommending CDN strategies</li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="mt-6 bg-blue-500/10 border border-blue-500/30 rounded p-4">
+          <p className="text-sm text-blue-200">
+            <strong>Pro Tip:</strong> Feed AI your Chrome DevTools Performance profiles, Lighthouse reports, and database execution plans. Ask it to prioritize fixes by impact vs effort ratio for maximum efficiency.
+          </p>
+        </div>
+      </div>
+
       <div className="bg-gradient-to-r from-orange-500/10 to-red-500/10 border border-orange-500/30 rounded-xl p-8">
         <h2 className="text-2xl font-semibold text-white mb-6">Key Takeaways</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -268,6 +340,7 @@ Generate the React Query setup and custom hooks"`}</pre>
               <li>• Suggesting modern alternatives (date-fns vs moment)</li>
               <li>• Writing memoization wrappers</li>
               <li>• Creating virtualization components</li>
+              <li>• Identifying optimization opportunities from metrics</li>
             </ul>
           </div>
           <div>

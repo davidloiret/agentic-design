@@ -360,6 +360,14 @@ export const aiDrivenDevPages: AIDrivenDevPage[] = [
     category: 'Getting Started',
     keywords: ['security', 'best practices', 'AI safety', 'code security'],
     priority: 0.7
+  },
+  {
+    id: 'visual-development',
+    title: 'Visual Development with AI',
+    description: 'Screenshot-to-code generation, visual UI debugging, and design-to-implementation workflows. Learn how AI can convert designs into production-ready code.',
+    category: 'Tools & Platforms',
+    keywords: ['visual development', 'screenshot-to-code', 'UI debugging', 'design-to-code', 'Figma', 'Playwright MCP'],
+    priority: 0.8
   }
 ];
 
