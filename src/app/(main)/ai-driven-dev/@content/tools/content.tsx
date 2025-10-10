@@ -96,6 +96,23 @@ const tools: Tool[] = [
     deployment: ['On-premise', 'Cloud'],
     badge: 'Enterprise'
   },
+  {
+    id: 'zed',
+    name: 'Zed',
+    company: 'Zed Industries',
+    category: 'IDE Assistants',
+    description: 'Lightning-fast multiplayer code editor with built-in AI from Atom creators',
+    pricing: 'Free (open source)',
+    stars: 45000,
+    users: '100k+',
+    keyFeatures: ['Blazing fast', 'Multiplayer editing', 'Native AI integration', 'Rust-based performance'],
+    limitations: ['Newer ecosystem', 'Limited extensions'],
+    bestFor: 'Speed-focused developers wanting native AI',
+    models: ['GPT-4', 'Claude'],
+    deployment: ['Desktop app'],
+    badge: 'New 2025',
+    url: 'https://zed.dev'
+  },
 
   // Terminal/CLI Agents
   {
@@ -159,6 +176,21 @@ const tools: Tool[] = [
     deployment: ['Terminal'],
     badge: 'Research'
   },
+  {
+    id: 'amazon-q-cli',
+    name: 'Amazon Q CLI',
+    company: 'AWS',
+    category: 'Terminal Agents',
+    description: 'New 2025 agentic CLI with MCP support for autonomous coding workflows',
+    pricing: 'Free tier, Pro $19/month',
+    keyFeatures: ['MCP support', 'Agentic workflows', 'AWS integration', 'Security scanning', 'Multi-step tasks'],
+    limitations: ['AWS ecosystem focus', 'Newer platform'],
+    bestFor: 'AWS developers wanting agentic CLI workflows',
+    models: ['Claude', 'Amazon Titan'],
+    deployment: ['Terminal'],
+    badge: 'New 2025',
+    url: 'https://aws.amazon.com/q/developer'
+  },
 
   // VS Code Extensions
   {
@@ -211,15 +243,16 @@ const tools: Tool[] = [
     name: 'GitHub Copilot',
     company: 'Microsoft/GitHub',
     category: 'VS Code Extensions',
-    description: 'Universal AI pair programmer, most widely adopted',
-    pricing: '$10/month, $19 business',
+    description: 'Universal AI pair programmer, most widely adopted. Pricing changed June 4, 2025',
+    pricing: '$10/month (was $19), $19 business',
     users: '10M+',
-    keyFeatures: ['Universal IDE support', 'GitHub integration', 'Reliable completions', 'Chat assistant'],
-    limitations: ['Basic features', 'No agent mode', 'Limited context'],
+    keyFeatures: ['Universal IDE support', 'GitHub integration', 'Reliable completions', 'Chat assistant', 'Agentic capabilities'],
+    limitations: ['Basic features', 'No deep agent mode', 'Limited context'],
     bestFor: 'Universal compatibility',
     humaneval: 90,
-    models: ['GPT-4', 'Codex'],
-    deployment: ['All major IDEs']
+    models: ['GPT-4', 'GPT-4o', 'Codex'],
+    deployment: ['All major IDEs'],
+    badge: '10M+ users'
   },
 
   // Web-Based Platforms
@@ -323,6 +356,22 @@ const tools: Tool[] = [
     deployment: ['Terminal'],
     badge: 'Official Google',
     url: 'https://ai.google.dev/gemini-api/docs/quickstart?lang=cli'
+  },
+  {
+    id: 'gemini-code-assist',
+    name: 'Gemini Code Assist',
+    company: 'Google',
+    category: 'IDE Assistants',
+    description: 'Enterprise AI coding with Gemini 2.5, free for individual developers in 2025',
+    pricing: 'Free for individuals, $19-45/user/month enterprise',
+    users: '200k+',
+    keyFeatures: ['Gemini 2.5 Flash', 'Context caching', 'Multi-file editing', 'GCP integration', 'Free for individuals'],
+    limitations: ['Google Cloud focus', 'Enterprise features paywalled'],
+    bestFor: 'Google Cloud developers and individual devs',
+    models: ['Gemini 2.5 Flash', 'Gemini 2.5 Pro'],
+    deployment: ['VS Code', 'JetBrains', 'Cloud IDE'],
+    badge: 'New 2025',
+    url: 'https://cloud.google.com/products/gemini/code-assist'
   },
   {
     id: 'codeium',
@@ -470,13 +519,14 @@ const tools: Tool[] = [
     name: 'Devin',
     company: 'Cognition',
     category: 'Autonomous',
-    description: 'First fully autonomous AI software engineer',
-    pricing: 'Enterprise only',
-    keyFeatures: ['Full autonomy', 'Project planning', 'Deployment', 'Sandboxed environment'],
-    limitations: ['Limited access', 'High cost'],
-    bestFor: 'Enterprise automation',
+    description: 'First fully autonomous AI software engineer. 96% price reduction in 2025!',
+    pricing: '$20/month (was $500 enterprise)',
+    keyFeatures: ['Full autonomy', 'Project planning', 'Deployment', 'Sandboxed environment', 'Complete workflows'],
+    limitations: ['Still evolving', 'Autonomous limits'],
+    bestFor: 'Autonomous development workflows',
     swe_bench: 13.86,
-    badge: 'First AI Engineer'
+    badge: 'AI Engineer',
+    url: 'https://devin.ai'
   },
   {
     id: 'goose',
@@ -491,6 +541,21 @@ const tools: Tool[] = [
     bestFor: 'Custom autonomous workflows',
     deployment: ['Local'],
     badge: 'Open Source'
+  },
+  {
+    id: 'jules',
+    name: 'Jules',
+    company: 'Jules AI',
+    category: 'Autonomous',
+    description: 'New 2025 agentic coding assistant with advanced task decomposition',
+    pricing: '$20/month',
+    keyFeatures: ['Task decomposition', 'Autonomous execution', 'Multi-file changes', 'Git integration', 'Context preservation'],
+    limitations: ['Newer platform', 'Limited track record'],
+    bestFor: 'Complex autonomous coding tasks',
+    models: ['Claude', 'GPT-4'],
+    deployment: ['CLI', 'VS Code'],
+    badge: 'New 2025',
+    url: 'https://jules.ai'
   },
 
   // Additional IDE/Editors

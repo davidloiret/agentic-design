@@ -2427,3 +2427,9 @@ add a disclaimer saying that this application is under construction
 Now do Intrinsic Alignment Pattern (Internal observation points that cannot be manipulated by the agent, preventing deep scheming) with concrete example and focus on main concept to help the learner understand.
 
 rabbitmq kafka vs grpc
+
+
+AI risk management
+
+source:
+https://www.pillar.security/agentic-ai-red-teaming-playbook

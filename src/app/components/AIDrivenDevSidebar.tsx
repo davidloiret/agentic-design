@@ -6,7 +6,7 @@ import {
   ChevronDown, ChevronRight, Sparkles, BookOpen, Code2, Wrench,
   FileText, Rocket, GitBranch, Cpu, Package, Users, Target,
   Layers, Hexagon, Box, TestTube, Workflow, Terminal, Smartphone,
-  RefreshCw, Bug, Shield, DollarSign, Brain, Activity, Scale
+  RefreshCw, Bug, Shield, DollarSign, Brain, Activity, Scale, AlertTriangle
 } from 'lucide-react';
 
 interface SidebarSection {
@@ -95,6 +95,7 @@ export const AIDrivenDevSidebar = ({
       title: 'Advanced Topics',
       icon: Shield,
       items: [
+        { id: 'risk-management', label: 'Risk Management & CVEs', route: '/ai-driven-dev/risk-management', icon: AlertTriangle, badge: 'Critical' },
         { id: 'security-best-practices', label: 'Security Best Practices', route: '/ai-driven-dev/security-best-practices', icon: Shield, badge: 'New' },
         { id: 'cost-management', label: 'Cost Management', route: '/ai-driven-dev/cost-management', icon: DollarSign, badge: 'New' },
         { id: 'team-workflows', label: 'Team Workflows', route: '/ai-driven-dev/team-workflows', icon: Users, badge: 'New' },
@@ -214,7 +215,9 @@ export const AIDrivenDevSidebar = ({
                       </div>
                       {item.badge && (
                         <span className={`px-2 py-0.5 text-xs rounded-full ${
-                          item.badge === 'New'
+                          item.badge === 'Critical'
+                            ? 'bg-red-500/20 text-red-400 animate-pulse'
+                            : item.badge === 'New'
                             ? 'bg-blue-500/20 text-blue-400'
                             : item.badge === 'Hot'
                             ? 'bg-orange-500/20 text-orange-400'

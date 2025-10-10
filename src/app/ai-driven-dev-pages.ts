@@ -124,27 +124,11 @@ export const aiDrivenDevPages: AIDrivenDevPage[] = [
     priority: 0.8
   },
   {
-    id: 'autonomous',
-    title: 'Autonomous Development Workflows',
-    description: 'Build workflows with autonomous AI agents that handle complex development tasks end-to-end.',
-    category: 'Tools & Platforms',
-    keywords: ['autonomous', 'workflows', 'AI automation'],
-    priority: 0.7
-  },
-  {
     id: 'no-code-builders',
     title: 'AI No-Code Development Platforms',
     description: 'Build applications without code using AI-powered no-code platforms and visual development tools.',
     category: 'Tools & Platforms',
     keywords: ['no-code', 'low-code', 'visual development', 'AI builders'],
-    priority: 0.7
-  },
-  {
-    id: 'no-code',
-    title: 'No-Code AI Development',
-    description: 'Leverage AI to build software without traditional coding using natural language and visual interfaces.',
-    category: 'Tools & Platforms',
-    keywords: ['no-code', 'AI development', 'visual programming'],
     priority: 0.7
   },
 
@@ -174,28 +158,12 @@ export const aiDrivenDevPages: AIDrivenDevPage[] = [
     priority: 0.8
   },
   {
-    id: 'ddd',
-    title: 'Domain-Driven Design with AI',
-    description: 'Use AI to implement Domain-Driven Design patterns, bounded contexts, aggregates, and domain models effectively.',
-    category: 'Methodologies',
-    keywords: ['DDD', 'domain-driven design', 'domain modeling', 'bounded context'],
-    priority: 0.8
-  },
-  {
     id: 'ddd-with-ai',
     title: 'AI-Assisted Domain-Driven Design',
     description: 'Leverage AI to discover domain models, define bounded contexts, and implement DDD patterns in your codebase.',
     category: 'Methodologies',
     keywords: ['DDD', 'domain-driven design', 'AI-assisted DDD'],
     priority: 0.7
-  },
-  {
-    id: 'hexagonal',
-    title: 'Hexagonal Architecture with AI',
-    description: 'Build maintainable applications with hexagonal (ports and adapters) architecture using AI assistance for boilerplate and structure.',
-    category: 'Methodologies',
-    keywords: ['hexagonal architecture', 'ports and adapters', 'clean architecture'],
-    priority: 0.8
   },
   {
     id: 'hexagonal-architecture',
@@ -254,6 +222,72 @@ export const aiDrivenDevPages: AIDrivenDevPage[] = [
     category: 'Production Workflows',
     keywords: ['70% problem', 'AI limitations', 'completion', 'polish'],
     priority: 0.7
+  },
+
+  // Advanced Topics (Missing Pages)
+  {
+    id: 'cost-management',
+    title: 'AI Coding Cost Management',
+    description: 'Optimize AI development spending while maximizing productivity. Compare pricing, manage API costs, and calculate ROI for AI coding tools.',
+    category: 'Advanced Topics',
+    keywords: ['cost management', 'pricing', 'ROI', 'budget', 'API costs'],
+    priority: 0.7
+  },
+  {
+    id: 'team-workflows',
+    title: 'Team Workflows with AI',
+    description: 'Scale AI-driven development across your team. Standardize practices, manage API keys, create shared prompt libraries, and establish code review processes.',
+    category: 'Advanced Topics',
+    keywords: ['team workflows', 'collaboration', 'API key management', 'prompt libraries', 'team standards'],
+    priority: 0.7
+  },
+  {
+    id: 'prompt-engineering',
+    title: 'Prompt Engineering for Development',
+    description: 'Master the art of communicating with AI coding assistants. Learn proven techniques for effective prompts, context management, and chain-of-thought reasoning.',
+    category: 'Advanced Topics',
+    keywords: ['prompt engineering', 'prompting techniques', 'context window', 'few-shot learning', 'chain-of-thought'],
+    priority: 0.8
+  },
+  {
+    id: 'cicd-integration',
+    title: 'CI/CD Integration with AI',
+    description: 'Automate AI code review, testing, and quality checks in your deployment pipeline. Integrate CodeRabbit, SonarQube, and Snyk with GitHub Actions.',
+    category: 'Advanced Topics',
+    keywords: ['CI/CD', 'continuous integration', 'GitHub Actions', 'automated testing', 'quality gates'],
+    priority: 0.7
+  },
+  {
+    id: 'monitoring-observability',
+    title: 'Monitoring & Observability for AI Code',
+    description: 'Track AI-generated code in production. Tag commits, monitor error rates, set up alerts, and compare AI vs. human code quality metrics.',
+    category: 'Advanced Topics',
+    keywords: ['monitoring', 'observability', 'error tracking', 'performance metrics', 'Sentry', 'Datadog'],
+    priority: 0.7
+  },
+  {
+    id: 'licensing-legal',
+    title: 'Licensing & Legal Issues in AI Development',
+    description: 'Navigate the legal landscape of AI-generated code. Understand ownership, copyright concerns, license conflicts, and protect your company from liability.',
+    category: 'Advanced Topics',
+    keywords: ['licensing', 'legal', 'copyright', 'IP ownership', 'GPL', 'open source licenses'],
+    priority: 0.7
+  },
+  {
+    id: 'troubleshooting',
+    title: 'AI Coding Tools Troubleshooting Guide',
+    description: 'Common issues with AI coding tools and how to fix them. Solutions for authentication errors, API limits, poor output quality, and performance problems.',
+    category: 'Advanced Topics',
+    keywords: ['troubleshooting', 'debugging', 'errors', 'API limits', 'performance'],
+    priority: 0.7
+  },
+  {
+    id: 'risk-management',
+    title: 'Risk Management for AI-Driven Development',
+    description: 'Comprehensive guide to CVEs, vulnerabilities, and security risks in AI coding tools. Covers Cursor CVE-2025-54135, GitHub Copilot CVE-2025-53773, data leaks, and mitigation strategies.',
+    category: 'Advanced Topics',
+    keywords: ['risk management', 'CVE', 'vulnerabilities', 'security risks', 'Cursor exploit', 'Copilot CVE', 'data leaks', 'threat intelligence'],
+    priority: 0.9
   },
 
   // Real Examples
@@ -384,5 +418,6 @@ export const aiDrivenDevCategories = [
   'Tools & Platforms',
   'Methodologies',
   'Production Workflows',
+  'Advanced Topics',
   'Real Examples'
 ];
