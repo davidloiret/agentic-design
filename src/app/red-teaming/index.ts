@@ -8,6 +8,15 @@ import { modelTheftTechniques } from './model-theft';
 import { advancedPromptInjectionTechniques } from './advanced-prompt-injection';
 import { advancedJailbreakingTechniques } from './advanced-jailbreaking';
 import { aiSafetyEvaluationTechniques } from './ai-safety-evaluation';
+import { agenticAITechniques } from './agentic-ai';
+import { advancedAgenticTechniques } from './advanced-agentic';
+import { memoryAttackTechniques } from './memory-attacks';
+import { multimodalTechniques } from './multimodal';
+import { checkerOutOfLoopTechniques } from './checker-out-of-loop';
+import { resourceExhaustionTechniques } from './resource-exhaustion';
+import { impactChainTechniques } from './impact-chain';
+import { untraceabilityTechniques } from './untraceability';
+import { criticalSystemInteractionTechniques } from './critical-system-interaction';
 
 export const allRedTeamingTechniques: RedTeamingTechnique[] = [
   ...promptInjectionTechniques,
@@ -19,6 +28,15 @@ export const allRedTeamingTechniques: RedTeamingTechnique[] = [
   ...supplyChainTechniques,
   ...modelTheftTechniques,
   ...aiSafetyEvaluationTechniques,
+  ...agenticAITechniques,
+  ...advancedAgenticTechniques,
+  ...memoryAttackTechniques,
+  ...multimodalTechniques,
+  ...checkerOutOfLoopTechniques,
+  ...resourceExhaustionTechniques,
+  ...impactChainTechniques,
+  ...untraceabilityTechniques,
+  ...criticalSystemInteractionTechniques,
 ];
 
 export const redTeamingCategories = {
@@ -64,6 +82,35 @@ export const redTeamingCategories = {
     color: 'from-cyan-500 to-red-500',
     techniques: modelTheftTechniques
   },
+  'agentic-ai': {
+    name: 'Agentic AI Attacks',
+    description: 'Multi-agent security testing and autonomous system exploitation techniques',
+    icon: '🤖',
+    color: 'from-purple-500 to-pink-500',
+    techniques: [
+      ...agenticAITechniques,
+      ...advancedAgenticTechniques,
+      ...checkerOutOfLoopTechniques,
+      ...resourceExhaustionTechniques,
+      ...impactChainTechniques,
+      ...untraceabilityTechniques,
+      ...criticalSystemInteractionTechniques
+    ]
+  },
+  'memory-attacks': {
+    name: 'Memory & Context Attacks',
+    description: 'Memory poisoning, RAG exploitation, and context manipulation techniques',
+    icon: '🧠',
+    color: 'from-pink-500 to-purple-500',
+    techniques: memoryAttackTechniques
+  },
+  'multimodal': {
+    name: 'Multimodal Attacks',
+    description: 'Cross-modal exploitation and modality-specific attack techniques',
+    icon: '🎬',
+    color: 'from-indigo-500 to-cyan-500',
+    techniques: multimodalTechniques
+  },
 };
 
 export * from './types';
@@ -76,3 +123,12 @@ export * from './model-theft';
 export * from './advanced-prompt-injection';
 export * from './advanced-jailbreaking';
 export * from './ai-safety-evaluation';
+export * from './agentic-ai';
+export * from './advanced-agentic';
+export * from './memory-attacks';
+export * from './multimodal';
+export * from './checker-out-of-loop';
+export * from './resource-exhaustion';
+export * from './impact-chain';
+export * from './untraceability';
+export * from './critical-system-interaction';

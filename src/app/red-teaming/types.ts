@@ -17,7 +17,7 @@ export interface RedTeamingTechnique {
   ethicalGuidelines: string[];
 }
 
-export type RedTeamingCategory = 
+export type RedTeamingCategory =
   | 'prompt-injection'
   | 'jailbreaking'
   | 'data-extraction'
@@ -30,4 +30,7 @@ export type RedTeamingCategory =
   | 'privacy-attacks'
   | 'robustness-testing'
   | 'bias-evaluation'
-  | 'safety-testing';
+  | 'safety-testing'
+  | 'agentic-ai'
+  | 'memory-attacks'
+  | 'multimodal';

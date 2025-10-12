@@ -2433,3 +2433,86 @@ AI risk management
 
 source:
 https://www.pillar.security/agentic-ai-red-teaming-playbook
+
+https://docs.google.com/spreadsheets/d/1BUyAg48gNlMyXxwXE9YKMUVemHtSUrtXSSYYXBsBoQ4/edit?gid=1341107069#gid=1341107069
+
+
+https://agenticsecurity.info/
+
+https://arxiv.org/html/2504.19956v1
+
+https://www.belfercenter.org/research-analysis/rise-agentic-ai-infrastructure-autonomy-and-americas-cyber-future
+
+---
+
+## AI Red Teaming Updates (2025-10-10)
+
+✅ **COMPLETED GAP ANALYSIS**: Comprehensive comparison between CSA Agentic AI Red Teaming Guide and existing content
+
+### New Red Teaming Techniques Added
+
+**Priority 1 Critical Gaps - NOW IMPLEMENTED:**
+
+1. **Checker-Out-of-the-Loop Techniques** (`src/app/red-teaming/checker-out-of-loop.ts`)
+   - Human Oversight Bypass (HOB)
+   - Autonomous Critical Action Execution (ACAE)
+   - Approval Workflow Manipulation (AWM)
+   - Human Verification Evasion (HVE)
+   - Decision Authority Escalation (DAE)
+
+2. **Resource Exhaustion Techniques** (`src/app/red-teaming/resource-exhaustion.ts`)
+   - Recursive Task Generation Attack (RTGA)
+   - Token Budget Depletion Attack (TBDA)
+   - API Quota Exhaustion (AQE)
+   - Agent Memory Exhaustion (AME)
+   - Computational Resource Flooding (CRF)
+   - Agent DoS via Infinite Loops (ADIL)
+   - Agent Storage Exhaustion (ASE)
+
+3. **Impact Chain Techniques** (`src/app/red-teaming/impact-chain.ts`)
+   - Cascading Failure Exploitation (CFE)
+   - Blast Radius Amplification Attack (BRAA)
+   - Cross-System Impact Propagation (CSIP)
+   - Multi-Tenant Impact Exploitation (MTIE)
+   - Agent Dependency Chain Exploitation (ADCE)
+
+### Coverage Summary
+
+- **Total New Techniques**: 17 (5 + 7 + 5)
+- **Previous Total**: 27 techniques
+- **New Total**: 44 techniques across all categories
+- **Categories Updated**: Agentic AI Attacks category enhanced with new techniques
+- **Build Status**: ✅ All tests passing, production build successful
+
+### Files Modified
+
+- ✅ Created `/src/app/red-teaming/checker-out-of-loop.ts`
+- ✅ Created `/src/app/red-teaming/resource-exhaustion.ts`
+- ✅ Created `/src/app/red-teaming/impact-chain.ts`
+- ✅ Updated `/src/app/red-teaming/index.ts` (imports, exports, category integration)
+- ℹ️ No changes needed to `/src/app/red-teaming/types.ts` (existing interface compatible)
+
+### Remaining Gaps (Lower Priority)
+
+**Priority 2 - Enhancement Opportunities:**
+- Enhance existing `supply-chain.ts` with agent-specific supply chain attacks
+- Add 2-3 authorization-specific techniques to `agentic-ai.ts`
+- Add critical system interaction techniques to `advanced-agentic.ts`
+
+**Priority 3 - Refinement:**
+- Add `testRequirements: string[]` field to `RedTeamingTechnique` interface
+- Update all techniques with references to AgentDojo, Agent-SafetyBench, AgentFence, MAESTRO
+- Enhance examples with more detailed procedural steps
+
+### Well-Covered Areas
+
+✅ Agent Memory and Context Manipulation (10 techniques in `memory-attacks.ts`)
+✅ Agent Goal and Instruction Manipulation
+✅ Agent Hallucination Exploitation
+✅ Agent Knowledge Base Poisoning
+✅ Agent Orchestration and Multi-Agent Exploitation
+✅ Agent Untraceability
+
+---
+
+https://genai.owasp.org/2025/07/22/owasp-agentic-ai-taxonomy-in-action-from-theory-to-tools/
