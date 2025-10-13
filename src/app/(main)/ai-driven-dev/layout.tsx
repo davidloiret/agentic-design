@@ -13,12 +13,12 @@ export default function AIDrivenDevLayout({
   const [expandedSections, setExpandedSections] = useState<string[]>(['getting-started', 'methodologies', 'workflows', 'tools-platforms', 'examples']);
 
   return (
-    <div className="flex relative">
+    <div className="flex h-screen overflow-hidden">
       <AIDrivenDevSidebar
         expandedSections={expandedSections}
         setExpandedSections={setExpandedSections}
       />
-      <main className="flex-1 min-h-screen">
+      <main className="flex-1 overflow-y-auto">
         {content || children}
       </main>
     </div>

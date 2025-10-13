@@ -153,7 +153,7 @@ export const AIDrivenDevSidebar = ({
   return (
     <aside className={`${
       isCollapsed ? 'w-16' : 'w-80'
-    } bg-gray-900/50 backdrop-blur-sm border-r border-gray-700 min-h-screen sticky top-0 transition-all duration-200 flex flex-col`}>
+    } bg-gray-900/50 backdrop-blur-sm border-r border-gray-700 h-screen transition-all duration-200 flex flex-col`}>
       {/* Header */}
       <div className="p-4 border-b border-gray-700/50">
         <div className="flex items-center justify-between">
