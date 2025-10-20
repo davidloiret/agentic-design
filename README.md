@@ -2516,3 +2516,8 @@ https://www.belfercenter.org/research-analysis/rise-agentic-ai-infrastructure-au
 ---
 
 https://genai.owasp.org/2025/07/22/owasp-agentic-ai-taxonomy-in-action-from-theory-to-tools/
+
+
+=>
+
+GEPA optimizer

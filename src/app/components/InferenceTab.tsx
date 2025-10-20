@@ -42,6 +42,7 @@ export const InferenceTab: React.FC<InferenceTabProps> = ({ activeCategory = 'ov
 
   const categories = [
     { id: 'overview', label: 'Overview', icon: BookOpen },
+    { id: 'non-determinism', label: 'Non-Determinism', icon: Brain },
     { id: 'agentic-inference', label: 'Agentic Patterns', icon: Layers },
     { id: 'optimization', label: 'Advanced Optimization', icon: Zap },
     { id: 'web-inference', label: 'Web Inference', icon: Globe },
@@ -374,6 +375,360 @@ export const InferenceTab: React.FC<InferenceTabProps> = ({ activeCategory = 'ov
               <div className="bg-gray-800 p-3 rounded-lg">
                 <h5 className="font-semibold text-white mb-1">ONNX Runtime</h5>
                 <p className="text-gray-300 text-sm">Cross-platform inference with hardware-specific optimizations</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    },
+    {
+      id: 'non-determinism',
+      title: 'Why Inference is Non-Deterministic',
+      icon: Brain,
+      content: (
+        <div className="space-y-6">
+          <div>
+            <h4 className="text-xl font-semibold text-white mb-4">The Myth of the "Same" Question</h4>
+            <p className="text-gray-300 mb-4">
+              Non-determinism—the behavior where a model produces different outputs for the same input—is the default state of modern LLMs.
+              True determinism (100% identical responses) is the exception and can only be achieved by controlling every variable across
+              the entire software, hardware, and contextual stack.
+            </p>
+            <div className="bg-yellow-900/20 border border-yellow-700/50 rounded-lg p-4">
+              <p className="text-yellow-300 text-sm">
+                <strong>Key Insight:</strong> The variations arise from four primary domains: Generation & Sampling, Context & Input,
+                System & Architecture, and Hardware & Implementation. Understanding these factors is crucial for building reliable AI systems.
+              </p>
+            </div>
+          </div>
+
+          {/* Category 1: Generation & Sampling */}
+          <div className="bg-gray-800 rounded-lg p-6">
+            <div className="flex items-start gap-3 mb-4">
+              <div className="bg-indigo-500/20 p-2 rounded-lg">
+                <Zap className="w-5 h-5 text-indigo-400" />
+              </div>
+              <div className="flex-1">
+                <h5 className="text-xl font-semibold text-white mb-2">Category 1: Intentional Generation & Sampling Parameters</h5>
+                <p className="text-gray-400 text-sm">The "Dice Roll" - Intentionally introduced randomness to ensure creativity</p>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div className="bg-gray-900 p-4 rounded-lg">
+                <h6 className="font-semibold text-white mb-2">1. Temperature</h6>
+                <p className="text-gray-300 text-sm mb-2">
+                  Controls the "creativity" or "chaos" of the output by skewing probabilities.
+                </p>
+                <div className="bg-gray-800 p-2 rounded mt-2 space-y-1">
+                  <div className="text-xs">
+                    <span className="text-green-400">T=0 (Greedy):</span> <span className="text-gray-400">Always chooses the highest probability word</span>
+                  </div>
+                  <div className="text-xs">
+                    <span className="text-yellow-400">T&gt;0 (Sampling):</span> <span className="text-gray-400">"Rolls the dice" and samples from available words</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-gray-900 p-4 rounded-lg">
+                <h6 className="font-semibold text-white mb-2">2. The Seed</h6>
+                <p className="text-gray-300 text-sm mb-2">
+                  Computers use a "seed" (starting number) to generate pseudo-random sequences.
+                </p>
+                <div className="bg-gray-800 p-2 rounded mt-2 space-y-1">
+                  <div className="text-xs">
+                    <span className="text-red-400">No Seed:</span> <span className="text-gray-400">New seed every request = guaranteed different output</span>
+                  </div>
+                  <div className="text-xs">
+                    <span className="text-blue-400">Fixed Seed:</span> <span className="text-gray-400">Same sequence of "dice rolls" = forcing determinism</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-gray-900 p-4 rounded-lg">
+                <h6 className="font-semibold text-white mb-2">3. Top-P (Nucleus Sampling)</h6>
+                <p className="text-gray-300 text-sm">
+                  Model samples from smallest "club" of words whose cumulative probability exceeds threshold (e.g., 90%).
+                  The exact words in this "club" can change with every step.
+                </p>
+              </div>
+
+              <div className="bg-gray-900 p-4 rounded-lg">
+                <h6 className="font-semibold text-white mb-2">4. Top-K</h6>
+                <p className="text-gray-300 text-sm">
+                  Model samples from the K most probable words (e.g., top 50 words).
+                </p>
+              </div>
+
+              <div className="bg-gray-900 p-4 rounded-lg">
+                <h6 className="font-semibold text-white mb-2">5. Alternative Sampling Strategies</h6>
+                <p className="text-gray-300 text-sm">
+                  Complex samplers like Mirostat or Typical Sampling have their own internal logic for deciding which words to consider.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Category 2: Output Shaping */}
+          <div className="bg-gray-800 rounded-lg p-6">
+            <div className="flex items-start gap-3 mb-4">
+              <div className="bg-green-500/20 p-2 rounded-lg">
+                <Shield className="w-5 h-5 text-green-400" />
+              </div>
+              <div className="flex-1">
+                <h5 className="text-xl font-semibold text-white mb-2">Category 2: Output-Shaping & Penalty Parameters</h5>
+                <p className="text-gray-400 text-sm">The "Rules" - Parameters that alter probability scores during generation</p>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div className="bg-gray-900 p-4 rounded-lg">
+                <h6 className="font-semibold text-white mb-2">6. Repetition/Frequency/Presence Penalties</h6>
+                <p className="text-gray-300 text-sm">
+                  Dynamically lower probability of words that have already appeared, forcing wider vocabulary use and avoiding loops.
+                  Even with fixed seed, penalties can change outcomes if word scores drop out of Top-K/Top-P "club."
+                </p>
+              </div>
+
+              <div className="bg-gray-900 p-4 rounded-lg">
+                <h6 className="font-semibold text-white mb-2">7. Stopping Conditions (Max Tokens)</h6>
+                <p className="text-gray-300 text-sm">
+                  Hard limit on response length. A run with max_tokens=50 will differ from max_tokens=500.
+                </p>
+              </div>
+
+              <div className="bg-gray-900 p-4 rounded-lg">
+                <h6 className="font-semibold text-white mb-2">8. Stopping Conditions (Stop Sequences)</h6>
+                <p className="text-gray-300 text-sm">
+                  Model stops if it generates specific strings (e.g., "\nHuman:"). One dice roll might hit this sequence,
+                  another might not, resulting in different answer lengths.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Category 3: Context & Input */}
+          <div className="bg-gray-800 rounded-lg p-6">
+            <div className="flex items-start gap-3 mb-4">
+              <div className="bg-blue-500/20 p-2 rounded-lg">
+                <BookOpen className="w-5 h-5 text-blue-400" />
+              </div>
+              <div className="flex-1">
+                <h5 className="text-xl font-semibold text-white mb-2">Category 3: Contextual & Input-Time Variables</h5>
+                <p className="text-gray-400 text-sm">The "Memory" - Model input is almost never just your last message</p>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div className="bg-gray-900 p-4 rounded-lg">
+                <h6 className="font-semibold text-white mb-2">9. Chat History (The Context Window)</h6>
+                <p className="text-gray-300 text-sm mb-2">
+                  Most common reason for perceived non-determinism. Model sees entire preceding conversation, not just last question.
+                </p>
+                <div className="bg-red-900/20 border border-red-700/30 p-2 rounded mt-2">
+                  <p className="text-red-300 text-xs">
+                    A single different word in chat history creates different input → different output
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-gray-900 p-4 rounded-lg">
+                <h6 className="font-semibold text-white mb-2">10. Context Window Limit (The "Forgetting" Point)</h6>
+                <p className="text-gray-300 text-sm">
+                  Models have finite memory (e.g., 8K or 128K tokens). In long conversations, they "forget" the beginning.
+                  Instructions given at start will be ignored once they fall out of context window.
+                </p>
+              </div>
+
+              <div className="bg-gray-900 p-4 rounded-lg">
+                <h6 className="font-semibold text-white mb-2">11. System Prompt</h6>
+                <p className="text-gray-300 text-sm">
+                  Hidden, high-priority instruction defining model's persona. Different system prompts produce vastly different response styles
+                  (e.g., "helpful assistant" vs. "sarcastic pirate").
+                </p>
+              </div>
+
+              <div className="bg-gray-900 p-4 rounded-lg">
+                <h6 className="font-semibold text-white mb-2">12. Tool Use (RAG - Retrieval-Augmented Generation)</h6>
+                <p className="text-gray-300 text-sm mb-2">
+                  Massive source of non-determinism. When you ask about "today's news," the model:
+                </p>
+                <ol className="list-decimal list-inside text-xs text-gray-400 mt-2 space-y-1">
+                  <li>Pauses generation</li>
+                  <li>Calls external tool (e.g., Google Search API)</li>
+                  <li>Receives new, dynamic data (search results)</li>
+                  <li>Injects this data into context</li>
+                </ol>
+                <p className="text-yellow-300 text-xs mt-2">
+                  Search results from 10:00 AM ≠ results at 10:01 AM = guaranteed different answer
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Category 4: System & Architecture */}
+          <div className="bg-gray-800 rounded-lg p-6">
+            <div className="flex items-start gap-3 mb-4">
+              <div className="bg-purple-500/20 p-2 rounded-lg">
+                <Layers className="w-5 h-5 text-purple-400" />
+              </div>
+              <div className="flex-1">
+                <h5 className="text-xl font-semibold text-white mb-2">Category 4: System & Architectural Variables</h5>
+                <p className="text-gray-400 text-sm">The "Orchestra" - The "model" is often a complex system of multiple models</p>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div className="bg-gray-900 p-4 rounded-lg">
+                <h6 className="font-semibold text-white mb-2">13. Model Updates & Versions</h6>
+                <p className="text-gray-300 text-sm">
+                  The model you use today may be a new, retrained, or updated version from yesterday.
+                  v1.2 model will respond differently than v1.3 model.
+                </p>
+              </div>
+
+              <div className="bg-gray-900 p-4 rounded-lg">
+                <h6 className="font-semibold text-white mb-2">14. A/B Testing & Canary Rollouts</h6>
+                <p className="text-gray-300 text-sm">
+                  Companies route traffic randomly to test new versions. Your first request might go to Model A (stable),
+                  while second request goes to Model B (test), resulting in different answers.
+                </p>
+              </div>
+
+              <div className="bg-gray-900 p-4 rounded-lg">
+                <h6 className="font-semibold text-white mb-2">15. Speculative Decoding</h6>
+                <p className="text-gray-300 text-sm">
+                  Speed-boosting technique where small "draft" model generates words, checked by large "expert" model.
+                  This complex dance between two different models introduces new variation points.
+                </p>
+              </div>
+
+              <div className="bg-gray-900 p-4 rounded-lg">
+                <h6 className="font-semibold text-white mb-2">16. Mixture of Experts (MoE) Architecture</h6>
+                <p className="text-gray-300 text-sm">
+                  Some models (like Mixtral) are a "team" of smaller sub-models. A "router" network decides which expert
+                  to use for each word—this router's decision can itself be non-deterministic.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Category 5: Hardware & Implementation */}
+          <div className="bg-gray-800 rounded-lg p-6">
+            <div className="flex items-start gap-3 mb-4">
+              <div className="bg-red-500/20 p-2 rounded-lg">
+                <Cpu className="w-5 h-5 text-red-400" />
+              </div>
+              <div className="flex-1">
+                <h5 className="text-xl font-semibold text-white mb-2">Category 5: Hardware & Low-Level Implementation</h5>
+                <p className="text-gray-400 text-sm">The "Physics" - Deepest and most difficult-to-control source of variation</p>
+              </div>
+            </div>
+
+            <div className="bg-yellow-900/20 border border-yellow-700/30 rounded-lg p-3 mb-4">
+              <p className="text-yellow-300 text-sm">
+                <AlertTriangle className="w-4 h-4 inline mr-1" />
+                <strong>Critical:</strong> Can cause non-determinism even if Temperature=0 and Seed is fixed!
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              <div className="bg-gray-900 p-4 rounded-lg">
+                <h6 className="font-semibold text-white mb-2">17. GPU Non-Determinism (Floating-Point Math)</h6>
+                <p className="text-gray-300 text-sm mb-2">
+                  The fundamental physical reason for non-determinism:
+                </p>
+                <ul className="list-disc list-inside text-xs text-gray-400 mt-2 space-y-1">
+                  <li><strong>Parallelism:</strong> GPUs perform billions of calculations in parallel</li>
+                  <li><strong>Floating-Point Arithmetic:</strong> Computer math with decimals is not perfectly associative</li>
+                  <li><strong>Consequence:</strong> Micro-changes in rounding can make Word A's score slightly different, causing different word selection</li>
+                </ul>
+                <div className="bg-gray-800 p-2 rounded mt-3">
+                  <p className="text-xs text-gray-400">
+                    Example: (a+b)+c ≠ a+(b+c) due to rounding → 0.81234567 vs 0.81234568 → Different word chosen
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-gray-900 p-4 rounded-lg">
+                <h6 className="font-semibold text-white mb-2">18. Quantization</h6>
+                <p className="text-gray-300 text-sm">
+                  Models use low-precision numbers (8-bit/4-bit) instead of high-precision (32-bit) for speed.
+                  This "quantized" model is an approximation—tiny rounding errors accumulate at every step.
+                </p>
+              </div>
+
+              <div className="bg-gray-900 p-4 rounded-lg">
+                <h6 className="font-semibold text-white mb-2">19. Batching</h6>
+                <p className="text-gray-300 text-sm">
+                  Your request is processed in a "batch" with other users' requests. The way these are grouped and
+                  padded can change exact order of GPU calculations, triggering floating-point issues.
+                </p>
+              </div>
+
+              <div className="bg-gray-900 p-4 rounded-lg">
+                <h6 className="font-semibold text-white mb-2">20. Inference-Time Dropout</h6>
+                <p className="text-gray-300 text-sm">
+                  Extremely rare but possible. "Dropout" (randomly disabling neurons) used during training.
+                  If accidentally left enabled during inference, introduces massive randomness no seed can control.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Summary and Implications */}
+          <div className="bg-gradient-to-r from-indigo-900/20 to-purple-900/20 rounded-lg p-6 border border-indigo-700/30">
+            <h4 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+              <Brain className="w-5 h-5 text-indigo-400" />
+              Key Takeaways for Builders
+            </h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h5 className="font-semibold text-indigo-300 mb-3">Achieving Near Determinism</h5>
+                <ul className="space-y-2 text-sm text-gray-300">
+                  <li className="flex items-start gap-2">
+                    <div className="w-1 h-1 bg-indigo-400 rounded-full mt-1.5"></div>
+                    <span>Set temperature to 0 (greedy decoding)</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <div className="w-1 h-1 bg-indigo-400 rounded-full mt-1.5"></div>
+                    <span>Use a fixed seed value</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <div className="w-1 h-1 bg-indigo-400 rounded-full mt-1.5"></div>
+                    <span>Control all input context exactly</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <div className="w-1 h-1 bg-indigo-400 rounded-full mt-1.5"></div>
+                    <span>Use same model version</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <div className="w-1 h-1 bg-yellow-400 rounded-full mt-1.5"></div>
+                    <span>Accept that hardware-level variations may still occur</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div>
+                <h5 className="font-semibold text-purple-300 mb-3">Embracing Non-Determinism</h5>
+                <ul className="space-y-2 text-sm text-gray-300">
+                  <li className="flex items-start gap-2">
+                    <div className="w-1 h-1 bg-purple-400 rounded-full mt-1.5"></div>
+                    <span>Build systems that handle variation gracefully</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <div className="w-1 h-1 bg-purple-400 rounded-full mt-1.5"></div>
+                    <span>Use evaluation metrics that account for semantic equivalence</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <div className="w-1 h-1 bg-purple-400 rounded-full mt-1.5"></div>
+                    <span>Implement retry logic for critical operations</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <div className="w-1 h-1 bg-purple-400 rounded-full mt-1.5"></div>
+                    <span>Focus on consistency of quality, not exact outputs</span>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>

@@ -1,12 +1,13 @@
 "use client"
 
 import React from 'react';
-import { 
-  BookOpen, 
-  Cpu, 
-  Cloud, 
-  Zap, 
-  BarChart3
+import {
+  BookOpen,
+  Cpu,
+  Cloud,
+  Zap,
+  BarChart3,
+  Brain
 } from 'lucide-react';
 import { CategoryNavigationLayout, NavigationItem, NavigationCategory } from './CategoryNavigationLayout';
 import Fuse from 'fuse.js';
@@ -19,6 +20,14 @@ const sections: NavigationItem[] = [
     complexity: 'low',
     icon: <BookOpen className="w-4 h-4" />,
     href: '/ai-inference'
+  },
+  {
+    id: 'non-determinism',
+    name: 'Non-Determinism',
+    category: 'core',
+    complexity: 'medium',
+    icon: <Brain className="w-4 h-4" />,
+    href: '/ai-inference/non-determinism'
   },
   {
     id: 'agentic-patterns',
