@@ -1,6 +1,6 @@
 'use client';
 
-import { Sparkles, Search, Command, GraduationCap, Star, Flame, Cpu } from 'lucide-react';
+import { Sparkles, Search, Command, GraduationCap, Flame, HeadphonesIcon } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLearningHub } from '@/contexts/LearningHubContext';
 import { UserMenu } from './UserMenu';
@@ -73,7 +73,6 @@ export const Header = () => {
   const router = useRouter();
   const pathname = usePathname();
   const isLearningHubActive = pathname === '/learning-hub' || pathname.startsWith('/learning-hub/');
-  const isSystemBuilderActive = pathname === '/system-builder' || pathname.startsWith('/system-builder/');
   const [logoExpression, setLogoExpression] = useState<BrainExpression>('happy');
 
   useEffect(() => {
@@ -302,116 +301,67 @@ export const Header = () => {
               </AnimatePresence>
             </motion.button>
 
-            {/* System Builder - Professional builder button */}
+            {/* Expert Services CTA - Replaces System Builder button */}
             <motion.button
-              id="system-builder-button"
-              onClick={() => router.push('/system-builder')}
-              className={`relative flex items-center space-x-2 px-4 py-2 font-medium rounded-lg shadow-lg overflow-hidden ${
-                isSystemBuilderActive 
-                  ? 'bg-gradient-to-r from-blue-600 to-cyan-700 text-white shadow-xl ring-2 ring-blue-400/50' 
-                  : 'bg-gradient-to-r from-blue-500 to-cyan-600 text-white'
-              }`}
+              id="expert-services-button"
+              onClick={() => router.push('/expert-services')}
+              className="relative flex items-center space-x-2 px-4 py-2 font-medium rounded-lg shadow-lg overflow-hidden bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white hover:from-amber-600 hover:via-orange-600 hover:to-amber-700"
               layout
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              animate={isSystemBuilderActive ? {
+              animate={{
                 boxShadow: [
-                  '0 0 20px rgba(59, 130, 246, 0.3)',
-                  '0 0 40px rgba(59, 130, 246, 0.5)',
-                  '0 0 20px rgba(59, 130, 246, 0.3)',
+                  '0 0 20px rgba(251, 146, 60, 0.3)',
+                  '0 0 40px rgba(251, 146, 60, 0.5)',
+                  '0 0 20px rgba(251, 146, 60, 0.3)',
                 ],
-              } : {}}
+              }}
               transition={{
-                layout: isSystemBuilderActive ? {
+                layout: {
                   type: "spring",
                   stiffness: 500,
                   damping: 40,
                   duration: 0.3
-                } : {
-                  type: "tween",
-                  duration: 0.25,
-                  ease: [0.4, 0, 0.2, 1]
                 },
                 boxShadow: {
-                  duration: 2,
+                  duration: 3,
                   repeat: Infinity,
                   ease: "easeInOut"
                 }
               }}
             >
-              {/* Animated background particles */}
-              <AnimatePresence>
-                {isSystemBuilderActive && (
-                  <>
-                    {[...Array(3)].map((_, i) => (
-                      <motion.div
-                        key={i}
-                        className="absolute w-1 h-1 bg-white rounded-full"
-                        initial={{ 
-                          x: (i - 1) * 30, 
-                          y: 20,
-                          opacity: 0 
-                        }}
-                        animate={{ 
-                          x: (i - 1) * 30, 
-                          y: -20,
-                          opacity: [0, 1, 0]
-                        }}
-                        transition={{
-                          duration: 2,
-                          delay: i * 0.3,
-                          repeat: Infinity,
-                          ease: "easeOut"
-                        }}
-                      />
-                    ))}
-                  </>
-                )}
-              </AnimatePresence>
-
               {/* Shimmer effect */}
               <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
                 animate={{
                   x: ['-100%', '100%'],
                 }}
                 transition={{
-                  duration: 3,
+                  duration: 2,
                   repeat: Infinity,
-                  repeatDelay: 2,
+                  repeatDelay: 1,
                   ease: "easeInOut"
                 }}
               />
 
               {/* Icon with pulse animation */}
               <motion.div
-                animate={isSystemBuilderActive ? {
-                  scale: [1, 1.1, 1],
-                } : {}}
+                animate={{
+                  scale: [1, 1.15, 1],
+                }}
                 transition={{
-                  duration: 1.5,
+                  duration: 2,
                   repeat: Infinity,
-                  repeatDelay: 1.5,
+                  repeatDelay: 0.5,
                 }}
               >
-                <Cpu className="w-4 h-4 relative z-10" />
+                <HeadphonesIcon className="w-4 h-4 relative z-10" />
               </motion.div>
-              
+
               {/* Text */}
-              <span className="text-sm relative z-10">System Builder</span>
+              <span className="text-sm relative z-10 font-semibold">Need Expert?</span>
             </motion.button>
 
-            {/* Share Secret - Fire icon button */}
-            <motion.button
-              onClick={() => router.push('/share-secret')}
-              className="p-2 text-orange-400 hover:text-orange-300 hover:bg-gray-800/50 rounded-lg transition-colors"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              title="Share Secret"
-            >
-              <Flame className="w-5 h-5" />
-            </motion.button>
-                    
             {/* Auth section - Last item on the right */}
             {loading ? (
               <div className="flex items-center space-x-3">
@@ -562,34 +512,27 @@ export const Header = () => {
                   )}
                 </AnimatePresence>
               </motion.button>
+              {/* Expert Services CTA - Mobile */}
               <motion.button
-                id="system-builder-button-mobile"
-                onClick={() => router.push('/system-builder')}
-                className={`relative flex items-center space-x-1 px-3 py-1.5 font-medium rounded-lg shadow-lg overflow-hidden ${
-                  isSystemBuilderActive 
-                    ? 'bg-gradient-to-r from-blue-600 to-cyan-700 text-white shadow-xl ring-2 ring-blue-400/50' 
-                    : 'bg-gradient-to-r from-blue-500 to-cyan-600 text-white'
-                }`}
+                id="expert-services-button-mobile"
+                onClick={() => router.push('/expert-services')}
+                className="relative flex items-center space-x-1 px-3 py-1.5 font-medium rounded-lg shadow-lg overflow-hidden bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white hover:from-amber-600 hover:via-orange-600 hover:to-amber-700"
                 layout
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                animate={isSystemBuilderActive ? {
+                animate={{
                   boxShadow: [
-                    '0 0 15px rgba(59, 130, 246, 0.3)',
-                    '0 0 25px rgba(59, 130, 246, 0.5)',
-                    '0 0 15px rgba(59, 130, 246, 0.3)',
+                    '0 0 15px rgba(251, 146, 60, 0.3)',
+                    '0 0 25px rgba(251, 146, 60, 0.5)',
+                    '0 0 15px rgba(251, 146, 60, 0.3)',
                   ],
-                } : {}}
+                }}
                 transition={{
-                  layout: isSystemBuilderActive ? {
+                  layout: {
                     type: "spring",
                     stiffness: 500,
                     damping: 40,
                     duration: 0.3
-                  } : {
-                    type: "tween",
-                    duration: 0.25,
-                    ease: [0.4, 0, 0.2, 1]
                   },
                   boxShadow: {
                     duration: 2,
@@ -600,41 +543,32 @@ export const Header = () => {
               >
                 {/* Shimmer effect for mobile */}
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
                   animate={{
                     x: ['-100%', '100%'],
                   }}
                   transition={{
-                    duration: 3,
+                    duration: 2,
                     repeat: Infinity,
-                    repeatDelay: 2,
+                    repeatDelay: 1,
                     ease: "easeInOut"
                   }}
                 />
 
                 {/* Icon with pulse */}
                 <motion.div
-                  animate={isSystemBuilderActive ? {
-                    scale: [1, 1.1, 1],
-                  } : {}}
+                  animate={{
+                    scale: [1, 1.15, 1],
+                  }}
                   transition={{
-                    duration: 1.5,
+                    duration: 2,
                     repeat: Infinity,
-                    repeatDelay: 1.5,
+                    repeatDelay: 0.5,
                   }}
                 >
-                  <Cpu className="w-3.5 h-3.5 relative z-10" />
+                  <HeadphonesIcon className="w-3.5 h-3.5 relative z-10" />
                 </motion.div>
-                <span className="text-xs relative z-10">Builder</span>
-              </motion.button>
-              <motion.button
-                onClick={() => router.push('/share-secret')}
-                className="p-2 text-orange-400 hover:text-orange-300 hover:bg-gray-800/50 rounded-lg transition-colors"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                title="Share Secret"
-              >
-                <Flame className="w-5 h-5" />
+                <span className="text-xs relative z-10 font-semibold">Expert</span>
               </motion.button>
               {loading ? (
                 <div className="flex items-center space-x-2">

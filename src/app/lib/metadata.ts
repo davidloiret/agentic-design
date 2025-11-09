@@ -683,3 +683,79 @@ export function generatePromptHubMetadata(page: PromptHubPage): Metadata {
     classification: 'AI/Prompt Engineering',
   };
 }
+
+export function generateExpertServicesMetadata(): Metadata {
+  const title = 'Expert AI Services | Consulting, Development & Mentoring';
+  const description = 'Accelerate your AI journey with personalized expertise. We offer AI strategy consulting, custom AI agent development, technical mentoring, architecture reviews, workshops, and feasibility studies. Book a free 30-minute discovery call.';
+  const url = `${SITE_URL}/expert-services`;
+
+  return {
+    title,
+    description,
+    keywords: [
+      'AI consulting',
+      'AI development',
+      'AI mentoring',
+      'custom AI agents',
+      'LLM integration',
+      'AI strategy',
+      'machine learning consulting',
+      'AI workshops',
+      'AI architecture review',
+      'AI feasibility study',
+      'multi-agent orchestration',
+      'prompt engineering services',
+      'AI transformation',
+      'AI implementation',
+      'technical mentoring',
+      'AI advisory services',
+      'enterprise AI solutions',
+      'AI proof of concept',
+      'AI training services',
+      'AI system design'
+    ],
+    authors: [{ name: 'Agentic Design' }],
+    creator: 'Agentic Design',
+    publisher: 'Agentic Design',
+    openGraph: {
+      type: 'website',
+      title: 'Expert AI Services - Transform Your Business with AI | Agentic Design',
+      description: 'From strategy to implementation: AI consulting, custom development, and mentoring services. Schedule your free discovery call to explore how we can accelerate your AI journey.',
+      url,
+      siteName: SITE_NAME,
+      images: [
+        {
+          url: `${SITE_URL}/api/og/expert-services`,
+          width: 1200,
+          height: 630,
+          alt: 'Agentic Design Expert AI Services',
+        },
+      ],
+      locale: 'en_US',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: 'Expert AI Services | Agentic Design',
+      description: 'AI consulting, custom development & mentoring to accelerate your AI transformation. Book a free discovery call.',
+      images: [`${SITE_URL}/api/og/expert-services`],
+      creator: '@agentic_design',
+      site: '@agentic_design',
+    },
+    alternates: {
+      canonical: url,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
+    category: 'Business Services',
+    classification: 'AI/Professional Services',
+  };
+}

@@ -13,7 +13,8 @@ import {
   UserCircle,
   CreditCard,
   Bell,
-  HelpCircle
+  HelpCircle,
+  Flame
 } from 'lucide-react';
 import { usePlausible } from '@/hooks/usePlausible';
 
@@ -186,6 +187,18 @@ export const UserMenu = () => {
             >
               <Bell className="w-4 h-4" />
               <span>Notifications</span>
+            </Link>
+
+            <Link
+              href="/share-secret"
+              className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-300 hover:bg-gray-800/50 hover:text-white transition-colors duration-150"
+              onClick={() => {
+                trackEvent('User Menu Navigation', { destination: 'share-secret' });
+                setIsOpen(false);
+              }}
+            >
+              <Flame className="w-4 h-4 text-orange-400" />
+              <span>Share Secret</span>
             </Link>
 
             <div className="border-t border-gray-700/50 my-1"></div>

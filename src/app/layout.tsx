@@ -51,6 +51,7 @@ export const metadata: Metadata = {
   creator: "Agentic Design",
   publisher: "Agentic Design",
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://agentic-design.ai'),
+  manifest: '/manifest.json',
   openGraph: {
     type: "website",
     locale: "en_US",

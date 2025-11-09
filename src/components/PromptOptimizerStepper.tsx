@@ -685,9 +685,9 @@ export default function PromptOptimizerStepper() {
               <Loader2 className="w-6 h-6 text-white animate-spin" />
             ) : isCompleted ? (
               <CheckCircle className="w-6 h-6 text-white" />
-            ) : (
-              <Icon className={`w-6 h-6 ${isActive ? 'text-white' : 'text-gray-400'}`} />
-            )}
+            ) : Icon ? (
+              React.createElement(Icon, { className: `w-6 h-6 ${isActive ? 'text-white' : 'text-gray-400'}` })
+            ) : null}
           </div>
           {index < steps.length - 1 && (
             <div className={`w-0.5 h-16 mt-2 transition-all ${
@@ -1089,7 +1089,7 @@ export default function PromptOptimizerStepper() {
                               : 'border-gray-700 hover:border-gray-600'
                           }`}
                         >
-                          <Icon className="w-8 h-8 mb-2 text-pink-500" />
+                          {Icon && React.createElement(Icon, { className: "w-8 h-8 mb-2 text-pink-500" })}
                           <div className="font-medium">{config.name}</div>
                           <div className="text-xs text-gray-400 mt-1">{config.description.slice(0, 50)}...</div>
                         </button>

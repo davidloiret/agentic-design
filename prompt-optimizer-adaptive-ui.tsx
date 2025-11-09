@@ -6,8 +6,8 @@ type OptimizationStrategy = 'bootstrap_fewshot' | 'mipro' | 'copro' | 'bootstrap
 interface StrategyConfig {
   name: string;
   description: string;
-  icon: React.ElementType;
-  primaryColor: string;
+  icon: React.ComponentType<{ className?: string }>;
+  primaryColor: 'blue' | 'purple' | 'green' | 'orange';
   features: string[];
   inputFields: {
     required: string[];

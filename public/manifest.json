@@ -1,0 +1,84 @@
+{
+  "name": "Agentic Design Patterns - AI Agent Design & Development",
+  "short_name": "Agentic Design",
+  "description": "Comprehensive collection of AI agent design patterns, techniques, and best practices for building intelligent systems. Expert AI consulting, development, and mentoring services.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#fb923c",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "categories": ["education", "productivity", "business"],
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-384.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot-desktop.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Agentic Design Desktop View"
+    },
+    {
+      "src": "/screenshot-mobile.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Agentic Design Mobile View"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "AI Patterns",
+      "short_name": "Patterns",
+      "description": "Browse AI design patterns",
+      "url": "/patterns",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Expert Services",
+      "short_name": "Services",
+      "description": "AI consulting and development services",
+      "url": "/expert-services",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "AI Red Teaming",
+      "short_name": "Red Team",
+      "description": "AI security and testing",
+      "url": "/ai-red-teaming",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    }
+  ],
+  "lang": "en",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "related_applications": []
+}

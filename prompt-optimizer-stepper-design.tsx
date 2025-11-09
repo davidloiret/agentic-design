@@ -7,7 +7,7 @@ interface StepperStep {
   id: string;
   title: string;
   description: string;
-  icon: React.ElementType;
+  icon?: React.ElementType;
   status: 'pending' | 'active' | 'completed' | 'error';
   results?: any;
 }
@@ -157,7 +157,7 @@ const PromptOptimizerStepper: React.FC = () => {
   );
 
   const StepItem: React.FC<{ step: StepperStep; index: number }> = ({ step, index }) => {
-    const Icon = step.icon;
+    const Icon: React.ElementType = step.icon || CheckCircle;
     const isActive = index === currentStep;
     const isCompleted = step.status === 'completed';
     const isPending = step.status === 'pending';
@@ -177,7 +177,7 @@ const PromptOptimizerStepper: React.FC = () => {
             ) : isCompleted ? (
               <CheckCircle className="w-6 h-6 text-white" />
             ) : (
-              <Icon className={`w-6 h-6 ${isActive ? 'text-white' : 'text-gray-600'}`} />
+              React.createElement(Icon, { className: `w-6 h-6 ${isActive ? 'text-white' : 'text-gray-600'}` })
             )}
           </div>
           {index < steps.length - 1 && (
