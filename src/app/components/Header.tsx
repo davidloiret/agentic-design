@@ -398,7 +398,7 @@ export const Header = () => {
         {/* Mobile Layout */}
         <div className="md:hidden">
           <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center space-x-2">
+            <Link href="/" className="flex items-center space-x-0 min-[480px]:space-x-2">
               <motion.div
                 className="flex items-center justify-center"
                 whileTap={{ scale: 0.95 }}
@@ -415,12 +415,12 @@ export const Header = () => {
                   skipInitialAnimation={true}
                 />
               </motion.div>
-              <h1 className="text-base font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
+              <h1 className="hidden min-[480px]:block text-base font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
                 Agentic Design
               </h1>
             </Link>
-            
-            <div className="flex items-center space-x-2">
+
+            <div className="flex items-center space-x-1.5 min-[400px]:space-x-2">
               <button
                 onClick={openSearch}
                 className="p-2 text-gray-400 hover:text-gray-200 hover:bg-gray-800/50 rounded-lg transition-colors"
@@ -430,9 +430,9 @@ export const Header = () => {
               <motion.button
                 id="learning-hub-button-mobile"
                 onClick={() => router.push('/learning-hub')}
-                className={`relative flex items-center space-x-1 px-3 py-1.5 font-medium rounded-lg shadow-lg overflow-hidden ${
-                  isLearningHubActive 
-                    ? 'bg-gradient-to-r from-rose-600 to-pink-700 text-white shadow-xl ring-2 ring-rose-400/50' 
+                className={`relative flex items-center space-x-1 px-2.5 min-[400px]:px-3 py-1.5 font-medium rounded-lg shadow-lg overflow-hidden ${
+                  isLearningHubActive
+                    ? 'bg-gradient-to-r from-rose-600 to-pink-700 text-white shadow-xl ring-2 ring-rose-400/50'
                     : 'bg-gradient-to-r from-rose-500 to-pink-600 text-white'
                 }`}
                 layout
@@ -462,6 +462,7 @@ export const Header = () => {
                     ease: "easeInOut"
                   }
                 }}
+                title="Learning Hub"
               >
                 {/* Shimmer effect for mobile */}
                 <motion.div
@@ -488,10 +489,10 @@ export const Header = () => {
                     repeatDelay: 2,
                   }}
                 >
-                  <GraduationCap className="w-3.5 h-3.5 relative z-10" />
+                  <GraduationCap className="w-3.5 h-3.5 min-[400px]:w-4 min-[400px]:h-4 relative z-10" />
                 </motion.div>
-                <span className="text-xs relative z-10">Learning</span>
-                
+                <span className="hidden min-[400px]:inline text-xs relative z-10">Learning</span>
+
                 {/* Mobile streak indicator */}
                 <AnimatePresence>
                   {isLearningHubActive && (
@@ -516,7 +517,7 @@ export const Header = () => {
               <motion.button
                 id="expert-services-button-mobile"
                 onClick={() => router.push('/expert-services')}
-                className="relative flex items-center space-x-1 px-3 py-1.5 font-medium rounded-lg shadow-lg overflow-hidden bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white hover:from-amber-600 hover:via-orange-600 hover:to-amber-700"
+                className="relative flex items-center space-x-1 px-2.5 min-[400px]:px-3 py-1.5 font-medium rounded-lg shadow-lg overflow-hidden bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white hover:from-amber-600 hover:via-orange-600 hover:to-amber-700"
                 layout
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -540,6 +541,7 @@ export const Header = () => {
                     ease: "easeInOut"
                   }
                 }}
+                title="Expert Services"
               >
                 {/* Shimmer effect for mobile */}
                 <motion.div
@@ -566,9 +568,9 @@ export const Header = () => {
                     repeatDelay: 0.5,
                   }}
                 >
-                  <HeadphonesIcon className="w-3.5 h-3.5 relative z-10" />
+                  <HeadphonesIcon className="w-3.5 h-3.5 min-[400px]:w-4 min-[400px]:h-4 relative z-10" />
                 </motion.div>
-                <span className="text-xs relative z-10 font-semibold">Expert</span>
+                <span className="hidden min-[400px]:inline text-xs relative z-10 font-semibold">Expert</span>
               </motion.button>
               {loading ? (
                 <div className="flex items-center space-x-2">

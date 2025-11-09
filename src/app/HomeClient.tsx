@@ -77,8 +77,8 @@ export function HomeClient() {
         <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-500/20 rounded-full blur-3xl" />
         
         {/* Auth Buttons - Top Right */}
-        <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20">
-          <div className="flex items-center gap-3">
+        <div className="absolute top-3 right-3 sm:top-4 sm:right-4 md:top-6 md:right-6 z-20">
+          <div className="flex items-center gap-2 sm:gap-3">
             <Link
               href="/auth/login"
               onClick={() => trackEvent('Homepage CTA', { action: 'sign_in', location: 'header' })}
@@ -86,7 +86,7 @@ export function HomeClient() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white transition-colors rounded-lg hover:bg-gray-800/50 backdrop-blur-sm"
+                className="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-gray-300 hover:text-white transition-colors rounded-lg hover:bg-gray-800/50 backdrop-blur-sm"
               >
                 Sign In
               </motion.button>
@@ -98,7 +98,7 @@ export function HomeClient() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-4 py-2 text-sm font-medium bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white rounded-lg shadow-lg transition-all duration-200"
+                className="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white rounded-lg shadow-lg transition-all duration-200"
               >
                 Sign Up
               </motion.button>
@@ -106,18 +106,18 @@ export function HomeClient() {
           </div>
         </div>
         
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-32">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20 pb-16 sm:pb-24 md:pb-32">
           <div className="text-center">
             {/* Animated Brain Mascot */}
             <motion.div
               initial={{ opacity: 0, scale: 0.5, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ 
+              transition={{
                 duration: 0.8,
                 type: "spring",
                 stiffness: 100
               }}
-              className="flex justify-center mb-8"
+              className="flex justify-center mb-6 sm:mb-8"
             >
               <div
                 onMouseEnter={() => {
@@ -131,7 +131,7 @@ export function HomeClient() {
               >
                 <BrainMascot
                   expression={mascotExpression}
-                  size="large"
+                  size="medium"
                   color="purple"
                   animate={true}
                   skipInitialAnimation={true}
@@ -145,7 +145,7 @@ export function HomeClient() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="text-5xl md:text-7xl font-bold mb-6"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6"
             >
               <span className="bg-gradient-to-r from-purple-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent">
                 Agentic Design
@@ -159,9 +159,9 @@ export function HomeClient() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto"
+              className="text-base sm:text-lg md:text-xl text-gray-300 mb-6 sm:mb-8 max-w-3xl mx-auto px-4 sm:px-0"
             >
-              Build intelligent AI systems with confidence. Explore comprehensive patterns, 
+              Build intelligent AI systems with confidence. Explore comprehensive patterns,
               techniques, and best practices for creating robust agentic workflows.
             </motion.p>
 
@@ -170,7 +170,7 @@ export function HomeClient() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center"
+              className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4 sm:px-0"
             >
               <Link
                 href="/patterns"
@@ -180,10 +180,10 @@ export function HomeClient() {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="px-8 py-4 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg font-semibold text-white shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2 group"
+                  className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg font-semibold text-white shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2 group text-sm sm:text-base"
                 >
                   Explore Patterns
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
                 </motion.button>
               </Link>
               <Link
@@ -194,7 +194,7 @@ export function HomeClient() {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="px-8 py-4 bg-gradient-to-r from-pink-500 to-red-500 rounded-lg font-semibold text-white shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2"
+                  className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-pink-500 to-red-500 rounded-lg font-semibold text-white shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2 text-sm sm:text-base"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
@@ -211,13 +211,13 @@ export function HomeClient() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8">
+      <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-8"
+            className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8"
           >
             {stats.map((stat, index) => {
               const Icon = stat.icon;
@@ -231,10 +231,10 @@ export function HomeClient() {
                   className="text-center"
                 >
                   <div className="flex justify-center mb-2">
-                    <Icon className="w-8 h-8 text-purple-400" />
+                    <Icon className="w-6 h-6 sm:w-8 sm:h-8 text-purple-400" />
                   </div>
-                  <div className="text-3xl font-bold text-white mb-1">{stat.value}</div>
-                  <div className="text-gray-400">{stat.label}</div>
+                  <div className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-1">{stat.value}</div>
+                  <div className="text-xs sm:text-sm md:text-base text-gray-400">{stat.label}</div>
                 </motion.div>
               );
             })}
@@ -243,23 +243,23 @@ export function HomeClient() {
       </section>
 
       {/* Features Grid */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
+      <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-12"
+            className="text-center mb-8 sm:mb-12"
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 sm:mb-4 px-2">
               Everything You Need to Build Intelligent AI Systems
             </h2>
-            <p className="text-lg text-gray-400 max-w-2xl mx-auto">
+            <p className="text-sm sm:text-base md:text-lg text-gray-400 max-w-2xl mx-auto px-4 sm:px-0">
               From foundational patterns to advanced techniques, we've got you covered
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {features.map((feature, index) => {
               const Icon = feature.icon;
               const tourIds = ['', 'ai-red-teaming', 'inference-optimization', 'code-sandbox'];
@@ -271,14 +271,14 @@ export function HomeClient() {
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
                   whileHover={{ y: -5, scale: 1.02 }}
-                  className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-xl p-6 hover:bg-gray-800/70 transition-all duration-200"
+                  className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-xl p-4 sm:p-5 md:p-6 hover:bg-gray-800/70 transition-all duration-200"
                   data-tour={tourIds[index]}
                 >
-                  <div className={`${feature.bgColor} w-12 h-12 rounded-lg flex items-center justify-center mb-4`}>
-                    <Icon className={`w-6 h-6 ${feature.color}`} />
+                  <div className={`${feature.bgColor} w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center mb-3 sm:mb-4`}>
+                    <Icon className={`w-5 h-5 sm:w-6 sm:h-6 ${feature.color}`} />
                   </div>
-                  <h3 className="text-xl font-semibold text-white mb-2">{feature.title}</h3>
-                  <p className="text-gray-400">{feature.description}</p>
+                  <h3 className="text-lg sm:text-xl font-semibold text-white mb-2">{feature.title}</h3>
+                  <p className="text-sm sm:text-base text-gray-400">{feature.description}</p>
                 </motion.div>
               );
             })}
@@ -287,22 +287,22 @@ export function HomeClient() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
+      <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="bg-gradient-to-r from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-2xl p-12 relative overflow-hidden"
+            className="bg-gradient-to-r from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-xl sm:rounded-2xl p-6 sm:p-8 md:p-12 relative overflow-hidden"
           >
-            {/* Floating mascot */}
+            {/* Floating mascot - hidden on very small screens */}
             <motion.div
-              className="absolute top-4 right-4"
-              animate={{ 
+              className="hidden min-[400px]:block absolute top-2 right-2 sm:top-4 sm:right-4"
+              animate={{
                 y: [0, -10, 0],
                 rotate: [-5, 5, -5]
               }}
-              transition={{ 
+              transition={{
                 duration: 4,
                 repeat: Infinity,
                 ease: "easeInOut"
@@ -310,18 +310,18 @@ export function HomeClient() {
             >
               <BrainMascot
                 expression="excited"
-                size="small"
+                size="tiny"
                 color="blue"
                 animate={true}
                 skipInitialAnimation={true}
               />
             </motion.div>
 
-            <Star className="w-12 h-12 text-yellow-400 mx-auto mb-4" />
-            <h2 className="text-3xl font-bold text-white mb-4">
+            <Star className="w-10 h-10 sm:w-12 sm:h-12 text-yellow-400 mx-auto mb-3 sm:mb-4" />
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-3 sm:mb-4">
               Ready to Build Smarter AI?
             </h2>
-            <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
+            <p className="text-sm sm:text-base md:text-lg text-gray-300 mb-6 sm:mb-8 max-w-2xl mx-auto px-4 sm:px-0">
               Join thousands of developers building the next generation of intelligent systems
             </p>
             <Link
@@ -331,7 +331,7 @@ export function HomeClient() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 bg-white text-gray-900 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
+                className="px-6 sm:px-8 py-3 sm:py-4 bg-white text-gray-900 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 text-sm sm:text-base"
               >
                 Start Learning Now
               </motion.button>
