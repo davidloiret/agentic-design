@@ -4,16 +4,11 @@ import { AuthService } from '../../../application/usecase/auth.service';
 import { LoginDto } from '../../../application/dto/login.dto';
 import { RegisterDto } from '../../../application/dto/register.dto';
 import { Public } from '../../guard/auth.guard';
+import { getCookieConfig, getAccessTokenCookieOptions, getRefreshTokenCookieOptions, logCookieConfig } from '../../utils/cookie-config';
 
+// Keep for backward compatibility, but use the new centralized config
 function getCookieOptions() {
-  const isProduction = process.env.NODE_ENV === 'production';
-  return {
-    httpOnly: true,
-    secure: isProduction,
-    sameSite: 'lax' as const,
-    domain: isProduction ? '.agentic-design.ai' : 'localhost',
-    path: '/',
-  };
+  return getCookieConfig();
 }
 
 @Controller('auth')

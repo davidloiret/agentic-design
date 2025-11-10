@@ -21,6 +21,8 @@ export class SupabaseAuthService {
         flowType: 'pkce',
         detectSessionInUrl: false,
         persistSession: false,
+        autoRefreshToken: true,  // Enable automatic token refresh
+        debug: process.env.NODE_ENV !== 'production',  // Enable debug logging in development
       },
     });
 
@@ -132,39 +134,68 @@ export class SupabaseAuthService {
 
   async getUserByToken(token: string) {
     try {
+      console.log('[SupabaseAuth] Validating token:', token.substring(0, 20) + '...');
       const { data, error } = await this.supabaseAdmin.auth.getUser(token);
-      
+
       if (error) {
-        console.error('Token validation error:', error);
-        
-        if (error.message?.includes('invalid') || 
-            error.message?.includes('expired') || 
+        console.error('[SupabaseAuth] Token validation error:', {
+          message: error.message,
+          status: error.status,
+          code: error.code,
+          tokenPrefix: token.substring(0, 20),
+        });
+
+        if (error.message?.includes('invalid') ||
+            error.message?.includes('expired') ||
             error.message?.includes('malformed') ||
             error.status === 401) {
           return null;
         }
-        
+
         this.handleAuthError(error);
       }
-      
+
+      if (!data?.user) {
+        console.error('[SupabaseAuth] No user returned for token');
+        return null;
+      }
+
+      console.log('[SupabaseAuth] Token validated successfully for user:', data.user.email);
       return data.user;
     } catch (error) {
-      console.error('Unexpected error in getUserByToken:', error);
+      console.error('[SupabaseAuth] Unexpected error in getUserByToken:', error);
       return null;
     }
   }
 
   async refreshSession(refreshToken: string) {
     try {
+      console.log('[SupabaseAuth] Attempting to refresh session with token:', refreshToken.substring(0, 20) + '...');
+
       const { data, error } = await this.supabase.auth.refreshSession({ refresh_token: refreshToken });
 
       if (error) {
+        console.error('[SupabaseAuth] Refresh session error from Supabase:', {
+          message: error.message,
+          status: error.status,
+          code: error.code,
+          details: error,
+        });
         this.handleAuthError(error);
       }
 
+      if (!data?.session) {
+        console.error('[SupabaseAuth] No session returned from refresh, data:', data);
+        throw new UnauthorizedException('No session returned from refresh');
+      }
+
+      console.log('[SupabaseAuth] Session refreshed successfully for user:', data.user?.email);
       return data;
     } catch (error) {
-      console.error('Unexpected error in refreshSession:', error);
+      console.error('[SupabaseAuth] Unexpected error in refreshSession:', error);
+      if (error instanceof UnauthorizedException) {
+        throw error;
+      }
       throw new UnauthorizedException('Failed to refresh authentication session');
     }
   }

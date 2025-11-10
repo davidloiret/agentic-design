@@ -3,6 +3,7 @@ import { Reflector } from '@nestjs/core';
 import { Request, Response } from 'express';
 import { SupabaseAuthService } from '../adapter/out/supabase-auth.service';
 import { UserRepository } from '../../../user/infrastructure/persistence/user.repository';
+import { getCookieConfig, getAccessTokenCookieOptions, getRefreshTokenCookieOptions } from '../utils/cookie-config';
 
 export const IS_PUBLIC_KEY = 'isPublic';
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
@@ -17,43 +18,43 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   private getCookieOptions() {
-    const isProduction = process.env.NODE_ENV === 'production';
-    return {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: 'lax' as const,
-      domain: isProduction ? '.agentic-design.ai' : 'localhost',
-      path: '/',
-    };
+    return getCookieConfig();
   }
 
   private async refreshTokenAndSetCookies(refreshToken: string, response: Response) {
     try {
+      console.log('[AuthGuard] Attempting to refresh token...');
       const refreshResult = await this.supabaseAuthService.refreshSession(refreshToken);
+
       if (refreshResult?.session?.access_token) {
-        const cookieOptions = this.getCookieOptions();
-        
-        response.cookie('access_token', refreshResult.session.access_token, {
-          ...cookieOptions,
-          maxAge: 60 * 60 * 1000, // 1 hour
-        });
-        
+        console.log('[AuthGuard] Setting new cookies after refresh');
+
+        response.cookie('access_token', refreshResult.session.access_token, getAccessTokenCookieOptions());
+
+        // Always update the refresh token if a new one is provided
         if (refreshResult.session.refresh_token) {
-          response.cookie('refresh_token', refreshResult.session.refresh_token, {
-            ...cookieOptions,
-            maxAge: 90 * 24 * 60 * 60 * 1000, // 90 days
-          });
+          response.cookie('refresh_token', refreshResult.session.refresh_token, getRefreshTokenCookieOptions());
+          console.log('[AuthGuard] Updated both access and refresh tokens');
+        } else {
+          console.log('[AuthGuard] Only updated access token, no new refresh token provided');
         }
-        
+
         return {
           token: refreshResult.session.access_token,
           user: refreshResult.user ?? refreshResult.session.user,
         };
+      } else {
+        console.error('[AuthGuard] No session returned from refresh attempt');
       }
     } catch (error) {
-      console.error('Token refresh failed:', error);
+      console.error('[AuthGuard] Token refresh failed with error:', {
+        message: error.message,
+        stack: error.stack,
+        name: error.name,
+      });
       // Clear invalid cookies with same options used to set them
       const cookieOptions = this.getCookieOptions();
+      console.log('[AuthGuard] Clearing cookies with options:', cookieOptions);
       response.clearCookie('access_token', cookieOptions);
       response.clearCookie('refresh_token', cookieOptions);
     }
@@ -85,16 +86,23 @@ export class AuthGuard implements CanActivate {
     }
     
     if (!token) {
+      console.log('[AuthGuard] No access token found, checking for refresh token...');
       // No access token at all, try refresh if available
       if (request.cookies?.['refresh_token']) {
         const refreshToken = request.cookies['refresh_token'];
+        console.log('[AuthGuard] Found refresh token, attempting automatic refresh...');
         const refreshResult = await this.refreshTokenAndSetCookies(refreshToken, response);
         if (refreshResult) {
           token = refreshResult.token;
           isFromCookie = true;
+          console.log('[AuthGuard] Successfully refreshed token via cookie');
+        } else {
+          console.error('[AuthGuard] Failed to refresh token, no valid session returned');
         }
+      } else {
+        console.log('[AuthGuard] No refresh token available');
       }
-      
+
       if (!token) {
         throw new UnauthorizedException('No authentication token provided');
       }
@@ -102,18 +110,23 @@ export class AuthGuard implements CanActivate {
 
     try {
       let user = await this.supabaseAuthService.getUserByToken(token);
-      
+
       // If token is invalid/expired and we have refresh token (cookie-based auth only)
       if (!user && isFromCookie && request.cookies?.['refresh_token']) {
+        console.log('[AuthGuard] Token validation failed, attempting refresh with refresh token...');
         const refreshToken = request.cookies['refresh_token'];
         const refreshResult = await this.refreshTokenAndSetCookies(refreshToken, response);
         if (refreshResult) {
           token = refreshResult.token;
           user = refreshResult.user;
+          console.log('[AuthGuard] Successfully recovered from expired token via refresh');
+        } else {
+          console.error('[AuthGuard] Failed to recover from expired token, refresh failed');
         }
       }
-      
+
       if (!user) {
+        console.error('[AuthGuard] Authentication failed: no valid user after all attempts');
         throw new UnauthorizedException('Invalid or expired authentication token');
       }
 
