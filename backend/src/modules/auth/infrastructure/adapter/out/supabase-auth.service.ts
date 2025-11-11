@@ -21,7 +21,7 @@ export class SupabaseAuthService {
         flowType: 'pkce',
         detectSessionInUrl: false,
         persistSession: false,
-        autoRefreshToken: true,  // Enable automatic token refresh
+        autoRefreshToken: false,  // Disable auto-refresh since we handle it manually
         debug: process.env.NODE_ENV !== 'production',  // Enable debug logging in development
       },
     });
@@ -119,6 +119,9 @@ export class SupabaseAuthService {
     }
 
     console.log(`[SupabaseAuth] Sign in successful for: ${email}`);
+    console.log(`[SupabaseAuth] Session refresh_token length: ${data.session?.refresh_token?.length}`);
+    console.log(`[SupabaseAuth] Session refresh_token (first 50 chars): ${data.session?.refresh_token?.substring(0, 50)}...`);
+    console.log(`[SupabaseAuth] Full refresh_token: ${data.session?.refresh_token}`);
     return data;
   }
 

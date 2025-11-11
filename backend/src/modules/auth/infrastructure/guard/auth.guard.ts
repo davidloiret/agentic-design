@@ -28,6 +28,7 @@ export class AuthGuard implements CanActivate {
 
       if (refreshResult?.session?.access_token) {
         console.log('[AuthGuard] Setting new cookies after refresh');
+        console.log('[AuthGuard] New access_token:', refreshResult.session.access_token.substring(0, 20) + '...');
 
         response.cookie('access_token', refreshResult.session.access_token, getAccessTokenCookieOptions());
 
@@ -35,6 +36,7 @@ export class AuthGuard implements CanActivate {
         if (refreshResult.session.refresh_token) {
           response.cookie('refresh_token', refreshResult.session.refresh_token, getRefreshTokenCookieOptions());
           console.log('[AuthGuard] Updated both access and refresh tokens');
+          console.log('[AuthGuard] New refresh_token:', refreshResult.session.refresh_token.substring(0, 20) + '...');
         } else {
           console.log('[AuthGuard] Only updated access token, no new refresh token provided');
         }
@@ -73,7 +75,13 @@ export class AuthGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest<Request>();
     const response = context.switchToHttp().getResponse<Response>();
-    
+
+    // Debug logging with request ID for tracking
+    const requestId = Math.random().toString(36).substring(7);
+    console.log(`[AuthGuard ${requestId}] === NEW REQUEST: ${request.method} ${request.url} ===`);
+    console.log(`[AuthGuard ${requestId}] Incoming request cookies:`, Object.keys(request.cookies || {}));
+    console.log(`[AuthGuard ${requestId}] Cookie header:`, request.headers['cookie']);
+
     let token = request.cookies?.['access_token'];
     let isFromCookie = !!token;
     
@@ -86,21 +94,22 @@ export class AuthGuard implements CanActivate {
     }
     
     if (!token) {
-      console.log('[AuthGuard] No access token found, checking for refresh token...');
+      console.log(`[AuthGuard ${requestId}] No access token found, checking for refresh token...`);
       // No access token at all, try refresh if available
       if (request.cookies?.['refresh_token']) {
         const refreshToken = request.cookies['refresh_token'];
-        console.log('[AuthGuard] Found refresh token, attempting automatic refresh...');
+        console.log(`[AuthGuard ${requestId}] Found refresh token, attempting automatic refresh...`);
+        console.log(`[AuthGuard ${requestId}] Refresh token being used:`, refreshToken.substring(0, 20) + '...');
         const refreshResult = await this.refreshTokenAndSetCookies(refreshToken, response);
         if (refreshResult) {
           token = refreshResult.token;
           isFromCookie = true;
-          console.log('[AuthGuard] Successfully refreshed token via cookie');
+          console.log(`[AuthGuard ${requestId}] Successfully refreshed token via cookie`);
         } else {
-          console.error('[AuthGuard] Failed to refresh token, no valid session returned');
+          console.error(`[AuthGuard ${requestId}] Failed to refresh token, no valid session returned`);
         }
       } else {
-        console.log('[AuthGuard] No refresh token available');
+        console.log(`[AuthGuard ${requestId}] No refresh token available`);
       }
 
       if (!token) {
@@ -113,20 +122,21 @@ export class AuthGuard implements CanActivate {
 
       // If token is invalid/expired and we have refresh token (cookie-based auth only)
       if (!user && isFromCookie && request.cookies?.['refresh_token']) {
-        console.log('[AuthGuard] Token validation failed, attempting refresh with refresh token...');
+        console.log(`[AuthGuard ${requestId}] Token validation failed, attempting refresh with refresh token...`);
         const refreshToken = request.cookies['refresh_token'];
+        console.log(`[AuthGuard ${requestId}] Refresh token being used:`, refreshToken.substring(0, 20) + '...');
         const refreshResult = await this.refreshTokenAndSetCookies(refreshToken, response);
         if (refreshResult) {
           token = refreshResult.token;
           user = refreshResult.user;
-          console.log('[AuthGuard] Successfully recovered from expired token via refresh');
+          console.log(`[AuthGuard ${requestId}] Successfully recovered from expired token via refresh`);
         } else {
-          console.error('[AuthGuard] Failed to recover from expired token, refresh failed');
+          console.error(`[AuthGuard ${requestId}] Failed to recover from expired token, refresh failed`);
         }
       }
 
       if (!user) {
-        console.error('[AuthGuard] Authentication failed: no valid user after all attempts');
+        console.error(`[AuthGuard ${requestId}] Authentication failed: no valid user after all attempts`);
         throw new UnauthorizedException('Invalid or expired authentication token');
       }
 
