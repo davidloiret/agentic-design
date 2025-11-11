@@ -77,7 +77,7 @@ const services: ServiceCard[] = [
       'Direct Slack/Discord access',
     ],
     duration: 'Monthly subscription',
-    price: '€2,500/month',
+    price: 'Custom quote',
     gradient: 'from-green-500 to-emerald-600',
   },
   {
@@ -92,7 +92,7 @@ const services: ServiceCard[] = [
       'Best practices recommendations',
     ],
     duration: '1-2 weeks',
-    price: 'Starting from €5,000',
+    price: 'Custom quote',
     gradient: 'from-orange-500 to-red-600',
   },
   {
@@ -107,7 +107,7 @@ const services: ServiceCard[] = [
       'Resource library access',
     ],
     duration: '2-3 days',
-    price: 'Starting from €8,000/workshop',
+    price: 'Custom quote',
     gradient: 'from-pink-500 to-rose-600',
   },
   {
