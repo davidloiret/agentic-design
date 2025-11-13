@@ -254,7 +254,7 @@ case "$1" in
             echo "Available services: frontend, backend, nginx, all"
             exit 1
         fi
-        
+
         if [ "$2" = "all" ]; then
             echo "⚡ Quick rebuilding all services with maximum caching..."
             run_with_timing "Building all services (max cache)" docker compose -f $COMPOSE_FILE build
@@ -263,6 +263,28 @@ case "$1" in
             echo "⚡ Quick rebuilding $2 with maximum caching..."
             run_with_timing "Building $2 (max cache)" docker compose -f $COMPOSE_FILE build $2
             run_with_timing "Recreating $2 container" docker compose -f $COMPOSE_FILE up -d --force-recreate $2
+
+            # If backend was rebuilt, wait for it to be healthy then restart nginx
+            if [ "$2" = "backend" ]; then
+                echo "⏳ Waiting for backend to be healthy..."
+                # Wait up to 60 seconds for backend to be ready
+                for i in {1..60}; do
+                    if docker compose -f $COMPOSE_FILE exec -T backend curl -f http://localhost:3001/api/v1/health >/dev/null 2>&1; then
+                        echo "✅ Backend is healthy!"
+                        echo "🔄 Restarting nginx to re-establish backend connection..."
+                        run_with_timing "Restarting nginx" docker compose -f $COMPOSE_FILE restart nginx
+                        break
+                    fi
+                    if [ $i -eq 60 ]; then
+                        echo "⚠️  Backend health check timeout after 60 seconds"
+                        echo "⚠️  Restarting nginx anyway..."
+                        run_with_timing "Restarting nginx" docker compose -f $COMPOSE_FILE restart nginx
+                    else
+                        echo "   Waiting for backend health check... ($i/60)"
+                        sleep 1
+                    fi
+                done
+            fi
         fi
         ;;
     force-rebuild)
