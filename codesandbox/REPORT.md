@@ -435,5 +435,6 @@ This is a robust foundation for building secure code execution features in large
 - Educational platforms with coding exercises
 - API testing with custom scripts
 - Serverless function prototypes
+- AI Agent run code
 
 The architecture provides a clear path for scaling horizontally (more API servers) and vertically (more VMs per server) based on load requirements.

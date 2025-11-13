@@ -84,6 +84,184 @@ services:
     networks:
       - agentic-network
 
+  # ============================================
+  # Highlight.io Services (Apache 2.0 License)
+  # Session Replay & Error Tracking
+  # ============================================
+
+  # Highlight.io Frontend Dashboard
+  highlight-frontend:
+    image: highlightio/frontend:latest
+    container_name: highlight-frontend
+    restart: unless-stopped
+    ports:
+      - "3100:3000"
+    environment:
+      - REACT_APP_PRIVATE_GRAPH_URI=http://highlight-backend:8082/private
+      - REACT_APP_PUBLIC_GRAPH_URI=http://highlight-backend:8082/public
+      - REACT_APP_FRONTEND_URI=http://localhost:3100
+      - REACT_APP_AUTH_MODE=simple
+    depends_on:
+      - highlight-backend
+    networks:
+      - agentic-network
+
+  # Highlight.io Backend API
+  highlight-backend:
+    image: highlightio/backend:latest
+    container_name: highlight-backend
+    restart: unless-stopped
+    ports:
+      - "8082:8082"
+    environment:
+      - PSQL_HOST=highlight-postgres
+      - PSQL_PORT=5432
+      - PSQL_DB=highlight
+      - PSQL_USER=highlight
+      - PSQL_PASSWORD=highlight_password
+      - REDIS_ADDRESS=highlight-redis:6379
+      - CLICKHOUSE_ADDRESS=highlight-clickhouse:9000
+      - CLICKHOUSE_DATABASE=highlight
+      - OPENSEARCH_URI=http://highlight-opensearch:9200
+      - S3_ENDPOINT=http://highlight-minio:9000
+      - S3_ACCESS_KEY_ID=minioadmin
+      - S3_SECRET_ACCESS_KEY=minioadmin
+      - S3_BUCKET_NAME=highlight-sessions
+      - FRONTEND_URI=http://localhost:3100
+      - PRIVATE_GRAPH_URI=http://localhost:8082/private
+      - PUBLIC_GRAPH_URI=http://localhost:8082/public
+      - NODE_ENV=production
+      - LOG_LEVEL=info
+    depends_on:
+      - highlight-postgres
+      - highlight-redis
+      - highlight-clickhouse
+      - highlight-opensearch
+      - highlight-minio
+    networks:
+      - agentic-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Highlight PostgreSQL
+  highlight-postgres:
+    image: postgres:15-alpine
+    container_name: highlight-postgres
+    restart: unless-stopped
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_DB=highlight
+      - POSTGRES_USER=highlight
+      - POSTGRES_PASSWORD=highlight_password
+    volumes:
+      - highlight-postgres-data:/var/lib/postgresql/data
+    networks:
+      - agentic-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U highlight"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Highlight Redis
+  highlight-redis:
+    image: redis:7-alpine
+    container_name: highlight-redis
+    restart: unless-stopped
+    ports:
+      - "6380:6379"
+    volumes:
+      - highlight-redis-data:/data
+    networks:
+      - agentic-network
+    command: redis-server --appendonly yes --maxmemory 2gb --maxmemory-policy allkeys-lru
+
+  # Highlight ClickHouse
+  highlight-clickhouse:
+    image: clickhouse/clickhouse-server:23-alpine
+    container_name: highlight-clickhouse
+    restart: unless-stopped
+    ports:
+      - "9001:9000"
+      - "8124:8123"
+    environment:
+      - CLICKHOUSE_DB=highlight
+      - CLICKHOUSE_USER=default
+      - CLICKHOUSE_PASSWORD=
+    volumes:
+      - highlight-clickhouse-data:/var/lib/clickhouse
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    networks:
+      - agentic-network
+
+  # Highlight OpenSearch
+  highlight-opensearch:
+    image: opensearchproject/opensearch:2
+    container_name: highlight-opensearch
+    restart: unless-stopped
+    ports:
+      - "9200:9200"
+      - "9600:9600"
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+      - DISABLE_SECURITY_PLUGIN=true
+      - DISABLE_INSTALL_DEMO_CONFIG=true
+    volumes:
+      - highlight-opensearch-data:/usr/share/opensearch/data
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    networks:
+      - agentic-network
+
+  # Highlight MinIO (Object Storage)
+  highlight-minio:
+    image: minio/minio:latest
+    container_name: highlight-minio
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+      - "9090:9001"
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    volumes:
+      - highlight-minio-data:/data
+    networks:
+      - agentic-network
+    command: server /data --console-address ":9001"
+
+  # MinIO Bucket Initialization
+  highlight-minio-init:
+    image: minio/mc:latest
+    container_name: highlight-minio-init
+    depends_on:
+      - highlight-minio
+    networks:
+      - agentic-network
+    entrypoint: >
+      /bin/sh -c "
+      sleep 10;
+      /usr/bin/mc alias set myminio http://highlight-minio:9000 minioadmin minioadmin;
+      /usr/bin/mc mb myminio/highlight-sessions --ignore-existing;
+      /usr/bin/mc anonymous set download myminio/highlight-sessions;
+      exit 0;
+      "
+
 volumes:
   nextjs-cache:
     driver: local
@@ -94,6 +272,16 @@ volumes:
   plausible_db_data:
     driver: local
   plausible_events_db_data:
+    driver: local
+  highlight-postgres-data:
+    driver: local
+  highlight-redis-data:
+    driver: local
+  highlight-clickhouse-data:
+    driver: local
+  highlight-opensearch-data:
+    driver: local
+  highlight-minio-data:
     driver: local
 
 networks:

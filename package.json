@@ -20,6 +20,8 @@
   },
   "dependencies": {
     "@gatewatcher/hoddor": "^1.0.1",
+    "@highlight-run/next": "^7.9.38",
+    "@highlight-run/node": "^3.12.22",
     "@monaco-editor/react": "^4.7.0",
     "@react-three/drei": "10.7.6",
     "@react-three/fiber": "9.4.0",

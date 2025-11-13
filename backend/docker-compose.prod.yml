@@ -124,6 +124,202 @@ services:
     networks:
       - agentic-network
 
+  # ============================================
+  # Highlight.io Services (Apache 2.0 License)
+  # Session Replay & Error Tracking - Production
+  # ============================================
+
+  # Highlight.io Frontend Dashboard
+  highlight-frontend:
+    image: highlightio/frontend:latest
+    container_name: highlight-frontend
+    restart: always
+    environment:
+      - REACT_APP_PRIVATE_GRAPH_URI=http://highlight-backend:8082/private
+      - REACT_APP_PUBLIC_GRAPH_URI=http://highlight-backend:8082/public
+      - REACT_APP_FRONTEND_URI=https://highlight.agentic-design.ai
+      - REACT_APP_AUTH_MODE=simple
+    depends_on:
+      - highlight-backend
+    networks:
+      - agentic-network
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '1'
+    #       memory: 1G
+
+  # Highlight.io Backend API
+  highlight-backend:
+    image: highlightio/backend:latest
+    container_name: highlight-backend
+    restart: always
+    environment:
+      - PSQL_HOST=highlight-postgres
+      - PSQL_PORT=5432
+      - PSQL_DB=highlight
+      - PSQL_USER=highlight
+      - PSQL_PASSWORD=${HIGHLIGHT_DB_PASSWORD:-highlight_production_password}
+      - REDIS_ADDRESS=highlight-redis:6379
+      - CLICKHOUSE_ADDRESS=highlight-clickhouse:9000
+      - CLICKHOUSE_DATABASE=highlight
+      - OPENSEARCH_URI=http://highlight-opensearch:9200
+      - S3_ENDPOINT=http://highlight-minio:9000
+      - S3_ACCESS_KEY_ID=${HIGHLIGHT_MINIO_ACCESS_KEY:-minioadmin}
+      - S3_SECRET_ACCESS_KEY=${HIGHLIGHT_MINIO_SECRET_KEY:-minioadmin}
+      - S3_BUCKET_NAME=highlight-sessions
+      - FRONTEND_URI=https://highlight.agentic-design.ai
+      - PRIVATE_GRAPH_URI=http://highlight-backend:8082/private
+      - PUBLIC_GRAPH_URI=http://highlight-backend:8082/public
+      - NODE_ENV=production
+      - LOG_LEVEL=info
+    depends_on:
+      - highlight-postgres
+      - highlight-redis
+      - highlight-clickhouse
+      - highlight-opensearch
+      - highlight-minio
+    networks:
+      - agentic-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '2'
+    #       memory: 4G
+
+  # Highlight PostgreSQL
+  highlight-postgres:
+    image: postgres:15-alpine
+    container_name: highlight-postgres
+    restart: always
+    environment:
+      - POSTGRES_DB=highlight
+      - POSTGRES_USER=highlight
+      - POSTGRES_PASSWORD=${HIGHLIGHT_DB_PASSWORD:-highlight_production_password}
+    volumes:
+      - highlight-postgres-data:/var/lib/postgresql/data
+    networks:
+      - agentic-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U highlight"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '1'
+    #       memory: 2G
+
+  # Highlight Redis
+  highlight-redis:
+    image: redis:7-alpine
+    container_name: highlight-redis
+    restart: always
+    volumes:
+      - highlight-redis-data:/data
+    networks:
+      - agentic-network
+    command: redis-server --appendonly yes --maxmemory 2gb --maxmemory-policy allkeys-lru
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '0.5'
+    #       memory: 2G
+
+  # Highlight ClickHouse
+  highlight-clickhouse:
+    image: clickhouse/clickhouse-server:23-alpine
+    container_name: highlight-clickhouse
+    restart: always
+    environment:
+      - CLICKHOUSE_DB=highlight
+      - CLICKHOUSE_USER=default
+      - CLICKHOUSE_PASSWORD=
+    volumes:
+      - highlight-clickhouse-data:/var/lib/clickhouse
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    networks:
+      - agentic-network
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '2'
+    #       memory: 4G
+
+  # Highlight OpenSearch
+  highlight-opensearch:
+    image: opensearchproject/opensearch:2
+    container_name: highlight-opensearch
+    restart: always
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "OPENSEARCH_JAVA_OPTS=-Xms1g -Xmx2g"
+      - DISABLE_SECURITY_PLUGIN=true
+      - DISABLE_INSTALL_DEMO_CONFIG=true
+    volumes:
+      - highlight-opensearch-data:/usr/share/opensearch/data
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    networks:
+      - agentic-network
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '2'
+    #       memory: 4G
+
+  # Highlight MinIO (Object Storage)
+  highlight-minio:
+    image: minio/minio:latest
+    container_name: highlight-minio
+    restart: always
+    environment:
+      - MINIO_ROOT_USER=${HIGHLIGHT_MINIO_ACCESS_KEY:-minioadmin}
+      - MINIO_ROOT_PASSWORD=${HIGHLIGHT_MINIO_SECRET_KEY:-minioadmin}
+    volumes:
+      - highlight-minio-data:/data
+    networks:
+      - agentic-network
+    command: server /data --console-address ":9001"
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '1'
+    #       memory: 2G
+
+  # MinIO Bucket Initialization
+  highlight-minio-init:
+    image: minio/mc:latest
+    container_name: highlight-minio-init
+    depends_on:
+      - highlight-minio
+    networks:
+      - agentic-network
+    entrypoint: >
+      /bin/sh -c "
+      sleep 10;
+      /usr/bin/mc alias set myminio http://highlight-minio:9000 ${HIGHLIGHT_MINIO_ACCESS_KEY:-minioadmin} ${HIGHLIGHT_MINIO_SECRET_KEY:-minioadmin};
+      /usr/bin/mc mb myminio/highlight-sessions --ignore-existing;
+      /usr/bin/mc anonymous set download myminio/highlight-sessions;
+      exit 0;
+      "
+
   # Nginx reverse proxy for SSL termination
   nginx:
     image: nginx:alpine
@@ -147,6 +343,16 @@ volumes:
   plausible_db_data:
     driver: local
   plausible_events_db_data:
+    driver: local
+  highlight-postgres-data:
+    driver: local
+  highlight-redis-data:
+    driver: local
+  highlight-clickhouse-data:
+    driver: local
+  highlight-opensearch-data:
+    driver: local
+  highlight-minio-data:
     driver: local
 
 networks:
