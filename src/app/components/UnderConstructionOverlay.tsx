@@ -14,7 +14,7 @@ export const UnderConstructionOverlay = () => {
         </div>
         <h2 className="text-3xl font-bold text-white mb-4">Under Construction</h2>
         <p className="text-gray-400 mb-6">
-          We're building something amazing! The AI Driven Development section is coming soon.
+          We're building something amazing! This section is coming soon.
         </p>
         <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-teal-500/10 to-cyan-500/10 border border-teal-500/30 rounded-lg">
           <Sparkles className="w-5 h-5 text-teal-400 animate-pulse" />

@@ -1,7 +1,6 @@
 import { MetadataRoute } from 'next'
 import { categories } from './categories'
 import { techniques } from './techniques'
-import { aiDrivenDevPages } from './ai-driven-dev-pages'
 import { aiInferencePages } from './ai-inference-pages'
 import { fineTuningPages } from './fine-tuning-pages'
 import { promptHubPages } from './prompt-hub-pages'
@@ -108,12 +107,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.4,
     },
     {
-      url: `${baseUrl}/ai-driven-dev`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
-      priority: 0.9,
-    },
-    {
       url: `${baseUrl}/recommendations`,
       lastModified: new Date(),
       changeFrequency: 'weekly' as const,
@@ -163,14 +156,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }))
 
-  // AI-Driven Dev pages
-  const aiDrivenDevPageEntries = aiDrivenDevPages.map(page => ({
-    url: `${baseUrl}/ai-driven-dev/${page.id}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly' as const,
-    priority: page.priority || 0.7,
-  }))
-
   // AI-Inference pages
   const aiInferencePageEntries = aiInferencePages.map(page => ({
     url: `${baseUrl}/ai-inference/${page.id}`,
@@ -199,7 +184,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...staticPages,
     ...categoryPages,
     ...techniquePages,
-    ...aiDrivenDevPageEntries,
     ...aiInferencePageEntries,
     ...fineTuningPageEntries,
     ...promptHubPageEntries,

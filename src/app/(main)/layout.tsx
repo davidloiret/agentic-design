@@ -65,7 +65,6 @@ export default function MainLayout({
       '/ai-red-teaming': 'ai-red-teaming',
       '/fine-tuning': 'fine-tuning',
       '/ai-inference': 'ai-inference',
-      '/ai-driven-dev': 'ai-driven-dev',
       '/prompt-hub': 'prompt-hub',
       '/project-hub': 'project-hub',
       '/news-hub': 'news-hub',

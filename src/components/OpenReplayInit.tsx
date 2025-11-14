@@ -56,7 +56,7 @@ export default function OpenReplayInit({
           projectKey,
           ingestPoint,
           assistEnabled,
-          sessionID: result.sessionID,
+          sessionID: 'sessionID' in result ? result.sessionID : undefined,
         });
       }).catch((error) => {
         console.error('OpenReplay failed to start:', error);
