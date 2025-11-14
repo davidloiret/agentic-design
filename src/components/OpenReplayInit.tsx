@@ -12,6 +12,7 @@ interface OpenReplayInitProps {
 }
 
 let trackerInstance: Tracker | null = null;
+let trackerReady: boolean = false;
 
 export default function OpenReplayInit({
   projectKey,
@@ -45,15 +46,24 @@ export default function OpenReplayInit({
         }));
       }
 
-      tracker.start();
+      // Store the tracker instance immediately
       trackerInstance = tracker;
-      initialized.current = true;
 
-      console.log('OpenReplay initialized:', {
-        projectKey,
-        ingestPoint,
-        assistEnabled,
+      // Start the tracker and wait for it to be ready
+      tracker.start().then((result) => {
+        trackerReady = true;
+        console.log('OpenReplay started successfully:', {
+          projectKey,
+          ingestPoint,
+          assistEnabled,
+          sessionID: result.sessionID,
+        });
+      }).catch((error) => {
+        console.error('OpenReplay failed to start:', error);
+        trackerReady = false;
       });
+
+      initialized.current = true;
     } catch (error) {
       console.error('Failed to initialize OpenReplay:', error);
     }
@@ -62,6 +72,7 @@ export default function OpenReplayInit({
       if (trackerInstance) {
         trackerInstance.stop();
         trackerInstance = null;
+        trackerReady = false;
         initialized.current = false;
       }
     };
@@ -76,12 +87,38 @@ export function getTracker(): Tracker | null {
 }
 
 // Helper functions for manual tracking
-export function identifyUser(userId: string, metadata?: Record<string, any>) {
-  if (trackerInstance) {
-    trackerInstance.setUserID(userId);
-    if (metadata) {
-      trackerInstance.setMetadata('user', JSON.stringify(metadata));
+export function identifyUser(userId: string, metadata?: Record<string, any>, retryCount = 0) {
+  if (!trackerInstance) {
+    console.warn('[OpenReplay] Cannot identify user - tracker not initialized yet.');
+    if (retryCount < 10) {
+      setTimeout(() => identifyUser(userId, metadata, retryCount + 1), 500);
+    } else {
+      console.error('[OpenReplay] Failed to identify user after 10 retries');
     }
+    return;
+  }
+
+  if (!trackerReady) {
+    console.warn('[OpenReplay] Tracker not ready yet. Waiting...');
+    if (retryCount < 10) {
+      setTimeout(() => identifyUser(userId, metadata, retryCount + 1), 500);
+    } else {
+      console.error('[OpenReplay] Tracker not ready after 10 retries');
+    }
+    return;
+  }
+
+  try {
+    console.log('[OpenReplay] Setting user ID:', userId);
+    trackerInstance.setUserID(userId);
+
+    if (metadata) {
+      console.log('[OpenReplay] Setting user metadata:', metadata);
+    }
+
+    console.log('[OpenReplay] User identified successfully');
+  } catch (error) {
+    console.error('[OpenReplay] Failed to identify user:', error);
   }
 }
 

@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { api } from '@/lib/api-client';
 import { plausible } from '@/components/PlausibleAnalytics';
+import { identifyUser } from '@/components/OpenReplayInit';
 
 interface User {
   id: string; // Supabase ID
@@ -82,6 +83,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Check if user is logged in on mount
     refreshUser();
   }, []);
+
+  // Identify user in OpenReplay when auth state changes
+  useEffect(() => {
+    if (user) {
+      const userId = user.userId || user.id;
+      const metadata = {
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+      };
+
+      console.log('[AuthContext] Identifying user in OpenReplay:', userId);
+      identifyUser(userId, metadata);
+    }
+  }, [user]);
 
   const signIn = async (email: string, password: string) => {
     const response = await api.post('/api/v1/auth/login', { email, password });
