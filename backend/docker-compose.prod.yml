@@ -127,18 +127,22 @@ services:
   # ============================================
   # Highlight.io Services (Apache 2.0 License)
   # Session Replay & Error Tracking - Production
+  # Self-hosted using official images from ghcr.io
   # ============================================
 
   # Highlight.io Frontend Dashboard
   highlight-frontend:
-    image: highlightio/frontend:latest
+    image: ghcr.io/highlight/highlight-frontend:latest
     container_name: highlight-frontend
     restart: always
+    ports:
+      - "3000:3000"
     environment:
-      - REACT_APP_PRIVATE_GRAPH_URI=http://highlight-backend:8082/private
-      - REACT_APP_PUBLIC_GRAPH_URI=http://highlight-backend:8082/public
+      - REACT_APP_PRIVATE_GRAPH_URI=https://highlight.agentic-design.ai/api/private
+      - REACT_APP_PUBLIC_GRAPH_URI=https://highlight.agentic-design.ai/api/public
       - REACT_APP_FRONTEND_URI=https://highlight.agentic-design.ai
-      - REACT_APP_AUTH_MODE=simple
+      - REACT_APP_AUTH_MODE=password
+      - REACT_APP_IN_DOCKER=true
     depends_on:
       - highlight-backend
     networks:
@@ -151,34 +155,40 @@ services:
 
   # Highlight.io Backend API
   highlight-backend:
-    image: highlightio/backend:latest
+    image: ghcr.io/highlight/highlight-backend:latest
     container_name: highlight-backend
     restart: always
+    ports:
+      - "8082:8082"
     environment:
+      - ENVIRONMENT=production
+      - ON_PREM=true
       - PSQL_HOST=highlight-postgres
       - PSQL_PORT=5432
       - PSQL_DB=highlight
       - PSQL_USER=highlight
       - PSQL_PASSWORD=${HIGHLIGHT_DB_PASSWORD:-highlight_production_password}
-      - REDIS_ADDRESS=highlight-redis:6379
+      - REDIS_EVENTS_STAGING_ENDPOINT=highlight-redis:6379
+      - REDIS_PASSWORD=${HIGHLIGHT_REDIS_PASSWORD:-}
       - CLICKHOUSE_ADDRESS=highlight-clickhouse:9000
-      - CLICKHOUSE_DATABASE=highlight
-      - OPENSEARCH_URI=http://highlight-opensearch:9200
-      - S3_ENDPOINT=http://highlight-minio:9000
-      - S3_ACCESS_KEY_ID=${HIGHLIGHT_MINIO_ACCESS_KEY:-minioadmin}
-      - S3_SECRET_ACCESS_KEY=${HIGHLIGHT_MINIO_SECRET_KEY:-minioadmin}
-      - S3_BUCKET_NAME=highlight-sessions
-      - FRONTEND_URI=https://highlight.agentic-design.ai
-      - PRIVATE_GRAPH_URI=http://highlight-backend:8082/private
-      - PUBLIC_GRAPH_URI=http://highlight-backend:8082/public
-      - NODE_ENV=production
-      - LOG_LEVEL=info
+      - CLICKHOUSE_DATABASE=default
+      - CLICKHOUSE_USERNAME=default
+      - CLICKHOUSE_PASSWORD=
+      - KAFKA_SERVERS=highlight-kafka:9092
+      - KAFKA_TOPIC=production
+      - OBJECT_STORAGE_FS=/highlight-data
+      - REACT_APP_FRONTEND_URI=https://highlight.agentic-design.ai
+      - REACT_APP_AUTH_MODE=password
+      - OAUTH_REDIRECT_URL=https://highlight.agentic-design.ai/api/oauth/callback
+      - ADMIN_PASSWORD=${HIGHLIGHT_ADMIN_PASSWORD:-changeme123}
+      - SSL=false
+    volumes:
+      - highlight-data:/highlight-data
     depends_on:
       - highlight-postgres
       - highlight-redis
       - highlight-clickhouse
-      - highlight-opensearch
-      - highlight-minio
+      - highlight-kafka
     networks:
       - agentic-network
     healthcheck:
@@ -193,12 +203,13 @@ services:
     #       cpus: '2'
     #       memory: 4G
 
-  # Highlight PostgreSQL
+  # Highlight PostgreSQL (with pgvector)
   highlight-postgres:
-    image: postgres:15-alpine
+    image: ankane/pgvector:v0.5.1
     container_name: highlight-postgres
     restart: always
     environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
       - POSTGRES_DB=highlight
       - POSTGRES_USER=highlight
       - POSTGRES_PASSWORD=${HIGHLIGHT_DB_PASSWORD:-highlight_production_password}
@@ -219,14 +230,16 @@ services:
 
   # Highlight Redis
   highlight-redis:
-    image: redis:7-alpine
+    image: redis:8.0.2
     container_name: highlight-redis
     restart: always
+    environment:
+      - REDIS_PASSWORD=${HIGHLIGHT_REDIS_PASSWORD:-}
     volumes:
       - highlight-redis-data:/data
     networks:
       - agentic-network
-    command: redis-server --appendonly yes --maxmemory 2gb --maxmemory-policy allkeys-lru
+    command: redis-server --save 60 1 --loglevel warning
     # deploy:
     #   resources:
     #     limits:
@@ -235,11 +248,11 @@ services:
 
   # Highlight ClickHouse
   highlight-clickhouse:
-    image: clickhouse/clickhouse-server:23-alpine
+    image: clickhouse/clickhouse-server:24.3.15.72-alpine
     container_name: highlight-clickhouse
     restart: always
     environment:
-      - CLICKHOUSE_DB=highlight
+      - CLICKHOUSE_DB=default
       - CLICKHOUSE_USER=default
       - CLICKHOUSE_PASSWORD=
     volumes:
@@ -256,69 +269,41 @@ services:
     #       cpus: '2'
     #       memory: 4G
 
-  # Highlight OpenSearch
-  highlight-opensearch:
-    image: opensearchproject/opensearch:2
-    container_name: highlight-opensearch
+  # Highlight Zookeeper (for Kafka)
+  highlight-zookeeper:
+    image: confluentinc/cp-zookeeper:7.7.0
+    container_name: highlight-zookeeper
     restart: always
     environment:
-      - discovery.type=single-node
-      - bootstrap.memory_lock=true
-      - "OPENSEARCH_JAVA_OPTS=-Xms1g -Xmx2g"
-      - DISABLE_SECURITY_PLUGIN=true
-      - DISABLE_INSTALL_DEMO_CONFIG=true
+      - ZOOKEEPER_CLIENT_PORT=2181
+      - ZOOKEEPER_TICK_TIME=2000
     volumes:
-      - highlight-opensearch-data:/usr/share/opensearch/data
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-      nofile:
-        soft: 65536
-        hard: 65536
+      - highlight-zookeeper-data:/var/lib/zookeeper/data
+      - highlight-zookeeper-log:/var/lib/zookeeper/log
     networks:
       - agentic-network
-    # deploy:
-    #   resources:
-    #     limits:
-    #       cpus: '2'
-    #       memory: 4G
 
-  # Highlight MinIO (Object Storage)
-  highlight-minio:
-    image: minio/minio:latest
-    container_name: highlight-minio
+  # Highlight Kafka (message queue)
+  highlight-kafka:
+    image: confluentinc/cp-kafka:7.7.0
+    container_name: highlight-kafka
     restart: always
-    environment:
-      - MINIO_ROOT_USER=${HIGHLIGHT_MINIO_ACCESS_KEY:-minioadmin}
-      - MINIO_ROOT_PASSWORD=${HIGHLIGHT_MINIO_SECRET_KEY:-minioadmin}
-    volumes:
-      - highlight-minio-data:/data
-    networks:
-      - agentic-network
-    command: server /data --console-address ":9001"
-    # deploy:
-    #   resources:
-    #     limits:
-    #       cpus: '1'
-    #       memory: 2G
-
-  # MinIO Bucket Initialization
-  highlight-minio-init:
-    image: minio/mc:latest
-    container_name: highlight-minio-init
     depends_on:
-      - highlight-minio
+      - highlight-zookeeper
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_ZOOKEEPER_CONNECT=highlight-zookeeper:2181
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://highlight-kafka:9092
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - KAFKA_TRANSACTION_STATE_LOG_MIN_ISR=1
+      - KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=1
+      - KAFKA_LOG_RETENTION_HOURS=1
+      - KAFKA_MESSAGE_MAX_BYTES=268435456
+    volumes:
+      - highlight-kafka-data:/var/lib/kafka/data
     networks:
       - agentic-network
-    entrypoint: >
-      /bin/sh -c "
-      sleep 10;
-      /usr/bin/mc alias set myminio http://highlight-minio:9000 ${HIGHLIGHT_MINIO_ACCESS_KEY:-minioadmin} ${HIGHLIGHT_MINIO_SECRET_KEY:-minioadmin};
-      /usr/bin/mc mb myminio/highlight-sessions --ignore-existing;
-      /usr/bin/mc anonymous set download myminio/highlight-sessions;
-      exit 0;
-      "
 
   # Nginx reverse proxy for SSL termination
   nginx:
@@ -344,15 +329,19 @@ volumes:
     driver: local
   plausible_events_db_data:
     driver: local
+  highlight-data:
+    driver: local
   highlight-postgres-data:
     driver: local
   highlight-redis-data:
     driver: local
   highlight-clickhouse-data:
     driver: local
-  highlight-opensearch-data:
+  highlight-zookeeper-data:
     driver: local
-  highlight-minio-data:
+  highlight-zookeeper-log:
+    driver: local
+  highlight-kafka-data:
     driver: local
 
 networks:

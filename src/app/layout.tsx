@@ -7,7 +7,7 @@ import { SearchProvider } from '@/contexts/SearchContext';
 import { SearchModal } from '@/app/components/SearchModal';
 import JsonLd from '@/components/JsonLd';
 import PlausibleAnalytics from '@/components/PlausibleAnalytics';
-import HighlightInit from '@/components/HighlightInit';
+import OpenReplayInit from '@/components/OpenReplayInit';
 import '@/lib/analytics'; // Initialize global analytics tracking
 
 const geistSans = Geist({
@@ -130,10 +130,11 @@ export default function RootLayout({
           src={process.env.NEXT_PUBLIC_PLAUSIBLE_SRC || '/js/script.js'}
           enabled={process.env.NEXT_PUBLIC_PLAUSIBLE_ENABLED !== 'false'}
         />
-        <HighlightInit
-          projectId={process.env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID || ''}
-          enabled={process.env.NEXT_PUBLIC_HIGHLIGHT_ENABLED !== 'false'}
-          backendUrl={process.env.NEXT_PUBLIC_HIGHLIGHT_BACKEND_URL}
+        <OpenReplayInit
+          projectKey="bBqBqI54msqJDLJx5j8N"
+          ingestPoint="https://highlight.agentic-design.ai/ingest"
+          enabled={true}
+          assistEnabled={true}
         />
         <AuthProvider>
           <SearchProvider>
