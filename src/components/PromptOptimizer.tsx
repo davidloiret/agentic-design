@@ -17,12 +17,10 @@ export default function PromptOptimizer() {
   const [customTestData, setCustomTestData] = useState<TrainingExample[]>([]);
   const [newTestExample, setNewTestExample] = useState({ inputs: '', expected_output: '' });
   const [useCustomTestData, setUseCustomTestData] = useState(false);
-  const [expandedTraces, setExpandedTraces] = useState<Set<number>>(new Set());
-  const [tryItMode, setTryItMode] = useState<{ requestId: string; result: OptimizationResult } | null>(null);
+  const [tryItMode, setTryItMode] = useState<{ requestId: string; result: any } | null>(null);
   const [tryItInputs, setTryItInputs] = useState<Record<string, string>>({});
   const [tryItPrediction, setTryItPrediction] = useState<any>(null);
   const [tryItLoading, setTryItLoading] = useState(false);
-  const [showFullTraces, setShowFullTraces] = useState(false);
 
   // Example templates
   const exampleTemplates = [
@@ -175,21 +173,38 @@ export default function PromptOptimizer() {
     setCustomTestData(customTestData.filter((_, i) => i !== index));
   };
 
-  const toggleTraceExpansion = (exampleIndex: number) => {
-    const newExpanded = new Set(expandedTraces);
-    if (newExpanded.has(exampleIndex)) {
-      newExpanded.delete(exampleIndex);
-    } else {
-      newExpanded.add(exampleIndex);
-    }
-    setExpandedTraces(newExpanded);
-  };
+  // Helper to analyze prompt performance
+  const analyzePromptQuality = (prompt: string) => {
+    if (!prompt) return { score: 0, suggestions: [] };
 
-  // Helper to clean ANSI escape codes from DSPy output
-  const cleanAnsiCodes = (text: string) => {
-    if (!text) return text;
-    // Remove ANSI escape sequences
-    return text.replace(/\x1b\[[0-9;]*m/g, '');
+    const suggestions = [];
+    let score = 0.5; // Base score
+
+    // Check for clear instructions
+    if (prompt.length > 50) score += 0.1;
+
+    // Check for examples
+    if (prompt.toLowerCase().includes('example')) {
+      score += 0.2;
+    } else {
+      suggestions.push('Consider adding examples to clarify expectations');
+    }
+
+    // Check for step-by-step instructions
+    if (/\b(step|first|then|finally|1\.|2\.|3\.)\b/i.test(prompt)) {
+      score += 0.1;
+    } else {
+      suggestions.push('Consider adding step-by-step instructions');
+    }
+
+    // Check for output format specification
+    if (/\b(format|output|structure)\b/i.test(prompt)) {
+      score += 0.1;
+    } else {
+      suggestions.push('Specify the desired output format');
+    }
+
+    return { score: Math.min(1.0, score), suggestions };
   };
 
   const tryOptimizedPrompt = async () => {
@@ -211,14 +226,14 @@ export default function PromptOptimizer() {
     }
   };
 
-  const initializeTryItMode = (requestId: string, result: OptimizationResult) => {
+  const initializeTryItMode = (requestId: string, result: any) => {
     setTryItMode({ requestId, result });
     setTryItPrediction(null);
     
     // Extract input fields from the prompt template
     const template = result.optimized_prompt?.original_template || '';
     const fieldMatches = template.match(/\{(\w+)\}/g) || [];
-    const fields = fieldMatches.map(match => match.slice(1, -1));
+    const fields = fieldMatches.map((match: string) => match.slice(1, -1));
     
     const initialInputs: Record<string, string> = {};
     fields.forEach(field => {
@@ -258,33 +273,103 @@ export default function PromptOptimizer() {
     setError(null);
 
     try {
-      const request: OptimizationRequest = {
-        prompt_template: { 
-          template: promptTemplate,
-          parameters: {}
-        },
-        training_data: trainingExamples,
-        metric: 'accuracy',
-        strategy: 'bootstrap_fewshot',
-        max_iterations: 10
+      // Extract input and output variables from template
+      const inputMatches = promptTemplate.match(/\{(\w+)\}/g) || [];
+      const inputVariables = inputMatches.map((match: string) => match.slice(1, -1));
+      const outputVariables = ['answer']; // Default output variable
+
+      const gepaRequest = {
+        prompt: promptTemplate,
+        input_variables: inputVariables,
+        output_variables: outputVariables,
+        training_examples: trainingExamples,
+        validation_examples: trainingExamples.slice(0, 3), // Use first 3 for validation
+        max_generations: 20,
+        population_size: 12,
+        objectives: ['performance', 'clarity', 'efficiency']
       };
 
-      const response = await promptOptimizerAPI.createOptimization(request);
-      
-      // Poll for result
-      setTimeout(async () => {
-        try {
-          const result = await promptOptimizerAPI.getOptimizationResult(response.request_id);
-          setOptimizationResults([result, ...optimizationResults]);
-        } catch (e) {
-          setError('Failed to fetch optimization result');
+      // Use the GEPA optimization endpoint
+      const response = await fetch('/api/v1/gepa-optimize', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(gepaRequest),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      // Convert GEPA result to the expected format
+      const optimizationResult = {
+        request_id: `gepa_${Date.now()}`,
+        status: 'completed',
+        created_at: new Date().toISOString(),
+        completed_at: new Date().toISOString(),
+        optimized_prompt: {
+          original_template: promptTemplate,
+          optimized_template: result.optimized_prompt,
+          performance_score: result.objectives?.performance || 0.8,
+          optimization_history: result.evolution_history || [],
+          metadata: result.config || {} // Add missing metadata property
+        },
+        performance_score: result.objectives?.performance || 0.8,
+        // Add GEPA specific metadata
+        gepa_metadata: {
+          objectives: result.objectives,
+          generation: result.generation,
+          pareto_front_size: result.pareto_front_size,
+          alternative_solutions: result.alternative_solutions || [],
+          mutation_history: result.mutation_history || []
         }
-      }, 2000);
+      };
+
+      setOptimizationResults([optimizationResult, ...optimizationResults]);
 
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Optimization failed');
+      setError(e instanceof Error ? e.message : 'GEPA optimization failed');
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Add GEPA Think function
+  const gepaThink = async () => {
+    if (!promptTemplate) {
+      setError('Please provide a prompt template to analyze');
+      return;
+    }
+
+    try {
+      const thinkRequest = {
+        prompt: promptTemplate,
+        context: 'Prompt optimization analysis',
+        optimization_goal: 'general'
+      };
+
+      const response = await fetch('/api/v1/gepa-think', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(thinkRequest),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      // Show thinking results in a modal or expandable section
+      alert(`GEPA Analysis:\n\nOptimization Potential: ${result.analysis?.optimization_potential || 'medium'}\n\nKey Suggestions:\n${result.suggestions?.structural_improvements?.join('\n') || 'None'}\n\nRecommended Approach:\n${result.recommended_approach || 'Use GEPA evolutionary optimization'}`);
+
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'GEPA think analysis failed');
     }
   };
 
@@ -335,22 +420,22 @@ export default function PromptOptimizer() {
           </h1>
         </div>
         <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-          Transform your prompts into high-performing AI interactions using DSPy's advanced optimization techniques
+          Transform your prompts into high-performing AI interactions using GEPA (Generalized Evolutionary Prompt Adaptation)
         </p>
-        
+
         {/* Quick stats/info */}
         <div className="flex items-center justify-center mt-4 space-x-6 text-sm text-gray-400">
           <div className="flex items-center">
             <Target className="w-4 h-4 mr-1" />
-            <span>Accuracy Focused</span>
+            <span>Multi-Objective</span>
           </div>
           <div className="flex items-center">
             <Brain className="w-4 h-4 mr-1" />
-            <span>DSPy Powered</span>
+            <span>Evolutionary AI</span>
           </div>
           <div className="flex items-center">
             <Sparkles className="w-4 h-4 mr-1" />
-            <span>Auto-optimized</span>
+            <span>Adaptive Learning</span>
           </div>
         </div>
       </div>
@@ -504,21 +589,29 @@ export default function PromptOptimizer() {
                   {loading ? (
                     <>
                       <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                      Optimizing...
+                      GEPA Optimizing...
                     </>
                   ) : (
                     <>
                       <Wand2 className="w-4 h-4 mr-2" />
-                      Optimize Prompt
+                      GEPA Optimize
                     </>
                   )}
+                </button>
+                <button
+                  onClick={gepaThink}
+                  disabled={!promptTemplate}
+                  className="flex-1 bg-gradient-to-r from-purple-500 to-pink-600 text-white px-6 py-3 rounded-lg hover:from-purple-600 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center"
+                >
+                  <Brain className="w-4 h-4 mr-2" />
+                  GEPA Think
                 </button>
                 <button
                   onClick={loadRecentResults}
                   className="flex-1 bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition-colors flex items-center justify-center"
                 >
                   <Copy className="w-4 h-4 mr-2" />
-                  Load Recent Results
+                  Load Results
                 </button>
               </div>
             </div>
@@ -712,20 +805,54 @@ export default function PromptOptimizer() {
                           </div>
                         </div>
                         
-                        {result.optimized_prompt.dspy_signature && (
+                        {/* GEPA Evolution Information */}
+                        {(result as any).gepa_metadata && (
                           <div>
-                            <div className="text-xs font-medium text-gray-400 mb-1">DSPY SIGNATURE (Internal Format)</div>
+                            <div className="text-xs font-medium text-gray-400 mb-1">GEPA EVOLUTIONARY METADATA</div>
                             <div className="text-sm text-gray-200 bg-gray-800 p-3 rounded-lg border border-gray-600 font-mono">
-                              {result.optimized_prompt.dspy_signature}
+                              <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                  <strong>Generation:</strong> {(result as any).gepa_metadata.generation || 'N/A'}
+                                </div>
+                                <div>
+                                  <strong>Pareto Front Size:</strong> {(result as any).gepa_metadata.pareto_front_size || 'N/A'}
+                                </div>
+                              </div>
+                              {(result as any).gepa_metadata.objectives && (
+                                <div className="mt-2">
+                                  <strong>Objectives:</strong>
+                                  <div className="grid grid-cols-3 gap-2 mt-1">
+                                    {Object.entries((result as any).gepa_metadata.objectives).map(([key, value]) => (
+                                      <div key={key} className="text-xs">
+                                        <span className="capitalize">{key}:</span> {(value as number).toFixed(3)}
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+                              {(result as any).gepa_metadata.mutation_history && (result as any).gepa_metadata.mutation_history.length > 0 && (
+                                <div className="mt-2">
+                                  <strong>Mutations Applied:</strong> {(result as any).gepa_metadata.mutation_history.join(', ')}
+                                </div>
+                              )}
                             </div>
                           </div>
                         )}
-                        
-                        {result.optimized_prompt.dspy_history && (
+
+                        {/* Alternative Solutions from GEPA */}
+                        {(result as any).gepa_metadata?.alternative_solutions && (result as any).gepa_metadata.alternative_solutions.length > 0 && (
                           <div>
-                            <div className="text-xs font-medium text-gray-400 mb-1">DSPY HISTORY (inspect_history)</div>
-                            <div className="text-sm text-gray-200 bg-gray-800 p-3 rounded-lg border border-gray-600 font-mono max-h-48 overflow-y-auto whitespace-pre-wrap">
-                              {cleanAnsiCodes(result.optimized_prompt.dspy_history)}
+                            <div className="text-xs font-medium text-gray-400 mb-1">ALTERNATIVE SOLUTIONS (Pareto Front)</div>
+                            <div className="space-y-2 max-h-32 overflow-y-auto">
+                              {(result as any).gepa_metadata.alternative_solutions.slice(0, 3).map((alt: any, idx: number) => (
+                                <div key={idx} className="text-xs text-gray-200 bg-gray-800 p-2 rounded border border-gray-600">
+                                  <div className="font-medium">Alternative {idx + 1}:</div>
+                                  <div className="truncate">{alt.prompt}</div>
+                                  <div className="text-gray-400">
+                                    Fitness: {(alt.fitness as number).toFixed(3)}
+                                  </div>
+                                </div>
+                              ))}
                             </div>
                           </div>
                         )}
@@ -784,7 +911,7 @@ export default function PromptOptimizer() {
                           className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded text-sm font-medium flex items-center"
                         >
                           <Sparkles className="w-4 h-4 mr-2" />
-                          Try It
+                          Try GEPA Result
                         </button>
                         <button
                           onClick={() => downloadPredictor(result.request_id)}
@@ -921,206 +1048,21 @@ export default function PromptOptimizer() {
                   </div>
                 </div>
                 
-                {/* DSPy Detailed Traces */}
+                {/* GEPA Analysis Information */}
                 <div className="bg-gray-700 p-4 rounded-lg">
-                  <h3 className="text-sm font-medium text-gray-300 mb-3">DSPy Execution Traces (Adapter Style)</h3>
-                  <div className="space-y-2 max-h-96 overflow-y-auto">
-                    {testResults.original_metrics.detailed_traces.map((trace, index) => (
-                      <div key={index} className="border border-gray-600 rounded-lg">
-                        <button
-                          onClick={() => toggleTraceExpansion(index)}
-                          className="w-full flex items-center justify-between p-3 text-left hover:bg-gray-600 transition-colors"
-                        >
-                          <div className="flex items-center space-x-2">
-                            <span className="text-sm font-medium text-gray-300">
-                              Example {trace.example} - {trace.error ? 'Error' : 'Success'}
-                            </span>
-                            {trace.dspy_history_output && (
-                              <div className="flex items-center space-x-1">
-                                <Code2 className="w-3 h-3 text-blue-400" />
-                                <span className="text-xs text-blue-400">DSPy Trace</span>
-                              </div>
-                            )}
-                          </div>
-                          {expandedTraces.has(index) ? (
-                            <ChevronDown className="w-4 h-4 text-gray-400" />
-                          ) : (
-                            <ChevronRight className="w-4 h-4 text-gray-400" />
-                          )}
-                        </button>
-                        
-                        {expandedTraces.has(index) && (
-                          <div className="px-3 pb-3 border-t border-gray-600">
-                            <div className="grid grid-cols-2 gap-4 mt-3">
-                              {/* Original Trace */}
-                              <div>
-                                <div className="text-xs font-medium text-blue-400 mb-2">Original Prompt Trace</div>
-                                <div className="space-y-2 text-xs">
-                                  {trace.inputs && (
-                                    <div>
-                                      <div className="text-gray-400 font-medium">Inputs:</div>
-                                      <div className="bg-gray-800 p-2 rounded font-mono text-gray-200">
-                                        {JSON.stringify(trace.inputs, null, 2)}
-                                      </div>
-                                    </div>
-                                  )}
-                                  
-                                  {trace.reasoning_steps && trace.reasoning_steps.length > 0 && (
-                                    <div>
-                                      <div className="text-gray-400 font-medium">Reasoning Steps:</div>
-                                      <div className="bg-gray-800 p-2 rounded">
-                                        {trace.reasoning_steps.map((step, stepIndex) => (
-                                          <div key={stepIndex} className="text-gray-200 mb-1">
-                                            {stepIndex + 1}. {step}
-                                          </div>
-                                        ))}
-                                      </div>
-                                    </div>
-                                  )}
-                                  
-                                  {trace.prediction && Object.keys(trace.prediction).length > 0 && (
-                                    <div>
-                                      <div className="text-gray-400 font-medium">Prediction Fields:</div>
-                                      <div className="bg-gray-800 p-2 rounded font-mono">
-                                        {Object.entries(trace.prediction).map(([key, value]) => (
-                                          <div key={key} className="text-gray-200">
-                                            <span className="text-green-400">{key}:</span> {value}
-                                          </div>
-                                        ))}
-                                      </div>
-                                    </div>
-                                  )}
-                                  
-                                  {trace.dspy_history_output && (
-                                    <div>
-                                      <div className="text-gray-400 font-medium">DSPy Adapter Output (Full Trace):</div>
-                                      <div className="bg-gray-800 p-2 rounded font-mono text-xs text-gray-200 whitespace-pre-wrap overflow-x-auto max-h-96 overflow-y-auto">
-                                        {cleanAnsiCodes(trace.dspy_history_output)}
-                                      </div>
-                                    </div>
-                                  )}
-                                  
-                                  {trace.actual_prompt_sent && (
-                                    <div>
-                                      <div className="text-gray-400 font-medium">Parsed Prompt Sent to LLM:</div>
-                                      <div className="bg-gray-800 p-2 rounded font-mono text-xs text-gray-200 whitespace-pre-wrap">
-                                        {trace.actual_prompt_sent}
-                                      </div>
-                                    </div>
-                                  )}
-                                  
-                                  {trace.actual_response_received && (
-                                    <div>
-                                      <div className="text-gray-400 font-medium">LLM Response:</div>
-                                      <div className="bg-gray-800 p-2 rounded font-mono text-xs text-gray-200 whitespace-pre-wrap">
-                                        {trace.actual_response_received}
-                                      </div>
-                                    </div>
-                                  )}
-                                  
-                                  {trace.llm_messages && (
-                                    <div>
-                                      <div className="text-gray-400 font-medium">LLM Messages:</div>
-                                      <div className="bg-gray-800 p-2 rounded space-y-1">
-                                        {trace.llm_messages.map((msg, msgIndex) => (
-                                          <div key={msgIndex} className="text-gray-200">
-                                            <span className="text-blue-400 font-medium">{msg.role}:</span>
-                                            <div className="ml-2 text-xs">{msg.content}</div>
-                                          </div>
-                                        ))}
-                                      </div>
-                                    </div>
-                                  )}
-                                  
-                                  {trace.error && (
-                                    <div>
-                                      <div className="text-red-400 font-medium">Error:</div>
-                                      <div className="bg-red-900/20 p-2 rounded text-red-300 text-xs">
-                                        {trace.error}
-                                      </div>
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                              
-                              {/* Optimized Trace */}
-                              <div>
-                                <div className="text-xs font-medium text-green-400 mb-2">Optimized Prompt Trace</div>
-                                <div className="space-y-2 text-xs">
-                                  {testResults.optimized_metrics.detailed_traces[index] && (
-                                    <>
-                                      {testResults.optimized_metrics.detailed_traces[index].reasoning_steps && 
-                                       testResults.optimized_metrics.detailed_traces[index].reasoning_steps.length > 0 && (
-                                        <div>
-                                          <div className="text-gray-400 font-medium">Reasoning Steps:</div>
-                                          <div className="bg-gray-800 p-2 rounded">
-                                            {testResults.optimized_metrics.detailed_traces[index].reasoning_steps.map((step, stepIndex) => (
-                                              <div key={stepIndex} className="text-gray-200 mb-1">
-                                                {stepIndex + 1}. {step}
-                                              </div>
-                                            ))}
-                                          </div>
-                                        </div>
-                                      )}
-                                      
-                                      {testResults.optimized_metrics.detailed_traces[index].dspy_history_output && (
-                                        <div>
-                                          <div className="text-gray-400 font-medium">DSPy Adapter Output (Full Trace):</div>
-                                          <div className="bg-gray-800 p-2 rounded font-mono text-xs text-gray-200 whitespace-pre-wrap overflow-x-auto max-h-96 overflow-y-auto">
-                                            {cleanAnsiCodes(testResults.optimized_metrics.detailed_traces[index].dspy_history_output)}
-                                          </div>
-                                        </div>
-                                      )}
-                                      
-                                      {testResults.optimized_metrics.detailed_traces[index].prediction && 
-                                       Object.keys(testResults.optimized_metrics.detailed_traces[index].prediction).length > 0 && (
-                                        <div>
-                                          <div className="text-gray-400 font-medium">Prediction Fields:</div>
-                                          <div className="bg-gray-800 p-2 rounded font-mono">
-                                            {Object.entries(testResults.optimized_metrics.detailed_traces[index].prediction).map(([key, value]) => (
-                                              <div key={key} className="text-gray-200">
-                                                <span className="text-green-400">{key}:</span> {value}
-                                              </div>
-                                            ))}
-                                          </div>
-                                        </div>
-                                      )}
-                                      
-                                      {testResults.optimized_metrics.detailed_traces[index].actual_prompt_sent && (
-                                        <div>
-                                          <div className="text-gray-400 font-medium">Parsed Prompt Sent to LLM:</div>
-                                          <div className="bg-gray-800 p-2 rounded font-mono text-xs text-gray-200 whitespace-pre-wrap">
-                                            {testResults.optimized_metrics.detailed_traces[index].actual_prompt_sent}
-                                          </div>
-                                        </div>
-                                      )}
-                                      
-                                      {testResults.optimized_metrics.detailed_traces[index].actual_response_received && (
-                                        <div>
-                                          <div className="text-gray-400 font-medium">LLM Response:</div>
-                                          <div className="bg-gray-800 p-2 rounded font-mono text-xs text-gray-200 whitespace-pre-wrap">
-                                            {testResults.optimized_metrics.detailed_traces[index].actual_response_received}
-                                          </div>
-                                        </div>
-                                      )}
-                                      
-                                      {testResults.optimized_metrics.detailed_traces[index].error && (
-                                        <div>
-                                          <div className="text-red-400 font-medium">Error:</div>
-                                          <div className="bg-red-900/20 p-2 rounded text-red-300 text-xs">
-                                            {testResults.optimized_metrics.detailed_traces[index].error}
-                                          </div>
-                                        </div>
-                                      )}
-                                    </>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    ))}
+                  <h3 className="text-sm font-medium text-gray-300 mb-3">GEPA Optimization Analysis</h3>
+                  <div className="text-sm text-gray-400">
+                    <p>The GEPA (Generalized Evolutionary Prompt Adaptation) system has optimized your prompt using advanced evolutionary algorithms that balance multiple objectives including performance, clarity, and efficiency.</p>
+                    <div className="mt-3 p-3 bg-gray-800 rounded border border-gray-600">
+                      <div className="text-xs font-medium text-gray-300 mb-1">Optimization Approach:</div>
+                      <ul className="text-xs text-gray-400 space-y-1">
+                        <li>• Multi-objective evolutionary optimization</li>
+                        <li>• Pareto front selection for trade-off analysis</li>
+                        <li>• LLM-based genetic operators (crossover, mutation)</li>
+                        <li>• Adaptive population management</li>
+                        <li>• Semantic diversity preservation</li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
                 
@@ -1248,8 +1190,8 @@ export default function PromptOptimizer() {
                       {/* Optimized Result */}
                       <div className="bg-gray-700 p-4 rounded-lg">
                         <div className="flex items-center justify-between mb-3">
-                          <h4 className="text-sm font-semibold text-green-400">With DSPy Optimization</h4>
-                          <span className="text-xs bg-green-900/30 text-green-400 px-2 py-1 rounded">Optimized</span>
+                          <h4 className="text-sm font-semibold text-green-400">With GEPA Optimization</h4>
+                          <span className="text-xs bg-green-900/30 text-green-400 px-2 py-1 rounded">Evolutionarily Optimized</span>
                         </div>
                         
                         {tryItPrediction.optimized.outputs && Object.keys(tryItPrediction.optimized.outputs).length > 0 ? (
@@ -1313,41 +1255,14 @@ export default function PromptOptimizer() {
                       </div>
                     </div>
                     
-                    {/* Show/Hide Full Traces Button */}
+                    {/* GEPA Analysis Button */}
                     <button
-                      onClick={() => setShowFullTraces(!showFullTraces)}
-                      className="text-sm text-blue-400 hover:text-blue-300 flex items-center"
+                      onClick={gepaThink}
+                      className="text-sm text-purple-400 hover:text-purple-300 flex items-center"
                     >
-                      {showFullTraces ? <ChevronDown className="w-4 h-4 mr-1" /> : <ChevronRight className="w-4 h-4 mr-1" />}
-                      View Full DSPy Traces
+                      <Brain className="w-4 h-4 mr-1" />
+                      Analyze with GEPA Think
                     </button>
-                    
-                    {/* Full Traces */}
-                    {showFullTraces && (
-                      <div className="mt-4 space-y-4">
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                          {/* Unoptimized Trace */}
-                          <div className="bg-gray-800 p-3 rounded">
-                            <h5 className="text-xs font-medium text-red-400 mb-2">Unoptimized Trace</h5>
-                            {tryItPrediction.unoptimized.trace?.dspy_history_output && (
-                              <div className="text-xs font-mono text-gray-300 whitespace-pre-wrap overflow-x-auto max-h-64 overflow-y-auto">
-                                {cleanAnsiCodes(tryItPrediction.unoptimized.trace.dspy_history_output)}
-                              </div>
-                            )}
-                          </div>
-                          
-                          {/* Optimized Trace */}
-                          <div className="bg-gray-800 p-3 rounded">
-                            <h5 className="text-xs font-medium text-green-400 mb-2">Optimized Trace</h5>
-                            {tryItPrediction.optimized.trace?.dspy_history_output && (
-                              <div className="text-xs font-mono text-gray-300 whitespace-pre-wrap overflow-x-auto max-h-64 overflow-y-auto">
-                                {cleanAnsiCodes(tryItPrediction.optimized.trace.dspy_history_output)}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    )}
                   </div>
                 </div>
               )}

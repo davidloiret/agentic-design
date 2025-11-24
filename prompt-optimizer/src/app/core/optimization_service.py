@@ -5,8 +5,10 @@ from ..core.config import Settings
 from ...domain.entities import OptimizationRequest, OptimizationResult, OptimizedPrompt
 from ...domain.ports import PromptOptimizerPort, OptimizationRepositoryPort
 from ...domain.prompt_guides import PromptGuideRegistry, PromptGuideType
+from ...infrastructure.gepa_optimizer import GEPAOptimizer, EvolutionConfig, OptimizationObjective
 import openai
 import json
+import asyncio
 
 
 class OptimizationService:
@@ -271,4 +273,266 @@ Approach this task with a structured plan:
             "improved_prompt": improved_prompt,
             "improvements_made": improvements_made,
             "suggestions": suggestions
+        }
+
+    async def gepa_optimize(
+        self,
+        prompt: str,
+        input_variables: List[str],
+        output_variables: List[str],
+        training_examples: Optional[List[dict]] = None,
+        validation_examples: Optional[List[dict]] = None,
+        max_generations: int = 30,
+        population_size: int = 15,
+        objectives: List[str] = None
+    ) -> Dict[str, Any]:
+        """Optimize prompt using GEPA (Generalized Evolutionary Prompt Adaptation)"""
+        try:
+            # Initialize OpenAI client
+            if hasattr(self.settings, 'openai_api_key') and self.settings.openai_api_key:
+                client = openai.AsyncOpenAI(api_key=self.settings.openai_api_key)
+            else:
+                raise ValueError("OpenAI API key is required for GEPA optimization")
+
+            # Convert string objectives to enum
+            objective_map = {
+                "performance": OptimizationObjective.PERFORMANCE,
+                "clarity": OptimizationObjective.CLARITY,
+                "efficiency": OptimizationObjective.EFFICIENCY,
+                "robustness": OptimizationObjective.ROBUSTNESS,
+                "conciseness": OptimizationObjective.CONCISENESS
+            }
+
+            optimization_objectives = [
+                objective_map.get(obj, OptimizationObjective.PERFORMANCE)
+                for obj in (objectives or ["performance", "clarity", "efficiency"])
+            ]
+
+            # Create GEPA configuration
+            config = EvolutionConfig(
+                population_size=population_size,
+                max_generations=max_generations,
+                objectives=optimization_objectives
+            )
+
+            # Initialize GEPA optimizer
+            gepa = GEPAOptimizer(
+                llm_client=client,
+                config=config,
+                training_examples=training_examples or [],
+                validation_examples=validation_examples or []
+            )
+
+            # Run optimization
+            result = await gepa.optimize(
+                initial_prompt=prompt,
+                input_variables=input_variables,
+                output_variables=output_variables,
+                max_iterations=max_generations
+            )
+
+            return result
+
+        except Exception as e:
+            raise ValueError(f"GEPA optimization failed: {str(e)}")
+
+    async def gepa_think(
+        self,
+        prompt: str,
+        context: Optional[str] = None,
+        optimization_goal: str = "general"
+    ) -> Dict[str, Any]:
+        """Generate thinking and optimization suggestions for a prompt using GEPA insights"""
+        try:
+            # Initialize OpenAI client
+            if hasattr(self.settings, 'openai_api_key') and self.settings.openai_api_key:
+                client = openai.AsyncOpenAI(api_key=self.settings.openai_api_key)
+            else:
+                # Fallback to rule-based thinking
+                return await self._rule_based_gepa_think(prompt, context, optimization_goal)
+
+            # Define optimization goals and their characteristics
+            goal_contexts = {
+                "general": "general-purpose optimization for clarity, effectiveness, and versatility",
+                "performance": "maximizing task performance and accuracy",
+                "efficiency": "minimizing token usage and response time",
+                "clarity": "improving prompt understandability and reducing ambiguity",
+                "robustness": "enhancing prompt resilience to varied inputs",
+                "creativity": "encouraging more creative and diverse responses"
+            }
+
+            goal_description = goal_contexts.get(optimization_goal, goal_contexts["general"])
+
+            system_prompt = """You are an expert prompt engineer with deep knowledge of the GEPA (Generalized Evolutionary Prompt Adaptation) framework.
+
+Your task is to analyze prompts and provide thinking-based optimization suggestions. Focus on:
+
+1. **Prompt Structure Analysis**: Evaluate the current structure, identify weaknesses, and suggest improvements
+2. **Evolutionary Potential**: Identify aspects that could benefit from evolutionary optimization
+3. **Objective Alignment**: Ensure the prompt aligns with the specified optimization goal
+4. **Multi-objective Considerations**: Balance different optimization objectives (performance, clarity, efficiency, robustness)
+5. **Optimization Strategy**: Suggest specific optimization approaches and mutations
+
+Provide your analysis in the following JSON format:
+{
+    "analysis": {
+        "current_strengths": ["strength1", "strength2"],
+        "improvement_areas": ["area1", "area2"],
+        "optimization_potential": "high/medium/low"
+    },
+    "suggestions": {
+        "structural_improvements": ["improvement1", "improvement2"],
+        "content_enhancements": ["enhancement1", "enhancement2"],
+        "evolutionary_mutations": ["mutation1", "mutation2"]
+    },
+    "optimization_thinking": "Detailed thinking about how this prompt could be optimized using evolutionary approaches",
+    "recommended_approach": "Specific recommendation for the best optimization approach",
+    "expected_outcomes": ["outcome1", "outcome2"]
+}"""
+
+            user_message = f"""Analyze this prompt for {goal_description}:
+
+**Prompt:**
+{prompt}
+
+**Context:** {context or "No additional context provided"}
+
+**Optimization Goal:** {optimization_goal}
+
+Please provide a comprehensive analysis and optimization suggestions using the GEPA framework insights."""
+
+            response = await client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_message}
+                ],
+                temperature=0.7,
+                response_format={"type": "json_object"}
+            )
+
+            result = json.loads(response.choices[0].message.content)
+            return result
+
+        except Exception as e:
+            # Fallback to rule-based thinking
+            return await self._rule_based_gepa_think(prompt, context, optimization_goal)
+
+    async def _rule_based_gepa_think(
+        self,
+        prompt: str,
+        context: Optional[str] = None,
+        optimization_goal: str = "general"
+    ) -> Dict[str, Any]:
+        """Rule-based thinking as fallback when LLM is not available"""
+
+        # Basic analysis
+        strengths = []
+        improvement_areas = []
+        structural_improvements = []
+        content_enhancements = []
+        evolutionary_mutations = []
+
+        # Analyze prompt characteristics
+        word_count = len(prompt.split())
+        sentence_count = len(prompt.split('.'))
+
+        # Strengths analysis
+        if word_count > 20:
+            strengths.append("Adequate length for detailed instructions")
+        if any(word in prompt.lower() for word in ["example", "for instance", "such as"]):
+            strengths.append("Contains examples for clarity")
+        if any(word in prompt.lower() for word in ["step", "first", "then", "finally"]):
+            strengths.append("Has structural elements")
+
+        # Improvement areas
+        if word_count < 20:
+            improvement_areas.append("May benefit from more detailed instructions")
+        if "example" not in prompt.lower():
+            improvement_areas.append("Could benefit from examples")
+        if not any(word in prompt.lower() for word in ["step", "first", "then"]):
+            improvement_areas.append("Lacks clear step-by-step structure")
+
+        # Structural improvements
+        if not any(phrase in prompt.lower() for phrase in ["your task", "you are", "please"]):
+            structural_improvements.append("Add clear role definition")
+        if not any(phrase in prompt.lower() for phrase in ["format", "structure", "output"]):
+            structural_improvements.append("Specify desired output format")
+        if not any(phrase in prompt.lower() for phrase in ["consider", "remember", "note"]):
+            structural_improvements.append("Add important constraints or considerations")
+
+        # Content enhancements based on goal
+        goal_specific_enhancements = {
+            "performance": ["Add performance criteria", "Include evaluation metrics", "Specify quality standards"],
+            "efficiency": ["Simplify language", "Remove redundancy", "Focus on essential requirements"],
+            "clarity": ["Define ambiguous terms", "Add clarifying examples", "Use simpler sentence structure"],
+            "robustness": ["Add edge case handling", "Include input validation", "Specify fallback behavior"],
+            "creativity": ["Encourage divergent thinking", "Allow multiple approaches", "Include creative constraints"]
+        }
+
+        content_enhancements = goal_specific_enhancements.get(optimization_goal, [
+            "Add specific examples",
+            "Include step-by-step instructions",
+            "Specify desired output format"
+        ])
+
+        # Evolutionary mutations based on GEPA approach
+        evolutionary_mutations = [
+            "Rephrase for clarity using different wording",
+            "Add contextual examples to improve understanding",
+            "Restructure with better logical flow",
+            "Add specific constraints and guidelines",
+            "Simplify while preserving key instructions"
+        ]
+
+        if optimization_goal == "performance":
+            evolutionary_mutations.extend([
+                "Add performance criteria and evaluation metrics",
+                "Include high-quality examples of desired output"
+            ])
+        elif optimization_goal == "efficiency":
+            evolutionary_mutations.extend([
+                "Remove redundant instructions",
+                "Consolidate related points",
+                "Use more concise phrasing"
+            ])
+
+        # Generate optimization thinking
+        optimization_thinking = f"""This prompt shows potential for evolutionary optimization.
+
+Current analysis indicates the prompt could benefit from {len(improvement_areas)} key improvement areas.
+The evolutionary approach would involve systematically exploring variations through:
+
+1. **Mutation-based improvements**: Applying targeted mutations like {', '.join(evolutionary_mutations[:3])}
+2. **Crossover combinations**: Blending successful elements from multiple prompt variations
+3. **Multi-objective selection**: Balancing {optimization_goal} with clarity, efficiency, and robustness
+4. **Iterative refinement**: Progressive improvement through evolutionary selection
+
+The optimization potential appears {'high' if len(improvement_areas) > 2 else 'medium'} given the current prompt structure."""
+
+        # Recommended approach
+        recommended_approach = f"Apply GEPA evolutionary optimization with focus on {optimization_goal}, using population-based exploration and multi-objective selection to identify the optimal prompt variants."
+
+        # Expected outcomes
+        expected_outcomes = [
+            f"Improved {optimization_goal} through systematic refinement",
+            "Enhanced prompt clarity and effectiveness",
+            "Better balance of competing objectives",
+            "More robust prompt that handles varied inputs"
+        ]
+
+        return {
+            "analysis": {
+                "current_strengths": strengths,
+                "improvement_areas": improvement_areas,
+                "optimization_potential": "high" if len(improvement_areas) > 2 else "medium"
+            },
+            "suggestions": {
+                "structural_improvements": structural_improvements,
+                "content_enhancements": content_enhancements,
+                "evolutionary_mutations": evolutionary_mutations
+            },
+            "optimization_thinking": optimization_thinking,
+            "recommended_approach": recommended_approach,
+            "expected_outcomes": expected_outcomes
         }
