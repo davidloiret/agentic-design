@@ -21,7 +21,7 @@ export class MediaBackupResponseDto {
   @ApiProperty()
   mimeType: string;
 
-  @ApiProperty(() => MediaType)
+  @ApiProperty({ enum: MediaType })
   mediaType: MediaType;
 
   @ApiProperty()
@@ -93,7 +93,7 @@ export class MediaBackupResponseDto {
   @ApiPropertyOptional()
   altitude?: number;
 
-  @ApiProperty(() => MediaStatus)
+  @ApiProperty({ enum: MediaStatus })
   status: MediaStatus;
 
   @ApiPropertyOptional()

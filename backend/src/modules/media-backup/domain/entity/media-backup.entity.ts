@@ -1,21 +1,18 @@
-import { Entity, Property, ManyToOne, Enum, Index } from '@mikro-orm/core';
-import { BaseEntity } from '../../../../modules/shared/base/base.entity';
-import { User } from '../../user/user.entity';
+import { Entity, Property, ManyToOne, Enum, Index, PrimaryKey } from '@mikro-orm/core';
+import { BaseEntity } from '../../../../modules/shared/domain/entity/base.entity';
+import { User } from '../../../user/domain/entity/user.entity';
 import { MediaStatus } from '../enums/media-status.enum';
 import { MediaType } from '../enums/media-type.enum';
 
 @Entity({ tableName: 'media_backups' })
-@Index({ fields: ['userId'] })
-@Index({ fields: ['deviceId'] })
-@Index({ fields: ['status'] })
-@Index({ fields: ['mediaType'] })
-@Index({ fields: ['createdAt'] })
+@Index({ name: 'idx_user_id', properties: ['user'] })
+@Index({ name: 'idx_device_id', properties: ['deviceId'] })
+@Index({ name: 'idx_status', properties: ['status'] })
+@Index({ name: 'idx_media_type', properties: ['mediaType'] })
+@Index({ name: 'idx_created_at', properties: ['createdAt'] })
 export class MediaBackupEntity extends BaseEntity {
   @ManyToOne(() => User, { nullable: false })
   user!: User;
-
-  @Property()
-  userId!: string;
 
   @Property()
   deviceId!: string;

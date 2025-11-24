@@ -19,7 +19,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { FileFieldsInterceptor } from '@nestjs/platform-express/multer';
 import { Response } from 'express';
 import { ApiTags, ApiOperation, ApiResponse, ApiConsumes, ApiParam } from '@nestjs/swagger';
-import { AuthGuard } from '../../../../modules/auth/auth.guard';
+import { AuthGuard } from '../../../../../modules/auth/infrastructure/guard/auth.guard';
 import { MediaBackupService } from '../../../application/usecase/media-backup.service';
 import { CreateMediaBackupDto } from '../../../application/dto/create-media-backup.dto';
 import { MediaBackupResponseDto } from '../../../application/dto/media-backup-response.dto';
@@ -54,7 +54,7 @@ export class MediaBackupController {
   @UseInterceptors(
     FileInterceptor('media', {
       limits: {
-        fileSize: this.MAX_FILE_SIZE,
+        fileSize: 100 * 1024 * 1024, // 100MB
       },
       fileFilter: (req, file, cb) => {
         // Allow common media types
@@ -213,7 +213,7 @@ export class MediaBackupController {
   @UseInterceptors(
     FileInterceptor('chunk', {
       limits: {
-        fileSize: this.CHUNK_SIZE * 2, // Allow some flexibility
+        fileSize: 2 * 1024 * 1024, // 2MB (allow some flexibility)
       }
     })
   )
@@ -341,16 +341,17 @@ export class MediaBackupController {
       const finalFileBuffer = fs.readFileSync(finalPath);
 
       // Create DTO
-      const createMediaBackupDto = {
+      const createMediaBackupDto: CreateMediaBackupDto = {
         deviceId: sessionInfo.deviceId,
         originalName: sessionInfo.fileName,
         fileName: finalFileName,
         mimeType: sessionInfo.mimeType,
         mediaType: sessionInfo.mediaType,
         size: sessionInfo.totalSize,
-        userId: sessionInfo.userId,
         originalCreatedAt: new Date(),
-        originalModifiedAt: new Date()
+        originalModifiedAt: new Date(),
+        checksumMd5: '', // Will be calculated in service
+        checksumSha256: '' // Will be calculated in service
       };
 
       // Process with existing service
@@ -464,7 +465,7 @@ export class MediaBackupController {
   async getMedia(
     @Request() req,
     @Param('id') id: string
-  ): Promise<{ media: MediaBackupResponseDto }> {
+  ): Promise<{ success: boolean; media?: MediaBackupResponseDto; error?: string }> {
     try {
       const media = await this.mediaBackupService.getMedia(id, req.user.id);
       if (!media) {
@@ -519,7 +520,7 @@ export class MediaBackupController {
   private mapToResponseDto(media: any): MediaBackupResponseDto {
     return {
       id: media.id,
-      userId: media.userId,
+      userId: media.user?.id,
       deviceId: media.deviceId,
       originalName: media.originalName,
       fileName: media.fileName,

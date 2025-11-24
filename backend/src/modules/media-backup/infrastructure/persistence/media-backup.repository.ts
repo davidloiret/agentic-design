@@ -1,29 +1,27 @@
 import { Injectable } from '@nestjs/common';
-import { EntityManager, EntityRepository } from '@mikro-orm/core';
+import { EntityManager, Reference } from '@mikro-orm/core';
 import { MediaBackupEntity } from '../../domain/entity/media-backup.entity';
 import { MediaStatus } from '../../domain/enums/media-status.enum';
 import { MediaType } from '../../domain/enums/media-type.enum';
+import { User } from '../../../user/domain/entity/user.entity';
 
 @Injectable()
-export class MediaBackupRepository extends EntityRepository<MediaBackupEntity> {
-  constructor(private readonly em: EntityManager) {
-    super(em, MediaBackupEntity);
-  }
+export class MediaBackupRepository {
+  constructor(private readonly em: EntityManager) {}
 
-  async create(mediaData: Partial<MediaBackupEntity>): Promise<MediaBackupEntity> {
-    const media = this.create(mediaData);
+  async createMedia(mediaData: Partial<MediaBackupEntity>): Promise<MediaBackupEntity> {
+    const media = this.em.create(MediaBackupEntity, mediaData);
     await this.em.persistAndFlush(media);
     return media;
   }
 
   async findById(id: string, userId?: string): Promise<MediaBackupEntity | null> {
-    const qb = this.createQueryBuilder('m').where({ id });
-
+    const where: any = { id };
     if (userId) {
-      qb.andWhere({ userId });
+      where.user = { id: userId };
     }
 
-    return qb.getSingleResult();
+    return this.em.findOne(MediaBackupEntity, where);
   }
 
   async findByUserId(
@@ -46,29 +44,35 @@ export class MediaBackupRepository extends EntityRepository<MediaBackupEntity> {
       tags
     } = options;
 
-    const qb = this.createQueryBuilder('m')
-      .where({ userId })
-      .orderBy({ createdAt: 'DESC' })
-      .limit(limit)
-      .offset(offset);
+    const where: any = { user: { id: userId } };
 
     if (mediaType) {
-      qb.andWhere({ mediaType });
+      where.mediaType = mediaType;
     }
 
     if (status) {
-      qb.andWhere({ status });
+      where.status = status;
     }
 
     if (albumId) {
-      qb.andWhere({ albumId });
+      where.albumId = albumId;
     }
 
     if (tags && tags.length > 0) {
-      qb.andWhere({ $ overlaps: { tags } });
+      where.tags = { $contains: tags };
     }
 
-    return qb.getResultAndCount();
+    const [media, total] = await this.em.findAndCount(
+      MediaBackupEntity,
+      where,
+      {
+        orderBy: { createdAt: 'DESC' },
+        limit,
+        offset
+      }
+    );
+
+    return [media, total];
   }
 
   async findByDeviceId(
@@ -82,17 +86,21 @@ export class MediaBackupRepository extends EntityRepository<MediaBackupEntity> {
   ): Promise<[MediaBackupEntity[], number]> {
     const { limit = 50, offset = 0, status } = options;
 
-    const qb = this.createQueryBuilder('m')
-      .where({ deviceId, userId })
-      .orderBy({ createdAt: 'DESC' })
-      .limit(limit)
-      .offset(offset);
+    const where: any = { deviceId, user: { id: userId } };
 
     if (status) {
-      qb.andWhere({ status });
+      where.status = status;
     }
 
-    return qb.getResultAndCount();
+    return this.em.findAndCount(
+      MediaBackupEntity,
+      where,
+      {
+        orderBy: { createdAt: 'DESC' },
+        limit,
+        offset
+      }
+    );
   }
 
   async findByChecksum(
@@ -100,20 +108,18 @@ export class MediaBackupRepository extends EntityRepository<MediaBackupEntity> {
     checksumSha256: string,
     userId?: string
   ): Promise<MediaBackupEntity | null> {
-    const qb = this.createQueryBuilder('m')
-      .where({ checksumMd5, checksumSha256 });
+    const where: any = { checksumMd5, checksumSha256 };
 
     if (userId) {
-      qb.andWhere({ userId });
+      where.user = { id: userId };
     }
 
-    return qb.getSingleResult();
+    return this.em.findOne(MediaBackupEntity, where);
   }
 
   async updateStatus(id: string, status: MediaStatus, errorMessage?: string): Promise<void> {
     const updateData: Partial<MediaBackupEntity> = {
-      status,
-      updatedAt: new Date()
+      status
     };
 
     if (status === MediaStatus.PROCESSING) {
@@ -126,7 +132,7 @@ export class MediaBackupRepository extends EntityRepository<MediaBackupEntity> {
       updateData.errorMessage = errorMessage;
     }
 
-    await this.nativeUpdate({ id }, updateData);
+    await this.em.nativeUpdate(MediaBackupEntity, { id }, updateData);
   }
 
   async updateUrls(
@@ -137,28 +143,26 @@ export class MediaBackupRepository extends EntityRepository<MediaBackupEntity> {
       previewUrl?: string;
     }
   ): Promise<void> {
-    await this.nativeUpdate(
+    await this.em.nativeUpdate(
+      MediaBackupEntity,
       { id },
-      {
-        ...urls,
-        updatedAt: new Date()
-      }
+      urls
     );
   }
 
   async markAsDeletedFromDevice(id: string): Promise<void> {
-    await this.nativeUpdate(
+    await this.em.nativeUpdate(
+      MediaBackupEntity,
       { id },
       {
         deletedFromDevice: true,
-        deletedFromDeviceAt: new Date(),
-        updatedAt: new Date()
+        deletedFromDeviceAt: new Date()
       }
     );
   }
 
   async delete(id: string, userId: string): Promise<void> {
-    await this.nativeDelete({ id, userId });
+    await this.em.nativeDelete(MediaBackupEntity, { id, user: { id: userId } });
   }
 
   async getStatsByUserId(userId: string): Promise<{
@@ -167,20 +171,11 @@ export class MediaBackupRepository extends EntityRepository<MediaBackupEntity> {
     byType: Record<MediaType, { count: number; size: number }>;
     byStatus: Record<MediaStatus, number>;
   }> {
-    const qb = this.createQueryBuilder('m')
-      .select([
-        'COUNT(*) as totalCount',
-        'SUM(m.size) as totalSize',
-        'm.mediaType as mediaType',
-        'm.status as status'
-      ])
-      .where({ userId })
-      .groupBy(['m.mediaType', 'm.status']);
-
-    const results = await qb.execute();
+    // For now, return basic stats using find
+    const media = await this.em.find(MediaBackupEntity, { user: { id: userId } });
 
     const stats = {
-      totalCount: 0,
+      totalCount: media.length,
       totalSize: 0,
       byType: {} as Record<MediaType, { count: number; size: number }>,
       byStatus: {} as Record<MediaStatus, number>
@@ -194,52 +189,38 @@ export class MediaBackupRepository extends EntityRepository<MediaBackupEntity> {
       stats.byStatus[status] = 0;
     }
 
-    results.forEach(result => {
-      const mediaType = result.mediaType as MediaType;
-      const status = result.status as MediaStatus;
-      const count = parseInt(result.totalCount);
-      const size = parseInt(result.totalSize);
-
-      stats.totalCount += count;
-      stats.totalSize += size;
-
-      if (stats.byType[mediaType]) {
-        stats.byType[mediaType].count += count;
-        stats.byType[mediaType].size += size;
-      }
-
-      stats.byStatus[status] = (stats.byStatus[status] || 0) + count;
+    media.forEach(item => {
+      stats.totalSize += item.size;
+      stats.byType[item.mediaType].count++;
+      stats.byType[item.mediaType].size += item.size;
+      stats.byStatus[item.status]++;
     });
 
     return stats;
   }
 
   async findDuplicates(userId: string): Promise<MediaBackupEntity[]> {
-    // Find media files with same checksums (potential duplicates)
-    const qb = this.createQueryBuilder('m')
-      .where({ userId })
-      .groupBy(['m.checksumMd5', 'm.checksumSha256'])
-      .having('COUNT(*) > 1');
+    // Simple implementation - find all media for the user and check for duplicates
+    const media = await this.em.find(MediaBackupEntity, { user: { id: userId } });
+    const checksumMap = new Map<string, MediaBackupEntity[]>();
 
-    const duplicates = await qb.execute();
-    const duplicateIds: string[] = [];
-
-    duplicates.forEach(duplicate => {
-      // Find all files with these checksums
-      const duplicateQb = this.createQueryBuilder('m')
-        .where({
-          userId,
-          checksumMd5: duplicate.checksumMd5,
-          checksumSha256: duplicate.checksumSha256
-        });
-
-      duplicateIds.push(...duplicateQb.select(['m.id']).execute().map(r => r.id));
+    // Group by checksum
+    media.forEach(item => {
+      const key = `${item.checksumMd5}-${item.checksumSha256}`;
+      if (!checksumMap.has(key)) {
+        checksumMap.set(key, []);
+      }
+      checksumMap.get(key)!.push(item);
     });
 
-    if (duplicateIds.length === 0) {
-      return [];
-    }
+    // Return only groups with more than 1 item
+    const duplicates: MediaBackupEntity[] = [];
+    checksumMap.forEach(items => {
+      if (items.length > 1) {
+        duplicates.push(...items);
+      }
+    });
 
-    return this.find({ id: { $in: duplicateIds } });
+    return duplicates;
   }
 }

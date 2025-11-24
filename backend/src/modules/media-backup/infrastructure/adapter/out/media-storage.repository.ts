@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import * as crypto from 'crypto';
-import * as sharp from 'sharp';
+import sharp from 'sharp';
 import { MediaMetadata, MediaProcessingOptions } from '../../../domain/types/media.types';
 import { MediaType } from '../../../domain/enums/media-type.enum';
 

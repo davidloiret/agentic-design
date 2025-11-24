@@ -26,6 +26,8 @@ export interface MediaMetadata {
   // Common metadata
   createdAt: Date;
   modifiedAt: Date;
+  originalCreatedAt: Date;
+  originalModifiedAt: Date;
   exifData?: ExifData;
   checksum: {
     md5: string;

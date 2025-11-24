@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { EntityManager } from '@mikro-orm/core';
+import { EntityManager, Reference } from '@mikro-orm/core';
 import { MediaBackupRepository } from '../../infrastructure/persistence/media-backup.repository';
 import { MediaStorageRepository } from '../../infrastructure/adapter/out/media-storage.repository';
 import { MediaMetadata, MediaBackupRequest, MediaBackupResult } from '../../domain/types/media.types';
 import { MediaStatus } from '../../domain/enums/media-status.enum';
 import { MediaBackupEntity } from '../../domain/entity/media-backup.entity';
+import { User } from '../../../user/domain/entity/user.entity';
 import { CreateMediaBackupDto } from '../dto/create-media-backup.dto';
 import { getMediaTypeFromMimeType } from '../../domain/enums/media-type.enum';
 
@@ -64,8 +65,8 @@ export class MediaBackupService {
 
     try {
       // Create media entity first
-      const mediaEntity = await this.mediaBackupRepository.create({
-        userId,
+      const mediaEntity = await this.mediaBackupRepository.createMedia({
+        user: userId as any,
         deviceId: dto.deviceId,
         originalName: dto.originalName,
         fileName: dto.fileName,
