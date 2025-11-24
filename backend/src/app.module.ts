@@ -23,6 +23,7 @@ import { VcfPanicButtonModule } from './modules/vcf/vcf-panic-button/vcf-panic-b
 import { VcfNotificationsModule } from './modules/vcf/vcf-notifications/vcf-notifications.module';
 import { VcfFilesModule } from './modules/vcf/vcf-files/vcf-files.module';
 import { VcfPaymentsModule } from './modules/vcf/vcf-payments/vcf-payments.module';
+import { MediaBackupModule } from './modules/media-backup/media-backup.module';
 import mikroOrmConfig from './mikro-orm.config';
 
 @Module({
@@ -52,6 +53,7 @@ import mikroOrmConfig from './mikro-orm.config';
     VcfNotificationsModule,
     VcfFilesModule,
     VcfPaymentsModule,
+    MediaBackupModule,
   ],
   controllers: [AppController, HealthController],
 })
