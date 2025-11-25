@@ -29,7 +29,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 @ApiTags('Media Backup')
-@Controller('api/v1/media-backup')
+@Controller('media-backup')
 @UseGuards(AuthGuard)
 export class MediaBackupController {
   private readonly UPLOAD_DIR = './uploads/media';
