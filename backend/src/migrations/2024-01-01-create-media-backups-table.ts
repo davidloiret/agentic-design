@@ -8,7 +8,7 @@ export class Migration20240101CreateMediaBackupsTable extends Migration {
         "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         "created_at" TIMESTAMP(3) NOT NULL DEFAULT now(),
         "updated_at" TIMESTAMP(3) NOT NULL DEFAULT now(),
-        "user_id" UUID NOT NULL,
+        "user_id" VARCHAR(255) NOT NULL,
         "device_id" VARCHAR(255) NOT NULL,
         "original_name" VARCHAR(500) NOT NULL,
         "file_name" VARCHAR(500) NOT NULL,
