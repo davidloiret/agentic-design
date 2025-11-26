@@ -1,18 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { EntityManager, Reference } from '@mikro-orm/core';
 import { MediaBackupRepository } from '../../infrastructure/persistence/media-backup.repository';
 import { MediaStorageRepository } from '../../infrastructure/adapter/out/media-storage.repository';
-import { MediaMetadata, MediaBackupRequest, MediaBackupResult } from '../../domain/types/media.types';
+import { MediaMetadata, MediaBackupResult } from '../../domain/types/media.types';
 import { MediaStatus } from '../../domain/enums/media-status.enum';
 import { MediaBackupEntity } from '../../domain/entity/media-backup.entity';
-import { User } from '../../../user/domain/entity/user.entity';
 import { CreateMediaBackupDto } from '../dto/create-media-backup.dto';
-import { getMediaTypeFromMimeType } from '../../domain/enums/media-type.enum';
 
 @Injectable()
 export class MediaBackupService {
   constructor(
-    private readonly em: EntityManager,
     private readonly mediaBackupRepository: MediaBackupRepository,
     private readonly mediaStorageRepository: MediaStorageRepository
   ) {}
@@ -64,7 +60,20 @@ export class MediaBackupService {
     }
 
     try {
-      // Create media entity first
+      // Step 1: Save media file to storage first
+      // This ensures we have the storageKey before creating the database record
+      const storageResult = await this.mediaStorageRepository.saveMedia(
+        userId,
+        dto.originalName,
+        mediaData,
+        mediaMetadata
+      );
+
+      if (!storageResult.storageKey) {
+        throw new Error('Storage operation did not return a valid storage key');
+      }
+
+      // Step 2: Create media entity with all data including storageKey
       const mediaEntity = await this.mediaBackupRepository.createMedia({
         user: userId as any,
         deviceId: dto.deviceId,
@@ -73,8 +82,8 @@ export class MediaBackupService {
         mimeType: dto.mimeType,
         mediaType: dto.mediaType,
         size: dto.size,
-        width: dto.width,
-        height: dto.height,
+        width: storageResult.processedMetadata?.width || dto.width,
+        height: storageResult.processedMetadata?.height || dto.height,
         duration: dto.duration,
         fps: dto.fps,
         bitrate: dto.bitrate,
@@ -90,40 +99,27 @@ export class MediaBackupService {
         gpsLatitude: dto.gpsLatitude,
         gpsLongitude: dto.gpsLongitude,
         altitude: dto.altitude,
-        status: MediaStatus.UPLOADING,
+        status: MediaStatus.PROCESSING,
+        processingStartedAt: new Date(),
         deletedFromDevice: false,
         albumId: dto.albumId,
         tags: dto.tags,
-        metadata: dto.metadata
-      });
-
-      // Save media file to storage
-      const storageResult = await this.mediaStorageRepository.saveMedia(
-        userId,
-        mediaEntity.id,
-        mediaData,
-        mediaMetadata
-      );
-
-      // Update entity with storage information
-      await this.em.nativeUpdate(MediaBackupEntity, mediaEntity.id, {
+        metadata: dto.metadata,
         storageKey: storageResult.storageKey,
         thumbnailUrl: storageResult.thumbnailUrl,
-        previewUrl: storageResult.previewUrl,
-        width: storageResult.processedMetadata.width,
-        height: storageResult.processedMetadata.height,
-        status: MediaStatus.PROCESSING,
-        processingStartedAt: new Date()
+        previewUrl: storageResult.previewUrl
       });
 
-      // Start background processing
-      await this.processMediaInBackground(mediaEntity.id, userId);
+      // Step 3: Start background processing (integrity check, etc.)
+      this.processMediaInBackground(mediaEntity.id, userId).catch(err => {
+        console.error(`Background processing failed for media ${mediaEntity.id}:`, err);
+      });
 
       return {
         success: true,
         mediaId: mediaEntity.id,
         storageKey: storageResult.storageKey,
-        cdnUrl: storageResult.storageKey, // TODO: Implement CDN URL generation
+        cdnUrl: storageResult.storageKey,
         thumbnailUrl: storageResult.thumbnailUrl,
         previewUrl: storageResult.previewUrl
       };
