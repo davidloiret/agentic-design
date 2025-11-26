@@ -106,26 +106,58 @@ export class MediaBackupController {
     }
 
     try {
-      // Validate DTO
-      if (!createMediaBackupDto.deviceId) {
-        createMediaBackupDto.deviceId = req.user.id;
+      // If client sent metadata as JSON string, parse and merge it
+      let parsedMetadata: any = {};
+      if ((createMediaBackupDto as any).metadata && typeof (createMediaBackupDto as any).metadata === 'string') {
+        try {
+          parsedMetadata = JSON.parse((createMediaBackupDto as any).metadata);
+        } catch (e) {
+          console.warn('Failed to parse metadata JSON:', e);
+        }
+      } else if ((createMediaBackupDto as any).metadata && typeof (createMediaBackupDto as any).metadata === 'object') {
+        parsedMetadata = (createMediaBackupDto as any).metadata;
       }
 
-      // Add file metadata to DTO
-      const dtoWithFileData = {
+      // Merge parsed metadata with DTO, prioritizing explicit DTO values
+      const mergedDto = {
+        ...parsedMetadata,
         ...createMediaBackupDto,
-        fileName: mediaFile.filename,
-        originalName: mediaFile.originalname,
-        mimeType: mediaFile.mimetype,
-        size: mediaFile.size,
-        userId: req.user.id
+        // Ensure these come from file if not provided
+        fileName: createMediaBackupDto.fileName || mediaFile.filename || mediaFile.originalname,
+        originalName: createMediaBackupDto.originalName || parsedMetadata.originalName || mediaFile.originalname,
+        mimeType: createMediaBackupDto.mimeType || parsedMetadata.mimeType || mediaFile.mimetype,
+        size: createMediaBackupDto.size || parsedMetadata.size || mediaFile.size,
+        // Set defaults
+        deviceId: createMediaBackupDto.deviceId || parsedMetadata.deviceId || req.user.id,
+        userId: req.user.id,
+        // Ensure numeric values are numbers
+        width: Number(createMediaBackupDto.width || parsedMetadata.width) || undefined,
+        height: Number(createMediaBackupDto.height || parsedMetadata.height) || undefined,
+        duration: Number(createMediaBackupDto.duration || parsedMetadata.duration) || undefined,
+        // Ensure boolean values are booleans
+        shouldDeleteOriginal: createMediaBackupDto.shouldDeleteOriginal === true || parsedMetadata.shouldDeleteOriginal === true,
       };
+
+      // Clean undefined values
+      Object.keys(mergedDto).forEach(key => {
+        if (mergedDto[key] === undefined || mergedDto[key] === null || Number.isNaN(mergedDto[key])) {
+          delete mergedDto[key];
+        }
+      });
+
+      console.log('Processing upload with merged DTO:', {
+        originalName: mergedDto.originalName,
+        mimeType: mergedDto.mimeType,
+        size: mergedDto.size,
+        width: mergedDto.width,
+        height: mergedDto.height,
+      });
 
       // Process upload
       const result = await this.mediaBackupService.backupMedia(
         req.user.id,
         mediaFile.buffer,
-        dtoWithFileData
+        mergedDto
       );
 
       // Clean up buffer to free memory
