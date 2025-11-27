@@ -166,6 +166,11 @@ export class MediaBackupController {
       return {
         success: true,
         message: 'Media uploaded successfully',
+        mediaId: result.mediaId,
+        storageKey: result.storageKey,
+        cdnUrl: result.cdnUrl,
+        thumbnailUrl: result.thumbnailUrl,
+        previewUrl: result.previewUrl,
         data: result
       };
     } catch (error) {
@@ -399,6 +404,11 @@ export class MediaBackupController {
       return {
         success: true,
         message: 'Upload completed successfully',
+        mediaId: result.mediaId,
+        storageKey: result.storageKey,
+        cdnUrl: result.cdnUrl,
+        thumbnailUrl: result.thumbnailUrl,
+        previewUrl: result.previewUrl,
         data: result
       };
     } catch (error) {

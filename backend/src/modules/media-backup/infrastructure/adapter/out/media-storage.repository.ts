@@ -46,14 +46,40 @@ export class MediaStorageRepository {
     const userDir = path.join(this.uploadDir, userId);
     await fs.mkdir(userDir, { recursive: true });
 
-    // Generate unique filename
+    // Generate unique filename - preserve original extension from filename if available
     const timestamp = Date.now();
-    const extension = this.getFileExtension(metadata.mimeType);
+    const originalName = metadata.originalName || '';
+    const originalExt = path.extname(originalName).toLowerCase().replace('.', '');
+    // Use original file extension if available, otherwise derive from mime type
+    const extension = originalExt || this.getFileExtension(metadata.mimeType);
     const filename = `${timestamp}_${mediaId}.${extension}`;
     const storageKey = `${userId}/${filename}`;
     const filePath = path.join(userDir, filename);
 
-    // Calculate checksums
+    // Check if this is a HEIC/HEIF file - we'll convert it ONLY for thumbnail generation
+    const isHeicFile = originalName.toLowerCase().endsWith('.heic') || originalName.toLowerCase().endsWith('.heif');
+    const isHeicMime = metadata.mimeType === 'image/heic' || metadata.mimeType === 'image/heif';
+    const isHeic = isHeicFile || isHeicMime;
+
+    // Keep the original buffer for saving the file as-is
+    // Only create a converted buffer for thumbnail generation if needed
+    let processBuffer = buffer;
+    if (isHeic) {
+      try {
+        console.log(`Processing HEIC file for thumbnails: ${originalName}, mimeType: ${metadata.mimeType}`);
+        // Convert HEIC to JPEG ONLY for processing (thumbnails/metadata)
+        processBuffer = await sharp(Buffer.from(buffer))
+          .jpeg({ quality: 95 })
+          .toBuffer();
+        console.log('HEIC thumbnail conversion successful');
+      } catch (error) {
+        console.error('Error converting HEIC for thumbnail generation:', error);
+        // If conversion fails, try to process as is
+        processBuffer = Buffer.from(buffer);
+      }
+    }
+
+    // Calculate checksums of original buffer
     const checksumMd5 = crypto.createHash('md5').update(buffer).digest('hex');
     const checksumSha256 = crypto.createHash('sha256').update(buffer).digest('hex');
 
@@ -73,17 +99,40 @@ export class MediaStorageRepository {
 
     // Process media based on type
     if (metadata.mediaType === MediaType.IMAGE) {
-      const imageInfo = await sharp(buffer).metadata();
-      processedMetadata.width = imageInfo.width;
-      processedMetadata.height = imageInfo.height;
+      try {
+        // Create a new buffer instance for metadata extraction
+        const metadataBuffer = Buffer.from(processBuffer);
+        const imageInfo = await sharp(metadataBuffer).metadata();
+        processedMetadata.width = imageInfo.width;
+        processedMetadata.height = imageInfo.height;
 
-      if (options.generateThumbnails) {
-        thumbnailUrl = await this.generateImageThumbnail(
-          buffer,
-          userId,
-          mediaId,
-          options
-        );
+        if (options.generateThumbnails) {
+          thumbnailUrl = await this.generateImageThumbnail(
+            processBuffer,
+            userId,
+            mediaId,
+            options
+          );
+        }
+      } catch (error) {
+        console.error('Error processing image metadata:', error);
+        // Set default values if metadata extraction fails
+        processedMetadata.width = metadata.width || 0;
+        processedMetadata.height = metadata.height || 0;
+
+        // Still try to generate thumbnail even if metadata fails
+        if (options.generateThumbnails) {
+          try {
+            thumbnailUrl = await this.generateImageThumbnail(
+              processBuffer,
+              userId,
+              mediaId,
+              options
+            );
+          } catch (thumbError) {
+            console.error('Error generating thumbnail after metadata failure:', thumbError);
+          }
+        }
       }
     } else if (metadata.mediaType === MediaType.VIDEO) {
       if (options.generateThumbnails) {
@@ -163,10 +212,27 @@ export class MediaStorageRepository {
       };
     }
 
-    await sharp(buffer)
-      .resize(resizeOptions)
-      .jpeg({ quality: options.compressionLevel || 80 })
-      .toFile(thumbnailPath);
+    try {
+      // Create a new buffer instance to avoid seek issues
+      const thumbnailBuffer = Buffer.from(buffer);
+      await sharp(thumbnailBuffer)
+        .resize(resizeOptions)
+        .jpeg({ quality: options.compressionLevel || 80 })
+        .toFile(thumbnailPath);
+    } catch (error) {
+      console.error('Error generating thumbnail:', error);
+      // Create a fallback placeholder thumbnail if processing fails
+      await sharp({
+        create: {
+          width: resizeOptions.width || 300,
+          height: resizeOptions.height || 300,
+          channels: 4,
+          background: { r: 128, g: 128, b: 128, alpha: 1 }
+        }
+      })
+        .jpeg({ quality: 80 })
+        .toFile(thumbnailPath);
+    }
 
     return `${userId}/${mediaId}_thumb.jpg`;
   }

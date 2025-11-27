@@ -5,6 +5,7 @@ import { MediaMetadata, MediaBackupResult } from '../../domain/types/media.types
 import { MediaStatus } from '../../domain/enums/media-status.enum';
 import { MediaBackupEntity } from '../../domain/entity/media-backup.entity';
 import { CreateMediaBackupDto } from '../dto/create-media-backup.dto';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class MediaBackupService {
@@ -60,11 +61,14 @@ export class MediaBackupService {
     }
 
     try {
+      // Generate a unique media ID for storage
+      const mediaId = randomUUID();
+
       // Step 1: Save media file to storage first
       // This ensures we have the storageKey before creating the database record
       const storageResult = await this.mediaStorageRepository.saveMedia(
         userId,
-        dto.originalName,
+        mediaId,
         mediaData,
         mediaMetadata
       );

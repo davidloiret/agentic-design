@@ -2,8 +2,12 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Install dependencies for development
-RUN apk add --no-cache python3 make g++
+# Install dependencies for development and HEIC/HEIF support
+RUN apk add --no-cache python3 make g++ \
+    libheif-dev \
+    libde265-dev \
+    aom-dev \
+    libavif-dev
 
 # Copy package files first for better caching
 COPY package*.json ./
@@ -12,6 +16,9 @@ COPY package-lock.json* ./
 # Install all dependencies (including devDependencies)
 # Use npm ci for faster, more reliable builds
 RUN npm ci
+
+# Rebuild Sharp with HEIC/HEIF support
+RUN npm rebuild sharp --build-from-source --sharp-libheif
 
 # Copy only necessary files, excluding node_modules
 COPY tsconfig*.json ./
