@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { MediaBackupController } from './infrastructure/adapter/in/media-backup.controller';
+import { TusController } from './infrastructure/adapter/in/tus.controller';
 import { MediaBackupService } from './application/usecase/media-backup.service';
 import { MediaBackupRepository } from './infrastructure/persistence/media-backup.repository';
 import { MediaStorageRepository } from './infrastructure/adapter/out/media-storage.repository';
@@ -14,7 +15,7 @@ import { UserModule } from '../user/user.module';
     MikroOrmModule.forFeature([MediaBackupEntity]),
     UserModule
   ],
-  controllers: [MediaBackupController],
+  controllers: [MediaBackupController, TusController],
   providers: [
     MediaBackupService,
     MediaBackupRepository,
