@@ -133,12 +133,13 @@ show_help() {
     echo "  shell [service]    - Enter shell in service container"
     echo ""
     echo "Services:"
-    echo "  frontend    - Next.js frontend (port 3002)"
-    echo "  backend     - Node.js backend (port 3001)"
-    echo "  nginx       - Nginx reverse proxy (ports 80/443)"
-    echo "  codesandbox - CodeSandbox environment (requires sudo for Firecracker/KVM)"
-    echo "  plausible   - Plausible Analytics (port 8000)"
-    echo "  all         - All services (default if no service specified)"
+    echo "  frontend       - Next.js frontend (port 3002)"
+    echo "  backend        - Node.js backend (port 3001)"
+    echo "  nginx          - Nginx reverse proxy (ports 80/443)"
+    echo "  reasoninglayer - ReasoningLayer.ai dashboard (port 3003)"
+    echo "  codesandbox    - CodeSandbox environment (requires sudo for Firecracker/KVM)"
+    echo "  plausible      - Plausible Analytics (port 8000)"
+    echo "  all            - All services (default if no service specified)"
     echo ""
     echo "Examples:"
     echo "  ./manage.sh up frontend              # Start only frontend"
@@ -150,6 +151,8 @@ show_help() {
     echo "  ./manage.sh stop codesandbox         # Stop CodeSandbox service"
     echo "  ./manage.sh up plausible             # Start Plausible Analytics"
     echo "  ./manage.sh setup plausible          # Setup and configure Plausible"
+    echo "  ./manage.sh up reasoninglayer        # Start ReasoningLayer dashboard"
+    echo "  ./manage.sh rebuild reasoninglayer   # Rebuild ReasoningLayer (pulls latest code)"
     echo "  ./manage.sh shell frontend           # Enter shell in frontend container"
     echo "  ./manage.sh shell backend            # Enter shell in backend container"
 }
@@ -374,9 +377,13 @@ case "$1" in
                 echo "🔧 Entering shell in backend container..."
                 docker compose -f $COMPOSE_FILE exec backend /bin/sh
                 ;;
+            reasoninglayer)
+                echo "🔧 Entering shell in reasoninglayer container..."
+                docker compose -f $COMPOSE_FILE exec reasoninglayer /bin/sh
+                ;;
             *)
                 echo "❌ Invalid service: $2"
-                echo "Available services for shell: frontend, backend"
+                echo "Available services for shell: frontend, backend, reasoninglayer"
                 exit 1
                 ;;
         esac
@@ -426,9 +433,40 @@ case "$1" in
                 echo "🔗 Your frontend is already configured to use this instance"
                 echo "🛡️  Don't forget to generate SSL certificates with: ./init-letsencrypt.sh"
                 ;;
+            reasoninglayer)
+                echo "🚀 Setting up ReasoningLayer.ai Dashboard..."
+
+                # Build the container (this clones the repo and builds)
+                run_with_timing "Building ReasoningLayer container" docker compose -f $COMPOSE_FILE build reasoninglayer
+
+                # Start the service
+                run_with_timing "Starting ReasoningLayer service" docker compose -f $COMPOSE_FILE up -d reasoninglayer
+
+                # Wait for it to be ready
+                echo "⏳ Waiting for ReasoningLayer to be ready..."
+                for i in {1..30}; do
+                    if curl -f http://localhost:3003/health >/dev/null 2>&1; then
+                        echo "✅ ReasoningLayer is ready!"
+                        break
+                    fi
+                    echo "⏳ Waiting for ReasoningLayer... ($i/30)"
+                    sleep 2
+                done
+
+                echo ""
+                echo "✅ ReasoningLayer.ai setup complete!"
+                echo "📊 Access the dashboard at: https://reasoninglayer.ai"
+                echo ""
+                echo "⚠️  Important Steps:"
+                echo "   1. Ensure DNS is configured for reasoninglayer.ai and www.reasoninglayer.ai"
+                echo "   2. Generate SSL certificates: ./init-letsencrypt.sh"
+                echo "   3. Restart nginx after SSL setup: ./manage.sh restart nginx"
+                echo ""
+                echo "🔄 To update with latest code: ./manage.sh force-rebuild reasoninglayer"
+                ;;
             *)
                 echo "❌ Setup not available for service: $2"
-                echo "Available setup commands: plausible"
+                echo "Available setup commands: plausible, reasoninglayer"
                 exit 1
                 ;;
         esac

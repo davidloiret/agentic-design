@@ -24,6 +24,7 @@ import { VcfNotificationsModule } from './modules/vcf/vcf-notifications/vcf-noti
 import { VcfFilesModule } from './modules/vcf/vcf-files/vcf-files.module';
 import { VcfPaymentsModule } from './modules/vcf/vcf-payments/vcf-payments.module';
 import { MediaBackupModule } from './modules/media-backup/media-backup.module';
+import { WaitlistModule } from './modules/waitlist/waitlist.module';
 import mikroOrmConfig from './mikro-orm.config';
 
 @Module({
@@ -54,6 +55,7 @@ import mikroOrmConfig from './mikro-orm.config';
     VcfFilesModule,
     VcfPaymentsModule,
     MediaBackupModule,
+    WaitlistModule,
   ],
   controllers: [AppController, HealthController],
 })

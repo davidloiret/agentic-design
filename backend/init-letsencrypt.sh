@@ -8,6 +8,7 @@ FRONTEND_DOMAIN="agentic-design.ai"
 BACKEND_DOMAIN="backend.agentic-design.ai"
 PLAUSIBLE_DOMAIN="plausible.agentic-design.ai"
 HIGHLIGHT_DOMAIN="highlight.agentic-design.ai"
+REASONINGLAYER_DOMAIN="reasoninglayer.ai"
 RSA_KEY_SIZE=4096
 DEFAULT_EMAIL="contact@agentic-design.ai"
 EMAIL="${SSL_EMAIL:-$DEFAULT_EMAIL}"
@@ -24,10 +25,11 @@ if [ -f "$SCRIPT_DIR/.env.prod" ]; then
 fi
 
 echo "🔒 Initializing Let's Encrypt for domains:"
-echo "   Frontend:   $FRONTEND_DOMAIN (+ www.$FRONTEND_DOMAIN)"
-echo "   Backend:    $BACKEND_DOMAIN"
-echo "   Plausible:  $PLAUSIBLE_DOMAIN"
-echo "   Highlight:  $HIGHLIGHT_DOMAIN"
+echo "   Frontend:        $FRONTEND_DOMAIN (+ www.$FRONTEND_DOMAIN)"
+echo "   Backend:         $BACKEND_DOMAIN"
+echo "   Plausible:       $PLAUSIBLE_DOMAIN"
+echo "   Highlight:       $HIGHLIGHT_DOMAIN"
+echo "   ReasoningLayer:  $REASONINGLAYER_DOMAIN (+ www.$REASONINGLAYER_DOMAIN)"
 
 # ─── Prepare directories ────────────────────────────────────────────────────────
 mkdir -p \
@@ -41,6 +43,7 @@ FRONTEND_CERT_EXISTS=false
 BACKEND_CERT_EXISTS=false
 PLAUSIBLE_CERT_EXISTS=false
 HIGHLIGHT_CERT_EXISTS=false
+REASONINGLAYER_CERT_EXISTS=false
 
 if [ -d "$CERTBOT_DIR/conf/live/$FRONTEND_DOMAIN" ]; then
   FRONTEND_CERT_EXISTS=true
@@ -62,7 +65,12 @@ if [ -d "$CERTBOT_DIR/conf/live/$HIGHLIGHT_DOMAIN" ]; then
   echo "⚠️  Certificates for $HIGHLIGHT_DOMAIN already exist!"
 fi
 
-if [ "$FRONTEND_CERT_EXISTS" = true ] || [ "$BACKEND_CERT_EXISTS" = true ] || [ "$PLAUSIBLE_CERT_EXISTS" = true ] || [ "$HIGHLIGHT_CERT_EXISTS" = true ]; then
+if [ -d "$CERTBOT_DIR/conf/live/$REASONINGLAYER_DOMAIN" ]; then
+  REASONINGLAYER_CERT_EXISTS=true
+  echo "⚠️  Certificates for $REASONINGLAYER_DOMAIN already exist!"
+fi
+
+if [ "$FRONTEND_CERT_EXISTS" = true ] || [ "$BACKEND_CERT_EXISTS" = true ] || [ "$PLAUSIBLE_CERT_EXISTS" = true ] || [ "$HIGHLIGHT_CERT_EXISTS" = true ] || [ "$REASONINGLAYER_CERT_EXISTS" = true ]; then
   read -p "Do you want to recreate existing certificates? (y/N): " -n 1 -r
   echo
   if [[ ! $REPLY =~ ^[Yy]$ ]]; then
@@ -97,6 +105,13 @@ if [ "$FRONTEND_CERT_EXISTS" = true ] || [ "$BACKEND_CERT_EXISTS" = true ] || [ 
       "$CERTBOT_DIR/conf/live/$HIGHLIGHT_DOMAIN" \
       "$CERTBOT_DIR/conf/archive/$HIGHLIGHT_DOMAIN" \
       "$CERTBOT_DIR/conf/renewal/$HIGHLIGHT_DOMAIN.conf"
+  fi
+
+  if [ "$REASONINGLAYER_CERT_EXISTS" = true ]; then
+    sudo rm -rf \
+      "$CERTBOT_DIR/conf/live/$REASONINGLAYER_DOMAIN" \
+      "$CERTBOT_DIR/conf/archive/$REASONINGLAYER_DOMAIN" \
+      "$CERTBOT_DIR/conf/renewal/$REASONINGLAYER_DOMAIN.conf"
   fi
 fi
 
@@ -148,6 +163,24 @@ if [ -z "$HIGHLIGHT_IP" ]; then
 fi
 echo "✅ Domain $HIGHLIGHT_DOMAIN resolves to: $HIGHLIGHT_IP"
 
+echo "Checking $REASONINGLAYER_DOMAIN..."
+REASONINGLAYER_IP=$(dig +short "$REASONINGLAYER_DOMAIN")
+if [ -z "$REASONINGLAYER_IP" ]; then
+  echo "❌ Error: Domain $REASONINGLAYER_DOMAIN does not resolve to an IP address!"
+  echo "Please configure your DNS to point to this server's IP address."
+  exit 1
+fi
+echo "✅ Domain $REASONINGLAYER_DOMAIN resolves to: $REASONINGLAYER_IP"
+
+echo "Checking www.$REASONINGLAYER_DOMAIN..."
+WWW_REASONINGLAYER_IP=$(dig +short "www.$REASONINGLAYER_DOMAIN")
+if [ -z "$WWW_REASONINGLAYER_IP" ]; then
+  echo "❌ Error: Domain www.$REASONINGLAYER_DOMAIN does not resolve to an IP address!"
+  echo "Please configure your DNS to point to this server's IP address."
+  exit 1
+fi
+echo "✅ Domain www.$REASONINGLAYER_DOMAIN resolves to: $WWW_REASONINGLAYER_IP"
+
 # ─── Fire up temporary Nginx for HTTP-01 challenge ─────────────────────────────
 echo "🚀 Starting temporary web server for Let's Encrypt challenge..."
 
@@ -170,7 +203,7 @@ fi
 cat > "$CERTBOT_DIR/nginx-temp.conf" <<EOF
 server {
     listen 80;
-    server_name $FRONTEND_DOMAIN www.$FRONTEND_DOMAIN $BACKEND_DOMAIN $PLAUSIBLE_DOMAIN $HIGHLIGHT_DOMAIN;
+    server_name $FRONTEND_DOMAIN www.$FRONTEND_DOMAIN $BACKEND_DOMAIN $PLAUSIBLE_DOMAIN $HIGHLIGHT_DOMAIN $REASONINGLAYER_DOMAIN www.$REASONINGLAYER_DOMAIN;
     location /.well-known/acme-challenge/ {
         root /var/www/certbot;
     }
@@ -273,8 +306,29 @@ docker run --rm \
     -d "$HIGHLIGHT_DOMAIN"
 HIGHLIGHT_CERTBOT_EXIT=$?
 
+# Request certificate for reasoninglayer domain (including www subdomain)
+echo "Getting certificate for $REASONINGLAYER_DOMAIN and www.$REASONINGLAYER_DOMAIN..."
+docker run --rm \
+  -v "$CERTBOT_DIR/conf:/etc/letsencrypt" \
+  -v "$CERTBOT_DIR/lib:/var/lib/letsencrypt" \
+  -v "$CERTBOT_DIR/log:/var/log/letsencrypt" \
+  -v "$CERTBOT_DIR/www:/var/www/certbot" \
+  certbot/certbot certonly \
+    --config-dir    /etc/letsencrypt \
+    --work-dir      /var/lib/letsencrypt \
+    --logs-dir      /var/log/letsencrypt \
+    --webroot       -w /var/www/certbot \
+    --email         "$EMAIL" \
+    --agree-tos \
+    --no-eff-email \
+    --non-interactive \
+    --rsa-key-size  "$RSA_KEY_SIZE" \
+    -d "$REASONINGLAYER_DOMAIN" \
+    -d "www.$REASONINGLAYER_DOMAIN"
+REASONINGLAYER_CERTBOT_EXIT=$?
+
 # Check if all certificates were obtained successfully
-if [ $FRONTEND_CERTBOT_EXIT -ne 0 ] || [ $BACKEND_CERTBOT_EXIT -ne 0 ] || [ $PLAUSIBLE_CERTBOT_EXIT -ne 0 ] || [ $HIGHLIGHT_CERTBOT_EXIT -ne 0 ]; then
+if [ $FRONTEND_CERTBOT_EXIT -ne 0 ] || [ $BACKEND_CERTBOT_EXIT -ne 0 ] || [ $PLAUSIBLE_CERTBOT_EXIT -ne 0 ] || [ $HIGHLIGHT_CERTBOT_EXIT -ne 0 ] || [ $REASONINGLAYER_CERTBOT_EXIT -ne 0 ]; then
   CERTBOT_EXIT=1
 else
   CERTBOT_EXIT=0
@@ -312,6 +366,9 @@ if [ $CERTBOT_EXIT -ne 0 ]; then
   if [ $HIGHLIGHT_CERTBOT_EXIT -ne 0 ]; then
     echo "   Highlight domain ($HIGHLIGHT_DOMAIN) failed"
   fi
+  if [ $REASONINGLAYER_CERTBOT_EXIT -ne 0 ]; then
+    echo "   ReasoningLayer domain ($REASONINGLAYER_DOMAIN) failed"
+  fi
   exit 1
 else
   echo "✅ SSL certificates successfully obtained for all domains!"
@@ -327,6 +384,9 @@ else
   echo ""
   echo "📅 Highlight certificate ($HIGHLIGHT_DOMAIN) expires at:"
   openssl x509 -enddate -noout -in "$CERTBOT_DIR/conf/live/$HIGHLIGHT_DOMAIN/fullchain.pem"
+  echo ""
+  echo "📅 ReasoningLayer certificate ($REASONINGLAYER_DOMAIN) expires at:"
+  openssl x509 -enddate -noout -in "$CERTBOT_DIR/conf/live/$REASONINGLAYER_DOMAIN/fullchain.pem"
   echo ""
   echo "🚀 You can now:"
   echo "   1. Ensure your .env.prod is configured"
