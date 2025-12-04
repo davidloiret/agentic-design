@@ -1,22 +1,12 @@
 # Stage 1: Build the React application
 FROM node:20-alpine AS builder
 
-# Install git for cloning
-RUN apk add --no-cache git openssh-client
-
 # Set working directory
 WORKDIR /app
 
-# Clone the repository using SSH
-ARG REPO_URL=git@github.com:kortexya/osfkb.git
-ARG BRANCH=main
-
-# Add github.com to known_hosts to avoid SSH prompts
-RUN mkdir -p -m 0700 ~/.ssh && \
-    ssh-keyscan github.com >> ~/.ssh/known_hosts
-
-# Clone using SSH mount (requires --ssh flag during build)
-RUN --mount=type=ssh git clone --depth 1 --branch ${BRANCH} ${REPO_URL} repo
+# Copy the local repository
+# Run sync-repo.sh before building to ensure repo is up to date
+COPY repo ./repo
 
 # Move to dashboard directory
 WORKDIR /app/repo/dashboard

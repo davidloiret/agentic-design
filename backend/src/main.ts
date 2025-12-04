@@ -28,6 +28,7 @@ async function bootstrap() {
         'http://127.0.0.1:3002',
         'https://agentic-design.ai',
         'http://localhost:8081',
+        'https://reasoninglayer.ai',
       ]);
 
       const devRegex = /^https?:\/\/(localhost|127\.0\.0\.1|192\.168\.\d+\.\d+):\d+$/;

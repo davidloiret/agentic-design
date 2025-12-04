@@ -230,20 +230,30 @@ case "$1" in
             run_codesandbox_with_sudo "rebuild"
         else
             echo "🔨 Rebuilding $2 with smart caching..."
+
+            # For reasoninglayer, sync the repo first
+            if [ "$2" = "reasoninglayer" ]; then
+                echo "🔄 Syncing ReasoningLayer repository..."
+                ORIGINAL_DIR=$(pwd)
+                cd ../reasoninglayer
+                run_with_timing "Syncing repository" ./sync-repo.sh
+                cd "$ORIGINAL_DIR"
+            fi
+
             run_with_timing "Stopping $2 container" docker compose -f $COMPOSE_FILE stop $2
             echo "🗑️  Removing $2 container..."
             docker compose -f $COMPOSE_FILE rm -f $2
-            
+
             # For frontend, also clear nginx cache
             if [ "$2" = "frontend" ]; then
                 echo "🧹 Clearing nginx cache for frontend..."
                 docker exec agentic-design-nginx rm -rf /var/cache/nginx/static/* 2>/dev/null || true
             fi
-            
+
             # Use smart caching with BuildKit - only rebuild what changed
             run_with_timing "Building $2 (smart cache)" docker compose -f $COMPOSE_FILE build --pull $2
             run_with_timing "Starting $2" docker compose -f $COMPOSE_FILE up -d $2
-            
+
             # Restart nginx if frontend was rebuilt to ensure cache is cleared
             if [ "$2" = "frontend" ]; then
                 run_with_timing "Restarting nginx to clear cache" docker compose -f $COMPOSE_FILE restart nginx
@@ -254,7 +264,7 @@ case "$1" in
         # Quick rebuild using maximum caching
         if [ -z "$2" ]; then
             echo "⚡ Usage: $0 quick-rebuild <service>"
-            echo "Available services: frontend, backend, nginx, all"
+            echo "Available services: frontend, backend, nginx, reasoninglayer, all"
             exit 1
         fi
 
@@ -263,6 +273,15 @@ case "$1" in
             run_with_timing "Building all services (max cache)" docker compose -f $COMPOSE_FILE build
             run_with_timing "Recreating containers" docker compose -f $COMPOSE_FILE up -d --force-recreate
         else
+            # For reasoninglayer, sync the repo first
+            if [ "$2" = "reasoninglayer" ]; then
+                echo "🔄 Syncing ReasoningLayer repository..."
+                ORIGINAL_DIR=$(pwd)
+                cd ../reasoninglayer
+                run_with_timing "Syncing repository" ./sync-repo.sh
+                cd "$ORIGINAL_DIR"
+            fi
+
             echo "⚡ Quick rebuilding $2 with maximum caching..."
             run_with_timing "Building $2 (max cache)" docker compose -f $COMPOSE_FILE build $2
             run_with_timing "Recreating $2 container" docker compose -f $COMPOSE_FILE up -d --force-recreate $2
