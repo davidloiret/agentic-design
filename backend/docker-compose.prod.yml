@@ -4,8 +4,10 @@ services:
     build:
       context: ../reasoninglayer
       dockerfile: Dockerfile
+      ssh:
+        - default
       args:
-        REPO_URL: https://github.com/kortexya/osfkb.git
+        REPO_URL: git@github.com:kortexya/osfkb.git
         BRANCH: main
     container_name: reasoninglayer-frontend
     restart: always

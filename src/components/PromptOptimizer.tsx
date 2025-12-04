@@ -177,7 +177,7 @@ export default function PromptOptimizer() {
   const analyzePromptQuality = (prompt: string) => {
     if (!prompt) return { score: 0, suggestions: [] };
 
-    const suggestions = [];
+    const suggestions: string[] = [];
     let score = 0.5; // Base score
 
     // Check for clear instructions

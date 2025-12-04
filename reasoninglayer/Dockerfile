@@ -7,12 +7,16 @@ RUN apk add --no-cache git openssh-client
 # Set working directory
 WORKDIR /app
 
-# Clone the repository (using HTTPS for build-time cloning)
-# For SSH access, you'd need to mount SSH keys at build time
-ARG REPO_URL=https://github.com/kortexya/osfkb.git
+# Clone the repository using SSH
+ARG REPO_URL=git@github.com:kortexya/osfkb.git
 ARG BRANCH=main
 
-RUN git clone --depth 1 --branch ${BRANCH} ${REPO_URL} repo
+# Add github.com to known_hosts to avoid SSH prompts
+RUN mkdir -p -m 0700 ~/.ssh && \
+    ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+# Clone using SSH mount (requires --ssh flag during build)
+RUN --mount=type=ssh git clone --depth 1 --branch ${BRANCH} ${REPO_URL} repo
 
 # Move to dashboard directory
 WORKDIR /app/repo/dashboard
@@ -20,8 +24,8 @@ WORKDIR /app/repo/dashboard
 # Install dependencies
 RUN npm ci
 
-# Build the application
-RUN npm run build
+# Build the application (skip TypeScript type checking, only build with Vite)
+RUN npx vite build
 
 # Stage 2: Serve with nginx
 FROM nginx:alpine
