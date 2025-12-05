@@ -11,10 +11,18 @@ export class WaitlistService {
   async signup(dto: WaitlistSignupDto): Promise<WaitlistSignupResponseDto> {
     this.logger.log(`Processing waitlist signup for: ${dto.email}`);
 
-    const emailSent = await this.emailService.sendWaitlistNotification(dto.email);
+    // Send notification to team
+    const notificationSent = await this.emailService.sendWaitlistNotification(dto.email);
 
-    if (!emailSent) {
-      this.logger.warn(`Email notification failed for: ${dto.email}`);
+    if (!notificationSent) {
+      this.logger.warn(`Team notification failed for: ${dto.email}`);
+    }
+
+    // Send welcome email to user
+    const welcomeSent = await this.emailService.sendWelcomeEmail(dto.email);
+
+    if (!welcomeSent) {
+      this.logger.warn(`Welcome email failed for: ${dto.email}`);
     }
 
     return {
