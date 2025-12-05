@@ -6,7 +6,7 @@ import { Resend } from 'resend';
 export class ResendEmailService {
   private readonly logger = new Logger(ResendEmailService.name);
   private readonly resend: Resend;
-  private readonly notificationEmail = 'contact@kortexya.com';
+  private readonly notificationEmail = 'contact@reasoninglayer.ai';
   private readonly fromEmail: string;
 
   constructor(private readonly configService: ConfigService) {
