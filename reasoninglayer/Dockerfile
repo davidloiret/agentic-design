@@ -14,8 +14,8 @@ WORKDIR /app/repo/dashboard
 # Install dependencies
 RUN npm ci
 
-# Build the application (skip TypeScript type checking, only build with Vite)
-RUN npx vite build
+# Build the application with SSG pre-rendering
+RUN npx vike build
 
 # Stage 2: Serve with nginx
 FROM nginx:alpine
