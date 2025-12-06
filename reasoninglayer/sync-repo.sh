@@ -5,7 +5,7 @@
 
 set -e
 
-REPO_URL="${REPO_URL:-git@github.com:kortexya/osfkb.git}"
+REPO_URL="${REPO_URL:-git@gitlab.com:kortexya/reasoninglayer.git}"
 BRANCH="${BRANCH:-main}"
 REPO_DIR="./repo"
 
