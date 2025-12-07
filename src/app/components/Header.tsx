@@ -1,6 +1,6 @@
 'use client';
 
-import { Sparkles, Search, Command, GraduationCap, Flame, HeadphonesIcon } from 'lucide-react';
+import { Sparkles, Search, Command, GraduationCap, Flame, HeadphonesIcon, Zap } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLearningHub } from '@/contexts/LearningHubContext';
 import { UserMenu } from './UserMenu';
@@ -301,6 +301,62 @@ export const Header = () => {
               </AnimatePresence>
             </motion.button>
 
+            {/* ReasoningLayer Waitlist CTA */}
+            <motion.a
+              href="https://reasoninglayer.ai/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="relative flex items-center space-x-2 px-4 py-2 font-medium rounded-lg shadow-lg overflow-hidden bg-gradient-to-r from-purple-500 via-blue-500 to-cyan-500 text-white hover:from-purple-600 hover:via-blue-600 hover:to-cyan-600"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              animate={{
+                boxShadow: [
+                  '0 0 20px rgba(139, 92, 246, 0.3)',
+                  '0 0 40px rgba(139, 92, 246, 0.5)',
+                  '0 0 20px rgba(139, 92, 246, 0.3)',
+                ],
+              }}
+              transition={{
+                boxShadow: {
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }
+              }}
+            >
+              {/* Shimmer effect */}
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                animate={{
+                  x: ['-100%', '100%'],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  repeatDelay: 1,
+                  ease: "easeInOut"
+                }}
+              />
+
+              {/* Icon with pulse animation */}
+              <motion.div
+                animate={{
+                  scale: [1, 1.2, 1],
+                }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  repeatDelay: 0.5,
+                }}
+              >
+                <Zap className="w-4 h-4 relative z-10" />
+              </motion.div>
+
+              {/* Text */}
+              <span className="text-sm relative z-10 font-semibold">ReasoningLayer</span>
+              <span className="text-[10px] relative z-10 bg-white/20 px-1.5 py-0.5 rounded-full">Waitlist Open</span>
+            </motion.a>
+
             {/* Expert Services CTA - Replaces System Builder button */}
             <motion.button
               id="expert-services-button"
@@ -513,35 +569,29 @@ export const Header = () => {
                   )}
                 </AnimatePresence>
               </motion.button>
-              {/* Expert Services CTA - Mobile */}
-              <motion.button
-                id="expert-services-button-mobile"
-                onClick={() => router.push('/expert-services')}
-                className="relative flex items-center space-x-1 px-2.5 min-[400px]:px-3 py-1.5 font-medium rounded-lg shadow-lg overflow-hidden bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white hover:from-amber-600 hover:via-orange-600 hover:to-amber-700"
-                layout
+              {/* ReasoningLayer Waitlist CTA - Mobile */}
+              <motion.a
+                href="https://reasoninglayer.ai/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative flex items-center space-x-1 px-2.5 min-[400px]:px-3 py-1.5 font-medium rounded-lg shadow-lg overflow-hidden bg-gradient-to-r from-purple-500 via-blue-500 to-cyan-500 text-white"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 animate={{
                   boxShadow: [
-                    '0 0 15px rgba(251, 146, 60, 0.3)',
-                    '0 0 25px rgba(251, 146, 60, 0.5)',
-                    '0 0 15px rgba(251, 146, 60, 0.3)',
+                    '0 0 15px rgba(139, 92, 246, 0.3)',
+                    '0 0 25px rgba(139, 92, 246, 0.5)',
+                    '0 0 15px rgba(139, 92, 246, 0.3)',
                   ],
                 }}
                 transition={{
-                  layout: {
-                    type: "spring",
-                    stiffness: 500,
-                    damping: 40,
-                    duration: 0.3
-                  },
                   boxShadow: {
                     duration: 2,
                     repeat: Infinity,
                     ease: "easeInOut"
                   }
                 }}
-                title="Expert Services"
+                title="ReasoningLayer Waitlist"
               >
                 {/* Shimmer effect for mobile */}
                 <motion.div
@@ -560,18 +610,18 @@ export const Header = () => {
                 {/* Icon with pulse */}
                 <motion.div
                   animate={{
-                    scale: [1, 1.15, 1],
+                    scale: [1, 1.2, 1],
                   }}
                   transition={{
-                    duration: 2,
+                    duration: 1.5,
                     repeat: Infinity,
                     repeatDelay: 0.5,
                   }}
                 >
-                  <HeadphonesIcon className="w-3.5 h-3.5 min-[400px]:w-4 min-[400px]:h-4 relative z-10" />
+                  <Zap className="w-3.5 h-3.5 min-[400px]:w-4 min-[400px]:h-4 relative z-10" />
                 </motion.div>
-                <span className="hidden min-[400px]:inline text-xs relative z-10 font-semibold">Expert</span>
-              </motion.button>
+                <span className="hidden min-[400px]:inline text-xs relative z-10 font-semibold">Waitlist</span>
+              </motion.a>
               {loading ? (
                 <div className="flex items-center space-x-2">
                   <div className="w-9 h-9 bg-gray-700 rounded-lg animate-pulse"></div>

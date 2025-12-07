@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { BookOpen, Lightbulb, Share2, FlaskConical, Brain, Boxes, Newspaper, FolderOpen, Cpu, Settings, ChevronDown, Menu, X, GraduationCap, Shield, FileText, FlaskRound, Target, Wand2, Code2 } from 'lucide-react';
+import { BookOpen, Lightbulb, Share2, FlaskConical, Brain, Boxes, Newspaper, Cpu, Settings, ChevronDown, Menu, X, GraduationCap, Shield, FileText, FlaskRound, Target, Wand2, Code2 } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -104,7 +104,6 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
       'fine-tuning': 'text-violet-400',
       'ai-inference': 'text-indigo-400',
       'prompt-hub': 'text-orange-400',
-      'project-hub': 'text-yellow-400',
       'news-hub': 'text-emerald-400',
       'ai-red-teaming': 'text-red-400',
       'pattern-evaluation': 'text-purple-400',
@@ -122,7 +121,6 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
       'fine-tuning': 'bg-violet-400',
       'ai-inference': 'bg-indigo-400',
       'prompt-hub': 'bg-orange-400',
-      'project-hub': 'bg-yellow-400',
       'news-hub': 'bg-emerald-400',
       'ai-red-teaming': 'bg-red-400',
       'pattern-evaluation': 'bg-purple-400',
@@ -153,7 +151,6 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
       name: 'Resources',
       tabs: [
         { id: 'prompt-hub', label: 'Prompt Hub', icon: FileText, description: 'Leaked AI system prompts', route: '/prompt-hub' },
-        { id: 'project-hub', label: 'Project Hub', icon: FolderOpen, description: 'Example projects', route: '/project-hub' },
         { id: 'news-hub', label: 'News Hub', icon: Newspaper, description: 'Latest updates', route: '/news-hub' },
       ]
     }
@@ -258,7 +255,6 @@ export const NavigationTabs = ({ activeTab, setActiveTab }: NavigationTabsProps)
                     .replace('Prompt Optimizer', 'Optimizer')
                     .replace('AI Red Teaming', 'Red Team')
                     .replace('Prompt Hub', 'Prompts')
-                    .replace('Project Hub', 'Projects')
                     .replace('News Hub', 'News');
 
                   return (
