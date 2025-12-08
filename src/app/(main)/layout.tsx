@@ -92,10 +92,22 @@ export default function MainLayout({
       <main className="relative">
         {children}
       </main>
-      <ChatBot 
+      <ChatBot
         onRecommendationSelect={() => {}}
         getRecommendations={() => []}
       />
+
+      {/* Built by Kortexya - Always visible footer */}
+      <div className="fixed bottom-2 left-4 z-40">
+        <a
+          href="https://kortexya.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs text-gray-500 hover:text-gray-300 transition-colors duration-200"
+        >
+          Built by <span className="font-medium">Kortexya</span>
+        </a>
+      </div>
 
       {/* Onboarding Flow */}
       <OnboardingFlow 
