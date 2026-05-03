@@ -137,6 +137,7 @@ show_help() {
     echo "  backend        - Node.js backend (port 3001)"
     echo "  nginx          - Nginx reverse proxy (ports 80/443)"
     echo "  reasoninglayer - ReasoningLayer.ai dashboard (port 3003)"
+    echo "  kortexya       - Kortexya.com website (port 3004)"
     echo "  codesandbox    - CodeSandbox environment (requires sudo for Firecracker/KVM)"
     echo "  plausible      - Plausible Analytics (port 8000)"
     echo "  all            - All services (default if no service specified)"
@@ -153,6 +154,8 @@ show_help() {
     echo "  ./manage.sh setup plausible          # Setup and configure Plausible"
     echo "  ./manage.sh up reasoninglayer        # Start ReasoningLayer dashboard"
     echo "  ./manage.sh rebuild reasoninglayer   # Rebuild ReasoningLayer (pulls latest code)"
+    echo "  ./manage.sh up kortexya              # Start Kortexya website"
+    echo "  ./manage.sh rebuild kortexya         # Rebuild Kortexya (pulls latest code)"
     echo "  ./manage.sh shell frontend           # Enter shell in frontend container"
     echo "  ./manage.sh shell backend            # Enter shell in backend container"
 }
@@ -240,6 +243,15 @@ case "$1" in
                 cd "$ORIGINAL_DIR"
             fi
 
+            # For kortexya, sync the repo first
+            if [ "$2" = "kortexya" ]; then
+                echo "🔄 Syncing Kortexya repository..."
+                ORIGINAL_DIR=$(pwd)
+                cd ../kortexya
+                run_with_timing "Syncing repository" ./sync-repo.sh
+                cd "$ORIGINAL_DIR"
+            fi
+
             run_with_timing "Stopping $2 container" docker compose -f $COMPOSE_FILE stop $2
             echo "🗑️  Removing $2 container..."
             docker compose -f $COMPOSE_FILE rm -f $2
@@ -278,6 +290,15 @@ case "$1" in
                 echo "🔄 Syncing ReasoningLayer repository..."
                 ORIGINAL_DIR=$(pwd)
                 cd ../reasoninglayer
+                run_with_timing "Syncing repository" ./sync-repo.sh
+                cd "$ORIGINAL_DIR"
+            fi
+
+            # For kortexya, sync the repo first
+            if [ "$2" = "kortexya" ]; then
+                echo "🔄 Syncing Kortexya repository..."
+                ORIGINAL_DIR=$(pwd)
+                cd ../kortexya
                 run_with_timing "Syncing repository" ./sync-repo.sh
                 cd "$ORIGINAL_DIR"
             fi
@@ -400,9 +421,13 @@ case "$1" in
                 echo "🔧 Entering shell in reasoninglayer container..."
                 docker compose -f $COMPOSE_FILE exec reasoninglayer /bin/sh
                 ;;
+            kortexya)
+                echo "🔧 Entering shell in kortexya container..."
+                docker compose -f $COMPOSE_FILE exec kortexya /bin/sh
+                ;;
             *)
                 echo "❌ Invalid service: $2"
-                echo "Available services for shell: frontend, backend, reasoninglayer"
+                echo "Available services for shell: frontend, backend, reasoninglayer, kortexya"
                 exit 1
                 ;;
         esac
@@ -483,9 +508,40 @@ case "$1" in
                 echo ""
                 echo "🔄 To update with latest code: ./manage.sh force-rebuild reasoninglayer"
                 ;;
+            kortexya)
+                echo "🚀 Setting up Kortexya.com Website..."
+
+                # Build the container (this clones the repo and builds)
+                run_with_timing "Building Kortexya container" docker compose -f $COMPOSE_FILE build kortexya
+
+                # Start the service
+                run_with_timing "Starting Kortexya service" docker compose -f $COMPOSE_FILE up -d kortexya
+
+                # Wait for it to be ready
+                echo "⏳ Waiting for Kortexya to be ready..."
+                for i in {1..30}; do
+                    if curl -f http://localhost:3004/ >/dev/null 2>&1; then
+                        echo "✅ Kortexya is ready!"
+                        break
+                    fi
+                    echo "⏳ Waiting for Kortexya... ($i/30)"
+                    sleep 2
+                done
+
+                echo ""
+                echo "✅ Kortexya.com setup complete!"
+                echo "📊 Access the website at: https://kortexya.com"
+                echo ""
+                echo "⚠️  Important Steps:"
+                echo "   1. Ensure DNS is configured for kortexya.com and www.kortexya.com"
+                echo "   2. Generate SSL certificates: ./init-letsencrypt.sh"
+                echo "   3. Restart nginx after SSL setup: ./manage.sh restart nginx"
+                echo ""
+                echo "🔄 To update with latest code: ./manage.sh rebuild kortexya"
+                ;;
             *)
                 echo "❌ Setup not available for service: $2"
-                echo "Available setup commands: plausible, reasoninglayer"
+                echo "Available setup commands: plausible, reasoninglayer, kortexya"
                 exit 1
                 ;;
         esac

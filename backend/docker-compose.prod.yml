@@ -4,18 +4,61 @@ services:
     build:
       context: ../reasoninglayer
       dockerfile: Dockerfile
-    container_name: reasoninglayer-frontend
+    # container_name removed to allow zero-downtime deployment scaling
     restart: always
-    ports:
-      - "3003:3003"
+    # Port 3003 is only accessible internally via Docker network
+    # External access is only through Nginx HTTPS proxy
+    expose:
+      - "3003"
     networks:
       - agentic-network
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3003/"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:3003/"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 30s
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+      rollback_config:
+        parallelism: 1
+        delay: 5s
+
+  # Kortexya - Next.js Website
+  kortexya:
+    build:
+      context: ../kortexya
+      dockerfile: Dockerfile
+    # container_name removed to allow zero-downtime deployment scaling
+    restart: always
+    # Port 3004 is only accessible internally via Docker network
+    # External access is only through Nginx HTTPS proxy
+    expose:
+      - "3004"
+    environment:
+      - NODE_ENV=production
+      - PORT=3004
+    networks:
+      - agentic-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3004/', (res) => process.exit(res.statusCode === 200 ? 0 : 1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+      rollback_config:
+        parallelism: 1
+        delay: 5s
 
   # Next.js Frontend
   frontend:
@@ -24,10 +67,12 @@ services:
       dockerfile: Dockerfile
       args:
         BUILDKIT_INLINE_CACHE: 1
-    container_name: agentic-design-frontend
+    # container_name removed to allow zero-downtime deployment scaling
     restart: always
-    ports:
-      - "3002:3002"
+    # Port 3002 is only accessible internally via Docker network
+    # External access is only through Nginx HTTPS proxy
+    expose:
+      - "3002"
     environment:
       - NODE_ENV=production
       - PORT=3002
@@ -45,6 +90,15 @@ services:
       timeout: 10s
       retries: 3
       start_period: 30s
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+      rollback_config:
+        parallelism: 1
+        delay: 5s
     # deploy:
     #   resources:
     #     limits:
@@ -58,10 +112,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: agentic-design-backend
+    # container_name removed to allow zero-downtime deployment scaling
     restart: always
-    ports:
-      - "3001:3001"
+    # Port 3001 is only accessible internally via Docker network
+    # External access is only through Nginx HTTPS proxy
+    expose:
+      - "3001"
     extra_hosts:
       - "host.docker.internal:host-gateway"
     environment:
@@ -80,6 +136,15 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+      rollback_config:
+        parallelism: 1
+        delay: 5s
     # deploy:
     #   resources:
     #     limits:
@@ -127,8 +192,10 @@ services:
     depends_on:
       - plausible_db
       - plausible_events_db
-    ports:
-      - "8000:8000"
+    # Port 8000 is only accessible internally via Docker network
+    # External access is only through Nginx HTTPS proxy
+    expose:
+      - "8000"
     environment:
       - BASE_URL=https://plausible.agentic-design.ai
       - SECRET_KEY_BASE=1d59dcbad9e287658ece6037a3672182c1214db49bf53031a00035789ff2cfa5
@@ -153,8 +220,10 @@ services:
     image: ghcr.io/highlight/highlight-frontend:latest
     container_name: highlight-frontend
     restart: always
-    ports:
-      - "3000:3000"
+    # Port 3000 is only accessible internally via Docker network
+    # External access is only through Nginx HTTPS proxy (via Caddy)
+    expose:
+      - "3000"
     environment:
       - REACT_APP_PRIVATE_GRAPH_URI=https://highlight.agentic-design.ai/api/private
       - REACT_APP_PUBLIC_GRAPH_URI=https://highlight.agentic-design.ai/api/public
@@ -176,8 +245,10 @@ services:
     image: ghcr.io/highlight/highlight-backend:latest
     container_name: highlight-backend
     restart: always
-    ports:
-      - "8082:8082"
+    # Port 8082 is only accessible internally via Docker network
+    # External access is only through Nginx HTTPS proxy (via Caddy)
+    expose:
+      - "8082"
     environment:
       - ENVIRONMENT=production
       - ON_PREM=true

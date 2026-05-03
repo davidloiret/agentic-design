@@ -1,0 +1,7 @@
+repo/.git
+repo/node_modules
+repo/.next
+repo/.env*.local
+repo/npm-debug.log*
+repo/yarn-debug.log*
+repo/yarn-error.log*

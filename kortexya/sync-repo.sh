@@ -1,15 +1,15 @@
 #!/bin/bash
 
-# Sync ReasoningLayer repository locally
+# Sync Kortexya repository locally
 # This script clones or pulls the latest code from the git repository
 
 set -e
 
-REPO_URL="${REPO_URL:-git@gitlab.com:kortexya/reasoninglayer-playground.git}"
+REPO_URL="${REPO_URL:-git@github.com:davidloiret/kortexya.git}"
 BRANCH="${BRANCH:-main}"
 REPO_DIR="./repo"
 
-echo "🔄 Syncing ReasoningLayer repository..."
+echo "🔄 Syncing Kortexya repository..."
 
 # Check if repo directory exists
 if [ -d "$REPO_DIR" ]; then
