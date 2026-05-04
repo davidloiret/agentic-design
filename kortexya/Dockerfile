@@ -35,6 +35,7 @@ WORKDIR /app
 # Set production environment
 ENV NODE_ENV=production
 ENV PORT=3004
+ENV HOSTNAME=0.0.0.0
 ENV NEXT_TELEMETRY_DISABLED=1
 
 # Create non-root user
@@ -56,7 +57,7 @@ EXPOSE 3004
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:3004/', (res) => process.exit(res.statusCode === 200 ? 0 : 1))"
+  CMD node -e "require('http').get('http://127.0.0.1:3004/', r => process.exit(r.statusCode<500?0:1)).on('error', () => process.exit(1))"
 
 # Start Next.js
 CMD ["node", "server.js"]

@@ -42,14 +42,23 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3004
+      - HOSTNAME=0.0.0.0
     networks:
       - agentic-network
     healthcheck:
-      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3004/', (res) => process.exit(res.statusCode === 200 ? 0 : 1))"]
+      test: ["CMD", "node", "-e", "require('http').get('http://127.0.0.1:3004/', r => process.exit(r.statusCode<500?0:1)).on('error', () => process.exit(1))"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 200
+    mem_limit: 1g
+    cpus: 1.5
     deploy:
       replicas: 1
       update_config:
@@ -85,11 +94,21 @@ services:
     networks:
       - agentic-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3002"]
+      test: ["CMD", "node", "-e", "require('http').get('http://127.0.0.1:3002/', r => process.exit(r.statusCode<500?0:1)).on('error', () => process.exit(1))"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 30s
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=128m
+      - /app/.secrets:rw,noexec,nosuid,size=4m
+      - /dev/shm:rw,noexec,nosuid,size=16m
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 300
+    mem_limit: 2g
+    cpus: 2.0
     deploy:
       replicas: 1
       update_config:
@@ -99,14 +118,6 @@ services:
       rollback_config:
         parallelism: 1
         delay: 5s
-    # deploy:
-    #   resources:
-    #     limits:
-    #       cpus: '1'
-    #       memory: 512M
-    #     reservations:
-    #       cpus: '0.25'
-    #       memory: 256M
 
   backend:
     build:
