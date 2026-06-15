@@ -52,6 +52,33 @@ run_with_timing() {
     return $exit_code
 }
 
+# Pull the latest code for the main repo (the frontend lives at the repo root,
+# one level up from this script's working dir of backend/). Guarantees a rebuild
+# truly picks up new commits:
+#   - --autostash so the pull works even with local uncommitted changes
+#     (e.g. nginx.conf tweaks) instead of silently failing on a dirty tree.
+#   - returns non-zero on any pull failure so callers abort instead of
+#     building/deploying stale code.
+#   - reports whether new commits actually arrived.
+pull_latest() {
+    local label="${1:-code}"
+    local before after
+    before=$(git -C .. rev-parse HEAD 2>/dev/null)
+    if ! run_with_timing "Pulling latest $label" git -C .. pull --rebase --autostash; then
+        echo "❌ git pull failed — aborting to avoid building stale code."
+        echo "   Resolve the git state in the repo root, then re-run."
+        return 1
+    fi
+    after=$(git -C .. rev-parse HEAD 2>/dev/null)
+    if [ "$before" = "$after" ]; then
+        echo "ℹ️  Already up to date ($(git -C .. rev-parse --short HEAD)) — no new commits to build."
+    else
+        echo "✅ Updated $(git -C .. rev-parse --short "$before") → $(git -C .. rev-parse --short "$after"):"
+        git -C .. --no-pager log --oneline "$before".."$after"
+    fi
+    return 0
+}
+
 # Function to check if sudo is available and prompt for password if needed
 ensure_sudo() {
     if ! sudo -n true 2>/dev/null; then
@@ -252,6 +279,11 @@ case "$1" in
                 cd "$ORIGINAL_DIR"
             fi
 
+            # For frontend, pull the latest code from git first
+            if [ "$2" = "frontend" ]; then
+                pull_latest "frontend code" || exit 1
+            fi
+
             run_with_timing "Stopping $2 container" docker compose -f $COMPOSE_FILE stop $2
             echo "🗑️  Removing $2 container..."
             docker compose -f $COMPOSE_FILE rm -f $2
@@ -303,6 +335,12 @@ case "$1" in
                 cd "$ORIGINAL_DIR"
             fi
 
+            # For frontend, pull the latest code from git first so we never
+            # rebuild stale source (Docker would otherwise cache an old tree).
+            if [ "$2" = "frontend" ]; then
+                pull_latest "frontend code" || exit 1
+            fi
+
             echo "⚡ Quick rebuilding $2 with maximum caching..."
             run_with_timing "Building $2 (max cache)" docker compose -f $COMPOSE_FILE build $2
             run_with_timing "Recreating $2 container" docker compose -f $COMPOSE_FILE up -d --force-recreate $2
@@ -327,6 +365,15 @@ case "$1" in
                         sleep 1
                     fi
                 done
+            fi
+
+            # Recreating a container gives it a new Docker IP. nginx resolves
+            # upstream hostnames once at startup, so without a reload it keeps
+            # proxying to the dead old IP -> 502 Bad Gateway. Reload (graceful,
+            # zero-downtime) so nginx re-resolves the new IP.
+            if [ "$2" = "frontend" ] || [ "$2" = "reasoninglayer" ] || [ "$2" = "kortexya" ]; then
+                echo "🔄 Reloading nginx to pick up new $2 container IP..."
+                run_with_timing "Reloading nginx" docker exec agentic-design-nginx nginx -s reload
             fi
         fi
         ;;
