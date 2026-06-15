@@ -5,7 +5,7 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import { LearningHubProvider } from '@/contexts/LearningHubContext';
 import { SearchProvider } from '@/contexts/SearchContext';
 import { SearchModal } from '@/app/components/SearchModal';
-import { WaitlistModal } from '@/components/WaitlistModal';
+import { BlogPromoModal } from '@/components/BlogPromoModal';
 import JsonLd from '@/components/JsonLd';
 import PlausibleAnalytics from '@/components/PlausibleAnalytics';
 import OpenReplayInit from '@/components/OpenReplayInit';
@@ -142,7 +142,7 @@ export default function RootLayout({
             <LearningHubProvider>
               {children}
               <SearchModal />
-              <WaitlistModal />
+              <BlogPromoModal />
             </LearningHubProvider>
           </SearchProvider>
         </AuthProvider>
