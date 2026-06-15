@@ -2,7 +2,9 @@
 
 import { NavigationTabs } from '../components/NavigationTabs';
 import { Header } from '../components/Header';
-import { ChatBot } from '../components/ChatBot';
+// ChatBot temporarily disabled (not working). Re-enable the import and the
+// <ChatBot /> render below to restore it.
+// import { ChatBot } from '../components/ChatBot';
 import OnboardingFlow from '@/components/OnboardingFlow';
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
@@ -92,10 +94,11 @@ export default function MainLayout({
       <main className="relative">
         {children}
       </main>
+      {/* ChatBot temporarily disabled (not working).
       <ChatBot
         onRecommendationSelect={() => {}}
         getRecommendations={() => []}
-      />
+      /> */}
 
       {/* Built by Kortexya - Always visible footer */}
       <div className="fixed bottom-2 left-4 z-40">
