@@ -6,6 +6,7 @@ import { LearningHubProvider } from '@/contexts/LearningHubContext';
 import { SearchProvider } from '@/contexts/SearchContext';
 import { SearchModal } from '@/app/components/SearchModal';
 import { BlogPromoModal } from '@/components/BlogPromoModal';
+import { BookDemoButton } from '@/components/BookDemoButton';
 import JsonLd from '@/components/JsonLd';
 import PlausibleAnalytics from '@/components/PlausibleAnalytics';
 import OpenReplayInit from '@/components/OpenReplayInit';
@@ -143,6 +144,7 @@ export default function RootLayout({
               {children}
               <SearchModal />
               <BlogPromoModal />
+              <BookDemoButton />
             </LearningHubProvider>
           </SearchProvider>
         </AuthProvider>
